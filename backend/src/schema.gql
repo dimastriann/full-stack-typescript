@@ -1,0 +1,19 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserModel {
+  id: Int!
+  name: String!
+  email: String!
+}
+
+type Query {
+  users: [UserModel!]!
+}
+
+type Mutation {
+  createUser(name: String!, email: String!): UserModel!
+  updateUser(id: Int!, name: String!, email: String!): UserModel!
+  deleteUser(id: Int!): UserModel!
+}
