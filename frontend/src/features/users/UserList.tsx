@@ -1,85 +1,21 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
-import { GET_USERS, CREATE_USER, UPDATE_USER, DELETE_USER } from "./user.graphql";
-import type { User } from "../../types/Users";
+import { useQuery } from "@apollo/client";
+import { GET_USERS } from "./user.graphql";
 
 
 type UserListProps = {
     editUser: Function
+    deleteUser: Function
 }
 
 
 export default function UserList(props: UserListProps) {
-    const { data, loading, error, refetch } = useQuery(GET_USERS);
-    // const [createUser] = useMutation(CREATE_USER);
-    // const [updateUser] = useMutation(UPDATE_USER);
-    const [deleteUser] = useMutation(DELETE_USER);
-    // const [name, setName] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [editingUser, setEditingUser] = useState<User | null>(null);
-
-    // const resetPayload = () => {
-    //     setEmail("");
-    //     setName("");
-    // }
-
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     console.log('user', name, email)
-    //     if (!name.trim() || !email.trim()) {
-    //         throw new Error("Please input name and email correctly!")
-    //     };
-    //     if (editingUser) {
-    //         await updateUser({ variables: { id: editingUser.id, name, email } });
-    //         setEditingUser(null);
-    //     } else {
-    //         await createUser({ variables: { name, email } });
-    //     }
-    //     resetPayload();
-    //     refetch();
-    // };
+    const { data, loading, error } = useQuery(GET_USERS);
 
     if (loading) return <p>Loading...</p>;
 
     return (
         <div className="p-6 max-w-xl mx-auto font-sans">
             <h1 className="text-3xl font-bold underline mb-2 text-black">User Management</h1>
-
-            {/* Form */}
-            {/* <form onSubmit={handleSubmit} className="mb-6 flex gap-2">
-                <input
-                    type="text"
-                    placeholder="Enter name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="flex-1 border border-gray-300 px-3 py-2 rounded"
-                />
-                <input
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 border border-gray-300 px-3 py-2 rounded"
-                />
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    {editingUser ? 'Save' : 'Add'}
-                </button>
-                {editingUser && (
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setEditingUser(null);
-                            resetPayload();
-                        }}
-                        className="text-gray-200 hover:underline"
-                    >
-                        Cancel
-                    </button>
-                )}
-            </form> */}
 
             {/* Table */}
             {loading ? (
@@ -106,8 +42,6 @@ export default function UserList(props: UserListProps) {
                                         onClick={
                                             () => {
                                                 props.editUser(user);
-                                                // setName(user.name);
-                                                // setEmail(user.email);
                                             }
                                         }
                                     >
@@ -117,8 +51,7 @@ export default function UserList(props: UserListProps) {
                                         className="text-red-600 hover:underline"
                                         onClick={async () => {
                                             if (confirm(`Delete user "${user.name}"?`)) {
-                                                await deleteUser({ variables: { id: user.id } });
-                                                refetch();
+                                                await props.deleteUser(user);
                                             }
                                         }}
                                     >

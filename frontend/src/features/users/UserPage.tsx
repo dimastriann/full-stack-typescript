@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_USER, GET_USERS, UPDATE_USER } from "./user.graphql";
+import { CREATE_USER, GET_USERS, UPDATE_USER, DELETE_USER } from "./user.graphql";
 import UserList from "./UserList";
 import UserForm from "./UserForm";
 import type { User } from "../../types/Users";
@@ -9,9 +9,12 @@ import type { User } from "../../types/Users";
 export default function User() {
     const [userInput, setUserInput] = useState<User | null>(null);
     const [createUser] = useMutation(CREATE_USER);
-    const { data, loading, error, refetch } = useQuery(GET_USERS);
+    const { refetch } = useQuery(GET_USERS);
     const [updateUser] = useMutation(UPDATE_USER);
+    const [deleteUser] = useMutation(DELETE_USER);
     const [editingUser, setEditingUser] = useState<User | null>(null);
+
+    // console.info("info user", data)
 
     const resetPayload = () => {
         setUserInput(null);
@@ -44,6 +47,11 @@ export default function User() {
         resetPayload()
     }
 
+    const userDelete = async (user: User) => {
+        await deleteUser({ variables: { id: user.id }});
+        refetch();
+    }
+
     return (
         <div className="p-6 max-w-xl mx-auto font-sans">
             <UserForm 
@@ -53,7 +61,9 @@ export default function User() {
                 editUser={editingUser} 
                 setEditUser={setEditingUser}
                 cancelEdit={cancelEdit} />
-            <UserList editUser={userEdit} />
+            <UserList 
+                editUser={userEdit} 
+                deleteUser={userDelete} />
         </div>
     )
 }

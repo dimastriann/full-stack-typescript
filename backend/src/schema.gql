@@ -8,12 +8,34 @@ type UserModel {
   email: String!
 }
 
+type Project {
+  id: Int!
+  name: String!
+  description: String!
+}
+
 type Query {
   users: [UserModel!]!
+  projects: [Project!]!
+  findOne(id: Int!): Project!
 }
 
 type Mutation {
   createUser(name: String!, email: String!): UserModel!
   updateUser(id: Int!, name: String!, email: String!): UserModel!
   deleteUser(id: Int!): UserModel!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  deleteProject(id: Int!): Project!
+}
+
+input CreateProjectInput {
+  name: String!
+  description: String
+}
+
+input UpdateProjectInput {
+  name: String
+  description: String
+  id: Int!
 }
