@@ -5,31 +5,46 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ProjectService {
+  constructor(private prisma: PrismaService) {}
 
-    constructor(private prisma: PrismaService){}
+  get includeRelation() {
+    return { responsible: true, tasks: true, timesheets: true };
+  }
 
   create(createProjectInput: CreateProjectInput) {
-    return this.prisma.project.create({data: createProjectInput});
+    return this.prisma.project.create({
+      data: createProjectInput,
+      include: { ...this.includeRelation },
+    });
   }
 
   async findAll() {
-    return this.prisma.project.findMany();
+    return this.prisma.project.findMany({
+      include: {
+        ...this.includeRelation,
+        comments: { include: { user: true } },
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} project`;
+    return this.prisma.project.findUnique({
+      where: { id },
+      include: { ...this.includeRelation, comments: true },
+    });
   }
 
   update(id: number, updateProjectInput: UpdateProjectInput) {
     return this.prisma.project.update({
-      where: {id},
-      data: {...updateProjectInput}
-    })
+      where: { id },
+      data: { ...updateProjectInput },
+      include: { ...this.includeRelation },
+    });
   }
 
   delete(id: number) {
     return this.prisma.project.delete({
-            where: { id }
-        })
+      where: { id },
+    });
   }
 }

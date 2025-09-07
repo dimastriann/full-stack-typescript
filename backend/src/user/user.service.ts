@@ -1,30 +1,58 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) {}
 
-    async findAll(){
-        return this.prisma.user.findMany();
-    }
+  async hashPassword(password: string) {
+    return await bcrypt.hash(password, 10);
+  }
 
-    async create(name: string, email: string){
-        return this.prisma.user.create({
-            data: {name, email}
-        })
-    }
+  get includesRelation() {
+    return { projects: true, tasks: true, timesheets: true };
+  }
 
-    async update(id: number, name: string, email: string) {
-        return this.prisma.user.update({
-            where: { id },
-            data: {name, email}
-        })
-    }
+  async findAll() {
+    return this.prisma.user.findMany({
+      include: { ...this.includesRelation, comments: true },
+    });
+  }
 
-    async delete(id: number) {
-        return this.prisma.user.delete({
-            where: { id }
-        })
-    }
+  async findOne(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { ...this.includesRelation, comments: true },
+    });
+  }
+
+  async create(createUserInput: CreateUserInput) {
+    return this.prisma.user.create({
+      data: {
+        ...createUserInput,
+        password: await this.hashPassword(createUserInput.password || ''),
+      },
+      include: { ...this.includesRelation },
+    });
+  }
+
+  async update(id: number, updateUserInput: UpdateUserInput) {
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        ...updateUserInput,
+        password: await this.hashPassword(updateUserInput.password || ''),
+      },
+      include: { ...this.includesRelation },
+    });
+  }
+
+  async delete(id: number) {
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
 }

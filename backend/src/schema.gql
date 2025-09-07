@@ -2,40 +2,230 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserModel {
+type Base {
   id: Int!
   name: String!
-  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Task {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String
+  status: String!
+  userId: Int!
+  projectId: Int!
+  user: User!
+  project: Project!
+}
+
+type Timesheet {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  description: String!
+  date: DateTime!
+  timeSpent: Float!
+  userId: Int!
+  projectId: Int!
+  user: User!
+  project: Project!
 }
 
 type Project {
   id: Int!
   name: String!
   description: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tasks: [Task]!
+  timesheets: [Timesheet]!
+  responsible: User!
+  responsibleId: Int!
+  comments: [Comment]!
+}
+
+type Comment {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  content: String!
+  userId: Int!
+  user: User!
+  projectId: Int
+  project: Project
+  taskId: Int
+  task: Task
+  parentId: Int
+  parent: Comment
+  replies: [Comment]!
+}
+
+type User {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  password: String!
+  phone: String
+  mobile: String
+  firstName: String!
+  lastName: String
+  status: Boolean!
+  address: String
+  bio: String
+  birthDate: DateTime
+  role: String!
+  projects: [Project]!
+  tasks: [Task]!
+  timesheets: [Timesheet]!
+  comments: [Comment]!
 }
 
 type Query {
-  users: [UserModel!]!
+  users: [User!]!
+  getUser(id: Int!): User!
   projects: [Project!]!
-  findOne(id: Int!): Project!
+  findOne(id: Int!): Task!
+  tasks: [Task!]!
+  base(id: Int!): Base!
+  timesheet(id: Int!): Timesheet!
+  comments: [Comment!]!
+  comment(id: Int!): Comment!
 }
 
 type Mutation {
-  createUser(name: String!, email: String!): UserModel!
-  updateUser(id: Int!, name: String!, email: String!): UserModel!
-  deleteUser(id: Int!): UserModel!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  deleteUser(id: Int!): User!
   createProject(createProjectInput: CreateProjectInput!): Project!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   deleteProject(id: Int!): Project!
+  createTask(createTaskInput: CreateTaskInput!): Task!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  removeTask(id: Int!): Task!
+  createBase(createBaseInput: CreateBaseInput!): Base!
+  updateBase(updateBaseInput: UpdateBaseInput!): Base!
+  removeBase(id: Int!): Base!
+  createTimesheet(createTimesheetInput: CreateTimesheetInput!): Timesheet!
+  updateTimesheet(updateTimesheetInput: UpdateTimesheetInput!): Timesheet!
+  removeTimesheet(id: Int!): Timesheet!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  removeComment(id: Int!): Comment!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  phone: String
+  mobile: String
+  firstName: String!
+  lastName: String
+  status: Boolean! = true
+  address: String
+  bio: String
+  birthDate: DateTime
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  phone: String
+  mobile: String
+  firstName: String
+  lastName: String
+  status: Boolean = true
+  address: String
+  bio: String
+  birthDate: DateTime
+  id: Int!
 }
 
 input CreateProjectInput {
   name: String!
   description: String
+  responsibleId: Int!
 }
 
 input UpdateProjectInput {
   name: String
   description: String
+  responsibleId: Int
+  id: Int!
+}
+
+input CreateTaskInput {
+  title: String!
+  description: String
+  userId: Int!
+  projectId: Int!
+}
+
+input UpdateTaskInput {
+  title: String
+  description: String
+  userId: Int
+  projectId: Int
+  id: Int!
+}
+
+input CreateBaseInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateBaseInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateTimesheetInput {
+  description: String!
+  date: DateTime!
+  timeSpent: Float!
+  userId: Int!
+  projectId: Int!
+}
+
+input UpdateTimesheetInput {
+  description: String
+  date: DateTime
+  timeSpent: Float
+  userId: Int
+  projectId: Int
+  id: Int!
+}
+
+input CreateCommentInput {
+  content: String!
+  userId: Int!
+  projectId: Int
+  taskId: Int
+  parentId: Int
+}
+
+input UpdateCommentInput {
+  content: String
+  userId: Int
+  projectId: Int
+  taskId: Int
+  parentId: Int
   id: Int!
 }

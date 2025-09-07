@@ -1,19 +1,19 @@
 // src/App.tsx
-import { Routes, Route, Navigate } from 'react-router-dom';
-import AppLayout from './layout/AppLayout';
-import User from './features/users/UserPage';
-import Project from './features/projects/pages/ProjectPage';
-import TaskList from './features/tasks/TaskList';
+import { Routes, Route } from 'react-router-dom';
+import HomePage from './pages/Home';
+import LoginPage from './pages/Login';
+import DashboardLayout from './layout/DashboardLayout';
+import Header from './components/Header';
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<AppLayout />}>
-        <Route path="/" element={<Navigate to="/users" />} />
-        <Route path="/users" element={<User />} />
-        <Route path="/projects" element={<Project />} />
-        <Route path="/tasks" element={<TaskList />} />
-      </Route>
-    </Routes>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard/*" element={<DashboardLayout />} />
+      </Routes>
+    </div>
   );
 }

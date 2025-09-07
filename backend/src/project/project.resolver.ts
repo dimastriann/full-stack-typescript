@@ -9,7 +9,9 @@ export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
 
   @Mutation(() => Project)
-  createProject(@Args('createProjectInput') createProjectInput: CreateProjectInput) {
+  createProject(
+    @Args('createProjectInput') createProjectInput: CreateProjectInput,
+  ) {
     return this.projectService.create(createProjectInput);
   }
 
@@ -24,8 +26,13 @@ export class ProjectResolver {
   }
 
   @Mutation(() => Project)
-  updateProject(@Args('updateProjectInput') updateProjectInput: UpdateProjectInput) {
-    return this.projectService.update(updateProjectInput.id, updateProjectInput);
+  updateProject(
+    @Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
+  ) {
+    return this.projectService.update(
+      updateProjectInput.id,
+      updateProjectInput,
+    );
   }
 
   @Mutation(() => Project)
