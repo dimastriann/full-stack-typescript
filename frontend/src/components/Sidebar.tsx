@@ -1,7 +1,10 @@
-import { NavLink } from 'react-router-dom';
-import { UsersIcon, FolderIcon, ClipboardListIcon } from 'lucide-react';
+import { NavLink, Navigate } from 'react-router-dom';
+import { UsersIcon, FolderIcon, ClipboardListIcon, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthProvider';
 
 export default function Sidebar() {
+  const { logout } = useAuth();
+
   return (
     <aside className="w-64 bg-white shadow-lg p-6 space-y-4 max-lg:hidden">
       <h2 className="text-lg font-semibold text-[#3b0a84] mb-4">Flow Panel</h2>
@@ -54,6 +57,13 @@ export default function Sidebar() {
         <ClipboardListIcon size={18} className="m-1" />{' '}
         <span className="ms-2">Reports</span>
       </NavLink>
+      <div
+        onClick={logout}
+        className="flex hover:bg-gray-100 py-2 px-3 rounded-lg cursor-pointer"
+      >
+        <LogOut size={18} className="m-1" />{' '}
+        <span className="ms-2">Logout</span>
+      </div>
     </aside>
   );
 }

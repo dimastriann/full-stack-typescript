@@ -1,15 +1,27 @@
+import { useState } from 'react';
+import { useAuth } from '../context/AuthProvider';
+
 export default function LoginPage(): React.ReactElement {
+  const [name, setName] = useState<string>('');
+  const { login } = useAuth();
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(name);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#3b0a84] to-[#5e60ce] text-white px-4">
       <h2 className="text-3xl font-bold mb-6">Login to ProjectFlow</h2>
       <form className="w-full max-w-sm space-y-4 bg-white text-black p-6 rounded-lg shadow">
         <div>
           <label htmlFor="email" className="block mb-1 font-medium">
-            Email
+            Email/Username
           </label>
           <input
-            type="email"
+            type="text"
             id="email"
+            onChange={(e) => setName(e.target.value)}
             className="w-full px-4 py-2 rounded border"
             required
           />
@@ -27,6 +39,7 @@ export default function LoginPage(): React.ReactElement {
         </div>
         <button
           type="submit"
+          onClick={handleLogin}
           className="w-full bg-[#3b0a84] text-white px-4 py-2 rounded hover:bg-[#2e0768]"
         >
           Login
