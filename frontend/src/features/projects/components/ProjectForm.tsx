@@ -1,6 +1,6 @@
 import { useProjects } from '../hooks/useProjects';
 import type { ProjectType } from '../../../types/Projects';
-import useUsers from '../../users/hooks/useUsers';
+// import useUsers from '../../users/hooks/useUsers';
 
 type ProjectFormProps = {
   projectInput: ProjectType | null;
@@ -13,7 +13,7 @@ type ProjectFormProps = {
 
 export default function ProjectForm(props: ProjectFormProps) {
   const { updateProject, createProject, refetch } = useProjects();
-  const { users } = useUsers();
+  // const { users } = useUsers();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,11 +68,11 @@ export default function ProjectForm(props: ProjectFormProps) {
         className="w-full border p-2 rounded"
       >
         <option value="">Select User</option>
-        {users.map((u: any) => (
+        {/* {users.map((u: any) => (
           <option key={u.id} value={u.id}>
             {u.name}
           </option>
-        ))}
+        ))} */}
       </select>
       <textarea
         placeholder="Description"

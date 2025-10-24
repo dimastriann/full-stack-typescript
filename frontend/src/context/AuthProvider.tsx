@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (token) {
       setSession(token);
     }
-  }, []);
+  }, [session]);
 
   const login = async (token: string) => {
     setCookie('session_id', token, 1);

@@ -1,7 +1,8 @@
-import React from 'react';
-import useUsers, { useUserStore } from '../hooks/useUsers';
+import React, { useState } from 'react';
+import { useUserContext } from '../hooks/useUsers';
 import type { UserType } from '../../../types/Users';
-import { useNavigate } from 'react-router-dom';
+import ErrorSection from '../../../components/ErrorSection';
+// import { useNavigate } from 'react-router-dom';
 
 // Separate component for individual user rows to prevent unnecessary re-renders
 const UserRow = React.memo(
@@ -34,9 +35,6 @@ const UserRow = React.memo(
       <td className="px-4 py-2 border">{user.mobile}</td>
       <td className="px-4 py-2 border">{user.role}</td>
       <td className="px-4 py-2 border text-center">
-        {/* <span className={`p-1 text-white rounded-lg ${user.status ? 'bg-green-600' : 'bg-red-600'}`}>
-                {user.status ? "Active" : "Inactive"}
-            </span> */}
         <span
           className={`px-2 py-0.5 rounded-full text-xs font-medium ${
             user.status
@@ -68,17 +66,17 @@ const UserRow = React.memo(
 UserRow.displayName = 'UserRow';
 
 export default function UserList() {
-  const { deleteUser, refetch, loading, users, error } = useUsers();
-  const setEditingUser = useUserStore((state) => state.setEditingUser);
-  const navigate = useNavigate();
-
-  // Combine multiple selectors into one to reduce subscriptions
-  // const { users, error, loading, setEditingUser } = useUserStore((state) => ({
-  //     users: state.users,
-  //     error: state.error,
-  //     loading: state.loading,
-  //     setEditingUser: state.setEditingUser
-  // }));
+  const {
+    loading,
+    records,
+    error,
+    refetch,
+    editingRecord,
+    setEditingRecord,
+    deleteRecord,
+  } = useUserContext();
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  // const navigate = useNavigate();
 
   // Memoize event handlers to prevent recreation on every render
   const changeCheckbox = React.useCallback((e: React.ChangeEvent) => {
@@ -86,43 +84,62 @@ export default function UserList() {
   }, []);
 
   const handleEditUser = React.useCallback(
-    (user: UserType) => {
-      setEditingUser(true, user);
-      navigate(`/dashboard/user/${user.id}`);
+    // (user: UserType) => {
+    //   setEditingUser(true, user);
+    //   navigate(`/dashboard/user/${user.id}`);
+    // },
+    // [setEditingUser],
+    () => {
+      console.log('click edit user');
     },
-    [setEditingUser],
+    [],
   );
 
   const handleDeleteUser = React.useCallback(
     async (user: UserType) => {
       if (confirm(`Delete user "${user.name}"?`)) {
-        await deleteUser({ variables: { id: user.id } });
-        await refetch();
+        try {
+          await deleteRecord({ variables: { id: user.id } });
+          await refetch();
+        } catch (error) {
+          console.warn(error);
+          setErrorMsg(`${error}`);
+        }
       }
     },
-    [deleteUser, refetch],
+    [deleteRecord, refetch],
+    // () => {
+    //   console.log('click delete user');
+    // },
+    // []
   );
 
-  // Memoize the table rows to prevent unnecessary re-renders
-  const tableRows = React.useMemo(
-    () =>
-      users.map((user: UserType) => (
-        <UserRow
-          key={user.id}
-          user={user}
-          onEdit={handleEditUser}
-          onDelete={handleDeleteUser}
-          onChangeCheckbox={changeCheckbox}
-        />
-      )),
-    [users, changeCheckbox, handleEditUser, handleDeleteUser],
-  );
+  // // Memoize the table rows to prevent unnecessary re-renders
+  // const tableRows = React.useMemo(
+  //   () =>
+  //     users.map((user: UserType) => (
+  //       <UserRow
+  //         key={user.id}
+  //         user={user}
+  //         onEdit={handleEditUser}
+  //         onDelete={handleDeleteUser}
+  //         onChangeCheckbox={changeCheckbox}
+  //       />
+  //     )),
+  //   [users, changeCheckbox, handleEditUser, handleDeleteUser],
+  // );
 
   if (loading) return <p>Loading...</p>;
+  if (!loading) {
+    console.info('users', records);
+  }
 
   return (
     <div className="">
       {/* Table */}
+      {errorMsg ? (
+        <ErrorSection errorMessage={errorMsg} close={setErrorMsg} />
+      ) : null}
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -133,7 +150,7 @@ export default function UserList() {
             <tr className="bg-gray-200">
               <th className="text-center px-4 py-2 border w-[5%]">
                 <input
-                  onChange={changeCheckbox}
+                  // onChange={changeCheckbox}
                   name="all_checked"
                   type="checkbox"
                 />
@@ -148,7 +165,18 @@ export default function UserList() {
               <th className="text-center px-4 py-2 border w-[15%]">Actions</th>
             </tr>
           </thead>
-          <tbody>{tableRows}</tbody>
+          {/* <tbody>{tableRows}</tbody> */}
+          <tbody>
+            {records.map((user) => (
+              <UserRow
+                key={user.id}
+                user={user}
+                onEdit={handleEditUser}
+                onDelete={handleDeleteUser}
+                onChangeCheckbox={changeCheckbox}
+              />
+            ))}
+          </tbody>
         </table>
       )}
     </div>

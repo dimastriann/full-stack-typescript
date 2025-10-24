@@ -1,7 +1,7 @@
 // features/tasks/components/TaskForm.tsx
 import { useState } from 'react';
 import useTasks from '../hooks/useTasks';
-import useUsers from '../../users/hooks/useUsers';
+// import useUsers from '../../users/hooks/useUsers';
 import { useProjects } from '../../projects/hooks/useProjects';
 
 export default function TaskForm({
@@ -20,7 +20,7 @@ export default function TaskForm({
   });
 
   const { createTask, updateTask, refetch } = useTasks();
-  const { users } = useUsers();
+  // const { users } = useUsers();
   const { projects } = useProjects();
 
   const handleChange = (
@@ -84,11 +84,11 @@ export default function TaskForm({
         className="w-full border p-2 rounded"
       >
         <option value="">Select User</option>
-        {users.map((u: any) => (
+        {/* {users.map((u: any) => (
           <option key={u.id} value={u.id}>
             {u.name}
           </option>
-        ))}
+        ))} */}
       </select>
 
       <select
