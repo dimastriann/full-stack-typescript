@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type AuthContext = {
@@ -14,9 +14,10 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<string>('');
+  const [session, setSession] = useState<string>(getCookie("session_id"));
   const navigate = useNavigate();
 
+  // TODO: change to persist DB or JWT Session
   function setCookie(cname: string, cvalue: string, exdays: number) {
     const d = new Date();
     d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
   }
 
+  // TODO: change to persist DB or JWT Session
   function getCookie(cname: string) {
     let name = cname + '=';
     let ca = document.cookie.split(';');
@@ -38,13 +40,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     return '';
   }
-
-  useEffect(() => {
-    const token = getCookie('session_id');
-    if (token) {
-      setSession(token);
-    }
-  }, [session]);
 
   const login = async (token: string) => {
     setCookie('session_id', token, 1);

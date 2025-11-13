@@ -7,6 +7,7 @@ declare const enum UserRole {
 export type UserType = {
   id?: number;
   name: string;
+  lastName?: string;
   email: string;
   password: string;
   role?: UserRole.USER;

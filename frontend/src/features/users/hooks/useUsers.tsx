@@ -43,6 +43,7 @@ export const UserContext = createContext<UserStoreModel>({
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { data, loading, error, refetch } = useQuery(GET_USERS);
+  console.info("use query", data)
   const [createUser] = useMutation(CREATE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
   const [deleteUser] = useMutation(DELETE_USER);

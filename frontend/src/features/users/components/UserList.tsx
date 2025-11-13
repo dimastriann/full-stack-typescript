@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useUserContext } from '../hooks/useUsers';
 import type { UserType } from '../../../types/Users';
 import ErrorSection from '../../../components/ErrorSection';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 
 // Separate component for individual user rows to prevent unnecessary re-renders
 const UserRow = React.memo(
@@ -71,12 +72,12 @@ export default function UserList() {
     records,
     error,
     refetch,
-    editingRecord,
+    // editingRecord,
     setEditingRecord,
     deleteRecord,
   } = useUserContext();
   const [errorMsg, setErrorMsg] = useState<string>('');
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Memoize event handlers to prevent recreation on every render
   const changeCheckbox = React.useCallback((e: React.ChangeEvent) => {
@@ -84,15 +85,15 @@ export default function UserList() {
   }, []);
 
   const handleEditUser = React.useCallback(
-    // (user: UserType) => {
-    //   setEditingUser(true, user);
-    //   navigate(`/dashboard/user/${user.id}`);
-    // },
-    // [setEditingUser],
-    () => {
-      console.log('click edit user');
+    (user: UserType) => {
+      setEditingRecord(user);
+      navigate(`/dashboard/user/${user.id}`);
     },
     [],
+    // () => {
+    //   console.log('click edit user');
+    // },
+    // [],
   );
 
   const handleDeleteUser = React.useCallback(
@@ -145,12 +146,20 @@ export default function UserList() {
       ) : error ? (
         <p>Error fetching users</p>
       ) : (
-        <table className="min-w-full table-auto text-sm border-collapse">
+        <div>
+          <button
+            onClick={() => navigate(`/dashboard/user/new`)}
+            className="rounded-md bg-[#3b0a84] ps-2 pe-3 py-2 text-sm font-medium text-white hover:bg-[#2a0761] transition-colors"
+          >
+            <Plus className="inline" size={'1.2rem'} />
+            Create
+          </button>
+        <table className="min-w-full table-auto text-sm border-collapse mt-3">
           <thead>
             <tr className="bg-gray-200">
               <th className="text-center px-4 py-2 border w-[5%]">
                 <input
-                  // onChange={changeCheckbox}
+                  onChange={changeCheckbox}
                   name="all_checked"
                   type="checkbox"
                 />
@@ -178,6 +187,7 @@ export default function UserList() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );
