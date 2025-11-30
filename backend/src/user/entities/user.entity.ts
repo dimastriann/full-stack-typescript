@@ -10,8 +10,8 @@ export class User extends Base {
   @Field()
   email: string;
 
-  @Field()
-  password: string;
+  // @Field()
+  // password: string;
 
   @Field({ nullable: true })
   phone: string;
@@ -50,5 +50,5 @@ export class User extends Base {
   timesheets?: [Timesheet];
 
   @Field(() => [CommentChat], { nullable: 'items' })
-  comments: [CommentChat];
+  comments?: [CommentChat];
 }

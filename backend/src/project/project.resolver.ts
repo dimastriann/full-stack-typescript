@@ -16,8 +16,11 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project])
-  projects() {
-    return this.projectService.findAll();
+  projects(
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ) {
+    return this.projectService.findAll(skip, take);
   }
 
   @Query(() => Project)

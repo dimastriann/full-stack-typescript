@@ -14,7 +14,7 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<string>(getCookie("session_id"));
+  const [session, setSession] = useState<string>(getCookie('session_id'));
   const navigate = useNavigate();
 
   // TODO: change to persist DB or JWT Session

@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBaseInput } from './dto/create-base.input';
-import { UpdateBaseInput } from './dto/update-base.input';
 
 @Injectable()
 export class BaseService {
-  create(createBaseInput: CreateBaseInput) {
+  create() {
     return 'This action adds a new base';
   }
 
@@ -16,7 +14,7 @@ export class BaseService {
     return `This action returns a #${id} base`;
   }
 
-  update(id: number, updateBaseInput: UpdateBaseInput) {
+  update(id: number) {
     return `This action updates a #${id} base`;
   }
 

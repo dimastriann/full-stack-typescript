@@ -1,15 +1,15 @@
 {
-  "name": "try_ts_fullstack",
+  "name": "typescript-fullstack",
   "version": "1.0.0",
-  "description": "",
+  "description": "Running TypeScript Fullstack Application",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run --prefix backend start:dev\" \"npm run --prefix frontend dev\""
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
+  "type": "module",
   "devDependencies": {
     "concurrently": "^9.2.0"
   }

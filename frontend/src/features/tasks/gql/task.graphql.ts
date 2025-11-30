@@ -7,10 +7,35 @@ export const GET_TASKS = gql`
       title
       description
       status
+      userId
+      projectId
       user {
+        id
         name
       }
       project {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_TASK = gql`
+  query ($id: Int!) {
+    getTask(id: $id) {
+      id
+      title
+      description
+      status
+      userId
+      projectId
+      user {
+        id
+        name
+      }
+      project {
+        id
         name
       }
     }
@@ -26,8 +51,8 @@ export const CREATE_TASK = gql`
 `;
 
 export const UPDATE_TASK = gql`
-  mutation UpdateTask($id: Int!, $input: UpdateTaskInput!) {
-    updateTask(id: $id, updateTaskInput: $input) {
+  mutation UpdateTask($input: UpdateTaskInput!) {
+    updateTask(updateTaskInput: $input) {
       id
     }
   }

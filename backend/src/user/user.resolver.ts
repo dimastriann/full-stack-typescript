@@ -9,8 +9,11 @@ export class UserResolver {
   constructor(private userService: UserService) {}
 
   @Query(() => [User])
-  users() {
-    return this.userService.findAll();
+  users(
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ) {
+    return this.userService.findAll(skip, take);
   }
 
   @Query(() => User)

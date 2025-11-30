@@ -1,6 +1,16 @@
-import { NavLink, Navigate } from 'react-router-dom';
-import { UsersIcon, FolderIcon, ClipboardListIcon, LogOut } from 'lucide-react';
-import { useAuth } from '../context/AuthProvider';
+import { NavLink } from 'react-router-dom';
+import {
+  UsersIcon,
+  FolderIcon,
+  ClipboardListIcon,
+  LogOut,
+  CircleGauge,
+  Timer,
+  Calendar,
+  User,
+  ListCheck,
+} from 'lucide-react';
+import { useAuth } from '../../context/AuthProvider';
 
 export default function Sidebar() {
   const { logout } = useAuth();
@@ -8,6 +18,13 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-white shadow-lg p-6 space-y-4 max-lg:hidden">
       <h2 className="text-lg font-semibold text-[#3b0a84] mb-4">Flow Panel</h2>
+      <NavLink
+        to="/dashboard"
+        className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
+      >
+        <CircleGauge size={18} className="m-1" />
+        <span className="ms-2">Overview</span>
+      </NavLink>
       <NavLink
         to="/dashboard/users"
         className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
@@ -26,36 +43,28 @@ export default function Sidebar() {
         to="/dashboard/tasks"
         className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
       >
-        <ClipboardListIcon size={18} className="m-1" />{' '}
+        <ListCheck size={18} className="m-1" />{' '}
         <span className="ms-2">Tasks</span>
       </NavLink>
       <NavLink
         to="/dashboard/profile"
         className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
       >
-        <ClipboardListIcon size={18} className="m-1" />{' '}
+        <Timer size={18} className="m-1" />{' '}
         <span className="ms-2">Timesheets</span>
       </NavLink>
       <NavLink
         to="/dashboard/calendar"
         className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
       >
-        <ClipboardListIcon size={18} className="m-1" />{' '}
+        <Calendar size={18} className="m-1" />{' '}
         <span className="ms-2">Calendar</span>
       </NavLink>
       <NavLink
-        to="/dashboard/blank"
+        to="/dashboard/profile"
         className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
       >
-        <ClipboardListIcon size={18} className="m-1" />{' '}
-        <span className="ms-2">Profile</span>
-      </NavLink>
-      <NavLink
-        to="/dashboard/reports"
-        className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
-      >
-        <ClipboardListIcon size={18} className="m-1" />{' '}
-        <span className="ms-2">Reports</span>
+        <User size={18} className="m-1" /> <span className="ms-2">Profile</span>
       </NavLink>
       <div
         onClick={logout}

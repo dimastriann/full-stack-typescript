@@ -1,21 +1,19 @@
 import { gql } from '@apollo/client';
 
 export const GET_USERS = gql`
-  query {
-    users {
+  query GetUsers($skip: Int, $take: Int) {
+    users(skip: $skip, take: $take) {
       id
       name
       email
-      password
-      phone
-      mobile
+      role
+      status
       firstName
       lastName
-      status
+      mobile
+      birthDate
       address
       bio
-      birthDate
-      role
     }
   }
 `;
@@ -26,7 +24,6 @@ export const GET_USER = gql`
       id
       name
       email
-      password
       phone
       mobile
       firstName
@@ -46,16 +43,34 @@ export const CREATE_USER = gql`
       id
       name
       email
+      phone
+      mobile
+      firstName
+      lastName
+      status
+      address
+      bio
+      birthDate
+      role
     }
   }
 `;
 
 export const UPDATE_USER = gql`
-  mutation ($id: Int!, $input: CreateUserInput!) {
-    updateUser(id: $id, updateUserInput: $input) {
+  mutation ($input: UpdateUserInput!) {
+    updateUser(updateUserInput: $input) {
       id
       name
       email
+      phone
+      mobile
+      firstName
+      lastName
+      status
+      address
+      bio
+      birthDate
+      role
     }
   }
 `;

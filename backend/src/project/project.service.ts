@@ -18,8 +18,10 @@ export class ProjectService {
     });
   }
 
-  async findAll() {
+  async findAll(skip?: number, take?: number) {
     return this.prisma.project.findMany({
+      skip,
+      take,
       include: {
         ...this.includeRelation,
         comments: { include: { user: true } },

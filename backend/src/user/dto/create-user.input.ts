@@ -1,4 +1,14 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, registerEnumType } from '@nestjs/graphql';
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  USER = 'USER',
+}
+
+registerEnumType(UserRole, {
+  name: 'UserRole',
+});
 
 @InputType()
 export class CreateUserInput {
@@ -34,4 +44,7 @@ export class CreateUserInput {
 
   @Field({ nullable: true })
   birthDate: Date;
+
+  @Field(() => UserRole, { defaultValue: UserRole.USER })
+  role: UserRole;
 }

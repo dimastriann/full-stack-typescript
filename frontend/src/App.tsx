@@ -1,10 +1,10 @@
 // src/App.tsx
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
-import DashboardLayout from './layout/DashboardLayout';
 import Header from './components/Header';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import DashboardLayout from './layout/DashboardLayout';
 
 export default function App() {
   return (

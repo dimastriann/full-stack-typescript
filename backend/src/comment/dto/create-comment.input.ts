@@ -1,5 +1,4 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { User } from 'src/user/entities/user.entity';
 
 @InputType()
 export class CreateCommentInput {

@@ -16,8 +16,10 @@ export class UserService {
     return { projects: true, tasks: true, timesheets: true };
   }
 
-  async findAll() {
+  async findAll(skip?: number, take?: number) {
     return this.prisma.user.findMany({
+      skip,
+      take,
       include: { ...this.includesRelation, comments: true },
     });
   }
@@ -40,12 +42,14 @@ export class UserService {
   }
 
   async update(id: number, updateUserInput: UpdateUserInput) {
+    if (updateUserInput.password) {
+      updateUserInput.password = await this.hashPassword(
+        updateUserInput.password,
+      );
+    }
     return this.prisma.user.update({
       where: { id },
-      data: {
-        ...updateUserInput,
-        password: await this.hashPassword(updateUserInput.password || ''),
-      },
+      data: updateUserInput,
       include: { ...this.includesRelation },
     });
   }

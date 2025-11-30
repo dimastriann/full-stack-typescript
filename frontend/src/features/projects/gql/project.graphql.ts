@@ -1,11 +1,17 @@
 import { gql } from '@apollo/client';
 
 export const GET_PROJECTS = gql`
-  query {
-    projects {
+  query GetProjects($skip: Int, $take: Int) {
+    projects(skip: $skip, take: $take) {
       id
       name
       description
+      status
+      responsibleId
+      responsible {
+        id
+        name
+      }
     }
   }
 `;
@@ -15,6 +21,9 @@ export const CREATE_PROJECT = gql`
     createProject(createProjectInput: $createProjectInput) {
       id
       name
+      description
+      status
+      responsibleId
     }
   }
 `;
@@ -24,6 +33,9 @@ export const UPDATE_PROJECT = gql`
     updateProject(updateProjectInput: $updateProjectInput) {
       id
       name
+      description
+      status
+      responsibleId
     }
   }
 `;

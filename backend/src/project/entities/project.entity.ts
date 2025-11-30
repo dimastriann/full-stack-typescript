@@ -37,5 +37,5 @@ export class Project {
   responsibleId?: number;
 
   @Field(() => [CommentChat], { nullable: 'items' })
-  comments: [CommentChat];
+  comments?: [CommentChat];
 }

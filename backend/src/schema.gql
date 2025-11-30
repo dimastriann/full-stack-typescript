@@ -79,7 +79,6 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   email: String!
-  password: String!
   phone: String
   mobile: String
   firstName: String!
@@ -96,11 +95,12 @@ type User {
 }
 
 type Query {
-  users: [User!]!
+  users(skip: Int, take: Int): [User!]!
   getUser(id: Int!): User!
-  projects: [Project!]!
-  findOne(id: Int!): Task!
+  projects(skip: Int, take: Int): [Project!]!
+  findOne(id: Int!): Project!
   tasks: [Task!]!
+  getTask(id: Int!): Task!
   base(id: Int!): Base!
   timesheet(id: Int!): Timesheet!
   comments: [Comment!]!
@@ -140,6 +140,13 @@ input CreateUserInput {
   address: String
   bio: String
   birthDate: DateTime
+  role: UserRole! = USER
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  USER
 }
 
 input UpdateUserInput {
@@ -154,6 +161,7 @@ input UpdateUserInput {
   address: String
   bio: String
   birthDate: DateTime
+  role: UserRole = USER
   id: Int!
 }
 
@@ -161,25 +169,48 @@ input CreateProjectInput {
   name: String!
   description: String
   responsibleId: Int!
+  status: ProjectStatus! = DRAFT
+}
+
+"""Project status"""
+enum ProjectStatus {
+  DRAFT
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  CANCELED
 }
 
 input UpdateProjectInput {
   name: String
   description: String
   responsibleId: Int
+  status: ProjectStatus = DRAFT
   id: Int!
 }
 
 input CreateTaskInput {
   title: String!
   description: String
+  status: TaskStatus! = TODO
   userId: Int!
   projectId: Int!
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DEPLOYED
+  TESTING
+  REVISION
+  DONE
+  CANCELED
 }
 
 input UpdateTaskInput {
   title: String
   description: String
+  status: TaskStatus = TODO
   userId: Int
   projectId: Int
   id: Int!
