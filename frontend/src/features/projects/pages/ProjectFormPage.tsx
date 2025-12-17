@@ -14,7 +14,7 @@ export default function ProjectFormPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6">
+    <div className="mx-auto py-6">
       <div className="mb-6 flex items-center">
         <button
           onClick={handleCancel}

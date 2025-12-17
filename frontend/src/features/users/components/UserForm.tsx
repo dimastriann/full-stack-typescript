@@ -9,9 +9,14 @@ import { useUserContext } from '../hooks/useUsers';
 interface UserFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
+  userId?: string | number; // Optional prop to override params
 }
 
-export default function UserForm({ onSuccess, onCancel }: UserFormProps) {
+export default function UserForm({
+  onSuccess,
+  onCancel,
+  userId: propUserId,
+}: UserFormProps) {
   const defaultValues = {
     name: '',
     email: '',
@@ -27,10 +32,12 @@ export default function UserForm({ onSuccess, onCancel }: UserFormProps) {
     role: 'USER',
   };
 
-  const { userId } = useParams();
+  const { userId: paramUserId } = useParams();
+  // Use propUserId if provided (converted to string for consistency), else paramUserId
+  const userId = propUserId ? String(propUserId) : paramUserId;
   const isEditMode = !!userId;
 
-  // Only fetch if we are in edit mode (have a userId from params)
+  // Only fetch if we are in edit mode (have a userId)
   const { data, loading: queryLoading } = useQuery(GET_USER, {
     skip: !isEditMode,
     variables: { id: parseInt(userId || '0') },

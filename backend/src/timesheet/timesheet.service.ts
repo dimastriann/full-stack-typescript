@@ -18,8 +18,11 @@ export class TimesheetService {
     });
   }
 
-  findAll() {
+  findAll(skip?: number, take?: number, taskId?: number) {
     return this.prisma.timesheet.findMany({
+      skip,
+      take,
+      where: taskId ? { taskId } : undefined,
       include: { ...this.includeRelation },
     });
   }

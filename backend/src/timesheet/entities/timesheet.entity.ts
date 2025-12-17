@@ -2,6 +2,7 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Base } from 'src/base/entities/base.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Project } from 'src/project/entities/project.entity';
+import { Task } from 'src/task/entities/task.entity';
 
 @ObjectType()
 export class Timesheet extends Base {
@@ -25,4 +26,10 @@ export class Timesheet extends Base {
 
   @Field(() => Project)
   project: Project;
+
+  @Field(() => Task)
+  task: Task;
+
+  @Field(() => Int)
+  taskId: number;
 }

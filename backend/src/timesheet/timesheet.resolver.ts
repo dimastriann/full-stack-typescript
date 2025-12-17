@@ -15,12 +15,16 @@ export class TimesheetResolver {
     return this.timesheetService.create(createTimesheetInput);
   }
 
-  @Query(() => [Timesheet], { name: 'timesheet' })
-  findAll() {
-    return this.timesheetService.findAll();
+  @Query(() => [Timesheet], { name: 'timesheets' })
+  findAll(
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+    @Args('taskId', { type: () => Int, nullable: true }) taskId?: number,
+  ) {
+    return this.timesheetService.findAll(skip, take, taskId);
   }
 
-  @Query(() => Timesheet, { name: 'timesheet' })
+  @Query(() => Timesheet, { name: 'getTimesheet' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.timesheetService.findOne(id);
   }

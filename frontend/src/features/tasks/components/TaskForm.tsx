@@ -10,6 +10,7 @@ import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { TaskStatus } from '../../../types/Tasks';
+import TaskTimesheetTable from './TaskTimesheetTable';
 
 interface TaskFormProps {
   onSuccess?: () => void;
@@ -98,123 +99,146 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
     return <p className="p-4 text-red-600">Task not found</p>;
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Title</label>
-        <input
-          {...register('title', { required: 'Title is required' })}
-          placeholder="Task Title"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-        />
-        {errors.title && (
-          <span className="text-red-500 text-xs">{errors.title.message}</span>
-        )}
-      </div>
+    <div
+      className={`grid grid-cols-1 ${isEditMode ? 'lg:grid-cols-2' : ''} gap-6`}
+    >
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+          <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4">
+            Task Details
+          </h3>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Title
+            </label>
+            <input
+              {...register('title', { required: 'Title is required' })}
+              placeholder="Task Title"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+            />
+            {errors.title && (
+              <span className="text-red-500 text-xs">
+                {errors.title.message}
+              </span>
+            )}
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Description
-        </label>
-        <textarea
-          {...register('description')}
-          placeholder="Task Description"
-          rows={3}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-        />
-      </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Description
+            </label>
+            <textarea
+              {...register('description')}
+              placeholder="Task Description"
+              rows={3}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+            />
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Assigned User
-          </label>
-          <select
-            {...register('userId', { required: 'User is required' })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          >
-            <option value="">Select User</option>
-            {usersData?.users?.map((u: any) => (
-              <option key={u.id} value={u.id}>
-                {u.name}
-              </option>
-            ))}
-          </select>
-          {errors.userId && (
-            <span className="text-red-500 text-xs">
-              {errors.userId.message}
-            </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Assigned User
+              </label>
+              <select
+                {...register('userId', { required: 'User is required' })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                <option value="">Select User</option>
+                {usersData?.users?.map((u: any) => (
+                  <option key={u.id} value={u.id}>
+                    {u.name}
+                  </option>
+                ))}
+              </select>
+              {errors.userId && (
+                <span className="text-red-500 text-xs">
+                  {errors.userId.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Project
+              </label>
+              <select
+                {...register('projectId', { required: 'Project is required' })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                <option value="">Select Project</option>
+                {projectsData?.projects?.map((p: ProjectType) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+              {errors.projectId && (
+                <span className="text-red-500 text-xs">
+                  {errors.projectId.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Status
+              </label>
+              <select
+                {...register('status')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                <option value={TaskStatus.TODO}>To Do</option>
+                <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+                <option value={TaskStatus.DEPLOYED}>Deployed</option>
+                <option value={TaskStatus.TESTING}>Testing</option>
+                <option value={TaskStatus.REVISION}>Revision</option>
+                <option value={TaskStatus.DONE}>Done</option>
+                <option value={TaskStatus.CANCELED}>Canceled</option>
+              </select>
+            </div>
+          </div>
+
+          {errorMsg && (
+            <div className="border-red-600 border-[1px] rounded-md my-2 p-2 text-red-600 bg-red-100 relative">
+              {errorMsg}
+              <X
+                className="cursor-pointer text-black absolute top-1 right-1 size-5"
+                onClick={() => setErrorMsg('')}
+              />
+            </div>
           )}
-        </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Project
-          </label>
-          <select
-            {...register('projectId', { required: 'Project is required' })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          >
-            <option value="">Select Project</option>
-            {projectsData?.projects?.map((p: ProjectType) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-          {errors.projectId && (
-            <span className="text-red-500 text-xs">
-              {errors.projectId.message}
-            </span>
-          )}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            {onCancel && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={mutationLoading}
+              className="inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              {mutationLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create'}
+            </button>
+          </div>
         </div>
+      </form>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Status
-          </label>
-          <select
-            {...register('status')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          >
-            <option value={TaskStatus.TODO}>To Do</option>
-            <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
-            <option value={TaskStatus.DEPLOYED}>Deployed</option>
-            <option value={TaskStatus.TESTING}>Testing</option>
-            <option value={TaskStatus.REVISION}>Revision</option>
-            <option value={TaskStatus.DONE}>Done</option>
-            <option value={TaskStatus.CANCELED}>Canceled</option>
-          </select>
-        </div>
-      </div>
-
-      {errorMsg && (
-        <div className="border-red-600 border-[1px] rounded-md my-2 p-2 text-red-600 bg-red-100 relative">
-          {errorMsg}
-          <X
-            className="cursor-pointer text-black absolute top-1 right-1 size-5"
-            onClick={() => setErrorMsg('')}
+      {isEditMode && task && (
+        <div className="space-y-4">
+          <TaskTimesheetTable
+            taskId={task.id}
+            userId={task.userId}
+            projectId={task.projectId}
           />
         </div>
       )}
-
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-        {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Cancel
-          </button>
-        )}
-        <button
-          type="submit"
-          disabled={mutationLoading}
-          className="inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-        >
-          {mutationLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create'}
-        </button>
-      </div>
-    </form>
+    </div>
   );
 }

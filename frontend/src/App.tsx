@@ -1,7 +1,7 @@
 // src/App.tsx
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home';
-import LoginPage from './pages/Login';
+import LoginPage from './features/auth/pages/LoginPage';
 import Header from './components/Header';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import DashboardLayout from './layout/DashboardLayout';

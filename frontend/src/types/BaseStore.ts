@@ -2,6 +2,7 @@ import { ApolloError } from '@apollo/client';
 import type { UserType } from './Users';
 import type { TaskType } from './Tasks';
 import type { ProjectType } from './Projects';
+import type { TimesheetType } from './Timesheets';
 
 export interface BaseStore<T> {
   records: T[];
@@ -24,3 +25,5 @@ export interface UserStoreModel extends BaseStore<UserType> {}
 export interface TaskStoreModel extends BaseStore<TaskType> {}
 
 export interface ProjectStoreModel extends BaseStore<ProjectType> {}
+
+export interface TimesheetStoreModel extends BaseStore<TimesheetType> {}

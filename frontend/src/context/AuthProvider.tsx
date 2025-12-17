@@ -3,58 +3,48 @@ import { useNavigate } from 'react-router-dom';
 
 type AuthContext = {
   session: string;
-  login: (val: string) => void;
+  user: any;
+  login: (userData: any) => void;
   logout: () => void;
 };
 
 export const AuthContext = createContext<AuthContext>({
   session: '',
+  user: null,
   login: () => undefined,
   logout: () => undefined,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<string>(getCookie('session_id'));
+  const [session, setSession] = useState<string>(
+    localStorage.getItem('session_id') || '',
+  );
+  const [user, setUser] = useState<any>(
+    JSON.parse(localStorage.getItem('user') || 'null'),
+  );
   const navigate = useNavigate();
 
-  // TODO: change to persist DB or JWT Session
-  function setCookie(cname: string, cvalue: string, exdays: number) {
-    const d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    let expires = 'expires=' + d.toUTCString();
-    document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-  }
-
-  // TODO: change to persist DB or JWT Session
-  function getCookie(cname: string) {
-    let name = cname + '=';
-    let ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return '';
-  }
-
-  const login = async (token: string) => {
-    setCookie('session_id', token, 1);
+  const login = (userData: any) => {
+    // For now, we simulate a token or just rely on the existence of user data
+    // In a real app we'd get a token from the backend
+    const token = 'simulated-token';
+    localStorage.setItem('session_id', token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setSession(token);
+    setUser(userData);
     navigate('/dashboard');
   };
 
   const logout = () => {
-    cookieStore.delete('session_id');
+    localStorage.removeItem('session_id');
+    localStorage.removeItem('user');
     setSession('');
+    setUser(null);
     navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ session, login, logout }}>
+    <AuthContext.Provider value={{ session, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -14,8 +14,12 @@ export class TaskResolver {
   }
 
   @Query(() => [Task])
-  tasks() {
-    return this.taskService.findAll();
+  tasks(
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+    @Args('projectId', { type: () => Int, nullable: true }) projectId?: number,
+  ) {
+    return this.taskService.findAll(skip, take, projectId);
   }
 
   @Query(() => Task)

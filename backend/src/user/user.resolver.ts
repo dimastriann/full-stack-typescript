@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import * as bcrypt from 'bcrypt';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -34,5 +35,25 @@ export class UserResolver {
   @Mutation(() => User)
   deleteUser(@Args('id', { type: () => Int }) id: number) {
     return this.userService.delete(id);
+  }
+
+  @Mutation(() => User)
+  async login(
+    @Args('email') email: string,
+    @Args('password') password: string,
+  ) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    let isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      // if bcrypt compare failed, try to compare plain password
+      isMatch = password === user.password;
+    }
+    if (!isMatch) {
+      throw new Error('Invalid credentials');
+    }
+    return user;
   }
 }

@@ -1,50 +1,45 @@
-// features/tasks/components/TaskList.tsx
-import React from 'react';
-import { useTasks } from '../hooks/useTasks';
-import TaskForm from './TaskForm';
-import { useState } from 'react';
-import type { TaskType } from '../../../types/Tasks';
+import React, { useState } from 'react';
+import { useTimesheets } from '../hooks/useTimesheets';
+import type { TimesheetType } from '../../../types/Timesheets';
+import { useNavigate } from 'react-router-dom';
 import {
+  Plus,
+  Trash2,
+  Eye,
+  Search,
   ChevronLeft,
   ChevronRight,
-  Eye,
-  Plus,
-  Search,
-  Trash2,
-  Layout,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import Modal from '../../../components/Dialog';
 import ErrorSection from '../../../components/ErrorSection';
-// import { DnDialog } from '../../../components/Dialog';
+import TimesheetForm from './TimesheetForm';
 
-const TaskRow = React.memo(
+const TimesheetRow = React.memo(
   ({
-    task,
+    timesheet,
     isChecked,
     isSelectionMode,
     onEdit,
     onDelete,
     onToggle,
   }: {
-    task: TaskType;
+    timesheet: TimesheetType;
     isChecked: boolean;
     isSelectionMode: boolean;
-    onEdit: (task: TaskType) => void;
-    onDelete: (task: TaskType) => void;
+    onEdit: (timesheet: TimesheetType) => void;
+    onDelete: (timesheet: TimesheetType) => void;
     onToggle: (id: number) => void;
   }) => (
     <tr
-      className={`hover: bg - gray - 50 cursor - pointer transition - colors ${isChecked ? 'bg-indigo-50' : ''} `}
+      className={`hover:bg-gray-50 cursor-pointer transition-colors ${isChecked ? 'bg-indigo-50' : ''}`}
       onClick={(e) => {
-        // Prevent toggling when clicking buttons
         if ((e.target as HTMLElement).closest('button')) return;
-        if (task.id) onToggle(task.id);
+        if (timesheet.id) onToggle(timesheet.id);
       }}
     >
       <td className="text-center w-[5%] p-3 border-b border-gray-100">
         <input
-          onChange={() => task.id && onToggle(task.id)}
+          onChange={() => timesheet.id && onToggle(timesheet.id)}
           checked={isChecked}
           type="checkbox"
           className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
@@ -52,30 +47,25 @@ const TaskRow = React.memo(
         />
       </td>
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-700">
-        {task.id}
+        {timesheet.id}
       </td>
       <td className="px-4 py-3 border-b border-gray-100 text-sm font-medium text-gray-900">
-        {task.title}
+        {timesheet.description}
       </td>
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {task.user?.name}
+        {new Date(timesheet.date).toLocaleDateString()}
       </td>
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {task.project?.name || '-'}
+        {timesheet.timeSpent}h
       </td>
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {task.status}
+        {timesheet.user?.name}
       </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-center">
-        <span
-          className={`px - 2 py - 1 rounded - full text - xs font - medium ${
-            task.status
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
-          } `}
-        >
-          {task.status}
-        </span>
+      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+        {timesheet.project?.name}
+      </td>
+      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+        {timesheet.task?.title || '-'}
       </td>
       <td className="px-4 py-3 border-b border-gray-100">
         <div className="flex items-center justify-center space-x-3">
@@ -84,7 +74,7 @@ const TaskRow = React.memo(
             className="text-indigo-600 hover:text-indigo-900 font-medium text-sm transition-colors"
             onClick={(e) => {
               e.stopPropagation();
-              onEdit(task);
+              onEdit(timesheet);
             }}
           >
             <Eye className="h-5 w-5" />
@@ -95,7 +85,7 @@ const TaskRow = React.memo(
               className="text-red-600 hover:text-red-900 font-medium text-sm transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete(task);
+                onDelete(timesheet);
               }}
             >
               <Trash2 className="h-5 w-5" />
@@ -107,9 +97,9 @@ const TaskRow = React.memo(
   ),
 );
 
-TaskRow.displayName = 'TaskRow';
+TimesheetRow.displayName = 'TimesheetRow';
 
-export default function TaskList() {
+export default function TimesheetList() {
   const {
     loading,
     records,
@@ -120,35 +110,34 @@ export default function TaskList() {
     page,
     setPage,
     pageSize,
-  } = useTasks();
+  } = useTimesheets();
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState<TaskType | null>(null);
+  const [timesheetToDelete, setTimesheetToDelete] =
+    useState<TimesheetType | null>(null);
 
-  // Search and Selection State
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  // Filter records based on search term
   const filteredRecords = React.useMemo(() => {
     if (!searchTerm) return records;
     const lowerTerm = searchTerm.toLowerCase();
     return records.filter(
-      (task) =>
-        task.title?.toLowerCase().includes(lowerTerm) ||
-        task.description?.toLowerCase().includes(lowerTerm),
+      (ts) =>
+        ts.description?.toLowerCase().includes(lowerTerm) ||
+        ts.user?.name?.toLowerCase().includes(lowerTerm) ||
+        ts.project?.name?.toLowerCase().includes(lowerTerm),
     );
   }, [records, searchTerm]);
 
-  // Checkbox Handlers
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       const allIds = filteredRecords
-        .map((task) => task.id)
+        .map((ts) => ts.id)
         .filter((id): id is number => id !== undefined);
       setSelectedIds(allIds);
     } else {
@@ -162,38 +151,43 @@ export default function TaskList() {
     );
   }, []);
 
-  const handleEditTask = React.useCallback(
-    (task: TaskType) => {
-      setEditingRecord(task);
-      navigate(`/ dashboard / task / ${task.id} `);
+  const handleEditTimesheet = React.useCallback(
+    (timesheet: TimesheetType) => {
+      setEditingRecord(timesheet);
+      // navigate(`/dashboard/timesheet/${timesheet.id}`); // Or use modal
+      setIsCreateModalOpen(true); // Using modal for now as per user request "similar to task/project" but task uses page, project uses page. Let's use modal for simplicity or page if preferred.
+      // Actually, TaskFormPage and ProjectEditPage exist. Let's use Modal for Create and maybe Modal for Edit too for now to be faster, or Page if needed.
+      // User said "similar to task and project CRUD". Project uses Page for Edit. Task uses Page for Edit.
+      // So I should probably use Page for Edit.
+      navigate(`/dashboard/timesheet/${timesheet.id}`);
     },
     [navigate, setEditingRecord],
   );
 
-  const handleDeleteClick = React.useCallback((task: TaskType) => {
-    setTaskToDelete(task);
+  const handleDeleteClick = React.useCallback((timesheet: TimesheetType) => {
+    setTimesheetToDelete(timesheet);
     setIsDeleteModalOpen(true);
   }, []);
 
   const confirmDelete = async () => {
-    if (taskToDelete?.id) {
+    if (timesheetToDelete?.id) {
       try {
-        await deleteRecord({ variables: { id: taskToDelete.id } });
+        await deleteRecord({ variables: { id: timesheetToDelete.id } });
         await refetch();
         setIsDeleteModalOpen(false);
-        setTaskToDelete(null);
-        // Remove from selection if it was selected
-        setSelectedIds((prev) => prev.filter((id) => id !== taskToDelete.id));
+        setTimesheetToDelete(null);
+        setSelectedIds((prev) =>
+          prev.filter((id) => id !== timesheetToDelete.id),
+        );
       } catch (error) {
         console.warn(error);
-        setErrorMsg(`${error} `);
+        setErrorMsg(`${error}`);
       }
     }
   };
 
   const confirmBulkDelete = async () => {
     try {
-      // Execute all deletes concurrently
       await Promise.all(
         selectedIds.map((id) => deleteRecord({ variables: { id } })),
       );
@@ -202,12 +196,12 @@ export default function TaskList() {
       setSelectedIds([]);
     } catch (error) {
       console.warn(error);
-      setErrorMsg(`Failed to delete some users: ${error} `);
+      setErrorMsg(`Failed to delete some timesheets: ${error}`);
     }
   };
 
   const handleCreateClick = () => {
-    setEditingRecord(null); // Clear editing record for new user
+    setEditingRecord(null);
     setIsCreateModalOpen(true);
   };
 
@@ -229,26 +223,23 @@ export default function TaskList() {
 
   return (
     <div className="bg-white rounded-lg shadow">
-      {/* Header Actions */}
       <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50 rounded-t-lg">
-        <h2 className="text-xl font-semibold text-gray-800">Tasks</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Timesheets</h2>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          {/* Search Bar */}
           <div className="relative flex-grow sm:flex-grow-0">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
             </div>
             <input
               type="text"
-              placeholder="Search users..."
+              placeholder="Search timesheets..."
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm w-full sm:w-64"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          {/* Bulk Delete Button */}
           {isSelectionMode && (
             <button
               onClick={() => setIsBulkDeleteModalOpen(true)}
@@ -259,39 +250,27 @@ export default function TaskList() {
             </button>
           )}
 
-          {/* Add User Button */}
           {!isSelectionMode && (
-            <>
-              <button
-                onClick={() => navigate('/dashboard/tasks')}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-              >
-                <Layout className="mr-2 h-4 w-4" />
-                Board
-              </button>
-              <button
-                onClick={handleCreateClick}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add
-              </button>
-            </>
+            <button
+              onClick={handleCreateClick}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add
+            </button>
           )}
         </div>
       </div>
 
-      {/* Error Message */}
       {errorMsg && (
         <div className="p-4">
           <ErrorSection errorMessage={errorMsg} close={setErrorMsg} />
         </div>
       )}
 
-      {/* Table */}
       {error ? (
         <div className="p-8 text-center text-red-600">
-          Error fetching users: {error.message}
+          Error fetching timesheets: {error.message}
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -310,10 +289,13 @@ export default function TaskList() {
                   ID
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200">
-                  Title
+                  Description
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200">
-                  Description
+                  Date
+                </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200">
+                  Time
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200">
                   User
@@ -322,7 +304,7 @@ export default function TaskList() {
                   Project
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200">
-                  Status
+                  Task
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200 text-center">
                   Actions
@@ -330,13 +312,13 @@ export default function TaskList() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
-              {filteredRecords.map((task) => (
-                <TaskRow
-                  key={task.id}
-                  task={task}
-                  isChecked={task.id ? selectedIds.includes(task.id) : false}
+              {filteredRecords.map((ts) => (
+                <TimesheetRow
+                  key={ts.id}
+                  timesheet={ts}
+                  isChecked={ts.id ? selectedIds.includes(ts.id) : false}
                   isSelectionMode={isSelectionMode}
-                  onEdit={handleEditTask}
+                  onEdit={handleEditTimesheet}
                   onDelete={handleDeleteClick}
                   onToggle={handleToggleSelect}
                 />
@@ -348,15 +330,14 @@ export default function TaskList() {
                     className="px-4 py-8 text-center text-gray-500"
                   >
                     {searchTerm
-                      ? 'No tasks found matching your search.'
-                      : 'No tasks found. Click "Add" to create one.'}
+                      ? 'No timesheets found matching your search.'
+                      : 'No timesheets found. Click "Add" to create one.'}
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
 
-          {/* Pagination Controls */}
           <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
             <div className="flex flex-1 justify-between sm:hidden">
               <button
@@ -364,7 +345,6 @@ export default function TaskList() {
                 disabled={page === 0}
                 className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
               >
-                <ChevronLeft className="mr-2 h-4 w-4" />
                 Previous
               </button>
               <button
@@ -372,7 +352,6 @@ export default function TaskList() {
                 disabled={records.length < pageSize}
                 className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
               >
-                <ChevronRight className="mr-2 h-4 w-4" />
                 Next
               </button>
             </div>
@@ -393,7 +372,7 @@ export default function TaskList() {
                     className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
                   >
                     <span className="sr-only">Previous</span>
-                    <ChevronLeft className="mr-2 h-5 w-5" aria-hidden="true" />
+                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                   </button>
                   <button
                     onClick={() => setPage(page + 1)}
@@ -410,23 +389,21 @@ export default function TaskList() {
         </div>
       )}
 
-      {/* Create User Modal */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        title="Create New Task"
+        title="Create New Timesheet"
       >
-        <TaskForm
+        <TimesheetForm
           onSuccess={handleCreateSuccess}
           onCancel={() => setIsCreateModalOpen(false)}
         />
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        title="Delete Task"
+        title="Delete Timesheet"
         maxWidth="sm:max-w-md"
       >
         <div className="mt-2">
@@ -434,11 +411,8 @@ export default function TaskList() {
             <Trash2 className="h-6 w-6 text-red-600" />
           </div>
           <p className="text-sm text-gray-500 text-center">
-            Are you sure you want to delete task{' '}
-            <span className="font-bold text-gray-900">
-              {taskToDelete?.title}
-            </span>
-            ? This action cannot be undone.
+            Are you sure you want to delete this timesheet? This action cannot
+            be undone.
           </p>
         </div>
         <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
@@ -459,11 +433,10 @@ export default function TaskList() {
         </div>
       </Modal>
 
-      {/* Bulk Delete Confirmation Modal */}
       <Modal
         isOpen={isBulkDeleteModalOpen}
         onClose={() => setIsBulkDeleteModalOpen(false)}
-        title="Delete Users"
+        title="Delete Timesheets"
         maxWidth="sm:max-w-md"
       >
         <div className="mt-2">
@@ -475,7 +448,7 @@ export default function TaskList() {
             <span className="font-bold text-gray-900">
               {selectedIds.length}
             </span>{' '}
-            selected users? This action cannot be undone.
+            selected timesheets? This action cannot be undone.
           </p>
         </div>
         <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">

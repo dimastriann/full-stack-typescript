@@ -14,8 +14,11 @@ export class TaskService {
     });
   }
 
-  findAll() {
+  findAll(skip?: number, take?: number, projectId?: number) {
     return this.prisma.task.findMany({
+      skip,
+      take,
+      where: projectId ? { projectId } : undefined,
       include: { user: true, project: true, comments: true },
     });
   }
