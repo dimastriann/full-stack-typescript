@@ -10,12 +10,14 @@ interface UserFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   userId?: string | number; // Optional prop to override params
+  isFromProfile?: boolean;
 }
 
 export default function UserForm({
   onSuccess,
   onCancel,
   userId: propUserId,
+  isFromProfile,
 }: UserFormProps) {
   const defaultValues = {
     name: '',
@@ -216,7 +218,7 @@ export default function UserForm({
             />
           </div>
 
-          <div className="md:col-span-2">
+          {!isFromProfile && <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700">
               Role
             </label>
@@ -228,7 +230,7 @@ export default function UserForm({
               <option value="MANAGER">Manager</option>
               <option value="ADMIN">Admin</option>
             </select>
-          </div>
+          </div>}
 
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700">

@@ -61,14 +61,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <CircleGauge size={18} className="m-1" />
           <span className="ms-2">Overview</span>
         </NavLink>
-        <NavLink
-          to="/dashboard/users"
-          onClick={() => onClose()}
-          className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
-        >
-          <UsersIcon size={18} className="m-1" />
-          <span className="ms-2">Users</span>
-        </NavLink>
+        {user?.role === 'ADMIN' && (
+          <NavLink
+            to="/dashboard/users"
+            onClick={() => onClose()}
+            className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
+          >
+            <UsersIcon size={18} className="m-1" />
+            <span className="ms-2">Users</span>
+          </NavLink>
+        )}
         <NavLink
           to="/dashboard/projects"
           onClick={() => onClose()}

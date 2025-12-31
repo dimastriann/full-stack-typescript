@@ -10,32 +10,32 @@ export class User extends Base {
   @Field()
   email: string;
 
-  // @Field()
-  // password: string;
+  @Field()
+  password: string;
 
   @Field({ nullable: true })
-  phone: string;
+  phone?: string;
 
   @Field({ nullable: true })
-  mobile: string;
+  mobile?: string;
 
   @Field()
   firstName: string;
 
   @Field({ nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @Field({ defaultValue: true })
   status: boolean;
 
   @Field({ nullable: true })
-  address: string;
+  address?: string;
 
   @Field({ nullable: true })
-  bio: string;
+  bio?: string;
 
   @Field({ nullable: true })
-  birthDate: Date;
+  birthDate?: Date;
 
   @Field()
   role: string;

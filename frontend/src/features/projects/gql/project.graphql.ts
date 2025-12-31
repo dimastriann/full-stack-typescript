@@ -12,6 +12,65 @@ export const GET_PROJECTS = gql`
         id
         name
       }
+      members {
+        id
+        role
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PROJECT = gql`
+  query GetProject($id: Int!) {
+    project(id: $id) {
+      id
+      name
+      description
+      status
+      responsibleId
+      responsible {
+        id
+        name
+      }
+      comments {
+        id
+        content
+        createdAt
+        user {
+          id
+          name
+        }
+        replies {
+          id
+          content
+          createdAt
+          user {
+            id
+            name
+          }
+        }
+      }
+      attachments {
+        id
+        filename
+        path
+        mimeType
+        size
+      }
+      members {
+        id
+        role
+        joinedAt
+        user {
+          id
+          firstName
+          lastName
+          email
+        }
+      }
     }
   }
 `;

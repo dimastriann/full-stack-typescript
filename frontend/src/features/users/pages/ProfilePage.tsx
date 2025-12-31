@@ -17,7 +17,7 @@ export default function ProfilePage() {
 
       <div className="bg-white shadow rounded-lg p-6">
         {user ? (
-          <UserForm userId={user.id} onSuccess={handleSuccess} />
+          <UserForm userId={user.id} onSuccess={handleSuccess} isFromProfile />
         ) : (
           <p>Loading profile...</p>
         )}

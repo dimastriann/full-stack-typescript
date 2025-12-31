@@ -6,6 +6,27 @@ export enum ProjectStatus {
   CANCELED = 'CANCELED',
 }
 
+export enum ProjectRole {
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
+  VIEWER = 'VIEWER',
+}
+
+export type ProjectMember = {
+  id: number;
+  userId: number;
+  projectId: number;
+  role: ProjectRole;
+  joinedAt: string;
+  user?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
 export type ProjectType = {
   id?: number;
   name: string;
@@ -16,4 +37,5 @@ export type ProjectType = {
     id: number;
     name: string;
   };
+  members?: ProjectMember[];
 };

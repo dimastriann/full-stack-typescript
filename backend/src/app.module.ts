@@ -11,6 +11,11 @@ import { TaskModule } from './task/task.module';
 import { BaseModule } from './base/base.module';
 import { TimesheetModule } from './timesheet/timesheet.module';
 import { CommentModule } from './comment/comment.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { AttachmentModule } from './attachment/attachment.module';
+import { ProjectMemberModule } from './project-member/project-member.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -19,14 +24,23 @@ import { CommentModule } from './comment/comment.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     UserModule,
     ProjectModule,
     TaskModule,
     BaseModule,
     TimesheetModule,
+    TimesheetModule,
     CommentModule,
+    CommentModule,
+    AuthModule,
+    AttachmentModule,
+    ProjectMemberModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

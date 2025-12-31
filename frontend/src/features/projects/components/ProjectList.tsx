@@ -14,12 +14,14 @@ import {
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import ProjectForm from './ProjectForm';
+import { useAuth } from '../../../context/AuthProvider';
 
 const ProjectRow = React.memo(
   ({
     project,
     isChecked,
     isSelectionMode,
+    currentUserId,
     onEdit,
     onDelete,
     onToggle,
@@ -27,70 +29,76 @@ const ProjectRow = React.memo(
     project: ProjectType;
     isChecked: boolean;
     isSelectionMode: boolean;
+    currentUserId: number;
     onEdit: (project: ProjectType) => void;
     onDelete: (project: ProjectType) => void;
     onToggle: (id: number) => void;
-  }) => (
-    <tr
-      className={`hover:bg-gray-50 cursor-pointer transition-colors ${isChecked ? 'bg-indigo-50' : ''}`}
-      onClick={(e) => {
-        if ((e.target as HTMLElement).closest('button')) return;
-        if (project.id) onToggle(project.id);
-      }}
-    >
-      <td className="text-center w-[5%] p-3 border-b border-gray-100">
-        <input
-          onChange={() => project.id && onToggle(project.id)}
-          checked={isChecked}
-          type="checkbox"
-          className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-700">
-        {project.id}
-      </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-sm font-medium text-gray-900">
-        {project.name}
-      </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {project.description}
-      </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {project.status}
-      </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {/* @ts-ignore - responsible might be populated */}
-        {project.responsible?.name || project.responsibleId}
-      </td>
-      <td className="px-4 py-3 border-b border-gray-100">
-        <div className="flex items-center justify-center space-x-3">
-          <button
-            title="Edit/View"
-            className="text-indigo-600 hover:text-indigo-900 font-medium text-sm transition-colors"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(project);
-            }}
-          >
-            <Eye className="h-5 w-5" />
-          </button>
-          {!isSelectionMode && (
+  }) => {
+    const userMembership = project.members?.find((m: any) => parseInt(m.user.id) === currentUserId);
+    const canDelete = userMembership?.role === 'OWNER' || userMembership?.role === 'ADMIN';
+
+    return (
+      <tr
+        className={`hover:bg-gray-50 cursor-pointer transition-colors ${isChecked ? 'bg-indigo-50' : ''}`}
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest('button')) return;
+          if (project.id) onToggle(project.id);
+        }}
+      >
+        <td className="text-center w-[5%] p-3 border-b border-gray-100">
+          <input
+            onChange={() => project.id && onToggle(project.id)}
+            checked={isChecked}
+            type="checkbox"
+            className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-700">
+          {project.id}
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm font-medium text-gray-900">
+          {project.name}
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+          {project.description}
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+          {project.status}
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+          {/* @ts-ignore - responsible might be populated */}
+          {project.responsible?.name || project.responsibleId}
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100">
+          <div className="flex items-center justify-center space-x-3">
             <button
-              title="Delete"
-              className="text-red-600 hover:text-red-900 font-medium text-sm transition-colors"
+              title="Edit/View"
+              className="text-indigo-600 hover:text-indigo-900 font-medium text-sm transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete(project);
+                onEdit(project);
               }}
             >
-              <Trash2 className="h-5 w-5" />
+              <Eye className="h-5 w-5" />
             </button>
-          )}
-        </div>
-      </td>
-    </tr>
-  ),
+            {!isSelectionMode && canDelete && (
+              <button
+                title="Delete"
+                className="text-red-600 hover:text-red-900 font-medium text-sm transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(project);
+                }}
+              >
+                <Trash2 className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+        </td>
+      </tr>
+    );
+  },
 );
 
 ProjectRow.displayName = 'ProjectRow';
@@ -119,6 +127,8 @@ export default function ProjectList() {
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
+  const { user: authUser } = useAuth();
+  const currentUserId = authUser?.id ? parseInt(authUser.id) : 0;
 
   const filteredRecords = React.useMemo(() => {
     if (!searchTerm) return records;
@@ -314,6 +324,7 @@ export default function ProjectList() {
                     project.id ? selectedIds.includes(project.id) : false
                   }
                   isSelectionMode={isSelectionMode}
+                  currentUserId={currentUserId}
                   onEdit={handleEditProject}
                   onDelete={handleDeleteClick}
                   onToggle={handleToggleSelect}

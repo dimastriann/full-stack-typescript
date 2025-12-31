@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from '../components/dashboard/Sidebar';
 import DashboardStats from '../components/dashboard/DashboardStats';
 import UserList from '../features/users/components/UserList';
@@ -18,9 +18,12 @@ import TimesheetFormPage from '../features/timesheets/pages/TimesheetFormPage';
 import ProfilePage from '../features/users/pages/ProfilePage';
 import { ProjectProvider } from '../features/projects/hooks/useProjects';
 import { Menu } from 'lucide-react';
+import { useAuth } from '../context/AuthProvider';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -40,22 +43,34 @@ export default function DashboardLayout() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
           <Routes>
             <Route path="/" element={<DashboardStats />} />
-            <Route
-              path="/users"
-              element={
-                <UserProvider>
-                  <UserList />
-                </UserProvider>
-              }
-            />
-            <Route
-              path="/user/:userId"
-              element={
-                <UserProvider>
-                  <UserEditPage />
-                </UserProvider>
-              }
-            />
+            {isAdmin ? (
+              <>
+                <Route
+                  path="/users"
+                  element={
+                    <UserProvider>
+                      <UserList />
+                    </UserProvider>
+                  }
+                />
+                <Route
+                  path="/user/:userId"
+                  element={
+                    <UserProvider>
+                      <UserEditPage />
+                    </UserProvider>
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <Route path="/users" element={<Navigate to="/dashboard" />} />
+                <Route
+                  path="/user/:userId"
+                  element={<Navigate to="/dashboard" />}
+                />
+              </>
+            )}
             <Route
               path="/projects"
               element={

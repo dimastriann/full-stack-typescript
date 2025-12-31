@@ -1,6 +1,25 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
+
+const httpLink = createUploadLink({
+  uri: 'http://127.0.0.1:3000/graphql',
+  headers: {
+    'Apollo-Require-Preflight': 'true', // Recommended for security
+  },
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = sessionStorage.getItem('session_id');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
 
 export const client = new ApolloClient({
-  uri: 'http://127.0.0.1:3000/graphql',
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });

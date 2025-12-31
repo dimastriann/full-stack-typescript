@@ -35,6 +35,31 @@ export const GET_TASK = gql`
         id
         name
       }
+      comments {
+        id
+        content
+        createdAt
+        user {
+          id
+          name
+        }
+        replies {
+          id
+          content
+          createdAt
+          user {
+            id
+            name
+          }
+        }
+      }
+      attachments {
+        id
+        filename
+        path
+        mimeType
+        size
+      }
     }
   }
 `;

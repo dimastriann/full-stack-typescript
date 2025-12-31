@@ -1,5 +1,6 @@
 import { createContext, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApolloClient } from "@apollo/client"
 
 type AuthContext = {
   session: string;
@@ -17,29 +18,33 @@ export const AuthContext = createContext<AuthContext>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<string>(
-    localStorage.getItem('session_id') || '',
+    sessionStorage.getItem('session_id') || '',
   );
   const [user, setUser] = useState<any>(
-    JSON.parse(localStorage.getItem('user') || 'null'),
+    JSON.parse(sessionStorage.getItem('user') || 'null'),
   );
   const navigate = useNavigate();
+  const client = useApolloClient();
 
-  const login = (userData: any) => {
-    // For now, we simulate a token or just rely on the existence of user data
-    // In a real app we'd get a token from the backend
-    const token = 'simulated-token';
-    localStorage.setItem('session_id', token);
-    localStorage.setItem('user', JSON.stringify(userData));
+  const login = (loginData: any) => {
+    // loginData contains { access_token, user }
+    const token = loginData.access_token;
+    const userData = loginData.user;
+
+    sessionStorage.setItem('session_id', token);
+    sessionStorage.setItem('user', JSON.stringify(userData));
     setSession(token);
     setUser(userData);
+    client.resetStore();
     navigate('/dashboard');
   };
 
   const logout = () => {
-    localStorage.removeItem('session_id');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('session_id');
+    sessionStorage.removeItem('user');
     setSession('');
     setUser(null);
+    client.resetStore();
     navigate('/login');
   };
 

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import ProjectForm from './ProjectForm';
+import { useAuth } from '../../../context/AuthProvider';
 
 const stages = [
   {
@@ -62,6 +63,9 @@ export default function ProjectKanban() {
     refetch,
   } = useProjects();
   const navigate = useNavigate();
+  const { user: authUser } = useAuth();
+  const currentUserId = authUser?.id ? parseInt(authUser.id) : 0;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'id'>('id');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -86,12 +90,21 @@ export default function ProjectKanban() {
     });
   }, [records, searchTerm, sortBy]);
 
-  const onDragStart = (e: React.DragEvent, id: number) => {
-    e.dataTransfer.setData('id', `${id}`);
+  const onDragStart = (e: React.DragEvent, project: any) => {
+    const userMembership = project.members?.find((m: any) => parseInt(m.user.id) === currentUserId);
+    const canUpdate = userMembership && userMembership.role !== 'VIEWER';
+
+    if (!canUpdate) {
+      e.preventDefault();
+      return;
+    }
+    e.dataTransfer.setData('id', `${project.id}`);
   };
 
   const onDrop = async (e: React.DragEvent, stage: ProjectStatus) => {
-    const id = parseInt(e.dataTransfer.getData('id'));
+    const idStr = e.dataTransfer.getData('id');
+    if (!idStr) return;
+    const id = parseInt(idStr);
     const project = records.find((p) => p.id === id);
     if (project && project.status !== stage) {
       try {
@@ -103,8 +116,10 @@ export default function ProjectKanban() {
             },
           },
         });
+        await refetch();
       } catch (err) {
         console.error('Failed to update status', err);
+        alert(`Failed to update project status: ${err}`);
       }
     }
   };
@@ -222,9 +237,7 @@ export default function ProjectKanban() {
                   <div
                     key={project.id}
                     draggable
-                    onDragStart={(e) =>
-                      project.id && onDragStart(e, project.id)
-                    }
+                    onDragStart={(e) => onDragStart(e, project)}
                     onClick={() => navigate(`/dashboard/project/${project.id}`)}
                     className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow"
                   >

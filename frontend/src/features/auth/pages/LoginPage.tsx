@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../../context/AuthProvider';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION } from '../gql/auth.graphql';
+import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -81,6 +82,16 @@ export default function LoginPage() {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
+          </div>
+
+          <div className="text-center text-sm">
+            <span className="text-gray-600">Don't have an account? </span>
+            <Link
+              to="/register"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Sign up
+            </Link>
           </div>
         </form>
       </div>

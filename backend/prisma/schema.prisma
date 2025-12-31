@@ -1,100 +1,100 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
-  // output   = "../generated/prisma"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:../dev.db"
+  provider = "postgresql"
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String
-  email       String        @unique
-  password    String
-  phone       String?
-  mobile      String?
-  firstName   String
-  lastName    String?
-  status      Boolean       @default(true)
-  address     String?
-  bio         String?
-  birthDate   DateTime?
-  gender      Gender?
-  role        UserRole      @default(USER)
-  tasks       Task[]
-  projects    Project[]
-  timesheets  Timesheet[]
-  comments    Comment[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                 Int             @id @default(autoincrement())
+  name               String
+  email              String          @unique
+  password           String
+  phone              String?
+  mobile             String?
+  firstName          String
+  lastName           String?
+  status             Boolean         @default(true)
+  address            String?
+  bio                String?
+  birthDate          DateTime?
+  gender             Gender?
+  role               UserRole        @default(USER)
+  tasks              Task[]
+  projects           Project[]
+  timesheets         Timesheet[]
+  comments           Comment[]
+  projectMemberships ProjectMember[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 }
 
 model Project {
-  id              Int             @id @default(autoincrement())
-  name            String
-  description     String?
-  tasks           Task[]
-  status          ProjectStatus   @default(DRAFT)
-  responsible     User?           @relation(fields: [responsibleId], references: [id])
-  responsibleId   Int?
-  comments        Comment[]
-  timesheets      Timesheet[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id            Int             @id @default(autoincrement())
+  name          String
+  description   String?
+  tasks         Task[]
+  status        ProjectStatus   @default(DRAFT)
+  responsible   User?           @relation(fields: [responsibleId], references: [id])
+  responsibleId Int?
+  comments      Comment[]
+  attachments   Attachment[]
+  timesheets    Timesheet[]
+  members       ProjectMember[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
 
 model Task {
-  id          Int           @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String?
-  user        User          @relation(fields: [userId], references: [id])
-  project     Project       @relation(fields: [projectId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+  project     Project      @relation(fields: [projectId], references: [id])
   userId      Int
   projectId   Int
-  status      TaskStatus    @default(TODO)
+  status      TaskStatus   @default(TODO)
   comments    Comment[]
+  attachments Attachment[]
   timesheets  Timesheet[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Timesheet {
-  id            Int           @id @default(autoincrement())
-  description   String
-  date          DateTime
-  timeSpent     Float
-  userId        Int
-  projectId     Int
-  project       Project       @relation(fields: [projectId], references: [id])
-  taskId        Int?
-  user          User          @relation(fields: [userId], references: [id])
-  task          Task?         @relation(fields: [taskId], references: [id])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id          Int      @id @default(autoincrement())
+  description String
+  date        DateTime
+  timeSpent   Float
+  userId      Int
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id])
+  taskId      Int?
+  user        User     @relation(fields: [userId], references: [id])
+  task        Task?    @relation(fields: [taskId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Comment {
-  id          Int           @id @default(autoincrement())
-  content     String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  userId      Int
-  projectId   Int?
-  taskId      Int?
-  parentId    Int?
-  user        User          @relation(fields: [userId], references: [id])
-  project     Project?      @relation(fields: [projectId], references: [id])
-  task        Task?         @relation(fields: [taskId], references: [id])
-  parent      Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
-  replies     Comment[]     @relation("CommentReplies")
+  id        Int       @id @default(autoincrement())
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int
+  projectId Int?
+  taskId    Int?
+  parentId  Int?
+  user      User      @relation(fields: [userId], references: [id])
+  project   Project?  @relation(fields: [projectId], references: [id])
+  task      Task?     @relation(fields: [taskId], references: [id])
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
 }
 
 enum UserRole {
@@ -124,4 +124,43 @@ enum TaskStatus {
   REVISION
   DONE
   CANCELED
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  filename  String
+  path      String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  projectId Int?
+  project   Project? @relation(fields: [projectId], references: [id])
+  taskId    Int?
+
+  task Task? @relation(fields: [taskId], references: [id])
+}
+
+model ProjectMember {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  projectId Int
+  role      ProjectRole @default(MEMBER)
+  joinedAt  DateTime    @default(now())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([projectId])
+  @@index([userId])
+}
+
+enum ProjectRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
 }

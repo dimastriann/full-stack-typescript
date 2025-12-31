@@ -13,7 +13,7 @@ export default function HomePage(): React.ReactElement {
           to="/dashboard"
           className="bg-white text-[#3b0a84] px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition"
         >
-          Go to Admin Dashboard
+          Go to Dashboard
         </Link>
       </section>
 

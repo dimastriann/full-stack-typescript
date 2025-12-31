@@ -1,5 +1,5 @@
 import { InputType, Int, Field, registerEnumType } from '@nestjs/graphql';
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus } from '../../../prisma/generated/client';
 
 registerEnumType(TaskStatus, {
   name: 'TaskStatus',
