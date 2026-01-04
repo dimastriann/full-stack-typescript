@@ -1,5 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from 'src/user/entities/user.entity';
 import { CommentService } from './comment.service';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
@@ -9,7 +11,10 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Resolver(() => Comment)
 export class CommentResolver {
-  constructor(private readonly commentService: CommentService) { }
+  constructor(
+    private readonly commentService: CommentService,
+    private readonly prisma: PrismaService,
+  ) { }
 
   @Mutation(() => Comment)
   @UseGuards(GqlAuthGuard)
@@ -55,6 +60,13 @@ export class CommentResolver {
     @CurrentUser() user: any,
   ) {
     return this.commentService.remove(id, user.id);
+  }
+
+  @ResolveField(() => User)
+  @UseGuards(GqlAuthGuard)
+  user(@Parent() comment: Comment) {
+    if (comment.user) return comment.user;
+    return this.prisma.user.findUnique({ where: { id: comment.userId } });
   }
 
   @ResolveField(() => [Comment], { nullable: 'items' })

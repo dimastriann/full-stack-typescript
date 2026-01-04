@@ -35,7 +35,10 @@ export class CommentService {
     ]);
 
     return this.prisma.comment.create({
-      data: createCommentInput,
+      data: {
+        ...createCommentInput,
+        userId,
+      },
       include: { user: true, project: true, task: true, parent: true },
     });
   }
@@ -123,6 +126,9 @@ export class CommentService {
       await this.projectMemberService.checkAccess(userId, parentComment.projectId);
     }
 
-    return this.prisma.comment.findMany({ where: { parentId } });
+    return this.prisma.comment.findMany({
+      where: { parentId },
+      include: { user: true, project: true, task: true, parent: true },
+    });
   }
 }
