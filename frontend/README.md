@@ -1,69 +1,37 @@
-# React + TypeScript + Vite
+# Frontend: Project Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for the Full Stack TypeScript Project Management App. It is a modern, responsive **React** application built with **Vite** and **TypeScript**, focused on delivering a premium user experience with granular permission control.
 
-Currently, two official plugins are available:
+## 🚀 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Advanced ACL Integration
+- **Permission-Aware UI**: Components automatically show/hide actions (Edit, Delete, Invite) based on the user's project-specific role (Owner, Admin, Member, Viewer).
+- **Kanban Board**: Interactive task management with drag-and-drop functionality restricted by user permissions.
 
-## Expanding the ESLint configuration
+### 2. Global Role-Based Navigation
+- **Admin Dashboard**: System-wide administrative features like User Management are only visible and accessible to authorized admins.
+- **Protective Routing**: Client-side route guards prevent unauthorized access to restricted views.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 3. Real-Time Interaction
+- **Live Statistics**: The overview dashboard features dynamic, real-time aggregate stats for high-level project tracking.
+- **Integrated Comments & Files**: Rich collaboration tools for projects and tasks with support for nested comments and multi-file attachments.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 4. Seamless Onboarding
+- **User Registration**: Integrated signup flow that automatically authenticates and redirects new users to their dashboard.
+- **Profile Management**: Personal profile editing with context-aware field rendering (e.g., hiding role management from the owner).
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🛠️ Technology Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Framework**: React 19
+- **Build Tool**: Vite
+- **GraphQL Client**: Apollo Client
+- **Styling**: Vanilla CSS (Custom Design System) & TailwindCSS
+- **State Management**: React Context & Zustand
+- **Icons**: Lucide React
+- **Icons**: Lucide React
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏁 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Install dependencies: `npm install`
+2. Start development server: `npm run dev`
+3. Build for production: `npm run build`

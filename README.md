@@ -7,31 +7,28 @@ A modern full-stack project management application built with TypeScript, featur
 ### Backend
 - **Framework**: NestJS (Node.js framework)
 - **API**: GraphQL with Apollo Server
-- **Database**: SQLite with Prisma ORM
-- **Authentication**: bcrypt for password hashing
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: JWT with Passport and bcrypt
 - **Language**: TypeScript
 - **Testing**: Jest
 
 ### Frontend
 - **Framework**: React 19 with TypeScript
 - **Build Tool**: Vite
-- **Styling**: TailwindCSS
-- **State Management**: React Context
+- **Styling**: Vanilla CSS (Premium Aesthetics) & TailwindCSS
+- **State Management**: React Context & Zustand
 - **GraphQL Client**: Apollo Client
-- **Routing**: React Router DOM
-- **Forms**: React Hook Form
-- **Icons**: Lucide React
-- **UI Components**: Headless UI
+- **Routing**: React Router DOM (with protected routes)
 
 ## 📋 Features
 
-- **User Management**: User registration, authentication, and profile management
-- **Project Management**: Create, update, and track projects with status management
-- **Task Management**: Assign tasks to users, track progress with Kanban-style boards
-- **Time Tracking**: Log time spent on projects and tasks
-- **Comments System**: Collaborative commenting on projects and tasks
-- **Role-based Access**: Admin, Manager, and User roles
-- **Real-time Updates**: GraphQL subscriptions for live updates
+- **Advanced ACL System**: Granular project-level roles (**Owner, Admin, Member, Viewer**) with inherited permissions.
+- **Global RBAC**: System-wide roles (**Admin, Manager, User**) protecting administrative dashboards.
+- **Dynamic Dashboard**: Real-time aggregate statistics for users, projects, and tasks.
+- **User Registration**: Seamless signup flow with automatic authentication.
+- **Task Management**: Kanban-style boards with drag-and-drop (permission-aware).
+- **Collaboration**: Nested commenting system and multi-level attachments.
+- **Time Tracking**: Log and manage time spent across entities.
 
 ## 🛠️ Development Setup
 
@@ -79,7 +76,7 @@ npm run dev
 
 ### Database Setup
 
-The application uses SQLite with Prisma ORM. The database file (`dev.db`) will be created automatically when you run the migrations.
+The application uses **PostgreSQL** with Prisma ORM. Ensure you have a running PostgreSQL instance and configure your `.env` file with the correct `DATABASE_URL`.
 
 ```bash
 # Navigate to backend directory
@@ -141,6 +138,8 @@ full-stack-typescript/
 │   │   ├── task/           # Task management module
 │   │   ├── timesheet/      # Time tracking module
 │   │   ├── comment/        # Comments system module
+│   │   ├── project-member/ # ACL & Membership module
+│   │   ├── dashboard/      # Statistics & Aggregates module
 │   │   └── prisma/         # Database service
 │   ├── prisma/
 │   │   ├── schema.prisma   # Database schema

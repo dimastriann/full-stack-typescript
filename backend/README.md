@@ -23,7 +23,15 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is the backend service for the Full Stack TypeScript Project Management App. It is built with **NestJS** and provides a **GraphQL API** for managing projects, tasks, users, and aggregate statistics.
+
+### Key Backend Features:
+- **GraphQL with Apollo**: Strongly typed API with automated schema generation.
+- **ACL Architecture**: Comprehensive Access Control List system for project-level permissions (Owner, Admin, Member, Viewer).
+- **Global RBAC**: Role-Based Access Control at the system level for administrative security.
+- **Prisma ORM**: Type-safe database access with PostgreSQL.
+- **Authentication**: JWT-based authentication using Passport.
+- **Automated Statistics**: Complex aggregation logic for dashboard statistics.
 
 ## Project setup
 
