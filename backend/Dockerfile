@@ -1,10 +1,10 @@
-FROM node:22-alpine
+FROM node:lts-alpine3.17
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN apk add --no-cache openssl libc6-compat
+# RUN apk add --no-cache openssl libc6-compat
 
 RUN npm install
 
