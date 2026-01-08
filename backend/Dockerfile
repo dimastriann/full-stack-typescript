@@ -1,10 +1,10 @@
-FROM node:24-alpine
+FROM node:24-slim
 
 WORKDIR /app
 
 COPY package*.json ./
 
-# RUN apk add --no-cache openssl libc6-compat
+RUN apt-get update -y && apt-get install -y openssl
 
 RUN npm install
 
