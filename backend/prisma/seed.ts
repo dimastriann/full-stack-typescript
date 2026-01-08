@@ -15,7 +15,7 @@ async function main() {
       email: "admin@gmail.com",
       password: await bcrypt.hash("admin", 10),
       firstName: "Dimas",
-      lastName: "Admin",
+      lastName: "User Flow",
       birthDate: new Date("1996-07-03 00:00:00"),
       role: 'ADMIN',
       gender: 'Male'
@@ -29,13 +29,13 @@ async function main() {
       email: "demo@gmail.com",
       password: await bcrypt.hash("demo", 10),
       firstName: "Demo",
-      lastName: "User",
+      lastName: "User Flow",
       birthDate: new Date("2000-07-03 00:00:00"),
       role: 'MANAGER',
       gender: 'Male'
     }
   })
-  console.log({ admin, demo })
+  // console.log({ admin, demo })
 }
 main()
   .then(async () => {

@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
 const httpLink = createUploadLink({
-  uri: 'http://127.0.0.1:3000/graphql',
+  uri: '/graphql',
   headers: {
     'Apollo-Require-Preflight': 'true', // Recommended for security
   },
