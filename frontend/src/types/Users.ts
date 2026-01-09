@@ -1,7 +1,7 @@
-declare const enum UserRole {
-  ADMIN,
-  MANAGER,
-  USER,
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  USER = 'USER',
 }
 
 export type UserType = {
@@ -10,7 +10,7 @@ export type UserType = {
   lastName?: string;
   email: string;
   password: string;
-  role?: UserRole.USER;
+  role?: UserRole;
   birthDate?: Date;
   mobile?: string;
   phone?: string;

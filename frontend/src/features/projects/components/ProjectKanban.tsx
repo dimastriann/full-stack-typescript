@@ -64,7 +64,7 @@ export default function ProjectKanban() {
   } = useProjects();
   const navigate = useNavigate();
   const { user: authUser } = useAuth();
-  const currentUserId = authUser?.id ? parseInt(authUser.id) : 0;
+  const currentUserId = authUser?.id || 0;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'id'>('id');

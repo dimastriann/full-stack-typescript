@@ -7,7 +7,7 @@ import {
   DELETE_TIMESHEET,
 } from '../../timesheets/gql/timesheet.graphql';
 import type { TimesheetType } from '../../../types/Timesheets';
-import { Plus, Trash2, Save, X } from 'lucide-react';
+import { Plus, Save, X } from 'lucide-react';
 
 interface TaskTimesheetTableProps {
   taskId: number;

@@ -5,7 +5,6 @@ import {
   LogOut,
   CircleGauge,
   Timer,
-  Calendar,
   User,
   ListCheck,
   X,
@@ -95,14 +94,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <Timer size={18} className="m-1" />{' '}
           <span className="ms-2">Timesheets</span>
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to="/dashboard/calendar"
           onClick={() => onClose()}
           className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
         >
           <Calendar size={18} className="m-1" />{' '}
           <span className="ms-2">Calendar</span>
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to="/dashboard/profile"
           onClick={() => onClose()}

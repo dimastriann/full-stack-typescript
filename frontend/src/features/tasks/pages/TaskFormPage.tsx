@@ -12,7 +12,7 @@ export default function TaskFormPage() {
   const { taskId } = useParams();
   const id = taskId ? parseInt(taskId, 10) : 0;
 
-  const { data, loading, error, refetch } = useQuery(GET_TASK, {
+  const { data, refetch } = useQuery(GET_TASK, {
     variables: { id },
     skip: !id,
   });

@@ -18,11 +18,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({ relationId, relationType
 
         setUploading(true);
         try {
-            console.log('file', {
-                file,
-                relationId,
-                relationType,
-            });
+            // console.log('file', {
+            //     file,
+            //     relationId,
+            //     relationType,
+            // });
             await uploadFile({
                 variables: {
                     file,

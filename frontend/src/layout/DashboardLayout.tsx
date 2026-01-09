@@ -9,7 +9,7 @@ import { TaskProvider } from '../features/tasks/hooks/useTasks';
 import ProjectList from '../features/projects/components/ProjectList';
 import ProjectKanban from '../features/projects/components/ProjectKanban';
 import ProjectEditPage from '../features/projects/pages/ProjectFormPage';
-import TemplateView from '../features/template/Template';
+// import TemplateView from '../features/template/Template';
 import TaskPage from '../features/tasks/pages/TaskPage';
 import TaskFormPage from '../features/tasks/pages/TaskFormPage';
 import TaskKanban from '../features/tasks/components/TaskKanban';
@@ -110,7 +110,7 @@ export default function DashboardLayout() {
               path="timesheet/:timesheetId"
               element={<TimesheetFormPage />}
             />
-            <Route path="template" element={<TemplateView />} />
+            {/* <Route path="template" element={<TemplateView />} /> */}
             <Route
               path="profile"
               element={
@@ -119,7 +119,7 @@ export default function DashboardLayout() {
                 </UserProvider>
               }
             />
-            <Route path="calendar" element={<TemplateView />} />
+            {/* <Route path="calendar" element={<TemplateView />} /> */}
           </Routes>
         </main>
       </div>

@@ -128,7 +128,7 @@ export default function ProjectList() {
 
   const navigate = useNavigate();
   const { user: authUser } = useAuth();
-  const currentUserId = authUser?.id ? parseInt(authUser.id) : 0;
+  const currentUserId = authUser?.id || 0;
 
   const filteredRecords = React.useMemo(() => {
     if (!searchTerm) return records;

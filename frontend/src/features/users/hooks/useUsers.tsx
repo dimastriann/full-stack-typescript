@@ -17,7 +17,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const { data, loading, error, refetch } = useQuery(GET_USERS, {
     variables: { skip: page * pageSize, take: pageSize },
   });
-  console.info('use query', data);
+  // console.info('use query', data);
   const [createUser] = useMutation(CREATE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
   const [deleteUser] = useMutation(DELETE_USER);

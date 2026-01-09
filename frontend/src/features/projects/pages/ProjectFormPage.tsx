@@ -11,11 +11,11 @@ import ProjectMembersList from '../components/ProjectMembersList';
 export default function ProjectFormPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const currentUserId = user?.id ? parseInt(user.id) : 0;
+  const currentUserId = user?.id || 0;
   const { projectId } = useParams();
   const id = projectId ? parseInt(projectId, 10) : 0;
 
-  const { data, loading, error, refetch } = useQuery(GET_PROJECT, {
+  const { data, refetch } = useQuery(GET_PROJECT, {
     variables: { id },
     skip: !id,
   });
