@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { defineConfig, env } from 'prisma/config'
+import { defineConfig } from 'prisma/config'
 
 export default defineConfig({
   // the main entry for your schema
@@ -14,6 +14,7 @@ export default defineConfig({
   datasource: {
     // Type Safe env() helper 
     // Does not replace the need for dotenv
-    url: env('DATABASE_URL'),
+    // use process.env to access environment variables
+    url: process.env.DATABASE_URL,
   },
 })
