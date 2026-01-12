@@ -49,6 +49,7 @@ export class ProjectPermissionGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
     const args = ctx.getArgs();
+    console.log('args', args);
 
     // Get the authenticated user
     const user = request.user;
@@ -57,7 +58,11 @@ export class ProjectPermissionGuard implements CanActivate {
     }
 
     // Try to get projectId from various argument names
-    const projectId = args.projectId || args.id || args.input?.projectId;
+    const projectId =
+      args.projectId ||
+      args.id ||
+      args.input?.projectId ||
+      args.updateProjectInput?.id;
 
     if (!projectId) {
       throw new ForbiddenException('Project ID not found in request');
