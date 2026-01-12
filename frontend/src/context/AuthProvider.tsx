@@ -1,6 +1,7 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
+import { GET_ME, LOGOUT_MUTATION } from '../features/auth/gql/auth.graphql';
 
 type AuthContext = {
   session: string;
@@ -17,14 +18,33 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<string>(
-    '', // Session status managed by cookies now
-  );
-  const [user, setUser] = useState<any>(
-    JSON.parse(sessionStorage.getItem('user') || 'null'),
-  );
+  const [session, setSession] = useState<string>('');
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
   const client = useApolloClient();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_ME,
+          fetchPolicy: 'network-only',
+        });
+        if (data?.me) {
+          setUser(data.me);
+          setSession('logged_in');
+        }
+      } catch (error) {
+        console.error('Session check failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, [client]);
 
   const login = (loginData: any) => {
     // loginData contains { access_token, user }
@@ -38,13 +58,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     navigate('/dashboard');
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await client.mutate({ mutation: LOGOUT_MUTATION });
+    } catch (error) {
+      console.error('Logout mutation failed:', error);
+    }
     sessionStorage.removeItem('user');
     setSession('');
     setUser(null);
     client.resetStore();
     navigate('/login');
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={{ session, user, login, logout }}>

@@ -138,6 +138,7 @@ type DashboardStats {
 
 type Query {
   users(skip: Int, take: Int): [User!]!
+  me: User!
   getUser(id: Int!): User!
   projectMembers(projectId: Int!): [ProjectMember!]!
   myProjectMemberships: [ProjectMember!]!

@@ -29,3 +29,22 @@ export const REGISTER_MUTATION = gql`
     }
   }
 `;
+
+export const GET_ME = gql`
+  query GetMe {
+    me {
+      id
+      email
+      name
+      role
+      firstName
+      lastName
+    }
+  }
+`;
+
+export const LOGOUT_MUTATION = gql`
+  mutation Logout {
+    logout
+  }
+`;

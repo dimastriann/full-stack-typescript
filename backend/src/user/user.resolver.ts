@@ -16,7 +16,7 @@ export class UserResolver {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard, RolesGuard)
@@ -26,6 +26,12 @@ export class UserResolver {
     @Args('take', { type: () => Int, nullable: true }) take?: number,
   ) {
     return this.userService.findAll(skip, take);
+  }
+
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  me(@Context() context: any) {
+    return context.req.user;
   }
 
   @Query(() => User)
