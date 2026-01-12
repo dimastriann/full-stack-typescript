@@ -24,7 +24,8 @@ export default function TaskFormPage() {
   const { handlePreviewFile, handleDownloadFile } = useAttachments();
 
   const handleDeleteAttachment = async (attachmentId: number) => {
-    if (!window.confirm('Are you sure you want to delete this attachment?')) return;
+    if (!window.confirm('Are you sure you want to delete this attachment?'))
+      return;
     try {
       await removeAttachment({
         variables: { id: attachmentId },
@@ -84,11 +85,16 @@ export default function TaskFormPage() {
               />
 
               <div className="mt-4">
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Attached Files</h4>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                  Attached Files
+                </h4>
                 {task?.attachments && task.attachments.length > 0 ? (
                   <ul className="divide-y divide-gray-200">
                     {task.attachments.map((file: any) => (
-                      <li key={file.id} className="py-2 flex justify-between items-center group">
+                      <li
+                        key={file.id}
+                        className="py-2 flex justify-between items-center group"
+                      >
                         <div className="flex items-center space-x-2 truncate">
                           <button
                             onClick={() => handlePreviewFile(file)}
@@ -96,7 +102,9 @@ export default function TaskFormPage() {
                           >
                             {file.filename}
                           </button>
-                          <span className="text-xs text-gray-500">({(file.size / 1024).toFixed(1)} KB)</span>
+                          <span className="text-xs text-gray-500">
+                            ({(file.size / 1024).toFixed(1)} KB)
+                          </span>
                         </div>
                         <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
@@ -114,7 +122,6 @@ export default function TaskFormPage() {
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
-
                       </li>
                     ))}
                   </ul>
@@ -127,6 +134,5 @@ export default function TaskFormPage() {
         </div>
       </div>
     </TaskProvider>
-
   );
 }

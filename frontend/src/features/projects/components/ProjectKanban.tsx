@@ -91,7 +91,9 @@ export default function ProjectKanban() {
   }, [records, searchTerm, sortBy]);
 
   const onDragStart = (e: React.DragEvent, project: any) => {
-    const userMembership = project.members?.find((m: any) => parseInt(m.user.id) === currentUserId);
+    const userMembership = project.members?.find(
+      (m: any) => parseInt(m.user.id) === currentUserId,
+    );
     const canUpdate = userMembership && userMembership.role !== 'VIEWER';
 
     if (!canUpdate) {

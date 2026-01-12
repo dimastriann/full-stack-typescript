@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApolloClient } from "@apollo/client"
+import { useApolloClient } from '@apollo/client';
 
 type AuthContext = {
   session: string;

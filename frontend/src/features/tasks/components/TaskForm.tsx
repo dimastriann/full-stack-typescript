@@ -14,7 +14,6 @@ import TaskTimesheetTable from './TaskTimesheetTable';
 import { useAuth } from '../../../context/AuthProvider';
 import type { UserType } from '../../../types/Users';
 
-
 interface TaskFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -59,7 +58,6 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
       projectId: '',
       status: TaskStatus.TODO,
     },
-
   });
 
   useEffect(() => {
@@ -77,8 +75,6 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
       });
     }
   }, [task, isEditMode, reset, userId, users, projects]);
-
-
 
   const onSubmit = handleSubmit(async (formData) => {
     try {

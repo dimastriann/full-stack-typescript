@@ -34,8 +34,11 @@ const ProjectRow = React.memo(
     onDelete: (project: ProjectType) => void;
     onToggle: (id: number) => void;
   }) => {
-    const userMembership = project.members?.find((m: any) => parseInt(m.user.id) === currentUserId);
-    const canDelete = userMembership?.role === 'OWNER' || userMembership?.role === 'ADMIN';
+    const userMembership = project.members?.find(
+      (m: any) => parseInt(m.user.id) === currentUserId,
+    );
+    const canDelete =
+      userMembership?.role === 'OWNER' || userMembership?.role === 'ADMIN';
 
     return (
       <tr

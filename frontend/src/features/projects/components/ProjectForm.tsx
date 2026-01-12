@@ -11,7 +11,6 @@ import { useProjects } from '../hooks/useProjects';
 import { useAuth } from '../../../context/AuthProvider';
 import type { UserType } from '../../../types/Users';
 
-
 interface ProjectFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -52,7 +51,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     loading: mutationLoading,
   } = useProjects();
   const [errorMsg, setErrorMsg] = useState<string>('');
-  
+
   const userId = currentUser?.id?.toString();
   const users: UserType[] = usersData?.users ?? [];
   const projects: ProjectType[] = projectsData?.projects ?? [];
@@ -89,7 +88,6 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       });
     }
   }, [projects, projectId, isEditMode, reset, userId, users]);
-
 
   const onSubmit = handleSubmit(async (formData) => {
     try {

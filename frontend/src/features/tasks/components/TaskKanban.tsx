@@ -6,7 +6,6 @@ import {
   CheckCircle,
   Circle,
   Clock,
-
   XCircle,
   List,
   Plus,

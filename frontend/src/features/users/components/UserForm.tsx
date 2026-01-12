@@ -218,19 +218,21 @@ export default function UserForm({
             />
           </div>
 
-          {!isFromProfile && <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Role
-            </label>
-            <select
-              {...register('role')}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-            >
-              <option value="USER">User</option>
-              <option value="MANAGER">Manager</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </div>}
+          {!isFromProfile && (
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Role
+              </label>
+              <select
+                {...register('role')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                <option value="USER">User</option>
+                <option value="MANAGER">Manager</option>
+                <option value="ADMIN">Admin</option>
+              </select>
+            </div>
+          )}
 
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700">

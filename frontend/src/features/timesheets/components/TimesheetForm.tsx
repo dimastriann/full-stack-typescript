@@ -13,7 +13,6 @@ import type { UserType } from '../../../types/Users';
 import { GET_TASKS } from '../../tasks/gql/task.graphql';
 import type { TaskType } from '../../../types/Tasks';
 
-
 interface TimesheetFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -64,7 +63,6 @@ export default function TimesheetForm({
       projectId: '',
       taskId: '',
     },
-
   });
 
   const projectId = Number(watch('projectId'));
@@ -90,8 +88,6 @@ export default function TimesheetForm({
       });
     }
   }, [timesheet, isEditMode, reset, userId, users, tasks]);
-
-
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -210,7 +206,6 @@ export default function TimesheetForm({
               {errors.userId.message?.toString()}
             </span>
           )}
-
         </div>
 
         <div>

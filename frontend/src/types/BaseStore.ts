@@ -25,13 +25,13 @@ export interface BaseStore<T> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface UserStoreModel extends BaseStore<UserType> { }
+export interface UserStoreModel extends BaseStore<UserType> {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface TaskStoreModel extends BaseStore<TaskType> { }
+export interface TaskStoreModel extends BaseStore<TaskType> {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ProjectStoreModel extends BaseStore<ProjectType> { }
+export interface ProjectStoreModel extends BaseStore<ProjectType> {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface TimesheetStoreModel extends BaseStore<TimesheetType> { }
+export interface TimesheetStoreModel extends BaseStore<TimesheetType> {}

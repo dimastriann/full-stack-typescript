@@ -10,6 +10,6 @@ export const GRAPHQL_URL = isDev ? envApiUrl : '/graphql';
 export const API_BASE_URL = isDev ? envApiUrl.replace(/\/graphql$/, '') : '';
 
 export const getAttachmentUrl = (id: number, download = false) => {
-    const base = API_BASE_URL;
-    return `${base}/attachment/file/${id}${download ? '?download=true' : ''}`;
+  const base = API_BASE_URL;
+  return `${base}/attachment/file/${id}${download ? '?download=true' : ''}`;
 };
