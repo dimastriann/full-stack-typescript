@@ -18,7 +18,7 @@ export const AuthContext = createContext<AuthContext>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<string>(
-    sessionStorage.getItem('session_id') || '',
+    '', // Session status managed by cookies now
   );
   const [user, setUser] = useState<any>(
     JSON.parse(sessionStorage.getItem('user') || 'null'),
@@ -28,19 +28,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (loginData: any) => {
     // loginData contains { access_token, user }
-    const token = loginData.access_token;
+    // access_token is now set in httpOnly cookie by backend
     const userData = loginData.user;
 
-    sessionStorage.setItem('session_id', token);
     sessionStorage.setItem('user', JSON.stringify(userData));
-    setSession(token);
+    setSession('logged_in'); // Placeholder to indicate logged in state
     setUser(userData);
     client.resetStore();
     navigate('/dashboard');
   };
 
   const logout = () => {
-    sessionStorage.removeItem('session_id');
     sessionStorage.removeItem('user');
     setSession('');
     setUser(null);

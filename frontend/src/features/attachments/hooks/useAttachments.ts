@@ -3,11 +3,8 @@ import { getAttachmentUrl } from '../../../config/api';
 export const useAttachments = () => {
   const handlePreviewFile = async (file: any) => {
     try {
-      const token = sessionStorage.getItem('session_id');
       const response = await fetch(getAttachmentUrl(file.id), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
 
       if (!response.ok) throw new Error('Failed to fetch file');
@@ -23,11 +20,8 @@ export const useAttachments = () => {
 
   const handleDownloadFile = async (file: any) => {
     try {
-      const token = sessionStorage.getItem('session_id');
       const response = await fetch(getAttachmentUrl(file.id, true), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
 
       if (!response.ok) throw new Error('Failed to fetch file');

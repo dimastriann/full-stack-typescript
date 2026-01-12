@@ -159,6 +159,7 @@ type Mutation {
   deleteUser(id: Int!): User!
   login(email: String!, password: String!): LoginResponse!
   register(createUserInput: CreateUserInput!): LoginResponse!
+  logout: Boolean!
   inviteToProject(input: InviteToProjectInput!): ProjectMember!
   updateMemberRole(input: UpdateMemberRoleInput!): ProjectMember!
   removeMemberFromProject(input: RemoveMemberInput!): ProjectMember!

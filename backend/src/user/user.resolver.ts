@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput, UserRole } from './dto/create-user.input';
@@ -56,6 +56,7 @@ export class UserResolver {
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
+    @Context() context: any,
   ) {
     const user = await this.userService.findByEmail(email);
     if (!user) {
@@ -70,17 +71,44 @@ export class UserResolver {
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
-    return this.authService.login(user);
+    const loginResponse = await this.authService.login(user);
+
+    context.res.cookie('access_token', loginResponse.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    });
+
+    return loginResponse;
   }
 
   @Mutation(() => LoginResponse)
-  async register(@Args('createUserInput') createUserInput: CreateUserInput) {
+  async register(
+    @Args('createUserInput') createUserInput: CreateUserInput,
+    @Context() context: any,
+  ) {
     // Ensure role is always USER for public registration
     const inputWithUserRole = {
       ...createUserInput,
       role: UserRole.USER,
     };
     const user = await this.userService.create(inputWithUserRole);
-    return this.authService.login(user);
+    const loginResponse = await this.authService.login(user);
+
+    context.res.cookie('access_token', loginResponse.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    });
+
+    return loginResponse;
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Context() context: any) {
+    context.res.clearCookie('access_token');
+    return true;
   }
 }

@@ -23,6 +23,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req, res }) => ({ req, res }),
     }),
     ConfigModule.forRoot({
       isGlobal: true,
