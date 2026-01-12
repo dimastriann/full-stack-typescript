@@ -9,7 +9,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Resolver(() => Timesheet)
 export class TimesheetResolver {
-  constructor(private readonly timesheetService: TimesheetService) { }
+  constructor(private readonly timesheetService: TimesheetService) {}
 
   @Mutation(() => Timesheet)
   @UseGuards(GqlAuthGuard)

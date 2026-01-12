@@ -9,7 +9,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Resolver(() => Task)
 export class TaskResolver {
-  constructor(private readonly taskService: TaskService) { }
+  constructor(private readonly taskService: TaskService) {}
 
   @Mutation(() => Task)
   @UseGuards(GqlAuthGuard)
@@ -46,7 +46,11 @@ export class TaskResolver {
     @Args('updateTaskInput') updateTaskInput: UpdateTaskInput,
     @CurrentUser() user: any,
   ) {
-    return this.taskService.update(updateTaskInput.id, updateTaskInput, user.id);
+    return this.taskService.update(
+      updateTaskInput.id,
+      updateTaskInput,
+      user.id,
+    );
   }
 
   @Mutation(() => Task)

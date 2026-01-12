@@ -8,11 +8,11 @@ import { User } from '../user/entities/user.entity';
 
 @Resolver()
 export class DashboardResolver {
-    constructor(private readonly dashboardService: DashboardService) { }
+  constructor(private readonly dashboardService: DashboardService) {}
 
-    @Query(() => DashboardStats)
-    @UseGuards(GqlAuthGuard)
-    async dashboardStats(@CurrentUser() user: User) {
-        return this.dashboardService.getStats(user.id);
-    }
+  @Query(() => DashboardStats)
+  @UseGuards(GqlAuthGuard)
+  async dashboardStats(@CurrentUser() user: User) {
+    return this.dashboardService.getStats(user.id);
+  }
 }

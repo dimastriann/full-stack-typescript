@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/user/entities/user.entity';
@@ -14,7 +22,7 @@ export class CommentResolver {
   constructor(
     private readonly commentService: CommentService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   @Mutation(() => Comment)
   @UseGuards(GqlAuthGuard)

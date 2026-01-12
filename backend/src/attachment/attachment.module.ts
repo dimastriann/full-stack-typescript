@@ -6,9 +6,9 @@ import { ProjectMemberModule } from 'src/project-member/project-member.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-    imports: [ProjectMemberModule, PrismaModule],
-    controllers: [AttachmentController],
-    providers: [AttachmentResolver, AttachmentService],
-    exports: [AttachmentService],
+  imports: [ProjectMemberModule, PrismaModule],
+  controllers: [AttachmentController],
+  providers: [AttachmentResolver, AttachmentService],
+  exports: [AttachmentService],
 })
-export class AttachmentModule { }
+export class AttachmentModule {}

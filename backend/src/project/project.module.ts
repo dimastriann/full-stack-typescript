@@ -8,4 +8,4 @@ import { ProjectMemberModule } from 'src/project-member/project-member.module';
   imports: [PrismaModule, ProjectMemberModule],
   providers: [ProjectResolver, ProjectService],
 })
-export class ProjectModule { }
+export class ProjectModule {}

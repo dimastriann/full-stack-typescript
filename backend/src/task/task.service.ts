@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -10,15 +14,15 @@ export class TaskService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
-  ) { }
+  ) {}
 
   async create(createTaskInput: CreateTaskInput, userId: number) {
     // Verify user has access to the project
-    await this.projectMemberService.checkPermission(userId, createTaskInput.projectId, [
-      ProjectRole.OWNER,
-      ProjectRole.ADMIN,
-      ProjectRole.MEMBER,
-    ]);
+    await this.projectMemberService.checkPermission(
+      userId,
+      createTaskInput.projectId,
+      [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER],
+    );
 
     return this.prisma.task.create({
       data: createTaskInput,
@@ -26,7 +30,12 @@ export class TaskService {
     });
   }
 
-  async findAll(userId: number, skip?: number, take?: number, projectId?: number) {
+  async findAll(
+    userId: number,
+    skip?: number,
+    take?: number,
+    projectId?: number,
+  ) {
     let projectIds: number[] = [];
 
     if (projectId) {
@@ -35,15 +44,16 @@ export class TaskService {
       projectIds = [projectId];
     } else {
       // Otherwise, get all accessible projects
-      const memberships = await this.projectMemberService.getUserProjects(userId);
-      projectIds = memberships.map(m => m.projectId);
+      const memberships =
+        await this.projectMemberService.getUserProjects(userId);
+      projectIds = memberships.map((m) => m.projectId);
     }
 
     return this.prisma.task.findMany({
       skip,
       take,
       where: {
-        projectId: { in: projectIds }
+        projectId: { in: projectIds },
       },
       include: {
         user: true,
@@ -54,12 +64,12 @@ export class TaskService {
             user: true,
             replies: {
               include: {
-                user: true
-              }
-            }
-          }
+                user: true,
+              },
+            },
+          },
         },
-        attachments: true
+        attachments: true,
       },
     });
   }
@@ -76,12 +86,12 @@ export class TaskService {
             user: true,
             replies: {
               include: {
-                user: true
-              }
-            }
-          }
+                user: true,
+              },
+            },
+          },
         },
-        attachments: true
+        attachments: true,
       },
     });
 

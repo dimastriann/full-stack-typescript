@@ -29,10 +29,6 @@ import { ProjectPermissionGuard } from './guards/project-permission.guard';
     ProjectAccessGuard,
     ProjectPermissionGuard,
   ],
-  exports: [
-    AuthService,
-    ProjectAccessGuard,
-    ProjectPermissionGuard,
-  ],
+  exports: [AuthService, ProjectAccessGuard, ProjectPermissionGuard],
 })
-export class AuthModule { }
+export class AuthModule {}

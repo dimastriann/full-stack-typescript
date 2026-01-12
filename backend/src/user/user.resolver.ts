@@ -16,12 +16,11 @@ export class UserResolver {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.USER)
-
   users(
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,

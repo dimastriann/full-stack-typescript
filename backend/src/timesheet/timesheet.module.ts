@@ -8,4 +8,4 @@ import { ProjectMemberModule } from 'src/project-member/project-member.module';
   imports: [ProjectMemberModule],
   providers: [TimesheetResolver, TimesheetService],
 })
-export class TimesheetModule { }
+export class TimesheetModule {}

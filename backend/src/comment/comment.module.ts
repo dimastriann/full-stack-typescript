@@ -8,4 +8,4 @@ import { ProjectMemberModule } from 'src/project-member/project-member.module';
   imports: [ProjectMemberModule],
   providers: [CommentResolver, CommentService],
 })
-export class CommentModule { }
+export class CommentModule {}

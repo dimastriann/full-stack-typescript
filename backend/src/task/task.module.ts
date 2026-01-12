@@ -8,4 +8,4 @@ import { ProjectMemberModule } from 'src/project-member/project-member.module';
   imports: [ProjectMemberModule],
   providers: [TaskResolver, TaskService],
 })
-export class TaskModule { }
+export class TaskModule {}

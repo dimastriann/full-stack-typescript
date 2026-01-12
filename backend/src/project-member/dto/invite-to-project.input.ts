@@ -7,15 +7,15 @@ import { ProjectRole } from 'prisma/generated/enums';
  */
 @InputType()
 export class InviteToProjectInput {
-    @Field(() => Int)
-    @IsInt()
-    projectId: number;
+  @Field(() => Int)
+  @IsInt()
+  projectId: number;
 
-    @Field()
-    @IsEmail()
-    email: string;
+  @Field()
+  @IsEmail()
+  email: string;
 
-    @Field(() => ProjectRole)
-    @IsEnum(ProjectRole)
-    role: ProjectRole;
+  @Field(() => ProjectRole)
+  @IsEnum(ProjectRole)
+  role: ProjectRole;
 }

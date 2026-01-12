@@ -8,7 +8,7 @@ export const PROJECT_ROLES_KEY = 'projectRoles';
 
 /**
  * Decorator to specify which roles are required to access a resolver
- * 
+ *
  * Usage:
  * @Mutation(() => Project)
  * @UseGuards(GqlAuthGuard, ProjectPermissionGuard)
@@ -22,4 +22,4 @@ export const PROJECT_ROLES_KEY = 'projectRoles';
  * }
  */
 export const RequireProjectRole = (...roles: ProjectRole[]) =>
-    SetMetadata(PROJECT_ROLES_KEY, roles);
+  SetMetadata(PROJECT_ROLES_KEY, roles);

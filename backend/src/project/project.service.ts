@@ -10,7 +10,7 @@ export class ProjectService {
   constructor(
     private prisma: PrismaService,
     private projectMemberService: ProjectMemberService,
-  ) { }
+  ) {}
 
   get includeRelation() {
     return {
@@ -49,7 +49,11 @@ export class ProjectService {
     });
 
     // Automatically add the creator as OWNER
-    await this.projectMemberService.addMember(project.id, creatorUserId, ProjectRole.OWNER);
+    await this.projectMemberService.addMember(
+      project.id,
+      creatorUserId,
+      ProjectRole.OWNER,
+    );
 
     // Return the project with updated members
     return this.prisma.project.findUnique({
@@ -102,9 +106,16 @@ export class ProjectService {
   /**
    * Update a project - verify user has OWNER or ADMIN role
    */
-  async update(id: number, updateProjectInput: UpdateProjectInput, userId: number) {
+  async update(
+    id: number,
+    updateProjectInput: UpdateProjectInput,
+    userId: number,
+  ) {
     // Verify user has permission to update (OWNER or ADMIN)
-    await this.projectMemberService.checkPermission(userId, id, [ProjectRole.OWNER, ProjectRole.ADMIN]);
+    await this.projectMemberService.checkPermission(userId, id, [
+      ProjectRole.OWNER,
+      ProjectRole.ADMIN,
+    ]);
 
     return this.prisma.project.update({
       where: { id },
@@ -118,7 +129,9 @@ export class ProjectService {
    */
   async delete(id: number, userId: number) {
     // Verify user is OWNER
-    await this.projectMemberService.checkPermission(userId, id, [ProjectRole.OWNER]);
+    await this.projectMemberService.checkPermission(userId, id, [
+      ProjectRole.OWNER,
+    ]);
 
     return this.prisma.project.delete({
       where: { id },

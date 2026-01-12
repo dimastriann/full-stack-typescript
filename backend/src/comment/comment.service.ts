@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -10,7 +14,7 @@ export class CommentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
-  ) { }
+  ) {}
 
   async create(createCommentInput: CreateCommentInput, userId: number) {
     let projectId = createCommentInput.projectId;
@@ -46,11 +50,11 @@ export class CommentService {
   async findAll(userId: number) {
     // Return only comments from projects user has access to
     const memberships = await this.projectMemberService.getUserProjects(userId);
-    const projectIds = memberships.map(m => m.projectId);
+    const projectIds = memberships.map((m) => m.projectId);
 
     return this.prisma.comment.findMany({
       where: {
-        projectId: { in: projectIds }
+        projectId: { in: projectIds },
       },
       include: { user: true, project: true, task: true, parent: true },
     });
@@ -76,7 +80,11 @@ export class CommentService {
     return comment;
   }
 
-  async update(id: number, updateCommentInput: UpdateCommentInput, userId: number) {
+  async update(
+    id: number,
+    updateCommentInput: UpdateCommentInput,
+    userId: number,
+  ) {
     const comment = await this.findOne(id, userId);
 
     if (!comment.projectId) {
@@ -123,7 +131,10 @@ export class CommentService {
     });
 
     if (parentComment?.projectId) {
-      await this.projectMemberService.checkAccess(userId, parentComment.projectId);
+      await this.projectMemberService.checkAccess(
+        userId,
+        parentComment.projectId,
+      );
     }
 
     return this.prisma.comment.findMany({

@@ -5,8 +5,9 @@ import { ProjectRole } from 'prisma/generated/enums';
 
 // Register the Prisma enum with GraphQL
 registerEnumType(ProjectRole, {
-    name: 'ProjectRole',
-    description: 'The role a user has in a project - OWNER (full control), ADMIN (manage members), MEMBER (contribute), VIEWER (read-only)',
+  name: 'ProjectRole',
+  description:
+    'The role a user has in a project - OWNER (full control), ADMIN (manage members), MEMBER (contribute), VIEWER (read-only)',
 });
 
 /**
@@ -15,31 +16,31 @@ registerEnumType(ProjectRole, {
  */
 @ObjectType()
 export class ProjectMember {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Int)
+  userId: number;
 
-    @Field(() => Int)
-    projectId: number;
+  @Field(() => Int)
+  projectId: number;
 
-    @Field(() => ProjectRole)
-    role: ProjectRole;
+  @Field(() => ProjectRole)
+  role: ProjectRole;
 
-    @Field()
-    joinedAt: Date;
+  @Field()
+  joinedAt: Date;
 
-    @Field()
-    createdAt: Date;
+  @Field()
+  createdAt: Date;
 
-    @Field()
-    updatedAt: Date;
+  @Field()
+  updatedAt: Date;
 
-    // Relations
-    @Field(() => User)
-    user: User;
+  // Relations
+  @Field(() => User)
+  user: User;
 
-    @Field(() => Project)
-    project: Project;
+  @Field(() => Project)
+  project: Project;
 }

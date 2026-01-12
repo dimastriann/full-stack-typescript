@@ -4,7 +4,7 @@ import { DashboardResolver } from './dashboard.resolver';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-    imports: [PrismaModule],
-    providers: [DashboardService, DashboardResolver],
+  imports: [PrismaModule],
+  providers: [DashboardService, DashboardResolver],
 })
-export class DashboardModule { }
+export class DashboardModule {}

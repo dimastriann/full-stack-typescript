@@ -8,4 +8,4 @@ import { PrismaModule } from 'src/prisma/prisma.module';
   providers: [ProjectMemberResolver, ProjectMemberService],
   exports: [ProjectMemberService], // Export so other modules can use it
 })
-export class ProjectMemberModule { }
+export class ProjectMemberModule {}

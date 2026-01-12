@@ -13,7 +13,7 @@ import { ProjectRole } from 'prisma/generated/enums';
 
 @Resolver(() => Project)
 export class ProjectResolver {
-  constructor(private readonly projectService: ProjectService) { }
+  constructor(private readonly projectService: ProjectService) {}
 
   /**
    * Create a new project - user is automatically added as OWNER

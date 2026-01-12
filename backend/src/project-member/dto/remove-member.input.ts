@@ -6,11 +6,11 @@ import { IsInt } from 'class-validator';
  */
 @InputType()
 export class RemoveMemberInput {
-    @Field(() => Int)
-    @IsInt()
-    projectId: number;
+  @Field(() => Int)
+  @IsInt()
+  projectId: number;
 
-    @Field(() => Int)
-    @IsInt()
-    userId: number;
+  @Field(() => Int)
+  @IsInt()
+  userId: number;
 }
