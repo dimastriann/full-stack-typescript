@@ -3,6 +3,7 @@ import { Base } from 'src/base/entities/base.entity';
 import { Project } from 'src/project/entities/project.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Attachment } from 'src/attachment/entities/attachment.entity';
+import { Comment as CommentChat } from 'src/comment/entities/comment.entity';
 
 @ObjectType()
 export class Task extends Base {
@@ -29,4 +30,7 @@ export class Task extends Base {
 
   @Field(() => [Attachment], { nullable: 'items' })
   attachments?: [Attachment];
+
+  @Field(() => [CommentChat], { nullable: 'items' })
+  comments?: [CommentChat];
 }

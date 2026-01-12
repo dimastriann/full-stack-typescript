@@ -2,8 +2,10 @@ import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
+const apiUri = import.meta.env.VITE_DEVELOPMENT?.toLowerCase() === 'true' ? import.meta.env.VITE_API_URL : '/graphql';
+
 const httpLink = createUploadLink({
-  uri: '/graphql',
+  uri: apiUri,
   headers: {
     'Apollo-Require-Preflight': 'true', // Recommended for security
   },

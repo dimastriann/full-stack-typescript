@@ -5,9 +5,12 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_PROJECTS } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { ProjectStatus } from '../../../types/Projects';
+import { ProjectStatus, type ProjectType } from '../../../types/Projects';
 import ProjectTaskTable from './ProjectTaskTable';
 import { useProjects } from '../hooks/useProjects';
+import { useAuth } from '../../../context/AuthProvider';
+import type { UserType } from '../../../types/Users';
+
 
 interface ProjectFormProps {
   onSuccess?: () => void;
@@ -15,6 +18,8 @@ interface ProjectFormProps {
 }
 
 export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
+  const { user: currentUser } = useAuth();
+
   const defaultValues = {
     name: '',
     description: '',
@@ -47,9 +52,13 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     loading: mutationLoading,
   } = useProjects();
   const [errorMsg, setErrorMsg] = useState<string>('');
+  
+  const userId = currentUser?.id?.toString();
+  const users: UserType[] = usersData?.users ?? [];
+  const projects: ProjectType[] = projectsData?.projects ?? [];
 
-  const project = projectsData?.projects?.find(
-    (p: any) => p.id === parseInt(projectId || '0'),
+  const project = projects.find(
+    (p: ProjectType) => p.id === parseInt(projectId || '0'),
   );
 
   const {
@@ -62,20 +71,25 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   });
 
   useEffect(() => {
-    if (isEditMode && projectsData?.projects) {
-      const project = projectsData.projects.find(
-        (p: any) => p.id === parseInt(projectId),
+    if (isEditMode && projects) {
+      const project = projects.find(
+        (p: ProjectType) => p.id === parseInt(projectId),
       );
       if (project) {
         reset({
           name: project.name,
           description: project.description,
           status: project.status,
-          responsibleId: project.responsibleId,
+          responsibleId: project.responsibleId.toString(),
         });
       }
+    } else if (!isEditMode && userId && users.length) {
+      reset({
+        responsibleId: userId,
+      });
     }
-  }, [projectsData, projectId, isEditMode, reset]);
+  }, [projects, projectId, isEditMode, reset, userId, users]);
+
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -91,7 +105,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
 
         // Ensure id is present
         projectFormData.id = parseInt(projectId!);
-
+        console.log('projectFormData', projectFormData);
         await updateRecord({
           variables: {
             updateProjectInput: projectFormData,
@@ -176,18 +190,20 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
                 {...register('responsibleId', {
                   required: 'Responsible person is required',
                 })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+                disabled={currentUser?.role === 'USER'}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
                 <option value="">Select User</option>
-                {usersData?.users?.map((u: any) => (
+                {users.map((u: UserType) => (
                   <option key={u.id} value={u.id}>
-                    {u.name}
+                    {u.name} ({u.email})
                   </option>
                 ))}
               </select>
+
               {errors.responsibleId && (
                 <span className="text-red-500 text-xs">
-                  {errors.responsibleId.message}
+                  {errors.responsibleId.message?.toString()}
                 </span>
               )}
             </div>

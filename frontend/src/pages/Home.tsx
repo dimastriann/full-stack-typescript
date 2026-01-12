@@ -123,7 +123,7 @@ export default function HomePage(): React.ReactElement {
       </section>
 
       <footer className="bg-white py-8 text-center text-gray-500 text-sm">
-        <p>© 2025 ProjectFlow. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} ProjectFlow. All rights reserved.</p>
       </footer>
     </>
   );

@@ -29,7 +29,7 @@ export default function TaskFormPage() {
 
   return (
     <TaskProvider>
-      <div className="mx-auto py-6 max-w-5xl">
+      <div className="mx-auto py-6">
         <div className="mb-6 flex items-center">
           <button
             onClick={handleCancel}

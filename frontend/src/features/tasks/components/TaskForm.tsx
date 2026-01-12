@@ -11,6 +11,9 @@ import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { TaskStatus } from '../../../types/Tasks';
 import TaskTimesheetTable from './TaskTimesheetTable';
+import { useAuth } from '../../../context/AuthProvider';
+import type { UserType } from '../../../types/Users';
+
 
 interface TaskFormProps {
   onSuccess?: () => void;
@@ -18,7 +21,9 @@ interface TaskFormProps {
 }
 
 export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
+  const { user: currentUser } = useAuth();
   const { taskId } = useParams();
+
   const isEditMode = !!taskId;
 
   // Only fetch if we are in edit mode (have a userId from params)
@@ -37,6 +42,9 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   const task = data?.getTask;
+  const projects: ProjectType[] = projectsData?.projects;
+  const users: UserType[] = usersData?.users;
+  const userId = currentUser?.id;
 
   const {
     register,
@@ -47,24 +55,30 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
     defaultValues: {
       title: '',
       description: '',
-      userId: '',
+      userId: userId?.toString() || '',
       projectId: '',
       status: TaskStatus.TODO,
     },
+
   });
 
   useEffect(() => {
-    if (isEditMode && task) {
-      // console.log('task edit', task);
+    if (isEditMode && task && projects) {
       reset({
         title: task.title,
         description: task.description,
-        userId: task.userId,
-        projectId: task.projectId,
+        userId: task.userId.toString(),
+        projectId: task.projectId.toString(),
         status: task.status,
       });
+    } else if (!isEditMode && userId && users) {
+      reset({
+        userId: userId.toString(),
+      });
     }
-  }, [task, isEditMode, reset]);
+  }, [task, isEditMode, reset, userId, users, projects]);
+
+
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -142,18 +156,20 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               </label>
               <select
                 {...register('userId', { required: 'User is required' })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+                disabled={currentUser?.role === 'USER'}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
                 <option value="">Select User</option>
-                {usersData?.users?.map((u: any) => (
+                {users?.map((u: UserType) => (
                   <option key={u.id} value={u.id}>
                     {u.name}
                   </option>
                 ))}
               </select>
+
               {errors.userId && (
                 <span className="text-red-500 text-xs">
-                  {errors.userId.message}
+                  {errors.userId.message?.toString()}
                 </span>
               )}
             </div>
@@ -167,7 +183,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
               >
                 <option value="">Select Project</option>
-                {projectsData?.projects?.map((p: ProjectType) => (
+                {projects?.map((p: ProjectType) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
                   </option>

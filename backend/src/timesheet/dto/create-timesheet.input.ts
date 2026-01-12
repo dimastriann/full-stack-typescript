@@ -16,4 +16,7 @@ export class CreateTimesheetInput {
 
   @Field(() => Int)
   projectId: number;
+
+  @Field(() => Int)
+  taskId: number;
 }
