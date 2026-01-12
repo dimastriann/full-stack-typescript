@@ -1,12 +1,17 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import ProjectForm from '../components/ProjectForm';
 import { ArrowLeft } from 'lucide-react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
+
 import { GET_PROJECT } from '../gql/project.graphql';
 import { CommentThread } from '../../../components/comments/CommentThread';
 import { FileUpload } from '../../../components/upload/FileUpload';
 import { useAuth } from '../../../context/AuthProvider';
 import ProjectMembersList from '../components/ProjectMembersList';
+
+import { REMOVE_ATTACHMENT } from '../../attachments/gql/attachment.graphql';
+import { Trash2, Download } from 'lucide-react';
+import { useAttachments } from '../../attachments/hooks/useAttachments';
 
 export default function ProjectFormPage() {
   const navigate = useNavigate();
@@ -19,6 +24,21 @@ export default function ProjectFormPage() {
     variables: { id },
     skip: !id,
   });
+  const [removeAttachment] = useMutation(REMOVE_ATTACHMENT);
+  const { handlePreviewFile, handleDownloadFile } = useAttachments();
+
+  const handleDeleteAttachment = async (attachmentId: number) => {
+    if (!window.confirm('Are you sure you want to delete this attachment?')) return;
+    try {
+      await removeAttachment({
+        variables: { id: attachmentId },
+      });
+      refetch();
+    } catch (error) {
+      console.error('Error deleting attachment:', error);
+      alert('Failed to delete attachment');
+    }
+  };
 
   const handleSuccess = () => {
     navigate('/dashboard/projects');
@@ -76,12 +96,35 @@ export default function ProjectFormPage() {
               {project?.attachments && project.attachments.length > 0 ? (
                 <ul className="divide-y divide-gray-200">
                   {project.attachments.map((file: any) => (
-                    <li key={file.id} className="py-2 flex justify-between items-center">
-                      <a href={file.path} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline truncate text-sm">
-                        {file.filename}
-                      </a>
-                      <span className="text-xs text-gray-500">{(file.size / 1024).toFixed(1)} KB</span>
+                    <li key={file.id} className="py-2 flex justify-between items-center group">
+                      <div className="flex items-center space-x-2 truncate">
+                        <button
+                          onClick={() => handlePreviewFile(file)}
+                          className="text-indigo-600 hover:underline truncate text-sm text-left"
+                        >
+                          {file.filename}
+                        </button>
+                        <span className="text-xs text-gray-500">({(file.size / 1024).toFixed(1)} KB)</span>
+                      </div>
+                      <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleDownloadFile(file)}
+                          className="text-gray-400 hover:text-indigo-600 p-1"
+                          title="Download"
+                        >
+                          <Download className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAttachment(file.id)}
+                          className="text-gray-400 hover:text-red-500 p-1"
+                          title="Delete attachment"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+
                     </li>
+
                   ))}
                 </ul>
               ) : (
@@ -92,5 +135,6 @@ export default function ProjectFormPage() {
         </div>
       </div>
     </div>
+
   );
 }

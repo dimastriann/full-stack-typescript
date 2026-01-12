@@ -176,6 +176,7 @@ type Mutation {
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   removeComment(id: Int!): Comment!
   uploadFile(file: Upload!, relationId: Int!, relationType: String!): Attachment!
+  removeAttachment(id: Int!): Attachment!
 }
 
 input CreateUserInput {

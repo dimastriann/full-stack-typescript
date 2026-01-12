@@ -20,4 +20,13 @@ export class AttachmentResolver {
     ) {
         return this.attachmentService.uploadFile(file, relationId, relationType, user.id);
     }
+
+    @Mutation(() => Attachment)
+    @UseGuards(GqlAuthGuard)
+    async removeAttachment(
+        @Args('id', { type: () => Int }) id: number,
+        @CurrentUser() user: any,
+    ) {
+        return this.attachmentService.remove(id, user.id);
+    }
 }

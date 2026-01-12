@@ -11,3 +11,11 @@ export const UPLOAD_FILE = gql`
     }
   }
 `;
+
+export const REMOVE_ATTACHMENT = gql`
+  mutation RemoveAttachment($id: Int!) {
+    removeAttachment(id: $id) {
+      id
+    }
+  }
+`;

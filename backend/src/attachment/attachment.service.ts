@@ -2,7 +2,8 @@ import { Injectable, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
-import { createWriteStream, mkdirSync, existsSync, statSync } from 'fs';
+import { createWriteStream, mkdirSync, existsSync, statSync, unlinkSync } from 'fs';
+
 import { join } from 'path';
 import { randomBytes } from 'crypto';
 import { FileUpload } from 'graphql-upload-ts';
@@ -79,6 +80,49 @@ export class AttachmentService {
                     resolve(attachment);
                 })
                 .on('error', (error: any) => reject(error));
+        });
+    }
+
+    async remove(id: number, userId: number) {
+        // 1. Find the attachment
+        const attachment = await this.prisma.attachment.findUnique({
+            where: { id },
+        });
+
+        if (!attachment) {
+            throw new ForbiddenException('Attachment not found');
+        }
+
+        // 2. Determine Project ID for access check
+        let projectId = attachment.projectId;
+        if (!projectId && attachment.taskId) {
+            const task = await this.prisma.task.findUnique({
+                where: { id: attachment.taskId },
+                select: { projectId: true }
+            });
+            if (task) projectId = task.projectId;
+        }
+
+        if (!projectId) {
+            throw new ForbiddenException('Associated project not found');
+        }
+
+        // 3. Verify user has access to the project
+        await this.projectMemberService.checkPermission(userId, projectId, [
+            ProjectRole.OWNER,
+            ProjectRole.ADMIN,
+            ProjectRole.MEMBER,
+        ]);
+
+        // 4. Delete the physical file
+        const filePath = join(process.cwd(), attachment.path);
+        if (existsSync(filePath)) {
+            unlinkSync(filePath);
+        }
+
+        // 5. Delete the database record
+        return this.prisma.attachment.delete({
+            where: { id },
         });
     }
 }
