@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider      = "prisma-client"
-  output        = "./generated"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
@@ -11,27 +11,92 @@ datasource db {
 }
 
 model User {
-  id                 Int             @id @default(autoincrement())
+  id                 Int               @id @default(autoincrement())
   name               String
-  email              String          @unique
+  email              String            @unique
   password           String
   phone              String?
   mobile             String?
   firstName          String
   lastName           String?
-  status             Boolean         @default(true)
+  status             Boolean           @default(true)
   address            String?
   bio                String?
   birthDate          DateTime?
   gender             Gender?
-  role               UserRole        @default(USER)
+  role               UserRole          @default(USER)
   tasks              Task[]
   projects           Project[]
   timesheets         Timesheet[]
   comments           Comment[]
   projectMemberships ProjectMember[]
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
+  workspaceMembers   WorkspaceMember[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+model Workspace {
+  id            Int               @id @default(autoincrement())
+  name          String
+  description   String?
+  members       WorkspaceMember[]
+  projects      Project[]
+  projectStages ProjectStage[]
+  taskStages    TaskStage[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model WorkspaceMember {
+  id          Int           @id @default(autoincrement())
+  workspaceId Int
+  userId      Int
+  role        WorkspaceRole @default(MEMBER)
+  joinedAt    DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model ProjectStage {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  color       String    @default("#808080")
+  isCompleted Boolean   @default(false)
+  isCanceled  Boolean   @default(false)
+  workspaceId Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model TaskStage {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  color       String    @default("#808080")
+  isCompleted Boolean   @default(false)
+  isCanceled  Boolean   @default(false)
+  workspaceId Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Project {
@@ -39,9 +104,12 @@ model Project {
   name          String
   description   String?
   tasks         Task[]
-  status        ProjectStatus   @default(DRAFT)
   responsible   User?           @relation(fields: [responsibleId], references: [id])
   responsibleId Int?
+  stage         ProjectStage?   @relation(fields: [stageId], references: [id])
+  stageId       Int?
+  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId   Int
   comments      Comment[]
   attachments   Attachment[]
   timesheets    Timesheet[]
@@ -55,10 +123,11 @@ model Task {
   title       String
   description String?
   user        User         @relation(fields: [userId], references: [id])
-  project     Project      @relation(fields: [projectId], references: [id])
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userId      Int
   projectId   Int
-  status      TaskStatus   @default(TODO)
+  stage       TaskStage?   @relation(fields: [stageId], references: [id])
+  stageId     Int?
   comments    Comment[]
   attachments Attachment[]
   timesheets  Timesheet[]
@@ -142,13 +211,14 @@ model Attachment {
 }
 
 model ProjectMember {
-  id        Int         @id @default(autoincrement())
-  userId    Int
-  projectId Int
-  role      ProjectRole @default(MEMBER)
-  joinedAt  DateTime    @default(now())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  projectId   Int
+  workspaceId Int
+  role        ProjectRole @default(MEMBER)
+  joinedAt    DateTime    @default(now())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)

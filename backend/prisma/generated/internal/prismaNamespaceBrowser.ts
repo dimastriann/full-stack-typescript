@@ -52,6 +52,10 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Workspace: 'Workspace',
+  WorkspaceMember: 'WorkspaceMember',
+  ProjectStage: 'ProjectStage',
+  TaskStage: 'TaskStage',
   Project: 'Project',
   Task: 'Task',
   Timesheet: 'Timesheet',
@@ -98,12 +102,67 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const WorkspaceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
+
+
+export const WorkspaceMemberScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  role: 'role',
+  joinedAt: 'joinedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkspaceMemberScalarFieldEnum = (typeof WorkspaceMemberScalarFieldEnum)[keyof typeof WorkspaceMemberScalarFieldEnum]
+
+
+export const ProjectStageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  color: 'color',
+  isCompleted: 'isCompleted',
+  isCanceled: 'isCanceled',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectStageScalarFieldEnum = (typeof ProjectStageScalarFieldEnum)[keyof typeof ProjectStageScalarFieldEnum]
+
+
+export const TaskStageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  color: 'color',
+  isCompleted: 'isCompleted',
+  isCanceled: 'isCanceled',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskStageScalarFieldEnum = (typeof TaskStageScalarFieldEnum)[keyof typeof TaskStageScalarFieldEnum]
+
+
 export const ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  status: 'status',
   responsibleId: 'responsibleId',
+  stageId: 'stageId',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -117,7 +176,7 @@ export const TaskScalarFieldEnum = {
   description: 'description',
   userId: 'userId',
   projectId: 'projectId',
-  status: 'status',
+  stageId: 'stageId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -172,6 +231,7 @@ export const ProjectMemberScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   projectId: 'projectId',
+  workspaceId: 'workspaceId',
   role: 'role',
   joinedAt: 'joinedAt',
   createdAt: 'createdAt',

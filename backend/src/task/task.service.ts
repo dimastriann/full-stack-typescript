@@ -14,7 +14,27 @@ export class TaskService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
-  ) {}
+  ) { }
+
+  get includeRelation() {
+    return {
+      user: true,
+      project: true,
+      stage: true,
+      attachments: true,
+      comments: {
+        where: { parentId: null },
+        include: {
+          user: true,
+          replies: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      },
+    };
+  }
 
   async create(createTaskInput: CreateTaskInput, userId: number) {
     // Verify user has access to the project
@@ -26,7 +46,7 @@ export class TaskService {
 
     return this.prisma.task.create({
       data: createTaskInput,
-      include: { user: true, project: true, attachments: true },
+      include: this.includeRelation,
     });
   }
 

@@ -16,6 +16,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AttachmentModule } from './attachment/attachment.module';
 import { ProjectMemberModule } from './project-member/project-member.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { WorkspaceModule } from './workspace/workspace.module';
+import { ProjectStageModule } from './project-stage/project-stage.module';
+import { TaskStageModule } from './task-stage/task-stage.module';
 
 @Module({
   imports: [
@@ -40,8 +43,11 @@ import { DashboardModule } from './dashboard/dashboard.module';
     AttachmentModule,
     ProjectMemberModule,
     DashboardModule,
+    WorkspaceModule,
+    ProjectStageModule,
+    TaskStageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

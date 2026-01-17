@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { TaskStatus } from '../../prisma/generated/client';
 
 @Injectable()
 export class DashboardService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getStats(userId: number) {
     const totalUsers = await this.prisma.user.count();
@@ -22,8 +21,8 @@ export class DashboardService {
     const pendingTasks = await this.prisma.task.count({
       where: {
         userId: userId,
-        status: {
-          not: TaskStatus.DONE,
+        stage: {
+          isCompleted: false,
         },
       },
     });

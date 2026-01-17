@@ -10,7 +10,7 @@ export class ProjectService {
   constructor(
     private prisma: PrismaService,
     private projectMemberService: ProjectMemberService,
-  ) {}
+  ) { }
 
   get includeRelation() {
     return {
@@ -18,6 +18,8 @@ export class ProjectService {
       tasks: true,
       timesheets: true,
       attachments: true,
+      workspace: true,
+      stage: true,
       members: {
         include: {
           user: true,
@@ -42,6 +44,22 @@ export class ProjectService {
    * This is the KEY to the ACL system - every project has at least one owner
    */
   async create(createProjectInput: CreateProjectInput, creatorUserId: number) {
+    // Verify user is a member of the workspace
+    const workspaceMember = await this.prisma.workspaceMember.findUnique({
+      where: {
+        workspaceId_userId: {
+          workspaceId: createProjectInput.workspaceId,
+          userId: creatorUserId,
+        },
+      },
+    });
+
+    if (!workspaceMember) {
+      throw new ForbiddenException(
+        'You must be a member of the workspace to create a project',
+      );
+    }
+
     // Create the project
     const project = await this.prisma.project.create({
       data: createProjectInput,
@@ -63,10 +81,14 @@ export class ProjectService {
   }
 
   /**
-   * Get all projects that the user has access to
-   * This replaces the old findAll() that returned ALL projects
+   * Get all projects that the user has access to, optionally filtered by workspace
    */
-  async findAll(userId: number, skip?: number, take?: number) {
+  async findAll(
+    userId: number,
+    workspaceId?: number,
+    skip?: number,
+    take?: number,
+  ) {
     // Get all project memberships for this user
     const memberships = await this.projectMemberService.getUserProjects(userId);
 
@@ -77,6 +99,7 @@ export class ProjectService {
     return this.prisma.project.findMany({
       where: {
         id: { in: projectIds },
+        ...(workspaceId && { workspaceId }),
       },
       skip,
       take,

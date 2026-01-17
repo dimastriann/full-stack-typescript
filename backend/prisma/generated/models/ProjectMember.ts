@@ -30,18 +30,21 @@ export type ProjectMemberAvgAggregateOutputType = {
   id: number | null
   userId: number | null
   projectId: number | null
+  workspaceId: number | null
 }
 
 export type ProjectMemberSumAggregateOutputType = {
   id: number | null
   userId: number | null
   projectId: number | null
+  workspaceId: number | null
 }
 
 export type ProjectMemberMinAggregateOutputType = {
   id: number | null
   userId: number | null
   projectId: number | null
+  workspaceId: number | null
   role: $Enums.ProjectRole | null
   joinedAt: Date | null
   createdAt: Date | null
@@ -52,6 +55,7 @@ export type ProjectMemberMaxAggregateOutputType = {
   id: number | null
   userId: number | null
   projectId: number | null
+  workspaceId: number | null
   role: $Enums.ProjectRole | null
   joinedAt: Date | null
   createdAt: Date | null
@@ -62,6 +66,7 @@ export type ProjectMemberCountAggregateOutputType = {
   id: number
   userId: number
   projectId: number
+  workspaceId: number
   role: number
   joinedAt: number
   createdAt: number
@@ -74,18 +79,21 @@ export type ProjectMemberAvgAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  workspaceId?: true
 }
 
 export type ProjectMemberSumAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  workspaceId?: true
 }
 
 export type ProjectMemberMinAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  workspaceId?: true
   role?: true
   joinedAt?: true
   createdAt?: true
@@ -96,6 +104,7 @@ export type ProjectMemberMaxAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  workspaceId?: true
   role?: true
   joinedAt?: true
   createdAt?: true
@@ -106,6 +115,7 @@ export type ProjectMemberCountAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  workspaceId?: true
   role?: true
   joinedAt?: true
   createdAt?: true
@@ -203,6 +213,7 @@ export type ProjectMemberGroupByOutputType = {
   id: number
   userId: number
   projectId: number
+  workspaceId: number
   role: $Enums.ProjectRole
   joinedAt: Date
   createdAt: Date
@@ -236,6 +247,7 @@ export type ProjectMemberWhereInput = {
   id?: Prisma.IntFilter<"ProjectMember"> | number
   userId?: Prisma.IntFilter<"ProjectMember"> | number
   projectId?: Prisma.IntFilter<"ProjectMember"> | number
+  workspaceId?: Prisma.IntFilter<"ProjectMember"> | number
   role?: Prisma.EnumProjectRoleFilter<"ProjectMember"> | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFilter<"ProjectMember"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ProjectMember"> | Date | string
@@ -248,6 +260,7 @@ export type ProjectMemberOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -264,6 +277,7 @@ export type ProjectMemberWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProjectMemberWhereInput | Prisma.ProjectMemberWhereInput[]
   userId?: Prisma.IntFilter<"ProjectMember"> | number
   projectId?: Prisma.IntFilter<"ProjectMember"> | number
+  workspaceId?: Prisma.IntFilter<"ProjectMember"> | number
   role?: Prisma.EnumProjectRoleFilter<"ProjectMember"> | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFilter<"ProjectMember"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ProjectMember"> | Date | string
@@ -276,6 +290,7 @@ export type ProjectMemberOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -294,6 +309,7 @@ export type ProjectMemberScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"ProjectMember"> | number
   userId?: Prisma.IntWithAggregatesFilter<"ProjectMember"> | number
   projectId?: Prisma.IntWithAggregatesFilter<"ProjectMember"> | number
+  workspaceId?: Prisma.IntWithAggregatesFilter<"ProjectMember"> | number
   role?: Prisma.EnumProjectRoleWithAggregatesFilter<"ProjectMember"> | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeWithAggregatesFilter<"ProjectMember"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProjectMember"> | Date | string
@@ -301,6 +317,7 @@ export type ProjectMemberScalarWhereWithAggregatesInput = {
 }
 
 export type ProjectMemberCreateInput = {
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -313,6 +330,7 @@ export type ProjectMemberUncheckedCreateInput = {
   id?: number
   userId: number
   projectId: number
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -320,6 +338,7 @@ export type ProjectMemberUncheckedCreateInput = {
 }
 
 export type ProjectMemberUpdateInput = {
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -332,6 +351,7 @@ export type ProjectMemberUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -342,6 +362,7 @@ export type ProjectMemberCreateManyInput = {
   id?: number
   userId: number
   projectId: number
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -349,6 +370,7 @@ export type ProjectMemberCreateManyInput = {
 }
 
 export type ProjectMemberUpdateManyMutationInput = {
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +381,7 @@ export type ProjectMemberUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -384,6 +407,7 @@ export type ProjectMemberCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -394,12 +418,14 @@ export type ProjectMemberAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
 }
 
 export type ProjectMemberMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -410,6 +436,7 @@ export type ProjectMemberMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -420,6 +447,7 @@ export type ProjectMemberSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  workspaceId?: Prisma.SortOrder
 }
 
 export type ProjectMemberCreateNestedManyWithoutUserInput = {
@@ -511,6 +539,7 @@ export type EnumProjectRoleFieldUpdateOperationsInput = {
 }
 
 export type ProjectMemberCreateWithoutUserInput = {
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -521,6 +550,7 @@ export type ProjectMemberCreateWithoutUserInput = {
 export type ProjectMemberUncheckedCreateWithoutUserInput = {
   id?: number
   projectId: number
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -560,6 +590,7 @@ export type ProjectMemberScalarWhereInput = {
   id?: Prisma.IntFilter<"ProjectMember"> | number
   userId?: Prisma.IntFilter<"ProjectMember"> | number
   projectId?: Prisma.IntFilter<"ProjectMember"> | number
+  workspaceId?: Prisma.IntFilter<"ProjectMember"> | number
   role?: Prisma.EnumProjectRoleFilter<"ProjectMember"> | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFilter<"ProjectMember"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ProjectMember"> | Date | string
@@ -567,6 +598,7 @@ export type ProjectMemberScalarWhereInput = {
 }
 
 export type ProjectMemberCreateWithoutProjectInput = {
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -577,6 +609,7 @@ export type ProjectMemberCreateWithoutProjectInput = {
 export type ProjectMemberUncheckedCreateWithoutProjectInput = {
   id?: number
   userId: number
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -612,6 +645,7 @@ export type ProjectMemberUpdateManyWithWhereWithoutProjectInput = {
 export type ProjectMemberCreateManyUserInput = {
   id?: number
   projectId: number
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -619,6 +653,7 @@ export type ProjectMemberCreateManyUserInput = {
 }
 
 export type ProjectMemberUpdateWithoutUserInput = {
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -629,6 +664,7 @@ export type ProjectMemberUpdateWithoutUserInput = {
 export type ProjectMemberUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -638,6 +674,7 @@ export type ProjectMemberUncheckedUpdateWithoutUserInput = {
 export type ProjectMemberUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -647,6 +684,7 @@ export type ProjectMemberUncheckedUpdateManyWithoutUserInput = {
 export type ProjectMemberCreateManyProjectInput = {
   id?: number
   userId: number
+  workspaceId: number
   role?: $Enums.ProjectRole
   joinedAt?: Date | string
   createdAt?: Date | string
@@ -654,6 +692,7 @@ export type ProjectMemberCreateManyProjectInput = {
 }
 
 export type ProjectMemberUpdateWithoutProjectInput = {
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -664,6 +703,7 @@ export type ProjectMemberUpdateWithoutProjectInput = {
 export type ProjectMemberUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -673,6 +713,7 @@ export type ProjectMemberUncheckedUpdateWithoutProjectInput = {
 export type ProjectMemberUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumProjectRoleFieldUpdateOperationsInput | $Enums.ProjectRole
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -685,6 +726,7 @@ export type ProjectMemberSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  workspaceId?: boolean
   role?: boolean
   joinedAt?: boolean
   createdAt?: boolean
@@ -697,6 +739,7 @@ export type ProjectMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  workspaceId?: boolean
   role?: boolean
   joinedAt?: boolean
   createdAt?: boolean
@@ -709,6 +752,7 @@ export type ProjectMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  workspaceId?: boolean
   role?: boolean
   joinedAt?: boolean
   createdAt?: boolean
@@ -721,13 +765,14 @@ export type ProjectMemberSelectScalar = {
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  workspaceId?: boolean
   role?: boolean
   joinedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "role" | "joinedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["projectMember"]>
+export type ProjectMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "workspaceId" | "role" | "joinedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["projectMember"]>
 export type ProjectMemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -751,6 +796,7 @@ export type $ProjectMemberPayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: number
     userId: number
     projectId: number
+    workspaceId: number
     role: $Enums.ProjectRole
     joinedAt: Date
     createdAt: Date
@@ -1183,6 +1229,7 @@ export interface ProjectMemberFieldRefs {
   readonly id: Prisma.FieldRef<"ProjectMember", 'Int'>
   readonly userId: Prisma.FieldRef<"ProjectMember", 'Int'>
   readonly projectId: Prisma.FieldRef<"ProjectMember", 'Int'>
+  readonly workspaceId: Prisma.FieldRef<"ProjectMember", 'Int'>
   readonly role: Prisma.FieldRef<"ProjectMember", 'ProjectRole'>
   readonly joinedAt: Prisma.FieldRef<"ProjectMember", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"ProjectMember", 'DateTime'>

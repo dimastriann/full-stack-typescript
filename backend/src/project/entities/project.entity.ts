@@ -5,6 +5,8 @@ import { User } from 'src/user/entities/user.entity';
 import { Comment as CommentChat } from 'src/comment/entities/comment.entity';
 import { Attachment } from 'src/attachment/entities/attachment.entity';
 import { ProjectMember } from 'src/project-member/entities/project-member.entity';
+import { Workspace } from 'src/workspace/entities/workspace.entity';
+import { ProjectStage } from 'src/project-stage/entities/project-stage.entity';
 
 @ObjectType()
 export class Project {
@@ -16,9 +18,6 @@ export class Project {
 
   @Field()
   description: string;
-
-  @Field()
-  status: string;
 
   @Field()
   createdAt: Date;
@@ -46,4 +45,16 @@ export class Project {
 
   @Field(() => [ProjectMember], { nullable: 'items' })
   members?: [ProjectMember];
+
+  @Field(() => Int)
+  workspaceId: number;
+
+  @Field(() => Workspace)
+  workspace: Workspace;
+
+  @Field(() => Int, { nullable: true })
+  stageId?: number;
+
+  @Field(() => ProjectStage, { nullable: true })
+  stage?: ProjectStage;
 }

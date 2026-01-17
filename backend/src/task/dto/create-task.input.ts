@@ -1,9 +1,4 @@
-import { InputType, Int, Field, registerEnumType } from '@nestjs/graphql';
-import { TaskStatus } from '../../../prisma/generated/client';
-
-registerEnumType(TaskStatus, {
-  name: 'TaskStatus',
-});
+import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreateTaskInput {
@@ -13,12 +8,12 @@ export class CreateTaskInput {
   @Field({ nullable: true })
   description?: string;
 
-  @Field(() => TaskStatus, { defaultValue: TaskStatus.TODO })
-  status: TaskStatus;
-
   @Field(() => Int)
   userId: number;
 
   @Field(() => Int)
   projectId: number;
+
+  @Field(() => Int, { nullable: true })
+  stageId?: number;
 }

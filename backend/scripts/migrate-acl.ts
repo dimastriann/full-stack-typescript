@@ -39,6 +39,7 @@ async function migrate() {
 					data: {
 						userId: project.responsibleId,
 						projectId: project.id,
+						workspaceId: project.workspaceId,
 						role: 'OWNER',
 					},
 				});

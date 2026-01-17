@@ -1,17 +1,4 @@
-import { InputType, Int, Field, registerEnumType } from '@nestjs/graphql';
-
-export enum ProjectStatus {
-  DRAFT = 'DRAFT',
-  IN_PROGRESS = 'IN_PROGRESS',
-  IN_REVIEW = 'IN_REVIEW',
-  DONE = 'DONE',
-  CANCELED = 'CANCELED',
-}
-
-registerEnumType(ProjectStatus, {
-  name: 'ProjectStatus',
-  description: 'Project status',
-});
+import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreateProjectInput {
@@ -24,6 +11,9 @@ export class CreateProjectInput {
   @Field(() => Int)
   responsibleId: number;
 
-  @Field(() => ProjectStatus, { defaultValue: ProjectStatus.DRAFT })
-  status: ProjectStatus;
+  @Field(() => Int)
+  workspaceId: number;
+
+  @Field(() => Int, { nullable: true })
+  stageId?: number;
 }
