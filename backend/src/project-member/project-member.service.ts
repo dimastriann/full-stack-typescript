@@ -13,7 +13,7 @@ import { ProjectRole } from 'prisma/generated/enums';
  */
 @Injectable()
 export class ProjectMemberService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Add a user to a project with a specific role

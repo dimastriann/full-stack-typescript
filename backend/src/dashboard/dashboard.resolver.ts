@@ -1,4 +1,4 @@
-import { Resolver, Query } from '@nestjs/graphql';
+import { Resolver, Query, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { DashboardStats } from './dto/dashboard-stats.type';
@@ -12,7 +12,11 @@ export class DashboardResolver {
 
   @Query(() => DashboardStats)
   @UseGuards(GqlAuthGuard)
-  async dashboardStats(@CurrentUser() user: User) {
-    return this.dashboardService.getStats(user.id);
+  async dashboardStats(
+    @CurrentUser() user: User,
+    @Args('workspaceId', { type: () => Int, nullable: true })
+    workspaceId?: number,
+  ) {
+    return this.dashboardService.getStats(user.id, workspaceId);
   }
 }

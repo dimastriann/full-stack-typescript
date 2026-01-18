@@ -5,10 +5,11 @@ import {
   CREATE_TASK,
   UPDATE_TASK,
   DELETE_TASK,
+  GET_TASK_STAGES,
 } from '../../tasks/gql/task.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import type { TaskType } from '../../../types/Tasks';
-import { TaskStatus } from '../../../types/Tasks';
+import { useWorkspace } from '../../../context/WorkspaceProvider';
+import type { TaskType, TaskStage } from '../../../types/Tasks';
 import { Plus, Save, X, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,11 +18,18 @@ interface ProjectTaskTableProps {
 }
 
 export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
+  const { activeWorkspace } = useWorkspace();
   const { data, loading, refetch } = useQuery(GET_TASKS, {
     variables: { projectId },
     skip: !projectId,
   });
   const { data: usersData } = useQuery(GET_USERS);
+  const { data: stagesData } = useQuery(GET_TASK_STAGES, {
+    variables: { workspaceId: activeWorkspace?.id },
+    skip: !activeWorkspace,
+  });
+
+  const stages: TaskStage[] = stagesData?.taskStages ?? [];
 
   const [createTask] = useMutation(CREATE_TASK);
   const [updateTask] = useMutation(UPDATE_TASK);
@@ -44,7 +52,6 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
     setEditForm({
       title: '',
       description: '',
-      status: TaskStatus.TODO,
       userId: undefined,
       projectId: Number(projectId),
     });
@@ -66,17 +73,25 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
 
   const handleSave = async () => {
     try {
-      const input = {
-        ...editForm,
-        id: editingId === 'new' ? undefined : editingId,
+      const input: any = {
+        title: editForm.title,
+        description: editForm.description,
         projectId: Number(projectId),
         userId: Number(editForm.userId),
       };
 
+      if (editForm.stageId) {
+        input.stageId = Number(editForm.stageId);
+      }
+
       if (editingId === 'new') {
-        await createTask({ variables: { input } });
+        await createTask({ variables: { createTaskInput: input } });
       } else {
-        await updateTask({ variables: { input: { ...input, id: editingId } } });
+        await updateTask({
+          variables: {
+            updateTaskInput: { ...input, id: Number(editingId) },
+          },
+        });
       }
       await refetch();
       setEditingId(null);
@@ -177,18 +192,17 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                 </td>
                 <td className="px-4 py-2">
                   <select
-                    name="status"
-                    value={editForm.status || TaskStatus.TODO}
+                    name="stageId"
+                    value={editForm.stageId || ''}
                     onChange={handleChange}
                     className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
                   >
-                    <option value={TaskStatus.TODO}>To Do</option>
-                    <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
-                    <option value={TaskStatus.DEPLOYED}>Deployed</option>
-                    <option value={TaskStatus.TESTING}>Testing</option>
-                    <option value={TaskStatus.REVISION}>Revision</option>
-                    <option value={TaskStatus.DONE}>Done</option>
-                    <option value={TaskStatus.CANCELED}>Canceled</option>
+                    <option value="">Select Stage</option>
+                    {stages.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.title}
+                      </option>
+                    ))}
                   </select>
                 </td>
                 <td className="px-4 py-2 text-right whitespace-nowrap">
@@ -249,20 +263,17 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                     </td>
                     <td className="px-4 py-2">
                       <select
-                        name="status"
-                        value={editForm.status || ''}
+                        name="stageId"
+                        value={editForm.stageId || ''}
                         onChange={handleChange}
                         className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
                       >
-                        <option value={TaskStatus.TODO}>To Do</option>
-                        <option value={TaskStatus.IN_PROGRESS}>
-                          In Progress
-                        </option>
-                        <option value={TaskStatus.DEPLOYED}>Deployed</option>
-                        <option value={TaskStatus.TESTING}>Testing</option>
-                        <option value={TaskStatus.REVISION}>Revision</option>
-                        <option value={TaskStatus.DONE}>Done</option>
-                        <option value={TaskStatus.CANCELED}>Canceled</option>
+                        <option value="">Select Stage</option>
+                        {stages.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.title}
+                          </option>
+                        ))}
                       </select>
                     </td>
                     <td className="px-4 py-2 text-right whitespace-nowrap">
@@ -293,16 +304,14 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-500">
                       <span
-                        className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full 
+                        className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full
                         ${
-                          task.status === TaskStatus.DONE
+                          task.stage?.isCompleted
                             ? 'bg-green-100 text-green-800'
-                            : task.status === TaskStatus.IN_PROGRESS
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
+                            : 'bg-indigo-100 text-indigo-800'
                         }`}
                       >
-                        {task.status}
+                        {task.stage?.title || 'No Stage'}
                       </span>
                     </td>
                     <td className="px-4 py-2 text-right text-sm font-medium">

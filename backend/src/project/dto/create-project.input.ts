@@ -16,4 +16,7 @@ export class CreateProjectInput {
 
   @Field(() => Int, { nullable: true })
   stageId?: number;
+
+  @Field(() => Int, { nullable: true })
+  sequence?: number;
 }

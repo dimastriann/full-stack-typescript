@@ -4,8 +4,8 @@ import { WorkspaceResolver } from './workspace.resolver';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-    imports: [PrismaModule],
-    providers: [WorkspaceResolver, WorkspaceService],
-    exports: [WorkspaceService],
+  imports: [PrismaModule],
+  providers: [WorkspaceResolver, WorkspaceService],
+  exports: [WorkspaceService],
 })
-export class WorkspaceModule { }
+export class WorkspaceModule {}

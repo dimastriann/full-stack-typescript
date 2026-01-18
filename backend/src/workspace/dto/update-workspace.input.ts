@@ -3,6 +3,6 @@ import { CreateWorkspaceInput } from './create-workspace.input';
 
 @InputType()
 export class UpdateWorkspaceInput extends PartialType(CreateWorkspaceInput) {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 }

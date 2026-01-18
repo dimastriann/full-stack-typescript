@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN     "sequence" INTEGER NOT NULL DEFAULT 1000;
+
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN     "sequence" INTEGER NOT NULL DEFAULT 1000;

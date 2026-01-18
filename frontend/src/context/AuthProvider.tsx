@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error('Logout mutation failed:', error);
     }
     sessionStorage.removeItem('user');
+    localStorage.removeItem('lastWorkspaceId');
     setSession('');
     setUser(null);
     client.resetStore();

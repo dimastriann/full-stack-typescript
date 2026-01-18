@@ -14,7 +14,7 @@ export class TaskService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
-  ) { }
+  ) {}
 
   get includeRelation() {
     return {
@@ -75,22 +75,10 @@ export class TaskService {
       where: {
         projectId: { in: projectIds },
       },
-      include: {
-        user: true,
-        project: true,
-        comments: {
-          where: { parentId: null },
-          include: {
-            user: true,
-            replies: {
-              include: {
-                user: true,
-              },
-            },
-          },
-        },
-        attachments: true,
+      orderBy: {
+        sequence: 'asc',
       },
+      include: this.includeRelation,
     });
   }
 

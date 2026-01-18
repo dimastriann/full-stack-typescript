@@ -22,10 +22,12 @@ export interface BaseStore<T> {
   setPage: (page: number) => void;
   pageSize: number;
   setPageSize: (pageSize: number) => void;
+  setRecords: (records: T[]) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface UserStoreModel extends BaseStore<UserType> {}
+export interface UserStoreModel
+  extends Omit<BaseStore<UserType>, 'setRecords'> {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface TaskStoreModel extends BaseStore<TaskType> {}
@@ -34,4 +36,5 @@ export interface TaskStoreModel extends BaseStore<TaskType> {}
 export interface ProjectStoreModel extends BaseStore<ProjectType> {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface TimesheetStoreModel extends BaseStore<TimesheetType> {}
+export interface TimesheetStoreModel
+  extends Omit<BaseStore<TimesheetType>, 'setRecords'> {}

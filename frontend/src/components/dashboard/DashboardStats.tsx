@@ -1,8 +1,14 @@
 import { useQuery } from '@apollo/client';
 import { GET_DASHBOARD_STATS } from '../../features/dashboard/gql/dashboard.graphql';
 
+import { useWorkspace } from '../../context/WorkspaceProvider';
+
 export default function DashboardStats() {
-  const { data, loading, error } = useQuery(GET_DASHBOARD_STATS);
+  const { activeWorkspace } = useWorkspace();
+  const { data, loading, error } = useQuery(GET_DASHBOARD_STATS, {
+    variables: { workspaceId: activeWorkspace?.id },
+    skip: !activeWorkspace,
+  });
 
   if (loading) {
     return (

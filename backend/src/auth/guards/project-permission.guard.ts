@@ -49,7 +49,6 @@ export class ProjectPermissionGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
     const args = ctx.getArgs();
-    console.log('args', args);
 
     // Get the authenticated user
     const user = request.user;

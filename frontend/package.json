@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
+    "@hello-pangea/dnd": "^18.0.1",
     "apollo-upload-client": "^18.0.1",
     "graphql": "^16.11.0",
     "lucide-react": "^0.525.0",

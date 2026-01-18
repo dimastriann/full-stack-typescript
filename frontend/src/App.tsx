@@ -1,24 +1,13 @@
-// src/App.tsx
-import { Routes, Route } from 'react-router-dom';
-import HomePage from './pages/Home';
-import LoginPage from './features/auth/pages/LoginPage';
-import RegisterPage from './features/auth/pages/RegisterPage';
-import Header from './components/Header';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import DashboardLayout from './layout/DashboardLayout';
+import { AuthProvider } from './context/AuthProvider';
+import { WorkspaceProvider } from './context/WorkspaceProvider';
+import { AppRoutes } from './AppRoutes';
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard/*" element={<DashboardLayout />} />
-        </Route>
-      </Routes>
-    </div>
+    <AuthProvider>
+      <WorkspaceProvider>
+        <AppRoutes />
+      </WorkspaceProvider>
+    </AuthProvider>
   );
 }

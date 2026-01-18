@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTasks } from '../hooks/useTasks';
-import { TaskStatus } from '../../../types/Tasks';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_TASK_STAGES } from '../gql/task.graphql';
+import { useWorkspace } from '../../../context/WorkspaceProvider';
 import {
   CheckCircle,
   Circle,
@@ -15,56 +17,41 @@ import {
   Rocket,
   TestTube,
   FileEdit,
+  User,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import TaskForm from './TaskForm';
+import type { TaskStage } from '../../../types/Tasks';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import type { DropResult } from '@hello-pangea/dnd';
 
-const stages = [
-  {
-    id: TaskStatus.TODO,
-    title: 'To Do',
-    color: 'bg-gray-100 border-gray-300',
-    icon: Circle,
-  },
-  {
-    id: TaskStatus.IN_PROGRESS,
-    title: 'In Progress',
-    color: 'bg-blue-100 border-blue-300',
-    icon: Clock,
-  },
-  {
-    id: TaskStatus.DEPLOYED,
-    title: 'Deployed',
-    color: 'bg-purple-100 border-purple-300',
-    icon: Rocket,
-  },
-  {
-    id: TaskStatus.TESTING,
-    title: 'Testing',
-    color: 'bg-orange-100 border-orange-300',
-    icon: TestTube,
-  },
-  {
-    id: TaskStatus.REVISION,
-    title: 'Revision',
-    color: 'bg-yellow-100 border-yellow-300',
-    icon: FileEdit,
-  },
-  {
-    id: TaskStatus.DONE,
-    title: 'Done',
-    color: 'bg-green-100 border-green-300',
-    icon: CheckCircle,
-  },
-  {
-    id: TaskStatus.CANCELED,
-    title: 'Canceled',
-    color: 'bg-red-100 border-red-300',
-    icon: XCircle,
-  },
-];
+const getStageStyles = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes('todo') || t.includes('to do'))
+    return { icon: Circle, color: 'text-gray-500', bg: 'bg-gray-100' };
+  if (t.includes('progress') || t.includes('active'))
+    return { icon: Clock, color: 'text-blue-500', bg: 'bg-blue-50' };
+  if (t.includes('deployed') || t.includes('released'))
+    return { icon: Rocket, color: 'text-purple-500', bg: 'bg-purple-50' };
+  if (t.includes('testing') || t.includes('test'))
+    return { icon: TestTube, color: 'text-orange-500', bg: 'bg-orange-50' };
+  if (t.includes('revision') || t.includes('fix'))
+    return { icon: FileEdit, color: 'text-yellow-500', bg: 'bg-yellow-50' };
+  if (t.includes('done') || t.includes('complete') || t.includes('finished'))
+    return { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-50' };
+  if (t.includes('cancel') || t.includes('removed'))
+    return { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50' };
+
+  return { icon: List, color: 'text-indigo-500', bg: 'bg-indigo-50' };
+};
 
 export default function TaskKanban() {
+  const { activeWorkspace } = useWorkspace();
+  const { data: stagesData } = useQuery(GET_TASK_STAGES, {
+    variables: { workspaceId: activeWorkspace?.id },
+    skip: !activeWorkspace,
+  });
+
   const {
     records,
     updateRecord,
@@ -73,12 +60,16 @@ export default function TaskKanban() {
     pageSize,
     setPageSize,
     setEditingRecord,
+    setRecords,
     refetch,
   } = useTasks();
+
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'title' | 'id'>('id');
+  const [sortBy, setSortBy] = useState<'title' | 'id' | 'sequence'>('sequence');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const stages: TaskStage[] = stagesData?.taskStages ?? [];
 
   const filteredRecords = useMemo(() => {
     let result = [...records];
@@ -96,41 +87,80 @@ export default function TaskKanban() {
       if (sortBy === 'title') {
         return (a.title || '').localeCompare(b.title || '');
       }
+      if (sortBy === 'sequence') {
+        return (a.sequence || 0) - (b.sequence || 0);
+      }
       return (a.id || 0) - (b.id || 0);
     });
   }, [records, searchTerm, sortBy]);
 
-  const onDragStart = (e: React.DragEvent, id: number) => {
-    e.dataTransfer.setData('id', `${id}`);
-  };
+  const onDragEnd = async (result: DropResult) => {
+    const { destination, source, draggableId } = result;
 
-  const onDrop = async (e: React.DragEvent, stage: TaskStatus) => {
-    const id = parseInt(e.dataTransfer.getData('id'));
-    const task = records.find((t) => t.id === id);
-    if (task && task.status !== stage) {
-      try {
-        // Update only the status
-        const input = {
-          id: task.id,
-          title: task.title,
-          description: task.description,
-          userId: task.userId,
-          projectId: task.projectId,
-          status: stage,
-        };
-        await updateRecord({
-          variables: {
-            input,
-          },
-        });
-      } catch (err) {
-        console.error('Failed to update status', err);
-      }
+    if (!destination) return;
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
     }
-  };
 
-  const onDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
+    const taskId = parseInt(draggableId);
+    const targetStageId = parseInt(destination.droppableId);
+
+    // Get tasks in target stage to calculate sequence
+    const stageTasks = filteredRecords
+      .filter((t) => t.stageId === targetStageId)
+      .sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+
+    // Remove the moving task from the list if it's already there (moving within same stage)
+    const filteredStageTasks = stageTasks.filter((t) => t.id !== taskId);
+
+    let newSequence = 1000;
+
+    if (filteredStageTasks.length === 0) {
+      newSequence = 1000;
+    } else if (destination.index === 0) {
+      newSequence = (filteredStageTasks[0].sequence || 0) / 2;
+    } else if (destination.index >= filteredStageTasks.length) {
+      newSequence =
+        (filteredStageTasks[filteredStageTasks.length - 1].sequence || 0) +
+        1000;
+    } else {
+      const prev = filteredStageTasks[destination.index - 1];
+      const next = filteredStageTasks[destination.index];
+      newSequence = ((prev.sequence || 0) + (next.sequence || 0)) / 2;
+    }
+
+    const roundedSequence = Math.round(newSequence);
+
+    // Optimistic UI Update
+    const newRecords = records.map((t) => {
+      if (t.id === taskId) {
+        return { ...t, stageId: targetStageId, sequence: roundedSequence };
+      }
+      return t;
+    });
+    setRecords(newRecords);
+
+    try {
+      await updateRecord({
+        variables: {
+          input: {
+            id: taskId,
+            stageId: targetStageId,
+            sequence: roundedSequence,
+          },
+        },
+      });
+      await refetch();
+    } catch (err) {
+      console.error('Failed to update task position', err);
+      // Revert on error
+      setRecords(records);
+      alert('Failed to update task position. Please try again.');
+    }
   };
 
   const handleCreateClick = () => {
@@ -156,117 +186,172 @@ export default function TaskKanban() {
     );
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="mb-4 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">Tasks Board</h2>
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="mb-6 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+        <div className="flex items-center gap-3">
+          <div className="bg-indigo-100 p-2 rounded-lg">
+            <List className="h-6 w-6 text-indigo-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+            Tasks Board
+          </h2>
+        </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
-          <div className="relative w-full sm:w-64">
+          <div className="relative w-full sm:w-72 group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-400" />
+              <Search className="h-4 w-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
             </div>
             <input
               type="text"
               placeholder="Search tasks..."
-              className="pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm w-full focus:ring-indigo-500 focus:border-indigo-500"
+              className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm w-full focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="relative inline-block text-left">
+            <div className="relative inline-block text-left w-full sm:w-auto">
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'title' | 'id')}
-                className="pl-3 pr-8 py-2 border border-gray-300 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none bg-white"
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="pl-3 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm w-full focus:ring-2 focus:ring-indigo-500 appearance-none outline-none cursor-pointer"
               >
+                <option value="sequence">Custom Order</option>
                 <option value="id">Sort by ID</option>
                 <option value="title">Sort by Title</option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                 <ArrowUpDown className="h-4 w-4" />
               </div>
             </div>
 
             <button
               onClick={() => setPageSize(pageSize + 20)}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+              className="inline-flex items-center px-4 py-2 border border-gray-200 rounded-lg shadow-xs text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors whitespace-nowrap"
             >
               <ChevronDown className="mr-2 h-4 w-4" />
-              Load More
+              More
             </button>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto ml-auto xl:ml-0">
             <button
               onClick={() => navigate('/dashboard/tasks/list')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-gray-200 rounded-lg shadow-xs text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
             >
-              <List className="mr-2 h-4 w-4" />
+              <List className="mr-2 h-4 w-4 text-gray-500" />
               List
             </button>
             <button
               onClick={handleCreateClick}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Task
+              New Task
             </button>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto h-full pb-4">
-        {stages.map((stage) => (
-          <div
-            key={stage.id}
-            className="flex-1 min-w-[300px] bg-gray-50 rounded-lg p-4 flex flex-col h-full"
-            onDragOver={onDragOver}
-            onDrop={(e) => onDrop(e, stage.id)}
-          >
-            <div
-              className={`flex items-center gap-2 mb-4 p-3 rounded-md border ${stage.color}`}
-            >
-              <stage.icon size={20} className="text-gray-700" />
-              <h2 className="font-semibold text-gray-800">{stage.title}</h2>
-              <span className="ml-auto bg-white/50 px-2 py-0.5 rounded-full text-sm font-medium">
-                {filteredRecords.filter((t) => t.status === stage.id).length}
-              </span>
-            </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex gap-6 overflow-x-auto h-full pb-6 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+          {stages.map((stage) => {
+            const { icon: StageIcon, color, bg } = getStageStyles(stage.title);
+            const stageTasks = filteredRecords.filter(
+              (t) => t.stageId === stage.id,
+            );
 
-            <div className="flex-1 space-y-3 overflow-y-auto min-h-[200px]">
-              {filteredRecords
-                .filter((task) => task.status === stage.id)
-                .map((task) => (
-                  <div
-                    key={task.id}
-                    draggable
-                    onDragStart={(e) => task.id && onDragStart(e, task.id)}
-                    onClick={() => navigate(`/dashboard/task/${task.id}`)}
-                    className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow"
-                  >
-                    <h3 className="font-medium text-gray-900 mb-1">
-                      {task.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2 mb-3">
-                      {task.description}
-                    </p>
-
-                    <div className="flex items-center justify-between text-xs text-gray-400">
-                      <span>ID: {task.id}</span>
-                      {task.user && (
-                        <span className="bg-gray-100 px-2 py-1 rounded">
-                          {task.user.name}
-                        </span>
-                      )}
+            return (
+              <div
+                key={stage.id}
+                className="flex-none w-[320px] bg-gray-100/50 rounded-xl flex flex-col h-full border border-gray-200/50"
+              >
+                <div className="p-4 flex items-center justify-between border-b border-gray-200/50 bg-white/80 rounded-t-xl backdrop-blur-sm sticky top-0 z-10">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`${bg} p-1.5 rounded-md`}>
+                      <StageIcon size={18} className={color} />
                     </div>
+                    <h2 className="font-bold text-gray-800 text-sm">
+                      {stage.title}
+                    </h2>
+                    <span className="bg-gray-200/50 text-gray-600 px-2 py-0.5 rounded-full text-[11px] font-bold">
+                      {stageTasks.length}
+                    </span>
                   </div>
-                ))}
-            </div>
-          </div>
-        ))}
-      </div>
+                  <button className="text-gray-400 hover:text-indigo-600 transition-colors">
+                    <Plus size={16} />
+                  </button>
+                </div>
+
+                <Droppable droppableId={stage.id.toString()}>
+                  {(provided, snapshot) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className={`flex-1 p-3 space-y-3 overflow-y-auto min-h-[150px] transition-colors duration-200 ${
+                        snapshot.isDraggingOver ? 'bg-indigo-50/50' : ''
+                      }`}
+                    >
+                      {stageTasks.map((task, index) => (
+                        <Draggable
+                          key={task.id!.toString()}
+                          draggableId={task.id!.toString()}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              onClick={() =>
+                                navigate(`/dashboard/task/${task.id}`)
+                              }
+                              className={`bg-white p-4 rounded-xl shadow-xs border border-gray-200 transition-all group hover:border-indigo-300 hover:shadow-md ${
+                                snapshot.isDragging
+                                  ? 'shadow-2xl border-indigo-400 rotate-1 scale-105 z-50'
+                                  : ''
+                              }`}
+                            >
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
+                                  {task.title}
+                                </h3>
+                              </div>
+
+                              {task.description && (
+                                <p className="text-xs text-gray-500 line-clamp-2 mb-4 leading-relaxed">
+                                  {task.description}
+                                </p>
+                              )}
+
+                              <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                                <div className="flex items-center gap-1.5 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+                                  <div className="bg-gray-100 p-1 rounded">
+                                    <User size={12} className="text-gray-500" />
+                                  </div>
+                                  <span className="text-[10px] font-bold text-gray-600 uppercase tracking-tighter">
+                                    {task.user?.name || 'Unassigned'}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] font-mono text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">
+                                  #{task.id}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            );
+          })}
+        </div>
+      </DragDropContext>
 
       <Modal
         isOpen={isCreateModalOpen}

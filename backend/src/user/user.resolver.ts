@@ -16,7 +16,7 @@ export class UserResolver {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard, RolesGuard)

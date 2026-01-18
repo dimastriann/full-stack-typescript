@@ -26,6 +26,7 @@ type TaskStage {
   workspaceId: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
+  sequence: Int!
 }
 
 type Task {
@@ -43,6 +44,7 @@ type Task {
   comments: [Comment]!
   stageId: Int
   stage: TaskStage
+  sequence: Int
 }
 
 type Timesheet {
@@ -86,12 +88,13 @@ enum ProjectRole {
 type WorkspaceMember {
   id: Int!
   workspaceId: Int!
+  workspace: Workspace
   userId: Int!
+  user: User
   role: WorkspaceRole!
   joinedAt: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
-  user: User
 }
 
 enum WorkspaceRole {
@@ -116,6 +119,7 @@ type ProjectStage {
   title: String!
   description: String
   color: String!
+  sequence: Int!
   isCompleted: Boolean!
   isCanceled: Boolean!
   workspaceId: Int!
@@ -140,6 +144,7 @@ type Project {
   workspace: Workspace!
   stageId: Int
   stage: ProjectStage
+  sequence: Int
 }
 
 type Comment {
@@ -200,7 +205,7 @@ type Query {
   projectMembers(projectId: Int!): [ProjectMember!]!
   myProjectMemberships: [ProjectMember!]!
   myRoleInProject(projectId: Int!): String
-  projects(skip: Int, take: Int): [Project!]!
+  projects(skip: Int, take: Int, workspaceId: Int): [Project!]!
   project(id: Int!): Project!
   tasks(skip: Int, take: Int, projectId: Int): [Task!]!
   getTask(id: Int!): Task!
@@ -208,7 +213,7 @@ type Query {
   getTimesheet(id: Int!): Timesheet!
   comments: [Comment!]!
   comment(id: Int!): Comment!
-  dashboardStats: DashboardStats!
+  dashboardStats(workspaceId: Int): DashboardStats!
   workspaces: [Workspace!]!
   workspace(id: Int!): Workspace!
   projectStages(workspaceId: Int!): [ProjectStage!]!
@@ -245,6 +250,9 @@ type Mutation {
   createWorkspace(createWorkspaceInput: CreateWorkspaceInput!): Workspace!
   updateWorkspace(updateWorkspaceInput: UpdateWorkspaceInput!): Workspace!
   removeWorkspace(id: Int!): Workspace!
+  inviteToWorkspace(input: InviteToWorkspaceInput!): WorkspaceMember!
+  updateWorkspaceMemberRole(input: UpdateWorkspaceMemberRoleInput!): WorkspaceMember!
+  removeMemberFromWorkspace(input: RemoveWorkspaceMemberInput!): WorkspaceMember!
   createProjectStage(createProjectStageInput: CreateProjectStageInput!): ProjectStage!
   updateProjectStage(updateProjectStageInput: UpdateProjectStageInput!): ProjectStage!
   removeProjectStage(id: Int!): ProjectStage!
@@ -313,6 +321,7 @@ input CreateProjectInput {
   responsibleId: Int!
   workspaceId: Int!
   stageId: Int
+  sequence: Int
 }
 
 input UpdateProjectInput {
@@ -321,6 +330,7 @@ input UpdateProjectInput {
   responsibleId: Int
   workspaceId: Int
   stageId: Int
+  sequence: Int
   id: Int!
 }
 
@@ -330,6 +340,7 @@ input CreateTaskInput {
   userId: Int!
   projectId: Int!
   stageId: Int
+  sequence: Int
 }
 
 input UpdateTaskInput {
@@ -338,6 +349,7 @@ input UpdateTaskInput {
   userId: Int
   projectId: Int
   stageId: Int
+  sequence: Int
   id: Int!
 }
 
@@ -391,6 +403,23 @@ input UpdateWorkspaceInput {
   id: Int!
 }
 
+input InviteToWorkspaceInput {
+  workspaceId: Int!
+  email: String!
+  role: WorkspaceRole! = MEMBER
+}
+
+input UpdateWorkspaceMemberRoleInput {
+  workspaceId: Int!
+  userId: Int!
+  role: WorkspaceRole!
+}
+
+input RemoveWorkspaceMemberInput {
+  workspaceId: Int!
+  userId: Int!
+}
+
 input CreateProjectStageInput {
   title: String!
   description: String
@@ -398,6 +427,7 @@ input CreateProjectStageInput {
   isCompleted: Boolean! = false
   isCanceled: Boolean! = false
   workspaceId: Int!
+  sequence: Int! = 5
 }
 
 input UpdateProjectStageInput {
@@ -407,6 +437,7 @@ input UpdateProjectStageInput {
   isCompleted: Boolean = false
   isCanceled: Boolean = false
   workspaceId: Int
+  sequence: Int = 5
   id: Int!
 }
 
@@ -417,6 +448,7 @@ input CreateTaskStageInput {
   isCompleted: Boolean! = false
   isCanceled: Boolean! = false
   workspaceId: Int!
+  sequence: Int! = 5
 }
 
 input UpdateTaskStageInput {
@@ -426,5 +458,6 @@ input UpdateTaskStageInput {
   isCompleted: Boolean = false
   isCanceled: Boolean = false
   workspaceId: Int
+  sequence: Int = 5
   id: Int!
 }

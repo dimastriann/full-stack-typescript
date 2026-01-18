@@ -28,11 +28,13 @@ export type AggregateProjectStage = {
 
 export type ProjectStageAvgAggregateOutputType = {
   id: number | null
+  sequence: number | null
   workspaceId: number | null
 }
 
 export type ProjectStageSumAggregateOutputType = {
   id: number | null
+  sequence: number | null
   workspaceId: number | null
 }
 
@@ -41,6 +43,7 @@ export type ProjectStageMinAggregateOutputType = {
   title: string | null
   description: string | null
   color: string | null
+  sequence: number | null
   isCompleted: boolean | null
   isCanceled: boolean | null
   workspaceId: number | null
@@ -53,6 +56,7 @@ export type ProjectStageMaxAggregateOutputType = {
   title: string | null
   description: string | null
   color: string | null
+  sequence: number | null
   isCompleted: boolean | null
   isCanceled: boolean | null
   workspaceId: number | null
@@ -65,6 +69,7 @@ export type ProjectStageCountAggregateOutputType = {
   title: number
   description: number
   color: number
+  sequence: number
   isCompleted: number
   isCanceled: number
   workspaceId: number
@@ -76,11 +81,13 @@ export type ProjectStageCountAggregateOutputType = {
 
 export type ProjectStageAvgAggregateInputType = {
   id?: true
+  sequence?: true
   workspaceId?: true
 }
 
 export type ProjectStageSumAggregateInputType = {
   id?: true
+  sequence?: true
   workspaceId?: true
 }
 
@@ -89,6 +96,7 @@ export type ProjectStageMinAggregateInputType = {
   title?: true
   description?: true
   color?: true
+  sequence?: true
   isCompleted?: true
   isCanceled?: true
   workspaceId?: true
@@ -101,6 +109,7 @@ export type ProjectStageMaxAggregateInputType = {
   title?: true
   description?: true
   color?: true
+  sequence?: true
   isCompleted?: true
   isCanceled?: true
   workspaceId?: true
@@ -113,6 +122,7 @@ export type ProjectStageCountAggregateInputType = {
   title?: true
   description?: true
   color?: true
+  sequence?: true
   isCompleted?: true
   isCanceled?: true
   workspaceId?: true
@@ -212,6 +222,7 @@ export type ProjectStageGroupByOutputType = {
   title: string
   description: string | null
   color: string
+  sequence: number
   isCompleted: boolean
   isCanceled: boolean
   workspaceId: number
@@ -247,6 +258,7 @@ export type ProjectStageWhereInput = {
   title?: Prisma.StringFilter<"ProjectStage"> | string
   description?: Prisma.StringNullableFilter<"ProjectStage"> | string | null
   color?: Prisma.StringFilter<"ProjectStage"> | string
+  sequence?: Prisma.IntFilter<"ProjectStage"> | number
   isCompleted?: Prisma.BoolFilter<"ProjectStage"> | boolean
   isCanceled?: Prisma.BoolFilter<"ProjectStage"> | boolean
   workspaceId?: Prisma.IntFilter<"ProjectStage"> | number
@@ -261,6 +273,7 @@ export type ProjectStageOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -278,6 +291,7 @@ export type ProjectStageWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"ProjectStage"> | string
   description?: Prisma.StringNullableFilter<"ProjectStage"> | string | null
   color?: Prisma.StringFilter<"ProjectStage"> | string
+  sequence?: Prisma.IntFilter<"ProjectStage"> | number
   isCompleted?: Prisma.BoolFilter<"ProjectStage"> | boolean
   isCanceled?: Prisma.BoolFilter<"ProjectStage"> | boolean
   workspaceId?: Prisma.IntFilter<"ProjectStage"> | number
@@ -292,6 +306,7 @@ export type ProjectStageOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -312,6 +327,7 @@ export type ProjectStageScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"ProjectStage"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"ProjectStage"> | string | null
   color?: Prisma.StringWithAggregatesFilter<"ProjectStage"> | string
+  sequence?: Prisma.IntWithAggregatesFilter<"ProjectStage"> | number
   isCompleted?: Prisma.BoolWithAggregatesFilter<"ProjectStage"> | boolean
   isCanceled?: Prisma.BoolWithAggregatesFilter<"ProjectStage"> | boolean
   workspaceId?: Prisma.IntWithAggregatesFilter<"ProjectStage"> | number
@@ -323,6 +339,7 @@ export type ProjectStageCreateInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -336,6 +353,7 @@ export type ProjectStageUncheckedCreateInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId: number
@@ -348,6 +366,7 @@ export type ProjectStageUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +380,7 @@ export type ProjectStageUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -374,6 +394,7 @@ export type ProjectStageCreateManyInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId: number
@@ -385,6 +406,7 @@ export type ProjectStageUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,6 +418,7 @@ export type ProjectStageUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -418,6 +441,7 @@ export type ProjectStageCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -427,6 +451,7 @@ export type ProjectStageCountOrderByAggregateInput = {
 
 export type ProjectStageAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
 }
 
@@ -435,6 +460,7 @@ export type ProjectStageMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -447,6 +473,7 @@ export type ProjectStageMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -456,6 +483,7 @@ export type ProjectStageMinOrderByAggregateInput = {
 
 export type ProjectStageSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
 }
 
@@ -526,6 +554,7 @@ export type ProjectStageCreateWithoutWorkspaceInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -538,6 +567,7 @@ export type ProjectStageUncheckedCreateWithoutWorkspaceInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -579,6 +609,7 @@ export type ProjectStageScalarWhereInput = {
   title?: Prisma.StringFilter<"ProjectStage"> | string
   description?: Prisma.StringNullableFilter<"ProjectStage"> | string | null
   color?: Prisma.StringFilter<"ProjectStage"> | string
+  sequence?: Prisma.IntFilter<"ProjectStage"> | number
   isCompleted?: Prisma.BoolFilter<"ProjectStage"> | boolean
   isCanceled?: Prisma.BoolFilter<"ProjectStage"> | boolean
   workspaceId?: Prisma.IntFilter<"ProjectStage"> | number
@@ -590,6 +621,7 @@ export type ProjectStageCreateWithoutProjectsInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -602,6 +634,7 @@ export type ProjectStageUncheckedCreateWithoutProjectsInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId: number
@@ -629,6 +662,7 @@ export type ProjectStageUpdateWithoutProjectsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -641,6 +675,7 @@ export type ProjectStageUncheckedUpdateWithoutProjectsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -653,6 +688,7 @@ export type ProjectStageCreateManyWorkspaceInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -663,6 +699,7 @@ export type ProjectStageUpdateWithoutWorkspaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -675,6 +712,7 @@ export type ProjectStageUncheckedUpdateWithoutWorkspaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +725,7 @@ export type ProjectStageUncheckedUpdateManyWithoutWorkspaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -729,6 +768,7 @@ export type ProjectStageSelect<ExtArgs extends runtime.Types.Extensions.Internal
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -744,6 +784,7 @@ export type ProjectStageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -757,6 +798,7 @@ export type ProjectStageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -770,6 +812,7 @@ export type ProjectStageSelectScalar = {
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -777,7 +820,7 @@ export type ProjectStageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProjectStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "color" | "isCompleted" | "isCanceled" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["projectStage"]>
+export type ProjectStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "color" | "sequence" | "isCompleted" | "isCanceled" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["projectStage"]>
 export type ProjectStageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   projects?: boolean | Prisma.ProjectStage$projectsArgs<ExtArgs>
@@ -801,6 +844,7 @@ export type $ProjectStagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     title: string
     description: string | null
     color: string
+    sequence: number
     isCompleted: boolean
     isCanceled: boolean
     workspaceId: number
@@ -1235,6 +1279,7 @@ export interface ProjectStageFieldRefs {
   readonly title: Prisma.FieldRef<"ProjectStage", 'String'>
   readonly description: Prisma.FieldRef<"ProjectStage", 'String'>
   readonly color: Prisma.FieldRef<"ProjectStage", 'String'>
+  readonly sequence: Prisma.FieldRef<"ProjectStage", 'Int'>
   readonly isCompleted: Prisma.FieldRef<"ProjectStage", 'Boolean'>
   readonly isCanceled: Prisma.FieldRef<"ProjectStage", 'Boolean'>
   readonly workspaceId: Prisma.FieldRef<"ProjectStage", 'Int'>

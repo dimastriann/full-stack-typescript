@@ -110,6 +110,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <User size={18} className="m-1" />{' '}
           <span className="ms-2">Profile</span>
         </NavLink>
+        <NavLink
+          to="/dashboard/workspace/settings"
+          onClick={() => onClose()}
+          className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
+        >
+          <FolderIcon size={18} className="m-1" />{' '}
+          <span className="ms-2">Workspace Settings</span>
+        </NavLink>
         <div
           onClick={logout}
           className="flex hover:bg-gray-100 py-2 px-3 rounded-lg cursor-pointer"

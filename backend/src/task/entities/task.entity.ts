@@ -37,4 +37,7 @@ export class Task extends Base {
 
   @Field(() => TaskStage, { nullable: true })
   stage?: TaskStage;
+
+  @Field(() => Int, { nullable: true })
+  sequence?: number;
 }

@@ -1,34 +1,38 @@
 import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { WorkspaceRole } from 'prisma/generated/enums';
 import { User } from 'src/user/entities/user.entity';
+import { Workspace } from './workspace.entity';
 
 registerEnumType(WorkspaceRole, {
-    name: 'WorkspaceRole',
+  name: 'WorkspaceRole',
 });
 
 @ObjectType()
 export class WorkspaceMember {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field(() => Int)
-    workspaceId: number;
+  @Field(() => Int)
+  workspaceId: number;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Workspace, { nullable: true })
+  workspace?: Workspace;
 
-    @Field(() => WorkspaceRole)
-    role: WorkspaceRole;
+  @Field(() => Int)
+  userId: number;
 
-    @Field()
-    joinedAt: Date;
+  @Field(() => User, { nullable: true })
+  user?: User;
 
-    @Field()
-    createdAt: Date;
+  @Field(() => WorkspaceRole)
+  role: WorkspaceRole;
 
-    @Field()
-    updatedAt: Date;
+  @Field()
+  joinedAt: Date;
 
-    @Field(() => User, { nullable: true })
-    user?: User;
+  @Field()
+  createdAt: Date;
+
+  @Field()
+  updatedAt: Date;
 }

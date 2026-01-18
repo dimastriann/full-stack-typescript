@@ -57,4 +57,7 @@ export class Project {
 
   @Field(() => ProjectStage, { nullable: true })
   stage?: ProjectStage;
+
+  @Field(() => Int, { nullable: true })
+  sequence?: number;
 }

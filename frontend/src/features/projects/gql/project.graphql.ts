@@ -1,12 +1,19 @@
 import { gql } from '@apollo/client';
 
 export const GET_PROJECTS = gql`
-  query GetProjects($skip: Int, $take: Int) {
-    projects(skip: $skip, take: $take) {
+  query GetProjects($skip: Int, $take: Int, $workspaceId: Int) {
+    projects(skip: $skip, take: $take, workspaceId: $workspaceId) {
       id
       name
       description
-      status
+      workspaceId
+      stageId
+      sequence
+      stage {
+        id
+        title
+        color
+      }
       responsibleId
       responsible {
         id
@@ -29,7 +36,16 @@ export const GET_PROJECT = gql`
       id
       name
       description
-      status
+      workspaceId
+      stageId
+      sequence
+      stage {
+        id
+        title
+        color
+        isCompleted
+        isCanceled
+      }
       responsibleId
       responsible {
         id
@@ -81,7 +97,8 @@ export const CREATE_PROJECT = gql`
       id
       name
       description
-      status
+      workspaceId
+      stageId
       responsibleId
     }
   }
@@ -93,7 +110,7 @@ export const UPDATE_PROJECT = gql`
       id
       name
       description
-      status
+      stageId
       responsibleId
     }
   }
@@ -103,6 +120,19 @@ export const DELETE_PROJECT = gql`
   mutation ($id: Int!) {
     deleteProject(id: $id) {
       id
+    }
+  }
+`;
+
+export const GET_PROJECT_STAGES = gql`
+  query GetProjectStages($workspaceId: Int!) {
+    projectStages(workspaceId: $workspaceId) {
+      id
+      title
+      color
+      sequence
+      isCompleted
+      isCanceled
     }
   }
 `;

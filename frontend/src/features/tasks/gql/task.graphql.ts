@@ -6,7 +6,13 @@ export const GET_TASKS = gql`
       id
       title
       description
-      status
+      stageId
+      sequence
+      stage {
+        id
+        title
+        color
+      }
       user {
         name
       }
@@ -24,7 +30,15 @@ export const GET_TASK = gql`
       id
       title
       description
-      status
+      stageId
+      sequence
+      stage {
+        id
+        title
+        color
+        isCompleted
+        isCanceled
+      }
       userId
       projectId
       user {
@@ -76,6 +90,8 @@ export const UPDATE_TASK = gql`
   mutation UpdateTask($input: UpdateTaskInput!) {
     updateTask(updateTaskInput: $input) {
       id
+      title
+      stageId
     }
   }
 `;
@@ -84,6 +100,18 @@ export const DELETE_TASK = gql`
   mutation DeleteTask($id: Int!) {
     removeTask(id: $id) {
       id
+    }
+  }
+`;
+
+export const GET_TASK_STAGES = gql`
+  query GetTaskStages($workspaceId: Int!) {
+    taskStages(workspaceId: $workspaceId) {
+      id
+      title
+      color
+      sequence
+      isCompleted
     }
   }
 `;

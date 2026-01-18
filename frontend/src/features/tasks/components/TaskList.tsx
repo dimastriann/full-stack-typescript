@@ -35,7 +35,7 @@ const TaskRow = React.memo(
     onToggle: (id: number) => void;
   }) => (
     <tr
-      className={`hover: bg - gray - 50 cursor - pointer transition - colors ${isChecked ? 'bg-indigo-50' : ''} `}
+      className={`hover:bg-gray-50 cursor-pointer transition-colors ${isChecked ? 'bg-indigo-50' : ''}`}
       onClick={(e) => {
         // Prevent toggling when clicking buttons
         if ((e.target as HTMLElement).closest('button')) return;
@@ -63,18 +63,15 @@ const TaskRow = React.memo(
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
         {task.project?.name || '-'}
       </td>
-      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        {task.status}
-      </td>
       <td className="px-4 py-3 border-b border-gray-100 text-center">
         <span
-          className={`px - 2 py - 1 rounded - full text - xs font - medium ${
-            task.status
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
+            task.stage?.isCompleted
               ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
-          } `}
+              : 'bg-indigo-100 text-indigo-700'
+          }`}
         >
-          {task.status}
+          {task.stage?.title || 'No Stage'}
         </span>
       </td>
       <td className="px-4 py-3 border-b border-gray-100">

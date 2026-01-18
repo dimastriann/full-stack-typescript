@@ -9,37 +9,39 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 @Resolver(() => ProjectStage)
 @UseGuards(GqlAuthGuard)
 export class ProjectStageResolver {
-    constructor(private readonly projectStageService: ProjectStageService) { }
+  constructor(private readonly projectStageService: ProjectStageService) {}
 
-    @Mutation(() => ProjectStage)
-    createProjectStage(
-        @Args('createProjectStageInput') createProjectStageInput: CreateProjectStageInput,
-    ) {
-        return this.projectStageService.create(createProjectStageInput);
-    }
+  @Mutation(() => ProjectStage)
+  createProjectStage(
+    @Args('createProjectStageInput')
+    createProjectStageInput: CreateProjectStageInput,
+  ) {
+    return this.projectStageService.create(createProjectStageInput);
+  }
 
-    @Query(() => [ProjectStage], { name: 'projectStages' })
-    findAll(@Args('workspaceId', { type: () => Int }) workspaceId: number) {
-        return this.projectStageService.findAll(workspaceId);
-    }
+  @Query(() => [ProjectStage], { name: 'projectStages' })
+  findAll(@Args('workspaceId', { type: () => Int }) workspaceId: number) {
+    return this.projectStageService.findAll(workspaceId);
+  }
 
-    @Query(() => ProjectStage, { name: 'projectStage' })
-    findOne(@Args('id', { type: () => Int }) id: number) {
-        return this.projectStageService.findOne(id);
-    }
+  @Query(() => ProjectStage, { name: 'projectStage' })
+  findOne(@Args('id', { type: () => Int }) id: number) {
+    return this.projectStageService.findOne(id);
+  }
 
-    @Mutation(() => ProjectStage)
-    updateProjectStage(
-        @Args('updateProjectStageInput') updateProjectStageInput: UpdateProjectStageInput,
-    ) {
-        return this.projectStageService.update(
-            updateProjectStageInput.id,
-            updateProjectStageInput,
-        );
-    }
+  @Mutation(() => ProjectStage)
+  updateProjectStage(
+    @Args('updateProjectStageInput')
+    updateProjectStageInput: UpdateProjectStageInput,
+  ) {
+    return this.projectStageService.update(
+      updateProjectStageInput.id,
+      updateProjectStageInput,
+    );
+  }
 
-    @Mutation(() => ProjectStage)
-    removeProjectStage(@Args('id', { type: () => Int }) id: number) {
-        return this.projectStageService.remove(id);
-    }
+  @Mutation(() => ProjectStage)
+  removeProjectStage(@Args('id', { type: () => Int }) id: number) {
+    return this.projectStageService.remove(id);
+  }
 }

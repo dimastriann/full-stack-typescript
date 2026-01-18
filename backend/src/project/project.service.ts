@@ -10,7 +10,7 @@ export class ProjectService {
   constructor(
     private prisma: PrismaService,
     private projectMemberService: ProjectMemberService,
-  ) { }
+  ) {}
 
   get includeRelation() {
     return {
@@ -100,6 +100,9 @@ export class ProjectService {
       where: {
         id: { in: projectIds },
         ...(workspaceId && { workspaceId }),
+      },
+      orderBy: {
+        sequence: 'asc',
       },
       skip,
       take,

@@ -4,8 +4,8 @@ import { TaskStageResolver } from './task-stage.resolver';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-    imports: [PrismaModule],
-    providers: [TaskStageResolver, TaskStageService],
-    exports: [TaskStageService],
+  imports: [PrismaModule],
+  providers: [TaskStageResolver, TaskStageService],
+  exports: [TaskStageService],
 })
-export class TaskStageModule { }
+export class TaskStageModule {}

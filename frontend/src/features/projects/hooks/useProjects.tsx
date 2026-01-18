@@ -8,20 +8,30 @@ import {
 import type { ProjectType } from '../../../types/Projects';
 import { createContext, useState, useEffect, useContext } from 'react';
 import type { ProjectStoreModel } from '../../../types/BaseStore';
+import { useWorkspace } from '../../../context/WorkspaceProvider';
 
 export const ProjectContext = createContext<ProjectStoreModel | undefined>(
   undefined,
 );
 
 export function ProjectProvider({ children }: { children: React.ReactNode }) {
+  const { activeWorkspace } = useWorkspace();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
+
   const { data, loading, error, refetch } = useQuery(GET_PROJECTS, {
-    variables: { skip: page * pageSize, take: pageSize },
+    variables: {
+      skip: page * pageSize,
+      take: pageSize,
+      workspaceId: activeWorkspace?.id,
+    },
+    skip: !activeWorkspace,
   });
+
   const [createProject] = useMutation(CREATE_PROJECT);
   const [updateProject] = useMutation(UPDATE_PROJECT);
   const [deleteProject] = useMutation(DELETE_PROJECT);
+
   const [editingProject, setEditingProject] = useState<ProjectType | null>(
     null,
   );
@@ -43,6 +53,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
     createRecord: createProject,
     updateRecord: updateProject,
     deleteRecord: deleteProject,
+    setRecords: setProjects,
     page,
     setPage,
     pageSize,

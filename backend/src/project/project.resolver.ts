@@ -36,8 +36,10 @@ export class ProjectResolver {
     @CurrentUser() user: any,
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
+    @Args('workspaceId', { type: () => Int, nullable: true })
+    workspaceId?: number,
   ) {
-    return this.projectService.findAll(user.id, skip, take);
+    return this.projectService.findAll(user.id, workspaceId, skip, take);
   }
 
   /**

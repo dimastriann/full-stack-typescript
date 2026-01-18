@@ -1,3 +1,5 @@
+import type { WorkspaceMember } from './Workspaces';
+
 export enum UserRole {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
@@ -15,4 +17,5 @@ export type UserType = {
   mobile?: string;
   phone?: string;
   status: boolean;
+  workspaceMembers?: WorkspaceMember[];
 };

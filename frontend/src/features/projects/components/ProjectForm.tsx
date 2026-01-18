@@ -3,12 +3,13 @@ import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_PROJECTS } from '../gql/project.graphql';
+import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { ProjectStatus, type ProjectType } from '../../../types/Projects';
+import type { ProjectType, ProjectStage } from '../../../types/Projects';
 import ProjectTaskTable from './ProjectTaskTable';
 import { useProjects } from '../hooks/useProjects';
 import { useAuth } from '../../../context/AuthProvider';
+import { useWorkspace } from '../../../context/WorkspaceProvider';
 import type { UserType } from '../../../types/Users';
 
 interface ProjectFormProps {
@@ -18,11 +19,12 @@ interface ProjectFormProps {
 
 export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   const { user: currentUser } = useAuth();
+  const { activeWorkspace } = useWorkspace();
 
   const defaultValues = {
     name: '',
     description: '',
-    status: 'DRAFT',
+    stageId: '',
     responsibleId: '',
   };
 
@@ -39,10 +41,15 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   // Ideally we should add GET_PROJECT query.
 
   const { data: projectsData } = useQuery(GET_PROJECTS, {
-    skip: !isEditMode,
+    variables: { workspaceId: activeWorkspace?.id },
+    skip: !activeWorkspace,
   });
 
   const { data: usersData } = useQuery(GET_USERS);
+  const { data: stagesData } = useQuery(GET_PROJECT_STAGES, {
+    variables: { workspaceId: activeWorkspace?.id },
+    skip: !activeWorkspace,
+  });
 
   const {
     createRecord,
@@ -55,10 +62,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   const userId = currentUser?.id?.toString();
   const users: UserType[] = usersData?.users ?? [];
   const projects: ProjectType[] = projectsData?.projects ?? [];
-
-  const project = projects.find(
-    (p: ProjectType) => p.id === parseInt(projectId || '0'),
-  );
+  const stages: ProjectStage[] = stagesData?.projectStages ?? [];
 
   const {
     register,
@@ -70,7 +74,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   });
 
   useEffect(() => {
-    if (isEditMode && projects) {
+    if (isEditMode && projects.length) {
       const project = projects.find(
         (p: ProjectType) => p.id === parseInt(projectId),
       );
@@ -78,12 +82,13 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
         reset({
           name: project.name,
           description: project.description,
-          status: project.status,
+          stageId: project.stageId?.toString() || '',
           responsibleId: project.responsibleId.toString(),
         });
       }
     } else if (!isEditMode && userId && users.length) {
       reset({
+        ...defaultValues,
         responsibleId: userId,
       });
     }
@@ -91,11 +96,21 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      const projectFormData: any = { ...formData };
+      if (!activeWorkspace) throw new Error('No active workspace selected');
 
-      // Convert responsibleId to number
+      const projectFormData: any = {
+        ...formData,
+        workspaceId: activeWorkspace.id,
+      };
+
+      // Convert IDs to number
       if (projectFormData.responsibleId) {
         projectFormData.responsibleId = parseInt(projectFormData.responsibleId);
+      }
+      if (projectFormData.stageId) {
+        projectFormData.stageId = parseInt(projectFormData.stageId);
+      } else {
+        delete projectFormData.stageId;
       }
 
       if (isEditMode) {
@@ -103,7 +118,6 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
 
         // Ensure id is present
         projectFormData.id = parseInt(projectId!);
-        console.log('projectFormData', projectFormData);
         await updateRecord({
           variables: {
             updateProjectInput: projectFormData,
@@ -126,10 +140,12 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     }
   });
 
+  const project = projects.find(
+    (p: ProjectType) => p.id === parseInt(projectId || '0'),
+  );
+
   return (
-    <div
-      className={`grid grid-cols-1 ${isEditMode ? 'lg:grid-cols-2' : ''} gap-6`}
-    >
+    <div>
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
           <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4">
@@ -166,17 +182,18 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Status
+                Stage
               </label>
               <select
-                {...register('status')}
+                {...register('stageId')}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
               >
-                <option value={ProjectStatus.DRAFT}>Draft</option>
-                <option value={ProjectStatus.IN_PROGRESS}>In Progress</option>
-                <option value={ProjectStatus.IN_REVIEW}>In Review</option>
-                <option value={ProjectStatus.DONE}>Done</option>
-                <option value={ProjectStatus.CANCELED}>Canceled</option>
+                <option value="">Select Stage</option>
+                {stages.map((stage) => (
+                  <option key={stage.id} value={stage.id}>
+                    {stage.title}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -239,7 +256,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       </form>
 
       {isEditMode && project && (
-        <div className="space-y-4">
+        <div className="space-y-4 mt-6">
           <ProjectTaskTable projectId={project.id} />
         </div>
       )}

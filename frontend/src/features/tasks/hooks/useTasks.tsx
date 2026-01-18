@@ -8,14 +8,17 @@ import {
 import type { TaskType } from '../../../types/Tasks';
 import { createContext, useState, useEffect, useContext } from 'react';
 import type { TaskStoreModel } from '../../../types/BaseStore';
+import { useWorkspace } from '../../../context/WorkspaceProvider';
 
 export const TaskContext = createContext<TaskStoreModel | undefined>(undefined);
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
+  const { activeWorkspace } = useWorkspace();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const { data, loading, error, refetch } = useQuery(GET_TASKS, {
     variables: { skip: page * pageSize, take: pageSize },
+    skip: !activeWorkspace,
   });
   const [createTask] = useMutation(CREATE_TASK);
   const [updateTask] = useMutation(UPDATE_TASK);
@@ -39,6 +42,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     createRecord: createTask,
     updateRecord: updateTask,
     deleteRecord: deleteTask,
+    setRecords: setTasks,
     page,
     setPage,
     pageSize,

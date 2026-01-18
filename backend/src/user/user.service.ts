@@ -6,14 +6,19 @@ import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async hashPassword(password: string) {
     return await bcrypt.hash(password, 10);
   }
 
   get includesRelation() {
-    return { projects: true, tasks: true, timesheets: true };
+    return {
+      projects: true,
+      tasks: true,
+      timesheets: true,
+      workspaceMembers: { include: { workspace: true } },
+    };
   }
 
   async findAll(skip?: number, take?: number) {

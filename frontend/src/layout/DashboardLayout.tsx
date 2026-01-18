@@ -9,16 +9,17 @@ import { TaskProvider } from '../features/tasks/hooks/useTasks';
 import ProjectList from '../features/projects/components/ProjectList';
 import ProjectKanban from '../features/projects/components/ProjectKanban';
 import ProjectEditPage from '../features/projects/pages/ProjectFormPage';
-// import TemplateView from '../features/template/Template';
 import TaskPage from '../features/tasks/pages/TaskPage';
 import TaskFormPage from '../features/tasks/pages/TaskFormPage';
 import TaskKanban from '../features/tasks/components/TaskKanban';
 import TimesheetPage from '../features/timesheets/pages/TimesheetPage';
 import TimesheetFormPage from '../features/timesheets/pages/TimesheetFormPage';
 import ProfilePage from '../features/users/pages/ProfilePage';
+import WorkspaceSettingsPage from '../features/workspaces/pages/WorkspaceSettingsPage';
 import { ProjectProvider } from '../features/projects/hooks/useProjects';
 import { Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthProvider';
+import { WorkspaceSwitcher } from '../components/WorkspaceSwitcher';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -29,36 +30,61 @@ export default function DashboardLayout() {
     <div className="flex h-screen bg-gray-100">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="lg:hidden bg-white shadow-sm p-4 flex items-center">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <Menu size={24} />
-          </button>
-          <span className="ml-4 font-semibold text-lg text-gray-700">
-            Dashboard
-          </span>
-        </div>
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+        {/* Top Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex justify-between items-center z-10">
+          <div className="flex items-center">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden text-gray-500 hover:text-gray-700 mr-4"
+            >
+              <Menu size={24} />
+            </button>
+            <h1 className="text-xl font-bold text-gray-800 hidden md:block">
+              ProjectFlow
+            </h1>
+            <span className="md:hidden font-semibold text-lg text-gray-700">
+              Dashboard
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <WorkspaceSwitcher />
+            <div className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+              {user?.firstName?.[0]}
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 flex flex-col min-h-0 bg-gray-100 overflow-hidden">
           <Routes>
-            <Route path="/" element={<DashboardStats />} />
+            <Route
+              path="/"
+              element={
+                <div className="flex-1 overflow-y-auto p-6">
+                  <DashboardStats />
+                </div>
+              }
+            />
             {isAdmin ? (
               <>
                 <Route
                   path="/users"
                   element={
-                    <UserProvider>
-                      <UserList />
-                    </UserProvider>
+                    <div className="flex-1 overflow-y-auto p-6">
+                      <UserProvider>
+                        <UserList />
+                      </UserProvider>
+                    </div>
                   }
                 />
                 <Route
                   path="/user/:userId"
                   element={
-                    <UserProvider>
-                      <UserEditPage />
-                    </UserProvider>
+                    <div className="flex-1 overflow-y-auto p-6">
+                      <UserProvider>
+                        <UserEditPage />
+                      </UserProvider>
+                    </div>
                   }
                 />
               </>
@@ -74,52 +100,95 @@ export default function DashboardLayout() {
             <Route
               path="/projects"
               element={
-                <ProjectProvider>
-                  <ProjectKanban />
-                </ProjectProvider>
+                <div className="flex-1 flex flex-col min-h-0 p-6">
+                  <ProjectProvider>
+                    <ProjectKanban />
+                  </ProjectProvider>
+                </div>
               }
             />
             <Route
               path="/projects/list"
               element={
-                <ProjectProvider>
-                  <ProjectList />
-                </ProjectProvider>
+                <div className="flex-1 overflow-y-auto p-6">
+                  <ProjectProvider>
+                    <ProjectList />
+                  </ProjectProvider>
+                </div>
               }
             />
             <Route
               path="/project/:projectId"
               element={
-                <ProjectProvider>
-                  <ProjectEditPage />
-                </ProjectProvider>
+                <div className="flex-1 overflow-y-auto p-6">
+                  <ProjectProvider>
+                    <ProjectEditPage />
+                  </ProjectProvider>
+                </div>
               }
             />
             <Route
               path="/tasks"
               element={
-                <TaskProvider>
-                  <TaskKanban />
-                </TaskProvider>
+                <div className="flex-1 flex flex-col min-h-0 p-6">
+                  <TaskProvider>
+                    <ProjectProvider>
+                      <TaskKanban />
+                    </ProjectProvider>
+                  </TaskProvider>
+                </div>
               }
             />
-            <Route path="/tasks/list" element={<TaskPage />} />
-            <Route path="task/:taskId" element={<TaskFormPage />} />
-            <Route path="timesheets" element={<TimesheetPage />} />
+            <Route
+              path="/tasks/list"
+              element={
+                <div className="flex-1 overflow-y-auto p-6">
+                  <TaskPage />
+                </div>
+              }
+            />
+            <Route
+              path="task/:taskId"
+              element={
+                <div className="flex-1 overflow-y-auto p-6">
+                  <TaskFormPage />
+                </div>
+              }
+            />
+            <Route
+              path="timesheets"
+              element={
+                <div className="flex-1 overflow-y-auto p-6">
+                  <TimesheetPage />
+                </div>
+              }
+            />
             <Route
               path="timesheet/:timesheetId"
-              element={<TimesheetFormPage />}
+              element={
+                <div className="flex-1 overflow-y-auto p-6">
+                  <TimesheetFormPage />
+                </div>
+              }
             />
-            {/* <Route path="template" element={<TemplateView />} /> */}
             <Route
               path="profile"
               element={
-                <UserProvider>
-                  <ProfilePage />
-                </UserProvider>
+                <div className="flex-1 overflow-y-auto p-6">
+                  <UserProvider>
+                    <ProfilePage />
+                  </UserProvider>
+                </div>
               }
             />
-            {/* <Route path="calendar" element={<TemplateView />} /> */}
+            <Route
+              path="workspace/settings"
+              element={
+                <div className="flex-1 overflow-y-auto p-6">
+                  <WorkspaceSettingsPage />
+                </div>
+              }
+            />
           </Routes>
         </main>
       </div>

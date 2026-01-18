@@ -9,6 +9,15 @@ export const LOGIN_MUTATION = gql`
         name
         email
         role
+        workspaceMembers {
+          id
+          role
+          workspace {
+            id
+            name
+            description
+          }
+        }
       }
     }
   }
@@ -25,6 +34,15 @@ export const REGISTER_MUTATION = gql`
         role
         firstName
         lastName
+        workspaceMembers {
+          id
+          role
+          workspace {
+            id
+            name
+            description
+          }
+        }
       }
     }
   }
@@ -39,6 +57,15 @@ export const GET_ME = gql`
       role
       firstName
       lastName
+      workspaceMembers {
+        id
+        role
+        workspace {
+          id
+          name
+          description
+        }
+      }
     }
   }
 `;

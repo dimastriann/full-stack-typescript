@@ -131,6 +131,7 @@ export const ProjectStageScalarFieldEnum = {
   title: 'title',
   description: 'description',
   color: 'color',
+  sequence: 'sequence',
   isCompleted: 'isCompleted',
   isCanceled: 'isCanceled',
   workspaceId: 'workspaceId',
@@ -146,6 +147,7 @@ export const TaskStageScalarFieldEnum = {
   title: 'title',
   description: 'description',
   color: 'color',
+  sequence: 'sequence',
   isCompleted: 'isCompleted',
   isCanceled: 'isCanceled',
   workspaceId: 'workspaceId',
@@ -163,6 +165,7 @@ export const ProjectScalarFieldEnum = {
   responsibleId: 'responsibleId',
   stageId: 'stageId',
   workspaceId: 'workspaceId',
+  sequence: 'sequence',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -177,6 +180,7 @@ export const TaskScalarFieldEnum = {
   userId: 'userId',
   projectId: 'projectId',
   stageId: 'stageId',
+  sequence: 'sequence',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

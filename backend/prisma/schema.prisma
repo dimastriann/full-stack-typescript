@@ -76,6 +76,7 @@ model ProjectStage {
   title       String
   description String?
   color       String    @default("#808080")
+  sequence    Int       @default(5)
   isCompleted Boolean   @default(false)
   isCanceled  Boolean   @default(false)
   workspaceId Int
@@ -90,6 +91,7 @@ model TaskStage {
   title       String
   description String?
   color       String    @default("#808080")
+  sequence    Int       @default(5)
   isCompleted Boolean   @default(false)
   isCanceled  Boolean   @default(false)
   workspaceId Int
@@ -114,6 +116,7 @@ model Project {
   attachments   Attachment[]
   timesheets    Timesheet[]
   members       ProjectMember[]
+  sequence      Int             @default(1000)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 }
@@ -131,6 +134,7 @@ model Task {
   comments    Comment[]
   attachments Attachment[]
   timesheets  Timesheet[]
+  sequence    Int          @default(1000)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }

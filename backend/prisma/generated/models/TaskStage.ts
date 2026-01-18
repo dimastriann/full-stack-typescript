@@ -28,11 +28,13 @@ export type AggregateTaskStage = {
 
 export type TaskStageAvgAggregateOutputType = {
   id: number | null
+  sequence: number | null
   workspaceId: number | null
 }
 
 export type TaskStageSumAggregateOutputType = {
   id: number | null
+  sequence: number | null
   workspaceId: number | null
 }
 
@@ -41,6 +43,7 @@ export type TaskStageMinAggregateOutputType = {
   title: string | null
   description: string | null
   color: string | null
+  sequence: number | null
   isCompleted: boolean | null
   isCanceled: boolean | null
   workspaceId: number | null
@@ -53,6 +56,7 @@ export type TaskStageMaxAggregateOutputType = {
   title: string | null
   description: string | null
   color: string | null
+  sequence: number | null
   isCompleted: boolean | null
   isCanceled: boolean | null
   workspaceId: number | null
@@ -65,6 +69,7 @@ export type TaskStageCountAggregateOutputType = {
   title: number
   description: number
   color: number
+  sequence: number
   isCompleted: number
   isCanceled: number
   workspaceId: number
@@ -76,11 +81,13 @@ export type TaskStageCountAggregateOutputType = {
 
 export type TaskStageAvgAggregateInputType = {
   id?: true
+  sequence?: true
   workspaceId?: true
 }
 
 export type TaskStageSumAggregateInputType = {
   id?: true
+  sequence?: true
   workspaceId?: true
 }
 
@@ -89,6 +96,7 @@ export type TaskStageMinAggregateInputType = {
   title?: true
   description?: true
   color?: true
+  sequence?: true
   isCompleted?: true
   isCanceled?: true
   workspaceId?: true
@@ -101,6 +109,7 @@ export type TaskStageMaxAggregateInputType = {
   title?: true
   description?: true
   color?: true
+  sequence?: true
   isCompleted?: true
   isCanceled?: true
   workspaceId?: true
@@ -113,6 +122,7 @@ export type TaskStageCountAggregateInputType = {
   title?: true
   description?: true
   color?: true
+  sequence?: true
   isCompleted?: true
   isCanceled?: true
   workspaceId?: true
@@ -212,6 +222,7 @@ export type TaskStageGroupByOutputType = {
   title: string
   description: string | null
   color: string
+  sequence: number
   isCompleted: boolean
   isCanceled: boolean
   workspaceId: number
@@ -247,6 +258,7 @@ export type TaskStageWhereInput = {
   title?: Prisma.StringFilter<"TaskStage"> | string
   description?: Prisma.StringNullableFilter<"TaskStage"> | string | null
   color?: Prisma.StringFilter<"TaskStage"> | string
+  sequence?: Prisma.IntFilter<"TaskStage"> | number
   isCompleted?: Prisma.BoolFilter<"TaskStage"> | boolean
   isCanceled?: Prisma.BoolFilter<"TaskStage"> | boolean
   workspaceId?: Prisma.IntFilter<"TaskStage"> | number
@@ -261,6 +273,7 @@ export type TaskStageOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -278,6 +291,7 @@ export type TaskStageWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"TaskStage"> | string
   description?: Prisma.StringNullableFilter<"TaskStage"> | string | null
   color?: Prisma.StringFilter<"TaskStage"> | string
+  sequence?: Prisma.IntFilter<"TaskStage"> | number
   isCompleted?: Prisma.BoolFilter<"TaskStage"> | boolean
   isCanceled?: Prisma.BoolFilter<"TaskStage"> | boolean
   workspaceId?: Prisma.IntFilter<"TaskStage"> | number
@@ -292,6 +306,7 @@ export type TaskStageOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -312,6 +327,7 @@ export type TaskStageScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"TaskStage"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"TaskStage"> | string | null
   color?: Prisma.StringWithAggregatesFilter<"TaskStage"> | string
+  sequence?: Prisma.IntWithAggregatesFilter<"TaskStage"> | number
   isCompleted?: Prisma.BoolWithAggregatesFilter<"TaskStage"> | boolean
   isCanceled?: Prisma.BoolWithAggregatesFilter<"TaskStage"> | boolean
   workspaceId?: Prisma.IntWithAggregatesFilter<"TaskStage"> | number
@@ -323,6 +339,7 @@ export type TaskStageCreateInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -336,6 +353,7 @@ export type TaskStageUncheckedCreateInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId: number
@@ -348,6 +366,7 @@ export type TaskStageUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +380,7 @@ export type TaskStageUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -374,6 +394,7 @@ export type TaskStageCreateManyInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId: number
@@ -385,6 +406,7 @@ export type TaskStageUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,6 +418,7 @@ export type TaskStageUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -418,6 +441,7 @@ export type TaskStageCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -427,6 +451,7 @@ export type TaskStageCountOrderByAggregateInput = {
 
 export type TaskStageAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
 }
 
@@ -435,6 +460,7 @@ export type TaskStageMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -447,6 +473,7 @@ export type TaskStageMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   isCanceled?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
@@ -456,6 +483,7 @@ export type TaskStageMinOrderByAggregateInput = {
 
 export type TaskStageSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sequence?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
 }
 
@@ -526,6 +554,7 @@ export type TaskStageCreateWithoutWorkspaceInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -538,6 +567,7 @@ export type TaskStageUncheckedCreateWithoutWorkspaceInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -579,6 +609,7 @@ export type TaskStageScalarWhereInput = {
   title?: Prisma.StringFilter<"TaskStage"> | string
   description?: Prisma.StringNullableFilter<"TaskStage"> | string | null
   color?: Prisma.StringFilter<"TaskStage"> | string
+  sequence?: Prisma.IntFilter<"TaskStage"> | number
   isCompleted?: Prisma.BoolFilter<"TaskStage"> | boolean
   isCanceled?: Prisma.BoolFilter<"TaskStage"> | boolean
   workspaceId?: Prisma.IntFilter<"TaskStage"> | number
@@ -590,6 +621,7 @@ export type TaskStageCreateWithoutTasksInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -602,6 +634,7 @@ export type TaskStageUncheckedCreateWithoutTasksInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId: number
@@ -629,6 +662,7 @@ export type TaskStageUpdateWithoutTasksInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -641,6 +675,7 @@ export type TaskStageUncheckedUpdateWithoutTasksInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -653,6 +688,7 @@ export type TaskStageCreateManyWorkspaceInput = {
   title: string
   description?: string | null
   color?: string
+  sequence?: number
   isCompleted?: boolean
   isCanceled?: boolean
   createdAt?: Date | string
@@ -663,6 +699,7 @@ export type TaskStageUpdateWithoutWorkspaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -675,6 +712,7 @@ export type TaskStageUncheckedUpdateWithoutWorkspaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +725,7 @@ export type TaskStageUncheckedUpdateManyWithoutWorkspaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isCanceled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -729,6 +768,7 @@ export type TaskStageSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -744,6 +784,7 @@ export type TaskStageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -757,6 +798,7 @@ export type TaskStageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -770,6 +812,7 @@ export type TaskStageSelectScalar = {
   title?: boolean
   description?: boolean
   color?: boolean
+  sequence?: boolean
   isCompleted?: boolean
   isCanceled?: boolean
   workspaceId?: boolean
@@ -777,7 +820,7 @@ export type TaskStageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TaskStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "color" | "isCompleted" | "isCanceled" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["taskStage"]>
+export type TaskStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "color" | "sequence" | "isCompleted" | "isCanceled" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["taskStage"]>
 export type TaskStageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workspace?: boolean | Prisma.WorkspaceDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.TaskStage$tasksArgs<ExtArgs>
@@ -801,6 +844,7 @@ export type $TaskStagePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     title: string
     description: string | null
     color: string
+    sequence: number
     isCompleted: boolean
     isCanceled: boolean
     workspaceId: number
@@ -1235,6 +1279,7 @@ export interface TaskStageFieldRefs {
   readonly title: Prisma.FieldRef<"TaskStage", 'String'>
   readonly description: Prisma.FieldRef<"TaskStage", 'String'>
   readonly color: Prisma.FieldRef<"TaskStage", 'String'>
+  readonly sequence: Prisma.FieldRef<"TaskStage", 'Int'>
   readonly isCompleted: Prisma.FieldRef<"TaskStage", 'Boolean'>
   readonly isCanceled: Prisma.FieldRef<"TaskStage", 'Boolean'>
   readonly workspaceId: Prisma.FieldRef<"TaskStage", 'Int'>

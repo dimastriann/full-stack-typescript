@@ -3,6 +3,6 @@ import { CreateTaskStageInput } from './create-task-stage.input';
 
 @InputType()
 export class UpdateTaskStageInput extends PartialType(CreateTaskStageInput) {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 }

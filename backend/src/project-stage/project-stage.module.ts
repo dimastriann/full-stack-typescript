@@ -4,8 +4,8 @@ import { ProjectStageResolver } from './project-stage.resolver';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-    imports: [PrismaModule],
-    providers: [ProjectStageResolver, ProjectStageService],
-    exports: [ProjectStageService],
+  imports: [PrismaModule],
+  providers: [ProjectStageResolver, ProjectStageService],
+  exports: [ProjectStageService],
 })
-export class ProjectStageModule { }
+export class ProjectStageModule {}

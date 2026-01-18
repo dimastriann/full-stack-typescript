@@ -50,4 +50,4 @@ import { TaskStageModule } from './task-stage/task-stage.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

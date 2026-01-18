@@ -67,7 +67,7 @@ const ProjectRow = React.memo(
           {project.description}
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-          {project.status}
+          {project.stage?.title || '-'}
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
           {/* @ts-ignore - responsible might be populated */}
