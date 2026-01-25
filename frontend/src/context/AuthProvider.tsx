@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
 import { GET_ME, LOGOUT_MUTATION } from '../features/auth/gql/auth.graphql';
+import Logger from '../lib/logger';
 
 type AuthContext = {
   session: string;
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setSession('logged_in');
         }
       } catch (error) {
-        console.error('Session check failed:', error);
+        Logger.error('Session check failed:', error);
       } finally {
         setLoading(false);
       }
@@ -62,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await client.mutate({ mutation: LOGOUT_MUTATION });
     } catch (error) {
-      console.error('Logout mutation failed:', error);
+      Logger.error('Logout mutation failed:', error);
     }
     sessionStorage.removeItem('user');
     localStorage.removeItem('lastWorkspaceId');

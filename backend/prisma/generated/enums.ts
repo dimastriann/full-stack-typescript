@@ -68,3 +68,11 @@ export const ProjectRole = {
 } as const
 
 export type ProjectRole = (typeof ProjectRole)[keyof typeof ProjectRole]
+
+
+export const ConversationType = {
+  CHANNEL: 'CHANNEL',
+  DIRECT: 'DIRECT'
+} as const
+
+export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]

@@ -31,7 +31,6 @@ export const WorkspaceProvider = ({ children }: { children: ReactNode }) => {
         (m: any) => m.workspace,
       );
       setWorkspaces(availableWorkspaces);
-      console.log('availableWorkspaces', workspaces);
 
       // Try to restore from localStorage or default to the first one
       const storedWorkspaceId = localStorage.getItem('lastWorkspaceId');

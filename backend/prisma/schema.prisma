@@ -11,28 +11,30 @@ datasource db {
 }
 
 model User {
-  id                 Int               @id @default(autoincrement())
+  id                 Int                       @id @default(autoincrement())
   name               String
-  email              String            @unique
+  email              String                    @unique
   password           String
   phone              String?
   mobile             String?
   firstName          String
   lastName           String?
-  status             Boolean           @default(true)
+  status             Boolean                   @default(true)
   address            String?
   bio                String?
   birthDate          DateTime?
   gender             Gender?
-  role               UserRole          @default(USER)
+  role               UserRole                  @default(USER)
   tasks              Task[]
   projects           Project[]
   timesheets         Timesheet[]
   comments           Comment[]
   projectMemberships ProjectMember[]
   workspaceMembers   WorkspaceMember[]
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+  conversations      ConversationParticipant[]
+  messages           Message[]
 }
 
 model Workspace {
@@ -45,6 +47,7 @@ model Workspace {
   taskStages    TaskStage[]
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
+  conversations Conversation[]
 }
 
 model WorkspaceMember {
@@ -237,4 +240,46 @@ enum ProjectRole {
   ADMIN
   MEMBER
   VIEWER
+}
+
+enum ConversationType {
+  CHANNEL
+  DIRECT
+}
+
+model Conversation {
+  id           Int                       @id @default(autoincrement())
+  name         String?
+  type         ConversationType          @default(DIRECT)
+  workspaceId  Int?
+  workspace    Workspace?                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  conversationId Int
+  joinedAt       DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id             Int      @id @default(autoincrement())
+  content        String
+  linkPreview    Json?
+  senderId       Int
+  conversationId Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }

@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Layout,
 } from 'lucide-react';
+import Logger from '../../../lib/logger';
 import Modal from '../../../components/Dialog';
 import ProjectForm from './ProjectForm';
 import { useAuth } from '../../../context/AuthProvider';
@@ -184,7 +185,7 @@ export default function ProjectList() {
           prev.filter((id) => id !== projectToDelete.id),
         );
       } catch (error) {
-        console.warn(error);
+        Logger.warn(error as string);
         setErrorMsg(`${error}`);
       }
     }
@@ -199,7 +200,7 @@ export default function ProjectList() {
       setIsBulkDeleteModalOpen(false);
       setSelectedIds([]);
     } catch (error) {
-      console.warn(error);
+      Logger.warn(error as string);
       setErrorMsg(`Failed to delete some projects: ${error}`);
     }
   };

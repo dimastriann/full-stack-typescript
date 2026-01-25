@@ -7,6 +7,7 @@ import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm } from 'react-hook-form';
+import Logger from '../../../lib/logger';
 import { X } from 'lucide-react';
 import type { TaskStage } from '../../../types/Tasks';
 import TaskTimesheetTable from './TaskTimesheetTable';
@@ -112,7 +113,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
       if (onSuccess) onSuccess();
       await refetch();
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       setErrorMsg(`${err}`);
     }
   });

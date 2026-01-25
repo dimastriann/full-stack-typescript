@@ -13,6 +13,7 @@ import {
 import Modal from '../../../components/Dialog';
 import ErrorSection from '../../../components/ErrorSection';
 import TimesheetForm from './TimesheetForm';
+import Logger from '../../../lib/logger';
 
 const TimesheetRow = React.memo(
   ({
@@ -180,7 +181,7 @@ export default function TimesheetList() {
           prev.filter((id) => id !== timesheetToDelete.id),
         );
       } catch (error) {
-        console.warn(error);
+        Logger.warn(error as string);
         setErrorMsg(`${error}`);
       }
     }
@@ -195,7 +196,7 @@ export default function TimesheetList() {
       setIsBulkDeleteModalOpen(false);
       setSelectedIds([]);
     } catch (error) {
-      console.warn(error);
+      Logger.warn(error as string);
       setErrorMsg(`Failed to delete some timesheets: ${error}`);
     }
   };

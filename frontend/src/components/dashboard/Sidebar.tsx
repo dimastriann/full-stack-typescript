@@ -7,6 +7,7 @@ import {
   Timer,
   User,
   ListCheck,
+  MessageSquare,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthProvider';
@@ -93,6 +94,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           <Timer size={18} className="m-1" />{' '}
           <span className="ms-2">Timesheets</span>
+        </NavLink>
+        <NavLink
+          to="/dashboard/discuss"
+          onClick={() => onClose()}
+          className="flex hover:bg-gray-100 py-2 px-3 rounded-lg"
+        >
+          <MessageSquare size={18} className="m-1" />{' '}
+          <span className="ms-2">Discuss</span>
         </NavLink>
         {/* <NavLink
           to="/dashboard/calendar"

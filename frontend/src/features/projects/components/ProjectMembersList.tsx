@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { User, UserPlus, Trash2 } from 'lucide-react';
+import Logger from '../../../lib/logger';
 import {
   GET_PROJECT_MEMBERS,
   INVITE_TO_PROJECT,
@@ -46,7 +47,7 @@ export default function ProjectMembersList({
       setIsInviteOpen(false);
       refetch();
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       alert('Failed to invite user');
     }
   };
@@ -61,7 +62,7 @@ export default function ProjectMembersList({
       });
       refetch();
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       alert('Failed to remove member');
     }
   };
@@ -75,7 +76,7 @@ export default function ProjectMembersList({
       });
       refetch();
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       alert('Failed to update role');
     }
   };

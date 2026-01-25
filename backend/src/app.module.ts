@@ -19,6 +19,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { ProjectStageModule } from './project-stage/project-stage.module';
 import { TaskStageModule } from './task-stage/task-stage.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { TaskStageModule } from './task-stage/task-stage.module';
     WorkspaceModule,
     ProjectStageModule,
     TaskStageModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

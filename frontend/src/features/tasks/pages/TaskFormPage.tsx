@@ -2,6 +2,7 @@ import { TaskProvider } from '../hooks/useTasks';
 import TaskForm from '../components/TaskForm';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Logger from '../../../lib/logger';
 import { useQuery, useMutation } from '@apollo/client';
 
 import { GET_TASK } from '../gql/task.graphql';
@@ -32,7 +33,7 @@ export default function TaskFormPage() {
       });
       refetch();
     } catch (error) {
-      console.error('Error deleting attachment:', error);
+      Logger.error('Error deleting attachment:', error as any);
       alert('Failed to delete attachment');
     }
   };

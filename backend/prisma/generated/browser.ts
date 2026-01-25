@@ -72,3 +72,18 @@ export type Attachment = Prisma.AttachmentModel
  * 
  */
 export type ProjectMember = Prisma.ProjectMemberModel
+/**
+ * Model Conversation
+ * 
+ */
+export type Conversation = Prisma.ConversationModel
+/**
+ * Model ConversationParticipant
+ * 
+ */
+export type ConversationParticipant = Prisma.ConversationParticipantModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel

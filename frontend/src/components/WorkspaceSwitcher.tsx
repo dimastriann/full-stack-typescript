@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { GET_ME } from '../features/auth/gql/auth.graphql';
 import { CREATE_WORKSPACE } from '../features/workspaces/gql/workspace.graphql';
 import { useState } from 'react';
+import Logger from '../lib/logger';
 
 export const WorkspaceSwitcher = () => {
   const { activeWorkspace, setActiveWorkspace, workspaces } = useWorkspace();
@@ -24,7 +25,7 @@ export const WorkspaceSwitcher = () => {
       setNewWorkspaceName('');
       setIsModalOpen(false);
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       alert('Failed to create workspace');
     }
   };

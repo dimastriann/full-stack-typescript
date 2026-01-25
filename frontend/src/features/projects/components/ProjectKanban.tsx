@@ -18,6 +18,7 @@ import {
   User,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
+import Logger from '../../../lib/logger';
 import ProjectForm from './ProjectForm';
 import type { ProjectStage } from '../../../types/Projects';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -155,7 +156,7 @@ export default function ProjectKanban() {
       // but it's safer to let Apollo handle the sync afterwards.
       await refetch();
     } catch (err) {
-      console.error('Failed to update project position', err);
+      Logger.error('Failed to update project position', err as any);
       // Revert on error
       setRecords(records);
       alert('Failed to update project position. Please try again.');

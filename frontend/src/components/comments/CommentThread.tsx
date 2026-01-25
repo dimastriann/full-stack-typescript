@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
+import Logger from '../../lib/logger';
 import { CREATE_COMMENT } from '../../features/comments/gql/comment.graphql';
 
 interface User {
@@ -57,7 +58,7 @@ const CommentItem = ({
       setShowReply(false);
       refetch();
     } catch (e) {
-      console.error(e);
+      Logger.error(e as string);
       alert('Failed to post reply');
     }
   };
@@ -143,7 +144,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       setNewComment('');
       refetch();
     } catch (e) {
-      console.error(e);
+      Logger.error(e as string);
       alert('Failed to post comment');
     }
   };

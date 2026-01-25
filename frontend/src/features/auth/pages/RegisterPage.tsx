@@ -3,6 +3,7 @@ import { useAuth } from '../../../context/AuthProvider';
 import { useMutation } from '@apollo/client';
 import { REGISTER_MUTATION } from '../gql/auth.graphql';
 import { Link, useNavigate } from 'react-router-dom';
+import Logger from '../../../lib/logger';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -42,8 +43,8 @@ export default function RegisterPage() {
         navigate('/dashboard');
       }
     } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || 'Registration failed');
+      Logger.error(err as string);
+      setErrorMsg('Registration failed. Please try again.');
     }
   };
 

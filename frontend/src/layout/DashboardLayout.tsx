@@ -16,6 +16,7 @@ import TimesheetPage from '../features/timesheets/pages/TimesheetPage';
 import TimesheetFormPage from '../features/timesheets/pages/TimesheetFormPage';
 import ProfilePage from '../features/users/pages/ProfilePage';
 import WorkspaceSettingsPage from '../features/workspaces/pages/WorkspaceSettingsPage';
+import DiscussPage from '../pages/DiscussPage';
 import { ProjectProvider } from '../features/projects/hooks/useProjects';
 import { Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthProvider';
@@ -189,6 +190,7 @@ export default function DashboardLayout() {
                 </div>
               }
             />
+            <Route path="discuss" element={<DiscussPage />} />
           </Routes>
         </main>
       </div>

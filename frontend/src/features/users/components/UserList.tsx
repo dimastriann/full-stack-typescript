@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUserContext } from '../hooks/useUsers';
 import type { UserType } from '../../../types/Users';
+import Logger from '../../../lib/logger';
 import ErrorSection from '../../../components/ErrorSection';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -10,7 +11,10 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  MessageSquare,
 } from 'lucide-react';
+import { useMutation } from '@apollo/client';
+import { CREATE_DIRECT_CONVERSATION } from '../../chat/gql/chat.graphql';
 import Modal from '../../../components/Dialog';
 import UserForm from './UserForm';
 
@@ -22,6 +26,7 @@ const UserRow = React.memo(
     isSelectionMode,
     onEdit,
     onDelete,
+    onMessage,
     onToggle,
   }: {
     user: UserType;
@@ -29,6 +34,7 @@ const UserRow = React.memo(
     isSelectionMode: boolean;
     onEdit: (user: UserType) => void;
     onDelete: (user: UserType) => void;
+    onMessage: (user: UserType) => void;
     onToggle: (id: number) => void;
   }) => (
     <tr
@@ -89,6 +95,16 @@ const UserRow = React.memo(
           >
             <Eye className="h-5 w-5" />
           </button>
+          <button
+            title="Message"
+            className="text-green-600 hover:text-green-900 font-medium text-sm transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMessage(user);
+            }}
+          >
+            <MessageSquare className="h-5 w-5" />
+          </button>
           {!isSelectionMode && (
             <button
               title="Delete"
@@ -130,6 +146,7 @@ export default function UserList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [createDirectConversation] = useMutation(CREATE_DIRECT_CONVERSATION);
 
   const navigate = useNavigate();
 
@@ -176,6 +193,23 @@ export default function UserList() {
     setIsDeleteModalOpen(true);
   }, []);
 
+  const handleMessageClick = React.useCallback(
+    async (userToMsg: UserType) => {
+      try {
+        const { data: convData } = await createDirectConversation({
+          variables: { otherUserId: userToMsg.id },
+        });
+        if (convData?.createDirectConversation) {
+          navigate('/dashboard/discuss');
+        }
+      } catch (err) {
+        Logger.error('Failed to start conversation:', err as any);
+        setErrorMsg('Failed to start conversation');
+      }
+    },
+    [createDirectConversation, navigate],
+  );
+
   const confirmDelete = async () => {
     if (userToDelete?.id) {
       try {
@@ -186,7 +220,7 @@ export default function UserList() {
         // Remove from selection if it was selected
         setSelectedIds((prev) => prev.filter((id) => id !== userToDelete.id));
       } catch (error) {
-        console.warn(error);
+        Logger.warn(error as string);
         setErrorMsg(`${error}`);
       }
     }
@@ -202,7 +236,7 @@ export default function UserList() {
       setIsBulkDeleteModalOpen(false);
       setSelectedIds([]);
     } catch (error) {
-      console.warn(error);
+      Logger.warn(error as string);
       setErrorMsg(`Failed to delete some users: ${error}`);
     }
   };
@@ -333,6 +367,7 @@ export default function UserList() {
                   isSelectionMode={isSelectionMode}
                   onEdit={handleEditUser}
                   onDelete={handleDeleteClick}
+                  onMessage={handleMessageClick}
                   onToggle={handleToggleSelect}
                 />
               ))}

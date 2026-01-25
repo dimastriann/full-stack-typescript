@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import Logger from '../../../lib/logger';
 import { useTimesheets } from '../hooks/useTimesheets';
 import { useParams } from 'react-router-dom';
 import { GET_TIMESHEET } from '../gql/timesheet.graphql';
@@ -70,8 +71,6 @@ export default function TimesheetForm({
     return tasks?.filter((task) => task.project.id === projectId);
   }, [projectId, tasks]);
 
-  console.log('timesheet', timesheet);
-
   useEffect(() => {
     if (isEditMode && timesheet && tasks) {
       reset({
@@ -110,7 +109,7 @@ export default function TimesheetForm({
       if (onSuccess) onSuccess();
       reset();
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       setErrorMsg(`${err}`);
     }
   });

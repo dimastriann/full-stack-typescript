@@ -1,4 +1,5 @@
 import { getAttachmentUrl } from '../../../config/api';
+import Logger from '../../../lib/logger';
 
 export const useAttachments = () => {
   const handlePreviewFile = async (file: any) => {
@@ -13,7 +14,7 @@ export const useAttachments = () => {
       const url = window.URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (error) {
-      console.error('Error previewing file:', error);
+      Logger.error('Error previewing file:', error as any);
       alert('Failed to preview file');
     }
   };
@@ -39,7 +40,7 @@ export const useAttachments = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading file:', error);
+      Logger.error('Error downloading file:', error as any);
       alert('Failed to download file');
     }
   };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Logger from '../../../lib/logger';
 import { useQuery, useMutation } from '@apollo/client';
 import { useWorkspace } from '../../../context/WorkspaceProvider';
 import { GET_PROJECT_STAGES } from '../../projects/gql/project.graphql';
@@ -108,7 +109,7 @@ export default function WorkspaceSettingsPage() {
         setEditingId(null);
       }
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       alert('Failed to update workspace');
     } finally {
       location.reload();
@@ -130,7 +131,7 @@ export default function WorkspaceSettingsPage() {
       setInviteEmail('');
       setEditingId(null);
     } catch (err: any) {
-      console.error(err);
+      Logger.error(err as string);
       alert(err.message || 'Failed to invite user');
     }
   };
@@ -148,7 +149,7 @@ export default function WorkspaceSettingsPage() {
         },
       });
     } catch (err: any) {
-      console.error(err);
+      Logger.error(err as string);
       alert(err.message || 'Failed to update role');
     }
   };
@@ -169,7 +170,7 @@ export default function WorkspaceSettingsPage() {
         },
       });
     } catch (err: any) {
-      console.error(err);
+      Logger.error(err as string);
       alert(err.message || 'Failed to remove member');
     }
   };

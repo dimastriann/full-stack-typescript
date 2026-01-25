@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Logger from '../../../lib/logger';
 import { useAuth } from '../../../context/AuthProvider';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION } from '../gql/auth.graphql';
-import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -22,9 +23,9 @@ export default function LoginPage() {
       if (data?.login) {
         login(data.login);
       }
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || 'Login failed');
+    } catch (err) {
+      Logger.error(err as string);
+      setErrorMsg('Invalid email or password');
     }
   };
 

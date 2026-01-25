@@ -5,14 +5,15 @@ import TaskForm from './TaskForm';
 import { useState } from 'react';
 import type { TaskType } from '../../../types/Tasks';
 import {
+  Trash2,
+  Edit2,
+  Search,
+  Layout,
+  Plus,
   ChevronLeft,
   ChevronRight,
-  Eye,
-  Plus,
-  Search,
-  Trash2,
-  Layout,
 } from 'lucide-react';
+import Logger from '../../../lib/logger';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../../components/Dialog';
 import ErrorSection from '../../../components/ErrorSection';
@@ -84,7 +85,7 @@ const TaskRow = React.memo(
               onEdit(task);
             }}
           >
-            <Eye className="h-5 w-5" />
+            <Edit2 className="h-5 w-5" />
           </button>
           {!isSelectionMode && (
             <button
@@ -182,7 +183,7 @@ export default function TaskList() {
         // Remove from selection if it was selected
         setSelectedIds((prev) => prev.filter((id) => id !== taskToDelete.id));
       } catch (error) {
-        console.warn(error);
+        Logger.warn(error as string);
         setErrorMsg(`${error} `);
       }
     }
@@ -198,7 +199,7 @@ export default function TaskList() {
       setIsBulkDeleteModalOpen(false);
       setSelectedIds([]);
     } catch (error) {
-      console.warn(error);
+      Logger.warn(error as string);
       setErrorMsg(`Failed to delete some users: ${error} `);
     }
   };

@@ -8,6 +8,7 @@ import {
 } from '../../timesheets/gql/timesheet.graphql';
 import type { TimesheetType } from '../../../types/Timesheets';
 import { Plus, Save, X } from 'lucide-react';
+import Logger from '../../../lib/logger';
 
 interface TaskTimesheetTableProps {
   taskId: number;
@@ -88,7 +89,7 @@ export default function TaskTimesheetTable({
       setEditingId(null);
       setEditForm({});
     } catch (error) {
-      console.error('Failed to save timesheet', error);
+      Logger.error('Failed to save timesheet', error as any);
       alert('Failed to save timesheet: ' + error);
     }
   };
@@ -99,7 +100,7 @@ export default function TaskTimesheetTable({
         await deleteTimesheet({ variables: { id } });
         await refetch();
       } catch (error) {
-        console.error('Failed to delete timesheet', error);
+        Logger.error('Failed to delete timesheet', error as any);
       }
     }
   };

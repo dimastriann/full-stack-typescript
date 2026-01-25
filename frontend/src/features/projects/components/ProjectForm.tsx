@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import Logger from '../../../lib/logger';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import type { ProjectType, ProjectStage } from '../../../types/Projects';
@@ -135,7 +136,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
         await refetch();
       }
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       setErrorMsg(`${err}`);
     }
   });

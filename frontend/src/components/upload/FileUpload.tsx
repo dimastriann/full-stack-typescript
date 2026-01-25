@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { UPLOAD_FILE } from '../../features/attachments/gql/attachment.graphql';
+import Logger from '../../lib/logger';
 
 interface FileUploadProps {
   relationId: number;
@@ -22,11 +23,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
     setUploading(true);
     try {
-      // console.log('file', {
-      //     file,
-      //     relationId,
-      //     relationType,
-      // });
       await uploadFile({
         variables: {
           file,
@@ -36,7 +32,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       });
       if (onUploadSuccess) onUploadSuccess();
     } catch (error) {
-      console.error('Error uploading file:', error);
+      Logger.error('Error uploading file:', error);
       alert('Failed to upload file');
     } finally {
       setUploading(false);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import Logger from '../../../lib/logger';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_USER } from '../gql/user.graphql';
@@ -89,15 +90,12 @@ export default function UserForm({
         // Ensure id is present in the input
         userFormData.id = parseInt(userId!);
 
-        console.info('update user', userFormData);
-
         await updateRecord({
           variables: {
             input: userFormData,
           },
         });
       } else {
-        console.info('create user', userFormData);
         if (!userFormData.birthDate) {
           delete userFormData.birthDate;
         }
@@ -112,7 +110,7 @@ export default function UserForm({
         await refetch();
       }
     } catch (err) {
-      console.error(err);
+      Logger.error(err as string);
       setErrorMsg(`${err}`);
     }
   });

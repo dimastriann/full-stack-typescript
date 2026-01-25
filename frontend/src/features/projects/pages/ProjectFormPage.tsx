@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import Logger from '../../../lib/logger';
 import ProjectForm from '../components/ProjectForm';
 import { ArrowLeft } from 'lucide-react';
 import { useQuery, useMutation } from '@apollo/client';
@@ -36,7 +37,7 @@ export default function ProjectFormPage() {
       });
       refetch();
     } catch (error) {
-      console.error('Error deleting attachment:', error);
+      Logger.error('Error deleting attachment:', error as any);
       alert('Failed to delete attachment');
     }
   };

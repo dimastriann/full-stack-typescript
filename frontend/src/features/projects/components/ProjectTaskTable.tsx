@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Logger from '../../../lib/logger';
 import { useQuery, useMutation } from '@apollo/client';
 import {
   GET_TASKS,
@@ -97,8 +98,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
       setEditingId(null);
       setEditForm({});
     } catch (error) {
-      console.error('Failed to save task', error);
-      alert('Failed to save task: ' + error);
+      Logger.error('Failed to save task', error as any);
     }
   };
 
@@ -108,7 +108,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
         await deleteTask({ variables: { id } });
         await refetch();
       } catch (error) {
-        console.error('Failed to delete task', error);
+        Logger.error('Failed to delete task', error as any);
       }
     }
   };

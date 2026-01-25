@@ -220,6 +220,7 @@ export type WorkspaceWhereInput = {
   projects?: Prisma.ProjectListRelationFilter
   projectStages?: Prisma.ProjectStageListRelationFilter
   taskStages?: Prisma.TaskStageListRelationFilter
+  conversations?: Prisma.ConversationListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -232,6 +233,7 @@ export type WorkspaceOrderByWithRelationInput = {
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   projectStages?: Prisma.ProjectStageOrderByRelationAggregateInput
   taskStages?: Prisma.TaskStageOrderByRelationAggregateInput
+  conversations?: Prisma.ConversationOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -247,6 +249,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   projects?: Prisma.ProjectListRelationFilter
   projectStages?: Prisma.ProjectStageListRelationFilter
   taskStages?: Prisma.TaskStageListRelationFilter
+  conversations?: Prisma.ConversationListRelationFilter
 }, "id">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -282,6 +285,7 @@ export type WorkspaceCreateInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -294,6 +298,7 @@ export type WorkspaceUncheckedCreateInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -305,6 +310,7 @@ export type WorkspaceUpdateInput = {
   projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -317,6 +323,7 @@ export type WorkspaceUncheckedUpdateInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -379,6 +386,11 @@ export type WorkspaceScalarRelationFilter = {
   isNot?: Prisma.WorkspaceWhereInput
 }
 
+export type WorkspaceNullableScalarRelationFilter = {
+  is?: Prisma.WorkspaceWhereInput | null
+  isNot?: Prisma.WorkspaceWhereInput | null
+}
+
 export type WorkspaceCreateNestedOneWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutMembersInput, Prisma.WorkspaceUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutMembersInput
@@ -435,6 +447,22 @@ export type WorkspaceUpdateOneRequiredWithoutProjectsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutProjectsInput, Prisma.WorkspaceUpdateWithoutProjectsInput>, Prisma.WorkspaceUncheckedUpdateWithoutProjectsInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutConversationsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutConversationsInput, Prisma.WorkspaceUncheckedCreateWithoutConversationsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutConversationsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneWithoutConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutConversationsInput, Prisma.WorkspaceUncheckedCreateWithoutConversationsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutConversationsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutConversationsInput
+  disconnect?: Prisma.WorkspaceWhereInput | boolean
+  delete?: Prisma.WorkspaceWhereInput | boolean
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutConversationsInput, Prisma.WorkspaceUpdateWithoutConversationsInput>, Prisma.WorkspaceUncheckedUpdateWithoutConversationsInput>
+}
+
 export type WorkspaceCreateWithoutMembersInput = {
   name: string
   description?: string | null
@@ -443,6 +471,7 @@ export type WorkspaceCreateWithoutMembersInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -454,6 +483,7 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -480,6 +510,7 @@ export type WorkspaceUpdateWithoutMembersInput = {
   projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -491,6 +522,7 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutProjectStagesInput = {
@@ -501,6 +533,7 @@ export type WorkspaceCreateWithoutProjectStagesInput = {
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutProjectStagesInput = {
@@ -512,6 +545,7 @@ export type WorkspaceUncheckedCreateWithoutProjectStagesInput = {
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutProjectStagesInput = {
@@ -538,6 +572,7 @@ export type WorkspaceUpdateWithoutProjectStagesInput = {
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutProjectStagesInput = {
@@ -549,6 +584,7 @@ export type WorkspaceUncheckedUpdateWithoutProjectStagesInput = {
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutTaskStagesInput = {
@@ -559,6 +595,7 @@ export type WorkspaceCreateWithoutTaskStagesInput = {
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutTaskStagesInput = {
@@ -570,6 +607,7 @@ export type WorkspaceUncheckedCreateWithoutTaskStagesInput = {
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutTaskStagesInput = {
@@ -596,6 +634,7 @@ export type WorkspaceUpdateWithoutTaskStagesInput = {
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutTaskStagesInput = {
@@ -607,6 +646,7 @@ export type WorkspaceUncheckedUpdateWithoutTaskStagesInput = {
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutProjectsInput = {
@@ -617,6 +657,7 @@ export type WorkspaceCreateWithoutProjectsInput = {
   members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutProjectsInput = {
@@ -628,6 +669,7 @@ export type WorkspaceUncheckedCreateWithoutProjectsInput = {
   members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutProjectsInput = {
@@ -654,6 +696,7 @@ export type WorkspaceUpdateWithoutProjectsInput = {
   members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
@@ -663,6 +706,69 @@ export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutConversationsInput = {
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutConversationsInput = {
+  id?: number
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutConversationsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutConversationsInput, Prisma.WorkspaceUncheckedCreateWithoutConversationsInput>
+}
+
+export type WorkspaceUpsertWithoutConversationsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutConversationsInput, Prisma.WorkspaceUncheckedUpdateWithoutConversationsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutConversationsInput, Prisma.WorkspaceUncheckedCreateWithoutConversationsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutConversationsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutConversationsInput, Prisma.WorkspaceUncheckedUpdateWithoutConversationsInput>
+}
+
+export type WorkspaceUpdateWithoutConversationsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutConversationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
@@ -677,6 +783,7 @@ export type WorkspaceCountOutputType = {
   projects: number
   projectStages: number
   taskStages: number
+  conversations: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -684,6 +791,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   projects?: boolean | WorkspaceCountOutputTypeCountProjectsArgs
   projectStages?: boolean | WorkspaceCountOutputTypeCountProjectStagesArgs
   taskStages?: boolean | WorkspaceCountOutputTypeCountTaskStagesArgs
+  conversations?: boolean | WorkspaceCountOutputTypeCountConversationsArgs
 }
 
 /**
@@ -724,6 +832,13 @@ export type WorkspaceCountOutputTypeCountTaskStagesArgs<ExtArgs extends runtime.
   where?: Prisma.TaskStageWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConversationWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -735,6 +850,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   projects?: boolean | Prisma.Workspace$projectsArgs<ExtArgs>
   projectStages?: boolean | Prisma.Workspace$projectStagesArgs<ExtArgs>
   taskStages?: boolean | Prisma.Workspace$taskStagesArgs<ExtArgs>
+  conversations?: boolean | Prisma.Workspace$conversationsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -768,6 +884,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   projects?: boolean | Prisma.Workspace$projectsArgs<ExtArgs>
   projectStages?: boolean | Prisma.Workspace$projectStagesArgs<ExtArgs>
   taskStages?: boolean | Prisma.Workspace$taskStagesArgs<ExtArgs>
+  conversations?: boolean | Prisma.Workspace$conversationsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -780,6 +897,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     projectStages: Prisma.$ProjectStagePayload<ExtArgs>[]
     taskStages: Prisma.$TaskStagePayload<ExtArgs>[]
+    conversations: Prisma.$ConversationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1185,6 +1303,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   projects<T extends Prisma.Workspace$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectStages<T extends Prisma.Workspace$projectStagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$projectStagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskStages<T extends Prisma.Workspace$taskStagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$taskStagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conversations<T extends Prisma.Workspace$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1700,6 +1819,30 @@ export type Workspace$taskStagesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.TaskStageScalarFieldEnum | Prisma.TaskStageScalarFieldEnum[]
+}
+
+/**
+ * Workspace.conversations
+ */
+export type Workspace$conversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Conversation
+   */
+  select?: Prisma.ConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Conversation
+   */
+  omit?: Prisma.ConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConversationInclude<ExtArgs> | null
+  where?: Prisma.ConversationWhereInput
+  orderBy?: Prisma.ConversationOrderByWithRelationInput | Prisma.ConversationOrderByWithRelationInput[]
+  cursor?: Prisma.ConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConversationScalarFieldEnum | Prisma.ConversationScalarFieldEnum[]
 }
 
 /**

@@ -20,6 +20,7 @@ import {
   User,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
+import Logger from '../../../lib/logger';
 import TaskForm from './TaskForm';
 import type { TaskStage } from '../../../types/Tasks';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -156,7 +157,7 @@ export default function TaskKanban() {
       });
       await refetch();
     } catch (err) {
-      console.error('Failed to update task position', err);
+      Logger.error('Failed to update task position', err as any);
       // Revert on error
       setRecords(records);
       alert('Failed to update task position. Please try again.');

@@ -198,6 +198,50 @@ type DashboardStats {
   pendingTasks: Int!
 }
 
+type LinkPreview {
+  url: String
+  title: String
+  description: String
+  image: String
+  siteName: String
+  favicons: String
+}
+
+type Message {
+  id: Int!
+  content: String!
+  linkPreview: LinkPreview
+  senderId: Int!
+  sender: User!
+  conversationId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ConversationParticipant {
+  id: Int!
+  userId: Int!
+  user: User!
+  conversationId: Int!
+  joinedAt: DateTime!
+}
+
+type Conversation {
+  id: Int!
+  name: String
+  type: ConversationType!
+  workspaceId: Int
+  participants: [ConversationParticipant!]!
+  messages: [Message!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum ConversationType {
+  CHANNEL
+  DIRECT
+}
+
 type Query {
   users(skip: Int, take: Int): [User!]!
   me: User!
@@ -220,6 +264,8 @@ type Query {
   projectStage(id: Int!): ProjectStage!
   taskStages(workspaceId: Int!): [TaskStage!]!
   taskStage(id: Int!): TaskStage!
+  myConversations: [Conversation!]!
+  conversationMessages(conversationId: Int!, limit: Int! = 50, cursor: Int): [Message!]!
 }
 
 type Mutation {
@@ -259,6 +305,11 @@ type Mutation {
   createTaskStage(createTaskStageInput: CreateTaskStageInput!): TaskStage!
   updateTaskStage(updateTaskStageInput: UpdateTaskStageInput!): TaskStage!
   removeTaskStage(id: Int!): TaskStage!
+  createDirectConversation(otherUserId: Int!): Conversation!
+  createChannel(name: String!, workspaceId: Int!, userIds: [Int!]!): Conversation!
+  deleteConversation(id: Int!): Boolean!
+  addParticipant(conversationId: Int!, userId: Int!): ConversationParticipant!
+  removeParticipant(conversationId: Int!, userId: Int!): Boolean!
 }
 
 input CreateUserInput {

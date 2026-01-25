@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,11 +16,14 @@
     "@hello-pangea/dnd": "^18.0.1",
     "apollo-upload-client": "^18.0.1",
     "graphql": "^16.11.0",
+    "linkify-react": "^4.3.2",
+    "linkifyjs": "^4.3.2",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.62.0",
-    "react-router-dom": "^7.6.3"
+    "react-router-dom": "^7.6.3",
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
