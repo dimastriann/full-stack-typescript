@@ -20,17 +20,30 @@ const DiscussPage = () => {
   const conversations = data?.myConversations || [];
 
   return (
-    <div className="flex h-full overflow-hidden">
-      <ConversationList
-        conversations={conversations}
-        selectedId={selectedConversation?.id}
-        onSelect={setSelectedConversation}
-      />
-      <div className="flex-1 p-4 bg-gray-100">
+    <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-gray-100">
+      <div
+        className={`${
+          selectedConversation ? 'hidden md:block' : 'block'
+        } w-full md:w-80 lg:w-96 border-r border-gray-200 bg-white`}
+      >
+        <ConversationList
+          conversations={conversations}
+          selectedId={selectedConversation?.id}
+          onSelect={setSelectedConversation}
+        />
+      </div>
+      <div
+        className={`${
+          selectedConversation ? 'block' : 'hidden md:block'
+        } flex-1 flex flex-col min-w-0 h-full`}
+      >
         {selectedConversation ? (
-          <ChatWindow conversation={selectedConversation} />
+          <ChatWindow
+            conversation={selectedConversation}
+            onBack={() => setSelectedConversation(null)}
+          />
         ) : (
-          <div className="h-full flex items-center justify-center text-gray-400 bg-white rounded-lg border border-dashed border-gray-300">
+          <div className="h-full flex items-center justify-center text-gray-400 bg-white m-4 rounded-lg border border-dashed border-gray-300">
             Select a conversation to start chatting
           </div>
         )}

@@ -70,6 +70,9 @@ export class ConversationParticipant {
 
   @Field()
   joinedAt: Date;
+
+  @Field()
+  lastReadAt: Date;
 }
 
 @ObjectType()
@@ -91,6 +94,9 @@ export class Conversation {
 
   @Field(() => [Message])
   messages: Message[];
+
+  @Field(() => Int, { defaultValue: 0 })
+  unreadCount: number;
 
   @Field()
   createdAt: Date;

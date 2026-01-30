@@ -33,6 +33,7 @@ export interface ConversationParticipant {
   user: User;
   conversationId: number;
   joinedAt: string;
+  lastReadAt: string;
 }
 
 export interface Conversation {
@@ -42,6 +43,7 @@ export interface Conversation {
   workspaceId?: number;
   participants: ConversationParticipant[];
   messages: Message[];
+  unreadCount?: number;
   createdAt: string;
   updatedAt: string;
 }

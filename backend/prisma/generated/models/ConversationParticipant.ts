@@ -43,6 +43,7 @@ export type ConversationParticipantMinAggregateOutputType = {
   userId: number | null
   conversationId: number | null
   joinedAt: Date | null
+  lastReadAt: Date | null
 }
 
 export type ConversationParticipantMaxAggregateOutputType = {
@@ -50,6 +51,7 @@ export type ConversationParticipantMaxAggregateOutputType = {
   userId: number | null
   conversationId: number | null
   joinedAt: Date | null
+  lastReadAt: Date | null
 }
 
 export type ConversationParticipantCountAggregateOutputType = {
@@ -57,6 +59,7 @@ export type ConversationParticipantCountAggregateOutputType = {
   userId: number
   conversationId: number
   joinedAt: number
+  lastReadAt: number
   _all: number
 }
 
@@ -78,6 +81,7 @@ export type ConversationParticipantMinAggregateInputType = {
   userId?: true
   conversationId?: true
   joinedAt?: true
+  lastReadAt?: true
 }
 
 export type ConversationParticipantMaxAggregateInputType = {
@@ -85,6 +89,7 @@ export type ConversationParticipantMaxAggregateInputType = {
   userId?: true
   conversationId?: true
   joinedAt?: true
+  lastReadAt?: true
 }
 
 export type ConversationParticipantCountAggregateInputType = {
@@ -92,6 +97,7 @@ export type ConversationParticipantCountAggregateInputType = {
   userId?: true
   conversationId?: true
   joinedAt?: true
+  lastReadAt?: true
   _all?: true
 }
 
@@ -186,6 +192,7 @@ export type ConversationParticipantGroupByOutputType = {
   userId: number
   conversationId: number
   joinedAt: Date
+  lastReadAt: Date
   _count: ConversationParticipantCountAggregateOutputType | null
   _avg: ConversationParticipantAvgAggregateOutputType | null
   _sum: ConversationParticipantSumAggregateOutputType | null
@@ -216,6 +223,7 @@ export type ConversationParticipantWhereInput = {
   userId?: Prisma.IntFilter<"ConversationParticipant"> | number
   conversationId?: Prisma.IntFilter<"ConversationParticipant"> | number
   joinedAt?: Prisma.DateTimeFilter<"ConversationParticipant"> | Date | string
+  lastReadAt?: Prisma.DateTimeFilter<"ConversationParticipant"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
 }
@@ -225,6 +233,7 @@ export type ConversationParticipantOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   conversationId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   conversation?: Prisma.ConversationOrderByWithRelationInput
 }
@@ -238,6 +247,7 @@ export type ConversationParticipantWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"ConversationParticipant"> | number
   conversationId?: Prisma.IntFilter<"ConversationParticipant"> | number
   joinedAt?: Prisma.DateTimeFilter<"ConversationParticipant"> | Date | string
+  lastReadAt?: Prisma.DateTimeFilter<"ConversationParticipant"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
 }, "id" | "userId_conversationId">
@@ -247,6 +257,7 @@ export type ConversationParticipantOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   conversationId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
   _count?: Prisma.ConversationParticipantCountOrderByAggregateInput
   _avg?: Prisma.ConversationParticipantAvgOrderByAggregateInput
   _max?: Prisma.ConversationParticipantMaxOrderByAggregateInput
@@ -262,10 +273,12 @@ export type ConversationParticipantScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"ConversationParticipant"> | number
   conversationId?: Prisma.IntWithAggregatesFilter<"ConversationParticipant"> | number
   joinedAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationParticipant"> | Date | string
+  lastReadAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationParticipant"> | Date | string
 }
 
 export type ConversationParticipantCreateInput = {
   joinedAt?: Date | string
+  lastReadAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConversationsInput
   conversation: Prisma.ConversationCreateNestedOneWithoutParticipantsInput
 }
@@ -275,10 +288,12 @@ export type ConversationParticipantUncheckedCreateInput = {
   userId: number
   conversationId: number
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationParticipantUpdateInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConversationsNestedInput
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutParticipantsNestedInput
 }
@@ -288,6 +303,7 @@ export type ConversationParticipantUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   conversationId?: Prisma.IntFieldUpdateOperationsInput | number
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationParticipantCreateManyInput = {
@@ -295,10 +311,12 @@ export type ConversationParticipantCreateManyInput = {
   userId: number
   conversationId: number
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationParticipantUpdateManyMutationInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationParticipantUncheckedUpdateManyInput = {
@@ -306,6 +324,7 @@ export type ConversationParticipantUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   conversationId?: Prisma.IntFieldUpdateOperationsInput | number
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationParticipantListRelationFilter = {
@@ -328,6 +347,7 @@ export type ConversationParticipantCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   conversationId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
 }
 
 export type ConversationParticipantAvgOrderByAggregateInput = {
@@ -341,6 +361,7 @@ export type ConversationParticipantMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   conversationId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
 }
 
 export type ConversationParticipantMinOrderByAggregateInput = {
@@ -348,6 +369,7 @@ export type ConversationParticipantMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   conversationId?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
+  lastReadAt?: Prisma.SortOrder
 }
 
 export type ConversationParticipantSumOrderByAggregateInput = {
@@ -442,6 +464,7 @@ export type ConversationParticipantUncheckedUpdateManyWithoutConversationNestedI
 
 export type ConversationParticipantCreateWithoutUserInput = {
   joinedAt?: Date | string
+  lastReadAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutParticipantsInput
 }
 
@@ -449,6 +472,7 @@ export type ConversationParticipantUncheckedCreateWithoutUserInput = {
   id?: number
   conversationId: number
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationParticipantCreateOrConnectWithoutUserInput = {
@@ -485,10 +509,12 @@ export type ConversationParticipantScalarWhereInput = {
   userId?: Prisma.IntFilter<"ConversationParticipant"> | number
   conversationId?: Prisma.IntFilter<"ConversationParticipant"> | number
   joinedAt?: Prisma.DateTimeFilter<"ConversationParticipant"> | Date | string
+  lastReadAt?: Prisma.DateTimeFilter<"ConversationParticipant"> | Date | string
 }
 
 export type ConversationParticipantCreateWithoutConversationInput = {
   joinedAt?: Date | string
+  lastReadAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConversationsInput
 }
 
@@ -496,6 +522,7 @@ export type ConversationParticipantUncheckedCreateWithoutConversationInput = {
   id?: number
   userId: number
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationParticipantCreateOrConnectWithoutConversationInput = {
@@ -528,10 +555,12 @@ export type ConversationParticipantCreateManyUserInput = {
   id?: number
   conversationId: number
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationParticipantUpdateWithoutUserInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutParticipantsNestedInput
 }
 
@@ -539,22 +568,26 @@ export type ConversationParticipantUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   conversationId?: Prisma.IntFieldUpdateOperationsInput | number
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationParticipantUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   conversationId?: Prisma.IntFieldUpdateOperationsInput | number
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationParticipantCreateManyConversationInput = {
   id?: number
   userId: number
   joinedAt?: Date | string
+  lastReadAt?: Date | string
 }
 
 export type ConversationParticipantUpdateWithoutConversationInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConversationsNestedInput
 }
 
@@ -562,12 +595,14 @@ export type ConversationParticipantUncheckedUpdateWithoutConversationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConversationParticipantUncheckedUpdateManyWithoutConversationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -577,6 +612,7 @@ export type ConversationParticipantSelect<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   conversationId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversationParticipant"]>
@@ -586,6 +622,7 @@ export type ConversationParticipantSelectCreateManyAndReturn<ExtArgs extends run
   userId?: boolean
   conversationId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversationParticipant"]>
@@ -595,6 +632,7 @@ export type ConversationParticipantSelectUpdateManyAndReturn<ExtArgs extends run
   userId?: boolean
   conversationId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversationParticipant"]>
@@ -604,9 +642,10 @@ export type ConversationParticipantSelectScalar = {
   userId?: boolean
   conversationId?: boolean
   joinedAt?: boolean
+  lastReadAt?: boolean
 }
 
-export type ConversationParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "conversationId" | "joinedAt", ExtArgs["result"]["conversationParticipant"]>
+export type ConversationParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "conversationId" | "joinedAt" | "lastReadAt", ExtArgs["result"]["conversationParticipant"]>
 export type ConversationParticipantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
@@ -631,6 +670,7 @@ export type $ConversationParticipantPayload<ExtArgs extends runtime.Types.Extens
     userId: number
     conversationId: number
     joinedAt: Date
+    lastReadAt: Date
   }, ExtArgs["result"]["conversationParticipant"]>
   composites: {}
 }
@@ -1060,6 +1100,7 @@ export interface ConversationParticipantFieldRefs {
   readonly userId: Prisma.FieldRef<"ConversationParticipant", 'Int'>
   readonly conversationId: Prisma.FieldRef<"ConversationParticipant", 'Int'>
   readonly joinedAt: Prisma.FieldRef<"ConversationParticipant", 'DateTime'>
+  readonly lastReadAt: Prisma.FieldRef<"ConversationParticipant", 'DateTime'>
 }
     
 

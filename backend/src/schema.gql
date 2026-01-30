@@ -224,6 +224,7 @@ type ConversationParticipant {
   user: User!
   conversationId: Int!
   joinedAt: DateTime!
+  lastReadAt: DateTime!
 }
 
 type Conversation {
@@ -233,6 +234,7 @@ type Conversation {
   workspaceId: Int
   participants: [ConversationParticipant!]!
   messages: [Message!]!
+  unreadCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -310,6 +312,7 @@ type Mutation {
   deleteConversation(id: Int!): Boolean!
   addParticipant(conversationId: Int!, userId: Int!): ConversationParticipant!
   removeParticipant(conversationId: Int!, userId: Int!): Boolean!
+  markAsRead(conversationId: Int!): Boolean!
 }
 
 input CreateUserInput {

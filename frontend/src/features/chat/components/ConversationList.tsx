@@ -1,6 +1,14 @@
 import type { Conversation, User } from '../types';
 import { useAuth } from '../../../context/AuthProvider';
-import { Plus, Search, Trash2 } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  Trash2,
+  Hash,
+  User as UserIcon,
+  ChevronDown,
+  ChevronRight,
+} from 'lucide-react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import {
@@ -21,6 +29,65 @@ interface ConversationListProps {
   onSelect: (conv: Conversation) => void;
 }
 
+const ConversationItem = ({
+  conv,
+  selectedId,
+  onSelect,
+  onDelete,
+  currentUserId,
+}: {
+  conv: Conversation;
+  selectedId?: number;
+  onSelect: (conv: Conversation) => void;
+  onDelete: (e: React.MouseEvent, id: number) => void;
+  currentUserId?: number;
+}) => {
+  return (
+    <button
+      onClick={() => onSelect(conv)}
+      className={`w-full text-left p-3 rounded-lg transition group relative flex flex-col gap-1 ${
+        selectedId === conv.id
+          ? 'bg-indigo-100 text-indigo-700 font-medium'
+          : 'hover:bg-gray-200 text-gray-600'
+      }`}
+    >
+      <div className="flex justify-between items-center w-full">
+        <div className="flex items-center gap-2 truncate flex-1 min-w-0 pr-2">
+          {conv.type === 'CHANNEL' ? (
+            <Hash size={16} className="text-gray-400 flex-shrink-0" />
+          ) : (
+            <UserIcon size={16} className="text-gray-400 flex-shrink-0" />
+          )}
+          <span className="truncate">
+            {conv.type === 'CHANNEL'
+              ? conv.name
+              : conv.participants.find((p) => p.userId !== currentUserId)?.user
+                  .name || 'Direct Chat'}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {conv.unreadCount && conv.unreadCount > 0 ? (
+            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+              {conv.unreadCount}
+            </span>
+          ) : null}
+          <div
+            onClick={(e) => onDelete(e, conv.id)}
+            className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition"
+          >
+            <Trash2 size={14} />
+          </div>
+        </div>
+      </div>
+      {conv.messages && conv.messages[0] && (
+        <div className="text-xs text-gray-400 truncate w-full pl-6">
+          {conv.messages[0].content}
+        </div>
+      )}
+    </button>
+  );
+};
+
 export const ConversationList = ({
   conversations,
   selectedId,
@@ -33,6 +100,20 @@ export const ConversationList = ({
   const [channelName, setChannelName] = useState('');
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedSections, setExpandedSections] = useState({
+    channels: true,
+    dms: true,
+  });
+
+  const channels = conversations.filter((c) => c.type === 'CHANNEL');
+  const dms = conversations.filter((c) => c.type === 'DIRECT');
+
+  const toggleSection = (section: 'channels' | 'dms') => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   const { data: userData } = useQuery(GET_USERS);
   const [createDirectConversation] = useMutation(CREATE_DIRECT_CONVERSATION, {
@@ -122,8 +203,8 @@ export const ConversationList = ({
     ) || [];
 
   return (
-    <div className="w-64 border-r border-gray-200 overflow-y-auto bg-gray-50 h-full">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10">
+    <div className="w-full flex flex-col bg-gray-50 h-full">
+      <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10 min-h-[64px]">
         <h2 className="text-lg font-bold text-gray-700">Discussions</h2>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -133,38 +214,80 @@ export const ConversationList = ({
           <Plus size={20} />
         </button>
       </div>
-      <div className="space-y-1 p-2">
-        {conversations.map((conv) => (
+      <div className="flex-1 overflow-y-auto p-2 space-y-4">
+        {/* Channels Section */}
+        <div>
           <button
-            key={conv.id}
-            onClick={() => onSelect(conv)}
-            className={`w-full text-left p-3 rounded-lg transition group relative ${
-              selectedId === conv.id
-                ? 'bg-indigo-100 text-indigo-700'
-                : 'hover:bg-gray-200 text-gray-600'
-            }`}
+            onClick={() => toggleSection('channels')}
+            className="w-full flex items-center justify-between px-2 py-1 text-xs font-bold text-gray-500 uppercase tracking-wider hover:bg-gray-100 rounded transition group"
           >
-            <div className="flex justify-between items-start">
-              <div className="font-semibold text-sm truncate flex-1">
-                {conv.type === 'CHANNEL'
-                  ? `# ${conv.name}`
-                  : conv.participants.find((p) => p.userId !== user.id)?.user
-                      .name || 'Direct Chat'}
-              </div>
-              <div
-                onClick={(e) => handleDeleteConversation(e, conv.id)}
-                className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition"
-              >
-                <Trash2 size={14} />
-              </div>
+            <div className="flex items-center gap-1">
+              {expandedSections.channels ? (
+                <ChevronDown size={14} />
+              ) : (
+                <ChevronRight size={14} />
+              )}
+              <span>Channels ({channels.length})</span>
             </div>
-            {conv.messages && conv.messages[0] && (
-              <div className="text-xs text-gray-400 truncate mt-1">
-                {conv.messages[0].content}
-              </div>
-            )}
           </button>
-        ))}
+
+          {expandedSections.channels && (
+            <div className="mt-1 space-y-1">
+              {channels.map((conv) => (
+                <ConversationItem
+                  key={conv.id}
+                  conv={conv}
+                  selectedId={selectedId}
+                  onSelect={onSelect}
+                  onDelete={handleDeleteConversation}
+                  currentUserId={user?.id}
+                />
+              ))}
+              {channels.length === 0 && (
+                <div className="px-6 py-2 text-xs text-gray-400 italic">
+                  No channels found
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Direct Messages Section */}
+        <div>
+          <button
+            onClick={() => toggleSection('dms')}
+            className="w-full flex items-center justify-between px-2 py-1 text-xs font-bold text-gray-500 uppercase tracking-wider hover:bg-gray-100 rounded transition group"
+          >
+            <div className="flex items-center gap-1">
+              {expandedSections.dms ? (
+                <ChevronDown size={14} />
+              ) : (
+                <ChevronRight size={14} />
+              )}
+              <span>Direct Messages ({dms.length})</span>
+            </div>
+          </button>
+
+          {expandedSections.dms && (
+            <div className="mt-1 space-y-1">
+              {dms.map((conv) => (
+                <ConversationItem
+                  key={conv.id}
+                  conv={conv}
+                  selectedId={selectedId}
+                  onSelect={onSelect}
+                  onDelete={handleDeleteConversation}
+                  currentUserId={user?.id}
+                />
+              ))}
+              {dms.length === 0 && (
+                <div className="px-6 py-2 text-xs text-gray-400 italic">
+                  No direct messages
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <Modal

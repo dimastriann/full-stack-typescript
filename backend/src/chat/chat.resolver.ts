@@ -84,4 +84,14 @@ export class ChatResolver {
     await this.chatService.removeParticipant(conversationId, userId);
     return true;
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async markAsRead(
+    @Args('conversationId', { type: () => Int }) conversationId: number,
+    @Context() context: any,
+  ) {
+    await this.chatService.markAsRead(conversationId, context.req.user.id);
+    return true;
+  }
 }

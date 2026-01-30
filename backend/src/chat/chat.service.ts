@@ -90,7 +90,7 @@ export class ChatService {
       }
     }
 
-    return this.prisma.message.create({
+    const message = await this.prisma.message.create({
       data: {
         content,
         senderId,
@@ -101,6 +101,11 @@ export class ChatService {
         sender: true,
       },
     });
+
+    // Auto-mark as read for the sender
+    await this.markAsRead(conversationId, senderId);
+
+    return message;
   }
 
   async getMessages(conversationId: number, limit = 50, cursor?: number) {
@@ -117,7 +122,7 @@ export class ChatService {
   }
 
   async getUserConversations(userId: number) {
-    return this.prisma.conversation.findMany({
+    const conversations = await this.prisma.conversation.findMany({
       where: {
         participants: {
           some: { userId },
@@ -129,15 +134,47 @@ export class ChatService {
             user: true,
           },
         },
-        _count: {
-          select: { messages: true },
-        },
         messages: {
           take: 1,
           orderBy: { createdAt: 'desc' },
         },
       },
       orderBy: { updatedAt: 'desc' },
+    });
+
+    // Calculate unread count for each conversation
+    return Promise.all(
+      conversations.map(async (conv) => {
+        const participant = conv.participants.find((p) => p.userId === userId);
+        const lastReadAt = participant?.lastReadAt || new Date(0);
+
+        const unreadCount = await this.prisma.message.count({
+          where: {
+            conversationId: conv.id,
+            createdAt: { gt: lastReadAt },
+            senderId: { not: userId },
+          },
+        });
+
+        return {
+          ...conv,
+          unreadCount,
+        };
+      }),
+    );
+  }
+
+  async markAsRead(conversationId: number, userId: number) {
+    return this.prisma.conversationParticipant.update({
+      where: {
+        userId_conversationId: {
+          userId,
+          conversationId,
+        },
+      },
+      data: {
+        lastReadAt: new Date(),
+      },
     });
   }
 

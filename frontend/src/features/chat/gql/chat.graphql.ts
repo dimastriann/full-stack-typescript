@@ -20,6 +20,7 @@ export const GET_MY_CONVERSATIONS = gql`
         content
         createdAt
       }
+      unreadCount
     }
   }
 `;
@@ -115,5 +116,11 @@ export const ADD_PARTICIPANT = gql`
 export const REMOVE_PARTICIPANT = gql`
   mutation RemoveParticipant($conversationId: Int!, $userId: Int!) {
     removeParticipant(conversationId: $conversationId, userId: $userId)
+  }
+`;
+
+export const MARK_AS_READ = gql`
+  mutation MarkAsRead($conversationId: Int!) {
+    markAsRead(conversationId: $conversationId)
   }
 `;

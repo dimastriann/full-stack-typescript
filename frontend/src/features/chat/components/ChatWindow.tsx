@@ -5,12 +5,13 @@ import {
   ADD_PARTICIPANT,
   REMOVE_PARTICIPANT,
   GET_MY_CONVERSATIONS,
+  MARK_AS_READ,
 } from '../gql/chat.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import type { Message, Conversation } from '../types';
 import { socketService } from '../../../lib/socket';
 import { useAuth } from '../../../context/AuthProvider';
-import { Info, UserPlus, Trash2, Search } from 'lucide-react';
+import { Info, UserPlus, Trash2, Search, ArrowLeft } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import Linkify from 'linkify-react';
 import LinkPreview from './LinkPreview';
@@ -18,9 +19,10 @@ import Logger from '../../../lib/logger';
 
 interface ChatWindowProps {
   conversation: Conversation;
+  onBack?: () => void;
 }
 
-export const ChatWindow = ({ conversation }: ChatWindowProps) => {
+export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -40,6 +42,9 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
     refetchQueries: [GET_MY_CONVERSATIONS],
   });
   const [removeParticipant] = useMutation(REMOVE_PARTICIPANT, {
+    refetchQueries: [GET_MY_CONVERSATIONS],
+  });
+  const [markAsRead] = useMutation(MARK_AS_READ, {
     refetchQueries: [GET_MY_CONVERSATIONS],
   });
 
@@ -81,8 +86,10 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
   useEffect(() => {
     if (data?.conversationMessages) {
       setMessages([...data.conversationMessages].reverse());
+      // Mark as read when messages are loaded
+      markAsRead({ variables: { conversationId: conversation.id } });
     }
-  }, [data]);
+  }, [data, conversation.id, markAsRead]);
 
   useEffect(() => {
     socketService.connect();
@@ -91,6 +98,8 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
     const handleNewMessage = (message: Message) => {
       if (message.conversationId === conversation.id) {
         setMessages((prev) => [...prev, message]);
+        // Auto-mark as read if the conversation is active
+        markAsRead({ variables: { conversationId: conversation.id } });
       }
     };
 
@@ -99,7 +108,7 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
     return () => {
       socketService.off('newMessage', handleNewMessage);
     };
-  }, [conversation.id]);
+  }, [conversation.id, markAsRead]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -121,12 +130,22 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
   return (
     <div className="flex flex-col h-full bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-lg">
-        <h3 className="font-semibold text-gray-800">
-          {conversation.type === 'CHANNEL'
-            ? `# ${conversation.name}`
-            : conversation.participants.find((p) => p.userId !== user.id)?.user
-                .name || 'Direct Chat'}
-        </h3>
+        <div className="flex items-center gap-3">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="md:hidden p-1 text-gray-500 hover:bg-gray-200 rounded-full transition"
+            >
+              <ArrowLeft size={20} />
+            </button>
+          )}
+          <h3 className="font-semibold text-gray-800">
+            {conversation.type === 'CHANNEL'
+              ? `# ${conversation.name}`
+              : conversation.participants.find((p) => p.userId !== user.id)
+                  ?.user.name || 'Direct Chat'}
+          </h3>
+        </div>
         {conversation.type === 'CHANNEL' && (
           <button
             onClick={() => setIsInfoModalOpen(true)}
@@ -150,12 +169,23 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
             <div
               className={`max-w-[70%] rounded-lg px-3 py-2 ${
                 msg.senderId === user.id
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-600 text-white'
+                  ? 'bg-indigo-300 text-neutral-800'
+                  : 'bg-indigo-100 text-neutral-800'
               }`}
             >
-              <div className="text-xs font-bold mb-1">
-                {msg.senderId === user.id ? 'You' : msg.sender.name}
+              <div className="flex items-center gap-2">
+                <div className="text-xs font-bold">
+                  {msg.senderId === user.id ? 'You' : msg.sender.name}
+                </div>
+                <div className="text-[10px] opacity-70" title={new Date(msg.createdAt).toLocaleString()}>
+                  {new Date(msg.createdAt).toLocaleDateString([], {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </div>
               </div>
               <div className="whitespace-pre-wrap">
                 {msg.linkPreview && <LinkPreview preview={msg.linkPreview} />}
@@ -168,12 +198,6 @@ export const ChatWindow = ({ conversation }: ChatWindowProps) => {
                 >
                   {msg.content}
                 </Linkify>
-              </div>
-              <div className="text-[10px] mt-1 opacity-70">
-                {new Date(msg.createdAt).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
               </div>
             </div>
           </div>
