@@ -214,7 +214,11 @@ model Attachment {
   project   Project? @relation(fields: [projectId], references: [id])
   taskId    Int?
 
-  task Task? @relation(fields: [taskId], references: [id])
+  task           Task?         @relation(fields: [taskId], references: [id])
+  message        Message?      @relation(fields: [messageId], references: [id])
+  messageId      Int?
+  conversationId Int?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
 }
 
 model ProjectMember {
@@ -257,6 +261,7 @@ model Conversation {
   updatedAt    DateTime                  @updatedAt
   participants ConversationParticipant[]
   messages     Message[]
+  attachments  Attachment[]
 }
 
 model ConversationParticipant {
@@ -273,14 +278,30 @@ model ConversationParticipant {
 }
 
 model Message {
-  id             Int      @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   content        String
   linkPreview    Json?
   senderId       Int
   conversationId Int
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  isEdited       Boolean      @default(false)
+  type           MessageType  @default(TEXT)
+  fileUrl        String?
+  fileName       String?
+  fileSize       Int?
+  mimeType       String?
+  metadata       Json?
+  attachments    Attachment[]
 
   sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  DOCUMENT
+  LOCATION
+  STICKER
 }

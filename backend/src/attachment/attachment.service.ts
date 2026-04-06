@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
@@ -16,6 +16,8 @@ import { FileUpload } from 'graphql-upload-ts';
 
 @Injectable()
 export class AttachmentService {
+  private readonly logger = new Logger(AttachmentService.name);
+
   constructor(
     private prisma: PrismaService,
     private projectMemberService: ProjectMemberService,
@@ -24,11 +26,14 @@ export class AttachmentService {
   async uploadFile(
     file: FileUpload,
     relationId: number,
-    relationType: 'project' | 'task' | 'comment',
+    relationType: 'project' | 'task' | 'comment' | 'message',
     userId: number,
   ) {
-    // 1. Determine Project ID for access check
+    this.logger.log(
+      `Uploading file: relationType=${relationType}, relationId=${relationId}, userId=${userId}`,
+    );
     let projectId = 0;
+    const isChat = relationType === 'message';
 
     if (relationType === 'project') {
       projectId = relationId;
@@ -47,14 +52,36 @@ export class AttachmentService {
       if (!comment || !comment.projectId)
         throw new ForbiddenException('Comment or associated project not found');
       projectId = comment.projectId;
+    } else if (isChat) {
+      // For chat, we verify the user is a participant of the conversation
+      // We assume relationId is the conversationId for now, or we might need messageId
+      // Actually, usually you upload an attachment BEFORE sending the message,
+      // or as part of sending the message.
+      // If relationType is 'message', relationId should be the conversationId
+      // where the user wants to send the file.
+      const participant = await this.prisma.conversationParticipant.findUnique({
+        where: {
+          userId_conversationId: {
+            userId,
+            conversationId: relationId,
+          },
+        },
+      });
+      if (!participant) {
+        throw new ForbiddenException(
+          'You are not a participant of this conversation',
+        );
+      }
     }
 
-    // 2. Verify user has access to the project
-    await this.projectMemberService.checkPermission(userId, projectId, [
-      ProjectRole.OWNER,
-      ProjectRole.ADMIN,
-      ProjectRole.MEMBER,
-    ]);
+    // 2. Verify user has access to the project (only if not chat)
+    if (!isChat) {
+      await this.projectMemberService.checkPermission(userId, projectId, [
+        ProjectRole.OWNER,
+        ProjectRole.ADMIN,
+        ProjectRole.MEMBER,
+      ]);
+    }
 
     // 3. Proceed with upload
     const { createReadStream, filename, mimetype } = file;
@@ -85,6 +112,7 @@ export class AttachmentService {
           if (relationType === 'project') data.projectId = relationId;
           else if (relationType === 'task') data.taskId = relationId;
           else if (relationType === 'comment') data.commentId = relationId;
+          else if (relationType === 'message') data.conversationId = relationId;
 
           const attachment = await this.prisma.attachment.create({
             data,

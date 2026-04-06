@@ -9,6 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { MessageType } from '../../prisma/generated/client';
 import { UseGuards, Logger } from '@nestjs/common';
 import { WsJwtGuard } from '../auth/guards/ws-jwt.guard'; // I'll need to create this
 
@@ -49,13 +50,33 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleSendMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody()
-    data: { conversationId: number; senderId: number; content: string },
+    data: {
+      conversationId: number;
+      senderId: number;
+      content: string;
+      type: MessageType;
+      fileData?: {
+        url: string;
+        name: string;
+        size?: number;
+        mimeType?: string;
+      };
+      metadata?: any;
+      attachmentIds?: number[];
+    },
   ) {
     const message = await this.chatService.saveMessage(
       data.conversationId,
       data.senderId,
       data.content,
+      data.type,
+      data.fileData,
+      data.metadata,
+      data.attachmentIds,
     );
+
+    this.logger.log(`Message sent: ${message.id}`);
+    this.logger.log(`Message data: ${JSON.stringify(data)}`);
 
     this.server
       .to(`conversation_${data.conversationId}`)
@@ -79,5 +100,47 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         conversationId: data.conversationId,
         userId: data.userId,
       });
+  }
+
+  @SubscribeMessage('updateMessage')
+  async handleUpdateMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody()
+    data: {
+      id: number;
+      conversationId: number;
+      senderId: number;
+      content: string;
+    },
+  ) {
+    const message = await this.chatService.updateMessage(
+      data.id,
+      data.senderId,
+      data.content,
+    );
+
+    this.server
+      .to(`conversation_${data.conversationId}`)
+      .emit('messageUpdated', message);
+
+    return message;
+  }
+
+  @SubscribeMessage('deleteMessage')
+  async handleDeleteMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody()
+    data: { id: number; conversationId: number; senderId: number },
+  ) {
+    await this.chatService.deleteMessage(data.id, data.senderId);
+
+    this.server
+      .to(`conversation_${data.conversationId}`)
+      .emit('messageDeleted', {
+        id: data.id,
+        conversationId: data.conversationId,
+      });
+
+    return { id: data.id };
   }
 }

@@ -16,7 +16,7 @@ export class AttachmentResolver {
     @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,
     @Args('relationId', { type: () => Int }) relationId: number,
     @Args('relationType', { type: () => String })
-    relationType: 'project' | 'task' | 'comment',
+    relationType: 'project' | 'task' | 'comment' | 'message',
     @CurrentUser() user: any,
   ) {
     return this.attachmentService.uploadFile(

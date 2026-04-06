@@ -94,4 +94,24 @@ export class ChatResolver {
     await this.chatService.markAsRead(conversationId, context.req.user.id);
     return true;
   }
+
+  @Mutation(() => Message)
+  @UseGuards(GqlAuthGuard)
+  async updateMessage(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('content') content: string,
+    @Context() context: any,
+  ) {
+    return this.chatService.updateMessage(id, context.req.user.id, content);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async deleteMessage(
+    @Args('id', { type: () => Int }) id: number,
+    @Context() context: any,
+  ) {
+    await this.chatService.deleteMessage(id, context.req.user.id);
+    return true;
+  }
 }

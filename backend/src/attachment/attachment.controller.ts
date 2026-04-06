@@ -43,26 +43,59 @@ export class AttachmentController {
       throw new ForbiddenException('Attachment not found');
     }
 
-    // 2. Determine Project ID for access check
-    let projectId = attachment.projectId;
-    if (!projectId && attachment.taskId) {
-      const task = await this.prisma.task.findUnique({
-        where: { id: attachment.taskId },
-        select: { projectId: true },
+    // 2. Determine Access Check
+    if (attachment.messageId || attachment.conversationId) {
+      // For chat, we verify the user is a participant of the conversation
+      let conversationId = attachment.conversationId;
+
+      if (!conversationId && attachment.messageId) {
+        const msg = await this.prisma.message.findUnique({
+          where: { id: attachment.messageId },
+          select: { conversationId: true },
+        });
+        if (msg) conversationId = msg.conversationId;
+      }
+
+      if (!conversationId) {
+        throw new ForbiddenException('Associated conversation not found');
+      }
+
+      const participant = await this.prisma.conversationParticipant.findUnique({
+        where: {
+          userId_conversationId: {
+            userId: user.id,
+            conversationId,
+          },
+        },
       });
-      if (task) projectId = task.projectId;
-    }
 
-    if (!projectId) {
-      throw new ForbiddenException('Associated project not found');
-    }
+      if (!participant) {
+        throw new ForbiddenException(
+          'You are not a participant of this conversation',
+        );
+      }
+    } else {
+      // Original project/task logic
+      let projectId = attachment.projectId;
+      if (!projectId && attachment.taskId) {
+        const task = await this.prisma.task.findUnique({
+          where: { id: attachment.taskId },
+          select: { projectId: true },
+        });
+        if (task) projectId = task.projectId;
+      }
 
-    // 3. Verify user has access to the project
-    await this.projectMemberService.checkPermission(user.id, projectId, [
-      ProjectRole.OWNER,
-      ProjectRole.ADMIN,
-      ProjectRole.MEMBER,
-    ]);
+      if (!projectId) {
+        throw new ForbiddenException('Associated project not found');
+      }
+
+      // 3. Verify user has access to the project
+      await this.projectMemberService.checkPermission(user.id, projectId, [
+        ProjectRole.OWNER,
+        ProjectRole.ADMIN,
+        ProjectRole.MEMBER,
+      ]);
+    }
 
     // 4. Serve the file
     const filePath = join(process.cwd(), attachment.path);

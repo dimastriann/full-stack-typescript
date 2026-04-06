@@ -31,6 +31,8 @@ export type AttachmentAvgAggregateOutputType = {
   size: number | null
   projectId: number | null
   taskId: number | null
+  messageId: number | null
+  conversationId: number | null
 }
 
 export type AttachmentSumAggregateOutputType = {
@@ -38,6 +40,8 @@ export type AttachmentSumAggregateOutputType = {
   size: number | null
   projectId: number | null
   taskId: number | null
+  messageId: number | null
+  conversationId: number | null
 }
 
 export type AttachmentMinAggregateOutputType = {
@@ -49,6 +53,8 @@ export type AttachmentMinAggregateOutputType = {
   createdAt: Date | null
   projectId: number | null
   taskId: number | null
+  messageId: number | null
+  conversationId: number | null
 }
 
 export type AttachmentMaxAggregateOutputType = {
@@ -60,6 +66,8 @@ export type AttachmentMaxAggregateOutputType = {
   createdAt: Date | null
   projectId: number | null
   taskId: number | null
+  messageId: number | null
+  conversationId: number | null
 }
 
 export type AttachmentCountAggregateOutputType = {
@@ -71,6 +79,8 @@ export type AttachmentCountAggregateOutputType = {
   createdAt: number
   projectId: number
   taskId: number
+  messageId: number
+  conversationId: number
   _all: number
 }
 
@@ -80,6 +90,8 @@ export type AttachmentAvgAggregateInputType = {
   size?: true
   projectId?: true
   taskId?: true
+  messageId?: true
+  conversationId?: true
 }
 
 export type AttachmentSumAggregateInputType = {
@@ -87,6 +99,8 @@ export type AttachmentSumAggregateInputType = {
   size?: true
   projectId?: true
   taskId?: true
+  messageId?: true
+  conversationId?: true
 }
 
 export type AttachmentMinAggregateInputType = {
@@ -98,6 +112,8 @@ export type AttachmentMinAggregateInputType = {
   createdAt?: true
   projectId?: true
   taskId?: true
+  messageId?: true
+  conversationId?: true
 }
 
 export type AttachmentMaxAggregateInputType = {
@@ -109,6 +125,8 @@ export type AttachmentMaxAggregateInputType = {
   createdAt?: true
   projectId?: true
   taskId?: true
+  messageId?: true
+  conversationId?: true
 }
 
 export type AttachmentCountAggregateInputType = {
@@ -120,6 +138,8 @@ export type AttachmentCountAggregateInputType = {
   createdAt?: true
   projectId?: true
   taskId?: true
+  messageId?: true
+  conversationId?: true
   _all?: true
 }
 
@@ -218,6 +238,8 @@ export type AttachmentGroupByOutputType = {
   createdAt: Date
   projectId: number | null
   taskId: number | null
+  messageId: number | null
+  conversationId: number | null
   _count: AttachmentCountAggregateOutputType | null
   _avg: AttachmentAvgAggregateOutputType | null
   _sum: AttachmentSumAggregateOutputType | null
@@ -252,8 +274,12 @@ export type AttachmentWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Attachment"> | Date | string
   projectId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   taskId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  messageId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  conversationId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
+  message?: Prisma.XOR<Prisma.MessageNullableScalarRelationFilter, Prisma.MessageWhereInput> | null
+  conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
 }
 
 export type AttachmentOrderByWithRelationInput = {
@@ -265,8 +291,12 @@ export type AttachmentOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   taskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  conversationId?: Prisma.SortOrderInput | Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   task?: Prisma.TaskOrderByWithRelationInput
+  message?: Prisma.MessageOrderByWithRelationInput
+  conversation?: Prisma.ConversationOrderByWithRelationInput
 }
 
 export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
@@ -281,8 +311,12 @@ export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Attachment"> | Date | string
   projectId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   taskId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  messageId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  conversationId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
+  message?: Prisma.XOR<Prisma.MessageNullableScalarRelationFilter, Prisma.MessageWhereInput> | null
+  conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
 }, "id">
 
 export type AttachmentOrderByWithAggregationInput = {
@@ -294,6 +328,8 @@ export type AttachmentOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   taskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  conversationId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AttachmentCountOrderByAggregateInput
   _avg?: Prisma.AttachmentAvgOrderByAggregateInput
   _max?: Prisma.AttachmentMaxOrderByAggregateInput
@@ -313,6 +349,8 @@ export type AttachmentScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Attachment"> | Date | string
   projectId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
   taskId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
+  messageId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
+  conversationId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
 }
 
 export type AttachmentCreateInput = {
@@ -323,6 +361,8 @@ export type AttachmentCreateInput = {
   createdAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutAttachmentsInput
   task?: Prisma.TaskCreateNestedOneWithoutAttachmentsInput
+  message?: Prisma.MessageCreateNestedOneWithoutAttachmentsInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutAttachmentsInput
 }
 
 export type AttachmentUncheckedCreateInput = {
@@ -334,6 +374,8 @@ export type AttachmentUncheckedCreateInput = {
   createdAt?: Date | string
   projectId?: number | null
   taskId?: number | null
+  messageId?: number | null
+  conversationId?: number | null
 }
 
 export type AttachmentUpdateInput = {
@@ -344,6 +386,8 @@ export type AttachmentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutAttachmentsNestedInput
   task?: Prisma.TaskUpdateOneWithoutAttachmentsNestedInput
+  message?: Prisma.MessageUpdateOneWithoutAttachmentsNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutAttachmentsNestedInput
 }
 
 export type AttachmentUncheckedUpdateInput = {
@@ -355,6 +399,8 @@ export type AttachmentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AttachmentCreateManyInput = {
@@ -366,6 +412,8 @@ export type AttachmentCreateManyInput = {
   createdAt?: Date | string
   projectId?: number | null
   taskId?: number | null
+  messageId?: number | null
+  conversationId?: number | null
 }
 
 export type AttachmentUpdateManyMutationInput = {
@@ -385,6 +433,8 @@ export type AttachmentUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AttachmentListRelationFilter = {
@@ -406,6 +456,8 @@ export type AttachmentCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
+  conversationId?: Prisma.SortOrder
 }
 
 export type AttachmentAvgOrderByAggregateInput = {
@@ -413,6 +465,8 @@ export type AttachmentAvgOrderByAggregateInput = {
   size?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
+  conversationId?: Prisma.SortOrder
 }
 
 export type AttachmentMaxOrderByAggregateInput = {
@@ -424,6 +478,8 @@ export type AttachmentMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
+  conversationId?: Prisma.SortOrder
 }
 
 export type AttachmentMinOrderByAggregateInput = {
@@ -435,6 +491,8 @@ export type AttachmentMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
+  conversationId?: Prisma.SortOrder
 }
 
 export type AttachmentSumOrderByAggregateInput = {
@@ -442,6 +500,8 @@ export type AttachmentSumOrderByAggregateInput = {
   size?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
+  conversationId?: Prisma.SortOrder
 }
 
 export type AttachmentCreateNestedManyWithoutProjectInput = {
@@ -528,6 +588,90 @@ export type AttachmentUncheckedUpdateManyWithoutTaskNestedInput = {
   deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
 }
 
+export type AttachmentCreateNestedManyWithoutConversationInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutConversationInput, Prisma.AttachmentUncheckedCreateWithoutConversationInput> | Prisma.AttachmentCreateWithoutConversationInput[] | Prisma.AttachmentUncheckedCreateWithoutConversationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutConversationInput | Prisma.AttachmentCreateOrConnectWithoutConversationInput[]
+  createMany?: Prisma.AttachmentCreateManyConversationInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUncheckedCreateNestedManyWithoutConversationInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutConversationInput, Prisma.AttachmentUncheckedCreateWithoutConversationInput> | Prisma.AttachmentCreateWithoutConversationInput[] | Prisma.AttachmentUncheckedCreateWithoutConversationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutConversationInput | Prisma.AttachmentCreateOrConnectWithoutConversationInput[]
+  createMany?: Prisma.AttachmentCreateManyConversationInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUpdateManyWithoutConversationNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutConversationInput, Prisma.AttachmentUncheckedCreateWithoutConversationInput> | Prisma.AttachmentCreateWithoutConversationInput[] | Prisma.AttachmentUncheckedCreateWithoutConversationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutConversationInput | Prisma.AttachmentCreateOrConnectWithoutConversationInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutConversationInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutConversationInput[]
+  createMany?: Prisma.AttachmentCreateManyConversationInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutConversationInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutConversationInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutConversationInput | Prisma.AttachmentUpdateManyWithWhereWithoutConversationInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
+export type AttachmentUncheckedUpdateManyWithoutConversationNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutConversationInput, Prisma.AttachmentUncheckedCreateWithoutConversationInput> | Prisma.AttachmentCreateWithoutConversationInput[] | Prisma.AttachmentUncheckedCreateWithoutConversationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutConversationInput | Prisma.AttachmentCreateOrConnectWithoutConversationInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutConversationInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutConversationInput[]
+  createMany?: Prisma.AttachmentCreateManyConversationInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutConversationInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutConversationInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutConversationInput | Prisma.AttachmentUpdateManyWithWhereWithoutConversationInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
+export type AttachmentCreateNestedManyWithoutMessageInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutMessageInput, Prisma.AttachmentUncheckedCreateWithoutMessageInput> | Prisma.AttachmentCreateWithoutMessageInput[] | Prisma.AttachmentUncheckedCreateWithoutMessageInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutMessageInput | Prisma.AttachmentCreateOrConnectWithoutMessageInput[]
+  createMany?: Prisma.AttachmentCreateManyMessageInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUncheckedCreateNestedManyWithoutMessageInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutMessageInput, Prisma.AttachmentUncheckedCreateWithoutMessageInput> | Prisma.AttachmentCreateWithoutMessageInput[] | Prisma.AttachmentUncheckedCreateWithoutMessageInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutMessageInput | Prisma.AttachmentCreateOrConnectWithoutMessageInput[]
+  createMany?: Prisma.AttachmentCreateManyMessageInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUpdateManyWithoutMessageNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutMessageInput, Prisma.AttachmentUncheckedCreateWithoutMessageInput> | Prisma.AttachmentCreateWithoutMessageInput[] | Prisma.AttachmentUncheckedCreateWithoutMessageInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutMessageInput | Prisma.AttachmentCreateOrConnectWithoutMessageInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutMessageInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutMessageInput[]
+  createMany?: Prisma.AttachmentCreateManyMessageInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutMessageInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutMessageInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutMessageInput | Prisma.AttachmentUpdateManyWithWhereWithoutMessageInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
+export type AttachmentUncheckedUpdateManyWithoutMessageNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutMessageInput, Prisma.AttachmentUncheckedCreateWithoutMessageInput> | Prisma.AttachmentCreateWithoutMessageInput[] | Prisma.AttachmentUncheckedCreateWithoutMessageInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutMessageInput | Prisma.AttachmentCreateOrConnectWithoutMessageInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutMessageInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutMessageInput[]
+  createMany?: Prisma.AttachmentCreateManyMessageInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutMessageInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutMessageInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutMessageInput | Prisma.AttachmentUpdateManyWithWhereWithoutMessageInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
 export type AttachmentCreateWithoutProjectInput = {
   filename: string
   path: string
@@ -535,6 +679,8 @@ export type AttachmentCreateWithoutProjectInput = {
   size: number
   createdAt?: Date | string
   task?: Prisma.TaskCreateNestedOneWithoutAttachmentsInput
+  message?: Prisma.MessageCreateNestedOneWithoutAttachmentsInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutAttachmentsInput
 }
 
 export type AttachmentUncheckedCreateWithoutProjectInput = {
@@ -545,6 +691,8 @@ export type AttachmentUncheckedCreateWithoutProjectInput = {
   size: number
   createdAt?: Date | string
   taskId?: number | null
+  messageId?: number | null
+  conversationId?: number | null
 }
 
 export type AttachmentCreateOrConnectWithoutProjectInput = {
@@ -585,6 +733,8 @@ export type AttachmentScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Attachment"> | Date | string
   projectId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   taskId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  messageId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  conversationId?: Prisma.IntNullableFilter<"Attachment"> | number | null
 }
 
 export type AttachmentCreateWithoutTaskInput = {
@@ -594,6 +744,8 @@ export type AttachmentCreateWithoutTaskInput = {
   size: number
   createdAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutAttachmentsInput
+  message?: Prisma.MessageCreateNestedOneWithoutAttachmentsInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutAttachmentsInput
 }
 
 export type AttachmentUncheckedCreateWithoutTaskInput = {
@@ -604,6 +756,8 @@ export type AttachmentUncheckedCreateWithoutTaskInput = {
   size: number
   createdAt?: Date | string
   projectId?: number | null
+  messageId?: number | null
+  conversationId?: number | null
 }
 
 export type AttachmentCreateOrConnectWithoutTaskInput = {
@@ -632,6 +786,104 @@ export type AttachmentUpdateManyWithWhereWithoutTaskInput = {
   data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutTaskInput>
 }
 
+export type AttachmentCreateWithoutConversationInput = {
+  filename: string
+  path: string
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutAttachmentsInput
+  task?: Prisma.TaskCreateNestedOneWithoutAttachmentsInput
+  message?: Prisma.MessageCreateNestedOneWithoutAttachmentsInput
+}
+
+export type AttachmentUncheckedCreateWithoutConversationInput = {
+  id?: number
+  filename: string
+  path: string
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  projectId?: number | null
+  taskId?: number | null
+  messageId?: number | null
+}
+
+export type AttachmentCreateOrConnectWithoutConversationInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutConversationInput, Prisma.AttachmentUncheckedCreateWithoutConversationInput>
+}
+
+export type AttachmentCreateManyConversationInputEnvelope = {
+  data: Prisma.AttachmentCreateManyConversationInput | Prisma.AttachmentCreateManyConversationInput[]
+  skipDuplicates?: boolean
+}
+
+export type AttachmentUpsertWithWhereUniqueWithoutConversationInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AttachmentUpdateWithoutConversationInput, Prisma.AttachmentUncheckedUpdateWithoutConversationInput>
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutConversationInput, Prisma.AttachmentUncheckedCreateWithoutConversationInput>
+}
+
+export type AttachmentUpdateWithWhereUniqueWithoutConversationInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateWithoutConversationInput, Prisma.AttachmentUncheckedUpdateWithoutConversationInput>
+}
+
+export type AttachmentUpdateManyWithWhereWithoutConversationInput = {
+  where: Prisma.AttachmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutConversationInput>
+}
+
+export type AttachmentCreateWithoutMessageInput = {
+  filename: string
+  path: string
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutAttachmentsInput
+  task?: Prisma.TaskCreateNestedOneWithoutAttachmentsInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutAttachmentsInput
+}
+
+export type AttachmentUncheckedCreateWithoutMessageInput = {
+  id?: number
+  filename: string
+  path: string
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  projectId?: number | null
+  taskId?: number | null
+  conversationId?: number | null
+}
+
+export type AttachmentCreateOrConnectWithoutMessageInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutMessageInput, Prisma.AttachmentUncheckedCreateWithoutMessageInput>
+}
+
+export type AttachmentCreateManyMessageInputEnvelope = {
+  data: Prisma.AttachmentCreateManyMessageInput | Prisma.AttachmentCreateManyMessageInput[]
+  skipDuplicates?: boolean
+}
+
+export type AttachmentUpsertWithWhereUniqueWithoutMessageInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AttachmentUpdateWithoutMessageInput, Prisma.AttachmentUncheckedUpdateWithoutMessageInput>
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutMessageInput, Prisma.AttachmentUncheckedCreateWithoutMessageInput>
+}
+
+export type AttachmentUpdateWithWhereUniqueWithoutMessageInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateWithoutMessageInput, Prisma.AttachmentUncheckedUpdateWithoutMessageInput>
+}
+
+export type AttachmentUpdateManyWithWhereWithoutMessageInput = {
+  where: Prisma.AttachmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutMessageInput>
+}
+
 export type AttachmentCreateManyProjectInput = {
   id?: number
   filename: string
@@ -640,6 +892,8 @@ export type AttachmentCreateManyProjectInput = {
   size: number
   createdAt?: Date | string
   taskId?: number | null
+  messageId?: number | null
+  conversationId?: number | null
 }
 
 export type AttachmentUpdateWithoutProjectInput = {
@@ -649,6 +903,8 @@ export type AttachmentUpdateWithoutProjectInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneWithoutAttachmentsNestedInput
+  message?: Prisma.MessageUpdateOneWithoutAttachmentsNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutAttachmentsNestedInput
 }
 
 export type AttachmentUncheckedUpdateWithoutProjectInput = {
@@ -659,6 +915,8 @@ export type AttachmentUncheckedUpdateWithoutProjectInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AttachmentUncheckedUpdateManyWithoutProjectInput = {
@@ -669,6 +927,8 @@ export type AttachmentUncheckedUpdateManyWithoutProjectInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AttachmentCreateManyTaskInput = {
@@ -679,6 +939,8 @@ export type AttachmentCreateManyTaskInput = {
   size: number
   createdAt?: Date | string
   projectId?: number | null
+  messageId?: number | null
+  conversationId?: number | null
 }
 
 export type AttachmentUpdateWithoutTaskInput = {
@@ -688,6 +950,8 @@ export type AttachmentUpdateWithoutTaskInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutAttachmentsNestedInput
+  message?: Prisma.MessageUpdateOneWithoutAttachmentsNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutAttachmentsNestedInput
 }
 
 export type AttachmentUncheckedUpdateWithoutTaskInput = {
@@ -698,6 +962,8 @@ export type AttachmentUncheckedUpdateWithoutTaskInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AttachmentUncheckedUpdateManyWithoutTaskInput = {
@@ -708,6 +974,102 @@ export type AttachmentUncheckedUpdateManyWithoutTaskInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AttachmentCreateManyConversationInput = {
+  id?: number
+  filename: string
+  path: string
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  projectId?: number | null
+  taskId?: number | null
+  messageId?: number | null
+}
+
+export type AttachmentUpdateWithoutConversationInput = {
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutAttachmentsNestedInput
+  task?: Prisma.TaskUpdateOneWithoutAttachmentsNestedInput
+  message?: Prisma.MessageUpdateOneWithoutAttachmentsNestedInput
+}
+
+export type AttachmentUncheckedUpdateWithoutConversationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AttachmentUncheckedUpdateManyWithoutConversationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AttachmentCreateManyMessageInput = {
+  id?: number
+  filename: string
+  path: string
+  mimeType: string
+  size: number
+  createdAt?: Date | string
+  projectId?: number | null
+  taskId?: number | null
+  conversationId?: number | null
+}
+
+export type AttachmentUpdateWithoutMessageInput = {
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutAttachmentsNestedInput
+  task?: Prisma.TaskUpdateOneWithoutAttachmentsNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutAttachmentsNestedInput
+}
+
+export type AttachmentUncheckedUpdateWithoutMessageInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AttachmentUncheckedUpdateManyWithoutMessageInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  filename?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conversationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -721,8 +1083,12 @@ export type AttachmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   projectId?: boolean
   taskId?: boolean
+  messageId?: boolean
+  conversationId?: boolean
   project?: boolean | Prisma.Attachment$projectArgs<ExtArgs>
   task?: boolean | Prisma.Attachment$taskArgs<ExtArgs>
+  message?: boolean | Prisma.Attachment$messageArgs<ExtArgs>
+  conversation?: boolean | Prisma.Attachment$conversationArgs<ExtArgs>
 }, ExtArgs["result"]["attachment"]>
 
 export type AttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -734,8 +1100,12 @@ export type AttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdAt?: boolean
   projectId?: boolean
   taskId?: boolean
+  messageId?: boolean
+  conversationId?: boolean
   project?: boolean | Prisma.Attachment$projectArgs<ExtArgs>
   task?: boolean | Prisma.Attachment$taskArgs<ExtArgs>
+  message?: boolean | Prisma.Attachment$messageArgs<ExtArgs>
+  conversation?: boolean | Prisma.Attachment$conversationArgs<ExtArgs>
 }, ExtArgs["result"]["attachment"]>
 
 export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -747,8 +1117,12 @@ export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdAt?: boolean
   projectId?: boolean
   taskId?: boolean
+  messageId?: boolean
+  conversationId?: boolean
   project?: boolean | Prisma.Attachment$projectArgs<ExtArgs>
   task?: boolean | Prisma.Attachment$taskArgs<ExtArgs>
+  message?: boolean | Prisma.Attachment$messageArgs<ExtArgs>
+  conversation?: boolean | Prisma.Attachment$conversationArgs<ExtArgs>
 }, ExtArgs["result"]["attachment"]>
 
 export type AttachmentSelectScalar = {
@@ -760,20 +1134,28 @@ export type AttachmentSelectScalar = {
   createdAt?: boolean
   projectId?: boolean
   taskId?: boolean
+  messageId?: boolean
+  conversationId?: boolean
 }
 
-export type AttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "path" | "mimeType" | "size" | "createdAt" | "projectId" | "taskId", ExtArgs["result"]["attachment"]>
+export type AttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "path" | "mimeType" | "size" | "createdAt" | "projectId" | "taskId" | "messageId" | "conversationId", ExtArgs["result"]["attachment"]>
 export type AttachmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Attachment$projectArgs<ExtArgs>
   task?: boolean | Prisma.Attachment$taskArgs<ExtArgs>
+  message?: boolean | Prisma.Attachment$messageArgs<ExtArgs>
+  conversation?: boolean | Prisma.Attachment$conversationArgs<ExtArgs>
 }
 export type AttachmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Attachment$projectArgs<ExtArgs>
   task?: boolean | Prisma.Attachment$taskArgs<ExtArgs>
+  message?: boolean | Prisma.Attachment$messageArgs<ExtArgs>
+  conversation?: boolean | Prisma.Attachment$conversationArgs<ExtArgs>
 }
 export type AttachmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Attachment$projectArgs<ExtArgs>
   task?: boolean | Prisma.Attachment$taskArgs<ExtArgs>
+  message?: boolean | Prisma.Attachment$messageArgs<ExtArgs>
+  conversation?: boolean | Prisma.Attachment$conversationArgs<ExtArgs>
 }
 
 export type $AttachmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -781,6 +1163,8 @@ export type $AttachmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs> | null
     task: Prisma.$TaskPayload<ExtArgs> | null
+    message: Prisma.$MessagePayload<ExtArgs> | null
+    conversation: Prisma.$ConversationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -791,6 +1175,8 @@ export type $AttachmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     createdAt: Date
     projectId: number | null
     taskId: number | null
+    messageId: number | null
+    conversationId: number | null
   }, ExtArgs["result"]["attachment"]>
   composites: {}
 }
@@ -1187,6 +1573,8 @@ export interface Prisma__AttachmentClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.Attachment$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   task<T extends Prisma.Attachment$taskArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$taskArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  message<T extends Prisma.Attachment$messageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$messageArgs<ExtArgs>>): Prisma.Prisma__MessageClient<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  conversation<T extends Prisma.Attachment$conversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$conversationArgs<ExtArgs>>): Prisma.Prisma__ConversationClient<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1224,6 +1612,8 @@ export interface AttachmentFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Attachment", 'DateTime'>
   readonly projectId: Prisma.FieldRef<"Attachment", 'Int'>
   readonly taskId: Prisma.FieldRef<"Attachment", 'Int'>
+  readonly messageId: Prisma.FieldRef<"Attachment", 'Int'>
+  readonly conversationId: Prisma.FieldRef<"Attachment", 'Int'>
 }
     
 
@@ -1655,6 +2045,44 @@ export type Attachment$taskArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.TaskInclude<ExtArgs> | null
   where?: Prisma.TaskWhereInput
+}
+
+/**
+ * Attachment.message
+ */
+export type Attachment$messageArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+}
+
+/**
+ * Attachment.conversation
+ */
+export type Attachment$conversationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Conversation
+   */
+  select?: Prisma.ConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Conversation
+   */
+  omit?: Prisma.ConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConversationInclude<ExtArgs> | null
+  where?: Prisma.ConversationWhereInput
 }
 
 /**

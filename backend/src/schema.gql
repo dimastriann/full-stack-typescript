@@ -216,6 +216,22 @@ type Message {
   conversationId: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
+  isEdited: Boolean!
+  type: MessageType!
+  fileUrl: String
+  fileName: String
+  fileSize: Int
+  mimeType: String
+  metadata: String
+  attachments: [Attachment!]
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  DOCUMENT
+  LOCATION
+  STICKER
 }
 
 type ConversationParticipant {
@@ -313,6 +329,8 @@ type Mutation {
   addParticipant(conversationId: Int!, userId: Int!): ConversationParticipant!
   removeParticipant(conversationId: Int!, userId: Int!): Boolean!
   markAsRead(conversationId: Int!): Boolean!
+  updateMessage(id: Int!, content: String!): Message!
+  deleteMessage(id: Int!): Boolean!
 }
 
 input CreateUserInput {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ConversationType } from '../../prisma/generated/client';
+import { ConversationType, MessageType } from '../../prisma/generated/client';
 import { getLinkPreview } from 'link-preview-js';
 import { Logger } from '@nestjs/common';
 
@@ -60,33 +60,48 @@ export class ChatService {
     return this.createConversation([user1Id, user2Id], 'DIRECT');
   }
 
-  async saveMessage(conversationId: number, senderId: number, content: string) {
+  async saveMessage(
+    conversationId: number,
+    senderId: number,
+    content: string,
+    type: MessageType = MessageType.TEXT,
+    fileData?: {
+      url: string;
+      name: string;
+      size?: number;
+      mimeType?: string;
+    },
+    metadata?: any,
+    attachmentIds?: number[],
+  ) {
     let linkPreviewData: any = null;
 
-    // Very basic URL detection
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const matches = content.match(urlRegex);
+    // Link preview only for TEXT messages
+    if (type === MessageType.TEXT) {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const matches = content.match(urlRegex);
 
-    if (matches && matches.length > 0) {
-      try {
-        const preview: any = await getLinkPreview(matches[0], {
-          followRedirects: 'follow',
-        });
+      if (matches && matches.length > 0) {
+        try {
+          const preview: any = await getLinkPreview(matches[0], {
+            followRedirects: 'follow',
+          });
 
-        if (preview && preview.title) {
-          linkPreviewData = {
-            url: preview.url,
-            title: preview.title,
-            description: preview.description || '',
-            image: preview.images?.[0] || preview.favicons?.[0] || '',
-            siteName: preview.siteName || '',
-            favicons: preview.favicons?.[0] || '',
-          };
+          if (preview && preview.title) {
+            linkPreviewData = {
+              url: preview.url,
+              title: preview.title,
+              description: preview.description || '',
+              image: preview.images?.[0] || preview.favicons?.[0] || '',
+              siteName: preview.siteName || '',
+              favicons: preview.favicons?.[0] || '',
+            };
+          }
+        } catch (error) {
+          this.logger.error(
+            `Failed to fetch link preview for ${matches[0]}: ${error.message}`,
+          );
         }
-      } catch (error) {
-        this.logger.error(
-          `Failed to fetch link preview for ${matches[0]}: ${error.message}`,
-        );
       }
     }
 
@@ -95,10 +110,22 @@ export class ChatService {
         content,
         senderId,
         conversationId,
+        type,
+        fileUrl: fileData?.url,
+        fileName: fileData?.name,
+        fileSize: fileData?.size,
+        mimeType: fileData?.mimeType,
+        metadata: metadata ? (metadata as any) : undefined,
         linkPreview: linkPreviewData as any,
+        attachments: attachmentIds
+          ? {
+              connect: attachmentIds.map((id) => ({ id })),
+            }
+          : undefined,
       },
       include: {
         sender: true,
+        attachments: true,
       },
     });
 
@@ -117,6 +144,7 @@ export class ChatService {
       orderBy: { createdAt: 'desc' },
       include: {
         sender: true,
+        attachments: true,
       },
     });
   }
@@ -204,6 +232,41 @@ export class ChatService {
           conversationId,
         },
       },
+    });
+  }
+
+  async updateMessage(id: number, senderId: number, content: string) {
+    const message = await this.prisma.message.findUnique({
+      where: { id },
+    });
+
+    if (!message || message.senderId !== senderId) {
+      throw new Error('Unauthorized or message not found');
+    }
+
+    return this.prisma.message.update({
+      where: { id },
+      data: {
+        content,
+        isEdited: true,
+      },
+      include: {
+        sender: true,
+      },
+    });
+  }
+
+  async deleteMessage(id: number, senderId: number) {
+    const message = await this.prisma.message.findUnique({
+      where: { id },
+    });
+
+    if (!message || message.senderId !== senderId) {
+      throw new Error('Unauthorized or message not found');
+    }
+
+    return this.prisma.message.delete({
+      where: { id },
     });
   }
 }

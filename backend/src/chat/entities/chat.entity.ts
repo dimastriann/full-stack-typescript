@@ -1,9 +1,17 @@
 import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
-import { ConversationType } from '../../../prisma/generated/client';
+import {
+  ConversationType,
+  MessageType,
+} from '../../../prisma/generated/client';
+import { Attachment } from 'src/attachment/entities/attachment.entity';
 
 registerEnumType(ConversationType, {
   name: 'ConversationType',
+});
+
+registerEnumType(MessageType, {
+  name: 'MessageType',
 });
 
 @ObjectType()
@@ -52,6 +60,30 @@ export class Message {
 
   @Field()
   updatedAt: Date;
+
+  @Field(() => Boolean)
+  isEdited: boolean;
+
+  @Field(() => MessageType)
+  type: MessageType;
+
+  @Field({ nullable: true })
+  fileUrl?: string;
+
+  @Field({ nullable: true })
+  fileName?: string;
+
+  @Field(() => Int, { nullable: true })
+  fileSize?: number;
+
+  @Field({ nullable: true })
+  mimeType?: string;
+
+  @Field(() => String, { nullable: true })
+  metadata?: any;
+
+  @Field(() => [Attachment], { nullable: true })
+  attachments?: Attachment[];
 }
 
 @ObjectType()

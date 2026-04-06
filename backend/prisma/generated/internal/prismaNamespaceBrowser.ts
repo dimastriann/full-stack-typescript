@@ -228,7 +228,9 @@ export const AttachmentScalarFieldEnum = {
   size: 'size',
   createdAt: 'createdAt',
   projectId: 'projectId',
-  taskId: 'taskId'
+  taskId: 'taskId',
+  messageId: 'messageId',
+  conversationId: 'conversationId'
 } as const
 
 export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
@@ -278,7 +280,14 @@ export const MessageScalarFieldEnum = {
   senderId: 'senderId',
   conversationId: 'conversationId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isEdited: 'isEdited',
+  type: 'type',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  metadata: 'metadata'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]

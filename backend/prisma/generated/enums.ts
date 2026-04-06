@@ -76,3 +76,14 @@ export const ConversationType = {
 } as const
 
 export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
+
+
+export const MessageType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  DOCUMENT: 'DOCUMENT',
+  LOCATION: 'LOCATION',
+  STICKER: 'STICKER'
+} as const
+
+export type MessageType = (typeof MessageType)[keyof typeof MessageType]
