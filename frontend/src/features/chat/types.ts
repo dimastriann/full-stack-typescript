@@ -3,6 +3,14 @@ export enum ConversationType {
   DIRECT = 'DIRECT',
 }
 
+export enum MessageType {
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  DOCUMENT = 'DOCUMENT',
+  LOCATION = 'LOCATION',
+  STICKER = 'STICKER',
+}
+
 export interface User {
   id: number;
   name: string;
@@ -25,6 +33,23 @@ export interface Message {
   conversationId: number;
   createdAt: string;
   updatedAt: string;
+  isEdited: boolean;
+  type: MessageType;
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  metadata?: string;
+  attachments: Attachment[];
+}
+
+export interface Attachment {
+  id: number;
+  filename: string;
+  path: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
 }
 
 export interface ConversationParticipant {

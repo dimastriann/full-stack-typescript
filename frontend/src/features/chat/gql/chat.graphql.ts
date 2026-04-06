@@ -44,6 +44,13 @@ export const GET_CONVERSATION_MESSAGES = gql`
         name
       }
       createdAt
+      isEdited
+      type
+      fileUrl
+      fileName
+      fileSize
+      mimeType
+      metadata
       linkPreview {
         url
         title
@@ -51,6 +58,13 @@ export const GET_CONVERSATION_MESSAGES = gql`
         image
         siteName
         favicons
+      }
+      attachments {
+        id
+        filename
+        path
+        mimeType
+        size
       }
     }
   }
@@ -122,5 +136,22 @@ export const REMOVE_PARTICIPANT = gql`
 export const MARK_AS_READ = gql`
   mutation MarkAsRead($conversationId: Int!) {
     markAsRead(conversationId: $conversationId)
+  }
+`;
+
+export const UPDATE_MESSAGE = gql`
+  mutation UpdateMessage($id: Int!, $content: String!) {
+    updateMessage(id: $id, content: $content) {
+      id
+      content
+      isEdited
+      updatedAt
+    }
+  }
+`;
+
+export const DELETE_MESSAGE = gql`
+  mutation DeleteMessage($id: Int!) {
+    deleteMessage(id: $id)
   }
 `;
