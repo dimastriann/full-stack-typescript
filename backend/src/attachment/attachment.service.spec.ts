@@ -1,42 +1,45 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CommentService } from './comment.service';
+import { AttachmentService } from './attachment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 
-describe('CommentService', () => {
-  let service: CommentService;
+describe('AttachmentService', () => {
+  let service: AttachmentService;
   let prisma: PrismaService;
   let projectMemberService: ProjectMemberService;
 
   const mockPrisma = {
-    comment: {
+    attachment: {
       findUnique: jest.fn(),
       findMany: jest.fn(),
       create: jest.fn(),
-      update: jest.fn(),
       delete: jest.fn(),
     },
     task: {
+      findUnique: jest.fn(),
+    },
+    comment: {
+      findUnique: jest.fn(),
+    },
+    conversationParticipant: {
       findUnique: jest.fn(),
     },
   };
 
   const mockProjectMemberService = {
     checkPermission: jest.fn(),
-    checkAccess: jest.fn(),
-    getUserProjects: jest.fn(),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CommentService,
+        AttachmentService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: ProjectMemberService, useValue: mockProjectMemberService },
       ],
     }).compile();
 
-    service = module.get<CommentService>(CommentService);
+    service = module.get<AttachmentService>(AttachmentService);
     prisma = module.get<PrismaService>(PrismaService);
     projectMemberService = module.get<ProjectMemberService>(ProjectMemberService);
   });
@@ -47,18 +50,5 @@ describe('CommentService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  describe('create', () => {
-    it('should create a comment successfully', async () => {
-      const input = { content: 'Test comment', projectId: 1, userId: 1 };
-      mockProjectMemberService.checkPermission.mockResolvedValue(true);
-      mockPrisma.comment.create.mockResolvedValue({ id: 1, ...input });
-
-      const result = await service.create(input as any, 1);
-      
-      expect(result).toBeDefined();
-      expect(mockPrisma.comment.create).toHaveBeenCalled();
-    });
   });
 });

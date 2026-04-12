@@ -133,10 +133,11 @@ export default function TimesheetForm({
       </h2>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
           Description
         </label>
         <textarea
+          id="description"
           {...register('description', { required: 'Description is required' })}
           placeholder="Description"
           rows={3}
@@ -151,10 +152,11 @@ export default function TimesheetForm({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
             Date
           </label>
           <input
+            id="date"
             type="date"
             {...register('date', { required: 'Date is required' })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
@@ -165,10 +167,11 @@ export default function TimesheetForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="timeSpent" className="block text-sm font-medium text-gray-700">
             Time Spent (Hours)
           </label>
           <input
+            id="timeSpent"
             type="number"
             step="0.1"
             {...register('timeSpent', {
@@ -185,10 +188,11 @@ export default function TimesheetForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="userId_ts" className="block text-sm font-medium text-gray-700">
             User
           </label>
           <select
+            id="userId_ts"
             {...register('userId', { required: 'User is required' })}
             disabled={currentUser?.role === 'USER'}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -208,10 +212,11 @@ export default function TimesheetForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="projectId_ts" className="block text-sm font-medium text-gray-700">
             Project
           </label>
           <select
+            id="projectId_ts"
             {...register('projectId', { required: 'Project is required' })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
           >
@@ -230,10 +235,11 @@ export default function TimesheetForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="taskId_ts" className="block text-sm font-medium text-gray-700">
             Task
           </label>
           <select
+            id="taskId_ts"
             {...register('taskId', { required: 'Task is required' })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
           >

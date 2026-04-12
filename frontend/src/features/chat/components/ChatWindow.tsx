@@ -794,11 +794,12 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs">
-                      {p.user.name[0]}
+                      {p.user?.name?.[0] || '?'}
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-800">
-                        {p.user.name} {p.userId === user.id && '(You)'}
+                        {p.user?.name || 'Unknown User'}{' '}
+                        {p.userId === user?.id && '(You)'}
                       </div>
                     </div>
                   </div>
