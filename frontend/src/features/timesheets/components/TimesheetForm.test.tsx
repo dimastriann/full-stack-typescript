@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import TimesheetForm from './TimesheetForm';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import { useTimesheets } from '../hooks/useTimesheets';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_USERS } from '../../users/gql/user.graphql';
@@ -10,8 +10,8 @@ import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 import { GET_TASKS } from '../../tasks/gql/task.graphql';
 
 // Mock hooks
-vi.mock('../../../context/AuthProvider', () => ({
-  useAuth: vi.fn(),
+vi.mock('../../../store/authStore', () => ({
+  useAuthStore: vi.fn(),
 }));
 
 vi.mock('../hooks/useTimesheets', () => ({
@@ -39,7 +39,9 @@ describe('TimesheetForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuth as any).mockReturnValue({ user: { id: 1, role: 'ADMIN' } });
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+      selector({ user: { id: 1, role: 'ADMIN' } }),
+    );
     (useTimesheets as any).mockReturnValue({
       createRecord: mockCreateRecord,
       updateRecord: vi.fn(),

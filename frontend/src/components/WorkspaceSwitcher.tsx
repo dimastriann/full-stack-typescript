@@ -1,4 +1,4 @@
-import { useWorkspace } from '../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../store/workspaceStore';
 import Modal from './Dialog';
 import { useMutation } from '@apollo/client';
 import { GET_ME } from '../features/auth/gql/auth.graphql';
@@ -7,7 +7,11 @@ import { useState } from 'react';
 import Logger from '../lib/logger';
 
 export const WorkspaceSwitcher = () => {
-  const { activeWorkspace, setActiveWorkspace, workspaces } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const setActiveWorkspace = useWorkspaceStore(
+    (state) => state.setActiveWorkspace,
+  );
+  const workspaces = useWorkspaceStore((state) => state.workspaces);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [createWorkspace] = useMutation(CREATE_WORKSPACE, {

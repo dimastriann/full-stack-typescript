@@ -3,7 +3,7 @@ import { useProjects } from '../hooks/useProjects';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_PROJECT_STAGES } from '../gql/project.graphql';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import {
   CheckCircle,
   Circle,
@@ -41,7 +41,7 @@ const getStageStyles = (title: string) => {
 };
 
 export default function ProjectKanban() {
-  const { activeWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const { data: stagesData } = useQuery(GET_PROJECT_STAGES, {
     variables: { workspaceId: activeWorkspace?.id },
     skip: !activeWorkspace,

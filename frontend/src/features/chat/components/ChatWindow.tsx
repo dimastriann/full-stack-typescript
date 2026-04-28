@@ -13,7 +13,7 @@ import { GET_USERS } from '../../users/gql/user.graphql';
 import { UPLOAD_FILE } from '../../attachments/gql/attachment.graphql';
 import type { Message, Conversation } from '../types';
 import { socketService } from '../../../lib/socket';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import {
   Info,
   UserPlus,
@@ -55,7 +55,7 @@ interface StagedAttachment {
 }
 
 export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
-  const { user } = useAuth();
+  const user = useAuthStore((state) => state.user);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);

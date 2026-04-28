@@ -4,8 +4,6 @@ import Sidebar from '../components/dashboard/Sidebar';
 import DashboardStats from '../components/dashboard/DashboardStats';
 import UserList from '../features/users/components/UserList';
 import UserEditPage from '../features/users/pages/UserFormPage';
-import { UserProvider } from '../features/users/hooks/useUsers';
-import { TaskProvider } from '../features/tasks/hooks/useTasks';
 import ProjectList from '../features/projects/components/ProjectList';
 import ProjectKanban from '../features/projects/components/ProjectKanban';
 import ProjectEditPage from '../features/projects/pages/ProjectFormPage';
@@ -17,14 +15,13 @@ import TimesheetFormPage from '../features/timesheets/pages/TimesheetFormPage';
 import ProfilePage from '../features/users/pages/ProfilePage';
 import WorkspaceSettingsPage from '../features/workspaces/pages/WorkspaceSettingsPage';
 import DiscussPage from '../pages/DiscussPage';
-import { ProjectProvider } from '../features/projects/hooks/useProjects';
 import { Menu } from 'lucide-react';
-import { useAuth } from '../context/AuthProvider';
+import { useAuthStore } from '../store/authStore';
 import { WorkspaceSwitcher } from '../components/WorkspaceSwitcher';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { user } = useAuth();
+  const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role === 'ADMIN';
 
   return (
@@ -72,9 +69,7 @@ export default function DashboardLayout() {
                   path="/users"
                   element={
                     <div className="flex-1 overflow-y-auto p-6">
-                      <UserProvider>
-                        <UserList />
-                      </UserProvider>
+                      <UserList />
                     </div>
                   }
                 />
@@ -82,9 +77,7 @@ export default function DashboardLayout() {
                   path="/user/:userId"
                   element={
                     <div className="flex-1 overflow-y-auto p-6">
-                      <UserProvider>
-                        <UserEditPage />
-                      </UserProvider>
+                      <UserEditPage />
                     </div>
                   }
                 />
@@ -102,9 +95,7 @@ export default function DashboardLayout() {
               path="/projects"
               element={
                 <div className="flex-1 flex flex-col min-h-0 p-6">
-                  <ProjectProvider>
-                    <ProjectKanban />
-                  </ProjectProvider>
+                  <ProjectKanban />
                 </div>
               }
             />
@@ -112,9 +103,7 @@ export default function DashboardLayout() {
               path="/projects/list"
               element={
                 <div className="flex-1 overflow-y-auto p-6">
-                  <ProjectProvider>
-                    <ProjectList />
-                  </ProjectProvider>
+                  <ProjectList />
                 </div>
               }
             />
@@ -122,9 +111,7 @@ export default function DashboardLayout() {
               path="/project/:projectId"
               element={
                 <div className="flex-1 overflow-y-auto p-6">
-                  <ProjectProvider>
-                    <ProjectEditPage />
-                  </ProjectProvider>
+                  <ProjectEditPage />
                 </div>
               }
             />
@@ -132,11 +119,7 @@ export default function DashboardLayout() {
               path="/tasks"
               element={
                 <div className="flex-1 flex flex-col min-h-0 p-6">
-                  <TaskProvider>
-                    <ProjectProvider>
-                      <TaskKanban />
-                    </ProjectProvider>
-                  </TaskProvider>
+                  <TaskKanban />
                 </div>
               }
             />
@@ -176,9 +159,7 @@ export default function DashboardLayout() {
               path="profile"
               element={
                 <div className="flex-1 overflow-y-auto p-6">
-                  <UserProvider>
-                    <ProfilePage />
-                  </UserProvider>
+                  <ProfilePage />
                 </div>
               }
             />

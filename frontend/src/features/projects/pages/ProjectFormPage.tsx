@@ -7,7 +7,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GET_PROJECT } from '../gql/project.graphql';
 import { CommentThread } from '../../../components/comments/CommentThread';
 import { FileUpload } from '../../../components/upload/FileUpload';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import ProjectMembersList from '../components/ProjectMembersList';
 
 import { REMOVE_ATTACHMENT } from '../../attachments/gql/attachment.graphql';
@@ -16,7 +16,7 @@ import { useAttachments } from '../../attachments/hooks/useAttachments';
 
 export default function ProjectFormPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const user = useAuthStore((state) => state.user);
   const currentUserId = user?.id || 0;
   const { projectId } = useParams();
   const id = projectId ? parseInt(projectId, 10) : 0;

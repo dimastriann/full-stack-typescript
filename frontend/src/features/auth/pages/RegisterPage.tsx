@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import { useMutation } from '@apollo/client';
 import { REGISTER_MUTATION } from '../gql/auth.graphql';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ export default function RegisterPage() {
     lastName: '',
   });
   const [errorMsg, setErrorMsg] = useState('');
-  const { login } = useAuth();
+  const login = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
 
   const [registerMutation, { loading }] = useMutation(REGISTER_MUTATION);
@@ -39,7 +39,7 @@ export default function RegisterPage() {
         },
       });
       if (data?.register) {
-        login(data.register);
+        login(data.register.user, 'logged_in');
         navigate('/dashboard');
       }
     } catch (err: any) {

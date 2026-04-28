@@ -9,8 +9,8 @@ import { GET_USERS } from '../../users/gql/user.graphql';
 import type { ProjectType, ProjectStage } from '../../../types/Projects';
 import ProjectTaskTable from './ProjectTaskTable';
 import { useProjects } from '../hooks/useProjects';
-import { useAuth } from '../../../context/AuthProvider';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useAuthStore } from '../../../store/authStore';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import type { UserType } from '../../../types/Users';
 
 interface ProjectFormProps {
@@ -19,8 +19,8 @@ interface ProjectFormProps {
 }
 
 export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
-  const { user: currentUser } = useAuth();
-  const { activeWorkspace } = useWorkspace();
+  const currentUser = useAuthStore((state) => state.user);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
 
   const defaultValues = {
     name: '',

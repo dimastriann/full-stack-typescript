@@ -15,7 +15,7 @@ import {
 import Logger from '../../../lib/logger';
 import Modal from '../../../components/Dialog';
 import ProjectForm from './ProjectForm';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 
 const ProjectRow = React.memo(
   ({
@@ -131,7 +131,7 @@ export default function ProjectList() {
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { user: authUser } = useAuth();
+  const authUser = useAuthStore((state) => state.user);
   const currentUserId = authUser?.id || 0;
 
   const filteredRecords = React.useMemo(() => {

@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthProvider';
+import { useAuthStore } from '../store/authStore';
 
 export default function Header(): React.ReactElement {
-  const { session } = useAuth();
+  const session = useAuthStore((state) => state.session);
 
   return (
     <header className="bg-[#3b0a84] text-white px-6 py-4 shadow-md sticky top-0">

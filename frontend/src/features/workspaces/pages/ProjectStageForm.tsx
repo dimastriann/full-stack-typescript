@@ -8,7 +8,7 @@ import {
   REMOVE_PROJECT_STAGE,
   UPDATE_PROJECT_STAGE,
 } from '../gql/workspace.graphql';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 
 const defaultValues: Omit<ProjectStage, 'id'> = {
   title: '',
@@ -42,7 +42,7 @@ export default function ProjectStageForm({
   const [createProjectStage] = useMutation(CREATE_PROJECT_STAGE);
   const [updateProjectStage] = useMutation(UPDATE_PROJECT_STAGE);
   const [removeProjectStage] = useMutation(REMOVE_PROJECT_STAGE);
-  const { activeWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
 
   useEffect(() => {
     if (isNew) {

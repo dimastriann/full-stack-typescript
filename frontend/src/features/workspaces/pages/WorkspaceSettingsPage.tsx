@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Logger from '../../../lib/logger';
 import { useQuery, useMutation } from '@apollo/client';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
 import { GET_PROJECT_STAGES } from '../../projects/gql/project.graphql';
 import { GET_TASK_STAGES } from '../../tasks/gql/task.graphql';
 import { GET_ME } from '../../auth/gql/auth.graphql';
@@ -27,8 +26,13 @@ import { WorkspaceRole } from '../../../types/Workspaces';
 import ProjectStagePage from './ProjectStagePage';
 import TaskStagePage from './TaskStagePage';
 
+import { useWorkspaceStore } from '../../../store/workspaceStore';
+
 export default function WorkspaceSettingsPage() {
-  const { activeWorkspace, setActiveWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const setActiveWorkspace = useWorkspaceStore(
+    (state) => state.setActiveWorkspace,
+  );
   const [editingId, setEditingId] = useState<
     number | 'new' | 'workspace' | 'invite' | null
   >(null);

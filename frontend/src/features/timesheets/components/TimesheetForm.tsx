@@ -9,7 +9,7 @@ import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import type { UserType } from '../../../types/Users';
 import { GET_TASKS } from '../../tasks/gql/task.graphql';
 import type { TaskType } from '../../../types/Tasks';
@@ -23,7 +23,7 @@ export default function TimesheetForm({
   onSuccess,
   onCancel,
 }: TimesheetFormProps) {
-  const { user: currentUser } = useAuth();
+  const currentUser = useAuthStore((state) => state.user);
   const { timesheetId } = useParams();
 
   const isEditMode = !!timesheetId;

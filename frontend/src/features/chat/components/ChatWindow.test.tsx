@@ -1,14 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import { ChatWindow } from './ChatWindow';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_CONVERSATION_MESSAGES, MARK_AS_READ } from '../gql/chat.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 
 // Mock hooks and services
-vi.mock('../../../context/AuthProvider', () => ({
-  useAuth: vi.fn(),
+vi.mock('../../../store/authStore', () => ({
+  useAuthStore: vi.fn(),
 }));
 
 vi.mock('../../../lib/socket', () => ({
@@ -67,7 +67,9 @@ describe('ChatWindow', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuth as any).mockReturnValue({ user: { id: 1 } });
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+      selector({ user: { id: 1 } }),
+    );
   });
 
   it('renders messages correctly', async () => {

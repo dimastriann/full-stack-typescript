@@ -1,5 +1,5 @@
 import type { Conversation, User } from '../types';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import {
   Plus,
   Search,
@@ -19,7 +19,7 @@ import {
 import { useState } from 'react';
 import Modal from '../../../components/Dialog';
 import type { UserType } from '../../../types/Users';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { Check, X as CloseIcon } from 'lucide-react';
 import Logger from '../../../lib/logger';
 
@@ -93,8 +93,8 @@ export const ConversationList = ({
   selectedId,
   onSelect,
 }: ConversationListProps) => {
-  const { user } = useAuth();
-  const { activeWorkspace } = useWorkspace();
+  const user = useAuthStore((state) => state.user);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'DM' | 'CHANNEL'>('DM');
   const [channelName, setChannelName] = useState('');

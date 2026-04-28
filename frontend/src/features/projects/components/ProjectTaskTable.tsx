@@ -9,7 +9,7 @@ import {
   GET_TASK_STAGES,
 } from '../../tasks/gql/task.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import type { TaskType, TaskStage } from '../../../types/Tasks';
 import { Plus, Save, X, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ interface ProjectTaskTableProps {
 }
 
 export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
-  const { activeWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const { data, loading, refetch } = useQuery(GET_TASKS, {
     variables: { projectId },
     skip: !projectId,

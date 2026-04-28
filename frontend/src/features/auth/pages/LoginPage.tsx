@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logger from '../../../lib/logger';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION } from '../gql/auth.graphql';
 
@@ -9,7 +9,15 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const { login } = useAuth();
+  const login = useAuthStore((state) => state.setAuth);
+  const session = useAuthStore((state) => state.session);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (session) {
+      navigate('/dashboard');
+    }
+  }, [session, navigate]);
 
   const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION);
 
@@ -21,7 +29,8 @@ export default function LoginPage() {
         variables: { email, password },
       });
       if (data?.login) {
-        login(data.login);
+        login(data.login.user, 'logged_in');
+        navigate('/dashboard');
       }
     } catch (err) {
       Logger.error(err as string);

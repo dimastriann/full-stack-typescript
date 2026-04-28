@@ -1,8 +1,8 @@
 import UserForm from '../components/UserForm';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const user = useAuthStore((state) => state.user);
 
   const handleSuccess = () => {
     // Optionally show a success message or just stay on the page

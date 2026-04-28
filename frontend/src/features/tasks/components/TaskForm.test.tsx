@@ -2,8 +2,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import TaskForm from './TaskForm';
-import { useAuth } from '../../../context/AuthProvider';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useAuthStore } from '../../../store/authStore';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { useTasks } from '../hooks/useTasks';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_TASK, GET_TASK_STAGES } from '../gql/task.graphql';
@@ -11,12 +11,12 @@ import { GET_USERS } from '../../users/gql/user.graphql';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 
 // Mock hooks
-vi.mock('../../../context/AuthProvider', () => ({
-  useAuth: vi.fn(),
+vi.mock('../../../store/authStore', () => ({
+  useAuthStore: vi.fn(),
 }));
 
-vi.mock('../../../context/WorkspaceProvider', () => ({
-  useWorkspace: vi.fn(),
+vi.mock('../../../store/workspaceStore', () => ({
+  useWorkspaceStore: vi.fn(),
 }));
 
 vi.mock('../hooks/useTasks', () => ({
@@ -52,8 +52,12 @@ describe('TaskForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuth as any).mockReturnValue({ user: { id: 1, role: 'ADMIN' } });
-    (useWorkspace as any).mockReturnValue({ activeWorkspace: { id: 1, name: 'Test WS' } });
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+      selector({ user: { id: 1, role: 'ADMIN' } }),
+    );
+    (useWorkspaceStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+      selector({ activeWorkspace: { id: 1, name: 'Test WS' } }),
+    );
     (useTasks as any).mockReturnValue({
       createRecord: mockCreateRecord,
       updateRecord: vi.fn(),

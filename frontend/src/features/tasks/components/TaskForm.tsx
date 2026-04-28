@@ -11,8 +11,8 @@ import Logger from '../../../lib/logger';
 import { X } from 'lucide-react';
 import type { TaskStage } from '../../../types/Tasks';
 import TaskTimesheetTable from './TaskTimesheetTable';
-import { useAuth } from '../../../context/AuthProvider';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useAuthStore } from '../../../store/authStore';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import type { UserType } from '../../../types/Users';
 
 interface TaskFormProps {
@@ -21,8 +21,8 @@ interface TaskFormProps {
 }
 
 export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
-  const { user: currentUser } = useAuth();
-  const { activeWorkspace } = useWorkspace();
+  const currentUser = useAuthStore((state) => state.user);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const { taskId } = useParams();
 
   const isEditMode = !!taskId;

@@ -1,4 +1,4 @@
-import { TaskProvider } from '../hooks/useTasks';
+
 import TaskForm from '../components/TaskForm';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -49,7 +49,7 @@ export default function TaskFormPage() {
   const task = data?.getTask;
 
   return (
-    <TaskProvider>
+    <>
       <div className="mx-auto py-6">
         <div className="mb-6 flex items-center">
           <button
@@ -134,6 +134,6 @@ export default function TaskFormPage() {
           </div>
         </div>
       </div>
-    </TaskProvider>
+    </>
   );
 }

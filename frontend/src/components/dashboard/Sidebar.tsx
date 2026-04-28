@@ -10,7 +10,8 @@ import {
   MessageSquare,
   X,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthProvider';
+import { useAuthStore } from '../../store/authStore';
+import { useLogout } from '../../hooks/useLogout';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -18,7 +19,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { logout, user } = useAuth();
+  const logout = useLogout();
+  const user = useAuthStore((state) => state.user);
 
   return (
     <>

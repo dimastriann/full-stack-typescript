@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthProvider';
+import { useAuthStore } from '../store/authStore';
 
 export default function LoginPage(): React.ReactElement {
   const [name, setName] = useState<string>('');
-  const { login } = useAuth();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    login(name);
+    setAuth({ name }, 'logged_in');
   };
 
   return (

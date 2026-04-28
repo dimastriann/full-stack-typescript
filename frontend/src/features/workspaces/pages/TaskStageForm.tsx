@@ -7,7 +7,7 @@ import {
   REMOVE_TASK_STAGE,
   UPDATE_TASK_STAGE,
 } from '../gql/workspace.graphql';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { Check, Edit2, Trash2, X } from 'lucide-react';
 
 const defaultValues: Omit<TaskStage, 'id'> = {
@@ -42,7 +42,7 @@ export default function TaskStageForm({
   const [createTaskStage] = useMutation(CREATE_TASK_STAGE);
   const [updateTaskStage] = useMutation(UPDATE_TASK_STAGE);
   const [removeTaskStage] = useMutation(REMOVE_TASK_STAGE);
-  const { activeWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
 
   useEffect(() => {
     if (isNew) {

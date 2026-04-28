@@ -2,20 +2,20 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import ProjectForm from './ProjectForm';
-import { useAuth } from '../../../context/AuthProvider';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useAuthStore } from '../../../store/authStore';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { useProjects } from '../hooks/useProjects';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 
 // Mock focus/hooks
-vi.mock('../../../context/AuthProvider', () => ({
-  useAuth: vi.fn(),
+vi.mock('../../../store/authStore', () => ({
+  useAuthStore: vi.fn(),
 }));
 
-vi.mock('../../../context/WorkspaceProvider', () => ({
-  useWorkspace: vi.fn(),
+vi.mock('../../../store/workspaceStore', () => ({
+  useWorkspaceStore: vi.fn(),
 }));
 
 vi.mock('../hooks/useProjects', () => ({
@@ -49,8 +49,12 @@ describe('ProjectForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuth as any).mockReturnValue({ user: { id: 1, role: 'ADMIN' } });
-    (useWorkspace as any).mockReturnValue({ activeWorkspace: { id: 1, name: 'Test WS' } });
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+      selector({ user: { id: 1, role: 'ADMIN' } }),
+    );
+    (useWorkspaceStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+      selector({ activeWorkspace: { id: 1, name: 'Test WS' } }),
+    );
     (useProjects as any).mockReturnValue({
       createRecord: mockCreateRecord,
       updateRecord: vi.fn(),

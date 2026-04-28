@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client';
 import { GET_DASHBOARD_STATS } from '../../features/dashboard/gql/dashboard.graphql';
 
-import { useWorkspace } from '../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../store/workspaceStore';
 
 export default function DashboardStats() {
-  const { activeWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const { data, loading, error } = useQuery(GET_DASHBOARD_STATS, {
     variables: { workspaceId: activeWorkspace?.id },
     skip: !activeWorkspace,
