@@ -45,6 +45,36 @@ type Task {
   stageId: Int
   stage: TaskStage
   sequence: Int
+  estimatedHours: Float!
+  dueDate: DateTime
+  priority: TaskPriority!
+  actualHours: Float!
+  parentTaskId: Int
+  parentTask: Task
+  subtasks: [Task]!
+  type: TaskType!
+  reporterId: Int
+  reporter: User
+  startDate: DateTime
+  completedAt: DateTime
+  remainingHours: Float!
+  progress: Float!
+  tags: [String]!
+  deletedAt: DateTime
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskType {
+  TASK
+  BUG
+  STORY
+  EPIC
 }
 
 type Timesheet {
@@ -61,6 +91,29 @@ type Timesheet {
   project: Project!
   task: Task!
   taskId: Int!
+  startTime: DateTime
+  endTime: DateTime
+  billable: Boolean!
+  hourlyRate: Float
+  cost: Float
+  source: TimesheetSource!
+  approvalStatus: ApprovalStatus!
+  approvedById: Int
+  approvedBy: User
+  approvedAt: DateTime
+  tags: [String]!
+}
+
+enum TimesheetSource {
+  MANUAL
+  TIMER
+  INTEGRATION
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 type ProjectMember {
@@ -145,6 +198,43 @@ type Project {
   stageId: Int
   stage: ProjectStage
   sequence: Int
+  budgetPlanned: Float!
+  budgetActual: Float!
+  startDate: DateTime
+  endDate: DateTime
+  phasesCount: Int!
+  methodology: ProjectMethodology!
+  key: String
+  visibility: ProjectVisibility!
+  priority: ProjectPriority!
+  actualStartDate: DateTime
+  actualEndDate: DateTime
+  progress: Float!
+  currency: String!
+  tags: [String]!
+  archivedAt: DateTime
+  totalHours: Float!
+}
+
+enum ProjectMethodology {
+  SCRUM
+  WATERFALL
+  KANBAN
+  AGILE
+  OTHER
+}
+
+enum ProjectVisibility {
+  PRIVATE
+  TEAM
+  PUBLIC
+}
+
+enum ProjectPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
 }
 
 type Comment {
@@ -185,6 +275,8 @@ type User {
   tasks: [Task]!
   timesheets: [Timesheet]!
   comments: [Comment]!
+  reportedTasks: [Task]!
+  approvedTimesheets: [Timesheet]!
 }
 
 type LoginResponse {
@@ -306,6 +398,8 @@ type Mutation {
   createTimesheet(createTimesheetInput: CreateTimesheetInput!): Timesheet!
   updateTimesheet(updateTimesheetInput: UpdateTimesheetInput!): Timesheet!
   removeTimesheet(id: Int!): Timesheet!
+  approveTimesheet(id: Int!): Timesheet!
+  rejectTimesheet(id: Int!): Timesheet!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   removeComment(id: Int!): Comment!
@@ -394,6 +488,15 @@ input CreateProjectInput {
   workspaceId: Int!
   stageId: Int
   sequence: Int
+  budgetPlanned: Float = 0
+  startDate: DateTime
+  endDate: DateTime
+  phasesCount: Int = 1
+  methodology: ProjectMethodology = KANBAN
+  visibility: ProjectVisibility = TEAM
+  priority: ProjectPriority = MEDIUM
+  currency: String = "USD"
+  tags: [String!]
 }
 
 input UpdateProjectInput {
@@ -403,7 +506,21 @@ input UpdateProjectInput {
   workspaceId: Int
   stageId: Int
   sequence: Int
+  budgetPlanned: Float = 0
+  startDate: DateTime
+  endDate: DateTime
+  phasesCount: Int = 1
+  methodology: ProjectMethodology = KANBAN
+  visibility: ProjectVisibility = TEAM
+  priority: ProjectPriority = MEDIUM
+  currency: String = "USD"
+  tags: [String!]
   id: Int!
+  actualStartDate: DateTime
+  actualEndDate: DateTime
+  progress: Float
+  archivedAt: DateTime
+  key: String
 }
 
 input CreateTaskInput {
@@ -413,6 +530,14 @@ input CreateTaskInput {
   projectId: Int!
   stageId: Int
   sequence: Int
+  estimatedHours: Float = 0
+  dueDate: DateTime
+  priority: TaskPriority = MEDIUM
+  parentTaskId: Int
+  type: TaskType = TASK
+  reporterId: Int
+  startDate: DateTime
+  tags: [String!]
 }
 
 input UpdateTaskInput {
@@ -422,7 +547,19 @@ input UpdateTaskInput {
   projectId: Int
   stageId: Int
   sequence: Int
+  estimatedHours: Float = 0
+  dueDate: DateTime
+  priority: TaskPriority = MEDIUM
+  parentTaskId: Int
+  type: TaskType = TASK
+  reporterId: Int
+  startDate: DateTime
+  tags: [String!]
   id: Int!
+  completedAt: DateTime
+  remainingHours: Float
+  progress: Float
+  deletedAt: DateTime
 }
 
 input CreateTimesheetInput {
@@ -432,6 +569,12 @@ input CreateTimesheetInput {
   userId: Int!
   projectId: Int!
   taskId: Int!
+  startTime: DateTime
+  endTime: DateTime
+  billable: Boolean = true
+  hourlyRate: Float
+  source: TimesheetSource = MANUAL
+  tags: [String!]
 }
 
 input UpdateTimesheetInput {
@@ -441,7 +584,17 @@ input UpdateTimesheetInput {
   userId: Int
   projectId: Int
   taskId: Int
+  startTime: DateTime
+  endTime: DateTime
+  billable: Boolean = true
+  hourlyRate: Float
+  source: TimesheetSource = MANUAL
+  tags: [String!]
   id: Int!
+  approvalStatus: ApprovalStatus
+  approvedById: Int
+  approvedAt: DateTime
+  cost: Float
 }
 
 input CreateCommentInput {

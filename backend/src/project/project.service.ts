@@ -60,9 +60,15 @@ export class ProjectService {
       );
     }
 
+    // Generate unique project key
+    const key = await this.generateProjectKey(createProjectInput.name);
+
     // Create the project
     const project = await this.prisma.project.create({
-      data: createProjectInput,
+      data: {
+        ...createProjectInput,
+        key,
+      },
       include: { ...this.includeRelation },
     });
 
@@ -162,5 +168,32 @@ export class ProjectService {
     return this.prisma.project.delete({
       where: { id },
     });
+  }
+
+  private async generateProjectKey(name: string): Promise<string> {
+    let prefix = name.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, '');
+    if (prefix.length < 2) prefix = 'PRJ';
+
+    const latestProject = await this.prisma.project.findFirst({
+      where: {
+        key: {
+          startsWith: prefix + '-',
+        },
+      },
+      orderBy: {
+        key: 'desc',
+      },
+    });
+
+    let nextNumber = 1;
+    if (latestProject && latestProject.key) {
+      const parts = latestProject.key.split('-');
+      const lastNum = parseInt(parts[parts.length - 1]);
+      if (!isNaN(lastNum)) {
+        nextNumber = lastNum + 1;
+      }
+    }
+
+    return `${prefix}-${nextNumber.toString().padStart(3, '0')}`;
   }
 }

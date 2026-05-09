@@ -63,6 +63,10 @@ export default function TimesheetForm({
       userId: userId?.toString() || '',
       projectId: '',
       taskId: '',
+      startTime: '',
+      endTime: '',
+      billable: true,
+      hourlyRate: 0,
     },
   });
 
@@ -80,6 +84,10 @@ export default function TimesheetForm({
         userId: timesheet.userId.toString(),
         projectId: timesheet.projectId.toString(),
         taskId: timesheet.taskId?.toString(),
+        startTime: timesheet.startTime ? new Date(timesheet.startTime).toISOString().slice(0, 16) : '',
+        endTime: timesheet.endTime ? new Date(timesheet.endTime).toISOString().slice(0, 16) : '',
+        billable: timesheet.billable,
+        hourlyRate: timesheet.hourlyRate || 0,
       });
     } else if (!isEditMode && userId && users) {
       reset({
@@ -98,6 +106,10 @@ export default function TimesheetForm({
         projectId: Number(formData.projectId),
         taskId: formData.taskId ? Number(formData.taskId) : undefined,
         date: new Date(formData.date).toISOString(),
+        startTime: formData.startTime ? new Date(formData.startTime).toISOString() : undefined,
+        endTime: formData.endTime ? new Date(formData.endTime).toISOString() : undefined,
+        billable: formData.billable,
+        hourlyRate: Number(formData.hourlyRate || 0),
       };
 
       if (isEditMode) {
@@ -185,6 +197,55 @@ export default function TimesheetForm({
               {errors.timeSpent.message}
             </span>
           )}
+        </div>
+
+        <div>
+          <label htmlFor="hourlyRate" className="block text-sm font-medium text-gray-700">
+            Hourly Rate
+          </label>
+          <input
+            id="hourlyRate"
+            type="number"
+            step="0.01"
+            {...register('hourlyRate')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+          />
+        </div>
+
+        <div className="flex items-center mt-6">
+          <input
+            id="billable"
+            type="checkbox"
+            {...register('billable')}
+            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+          />
+          <label htmlFor="billable" className="ml-2 block text-sm font-medium text-gray-700">
+            Billable
+          </label>
+        </div>
+
+        <div>
+          <label htmlFor="startTime" className="block text-sm font-medium text-gray-700">
+            Start Time
+          </label>
+          <input
+            id="startTime"
+            type="datetime-local"
+            {...register('startTime')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="endTime" className="block text-sm font-medium text-gray-700">
+            End Time
+          </label>
+          <input
+            id="endTime"
+            type="datetime-local"
+            {...register('endTime')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+          />
         </div>
 
         <div>

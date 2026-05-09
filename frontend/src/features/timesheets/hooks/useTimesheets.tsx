@@ -4,6 +4,8 @@ import {
   DELETE_TIMESHEET,
   UPDATE_TIMESHEET,
   GET_TIMESHEETS,
+  APPROVE_TIMESHEET,
+  REJECT_TIMESHEET,
 } from '../gql/timesheet.graphql';
 import { useEffect } from 'react';
 import { useTimesheetStore } from '../../../store/timesheetStore';
@@ -27,6 +29,8 @@ export const useTimesheets = () => {
   const [createTimesheet] = useMutation(CREATE_TIMESHEET);
   const [updateTimesheet] = useMutation(UPDATE_TIMESHEET);
   const [deleteTimesheet] = useMutation(DELETE_TIMESHEET);
+  const [approveTimesheet] = useMutation(APPROVE_TIMESHEET);
+  const [rejectTimesheet] = useMutation(REJECT_TIMESHEET);
 
   useEffect(() => {
     if (data?.timesheets) {
@@ -48,5 +52,7 @@ export const useTimesheets = () => {
     setPage,
     pageSize,
     setPageSize,
+    approveRecord: approveTimesheet,
+    rejectRecord: rejectTimesheet,
   };
 };

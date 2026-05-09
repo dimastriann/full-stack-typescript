@@ -9,6 +9,7 @@ import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm } from 'react-hook-form';
 import Logger from '../../../lib/logger';
 import { X } from 'lucide-react';
+import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
 import type { TaskStage } from '../../../types/Tasks';
 import TaskTimesheetTable from './TaskTimesheetTable';
 import { useAuthStore } from '../../../store/authStore';
@@ -67,6 +68,12 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
       userId: userId?.toString() || '',
       projectId: '',
       stageId: '',
+      estimatedHours: 0,
+      dueDate: '',
+      priority: TaskPriority.MEDIUM,
+      type: TaskTypeEnum.TASK,
+      parentTaskId: '',
+      startDate: '',
     },
   });
 
@@ -78,6 +85,12 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         userId: task.userId.toString(),
         projectId: task.projectId.toString(),
         stageId: task.stageId?.toString() || '',
+        estimatedHours: task.estimatedHours,
+        dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '',
+        priority: task.priority,
+        type: task.type,
+        parentTaskId: task.parentTaskId?.toString() || '',
+        startDate: task.startDate ? new Date(task.startDate).toISOString().split('T')[0] : '',
       });
     } else if (!isEditMode && userId && users.length) {
       reset({
@@ -97,7 +110,16 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         description: formData.description,
         userId: Number(formData.userId),
         projectId: Number(formData.projectId),
+        estimatedHours: Number(formData.estimatedHours),
+        priority: formData.priority,
+        type: formData.type,
+        parentTaskId: formData.parentTaskId ? Number(formData.parentTaskId) : undefined,
+        startDate: formData.startDate ? new Date(formData.startDate).toISOString() : undefined,
       };
+
+      if (formData.dueDate) {
+        input.dueDate = formData.dueDate;
+      }
 
       if (formData.stageId) {
         input.stageId = Number(formData.stageId);
@@ -228,6 +250,97 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label htmlFor="estimatedHours" className="block text-sm font-medium text-gray-700">
+                Estimated Hours
+              </label>
+              <input
+                id="estimatedHours"
+                type="number"
+                step="0.5"
+                {...register('estimatedHours')}
+                placeholder="0"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700">
+                Due Date
+              </label>
+              <input
+                id="dueDate"
+                type="date"
+                {...register('dueDate')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="priority" className="block text-sm font-medium text-gray-700">
+                Priority
+              </label>
+              <select
+                id="priority"
+                {...register('priority')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                {Object.values(TaskPriority).map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+                Task Type
+              </label>
+              <select
+                id="type"
+                {...register('type')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                {Object.values(TaskTypeEnum).map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="parentTaskId" className="block text-sm font-medium text-gray-700">
+                Parent Task
+              </label>
+              <select
+                id="parentTaskId"
+                {...register('parentTaskId')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                <option value="">No Parent (Root Task)</option>
+                {/* Ideally filter to only show tasks from same project */}
+                {data?.tasks?.filter((t: any) => t.id !== Number(taskId)).map((t: any) => (
+                  <option key={t.id} value={t.id}>
+                    {t.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+                Start Date
+              </label>
+              <input
+                id="startDate"
+                type="date"
+                {...register('startDate')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
             </div>
           </div>
 

@@ -310,6 +310,8 @@ export type UserWhereInput = {
   comments?: Prisma.CommentListRelationFilter
   projectMemberships?: Prisma.ProjectMemberListRelationFilter
   workspaceMembers?: Prisma.WorkspaceMemberListRelationFilter
+  reportedTasks?: Prisma.TaskListRelationFilter
+  approvedTimesheets?: Prisma.TimesheetListRelationFilter
   conversations?: Prisma.ConversationParticipantListRelationFilter
   messages?: Prisma.MessageListRelationFilter
 }
@@ -337,6 +339,8 @@ export type UserOrderByWithRelationInput = {
   comments?: Prisma.CommentOrderByRelationAggregateInput
   projectMemberships?: Prisma.ProjectMemberOrderByRelationAggregateInput
   workspaceMembers?: Prisma.WorkspaceMemberOrderByRelationAggregateInput
+  reportedTasks?: Prisma.TaskOrderByRelationAggregateInput
+  approvedTimesheets?: Prisma.TimesheetOrderByRelationAggregateInput
   conversations?: Prisma.ConversationParticipantOrderByRelationAggregateInput
   messages?: Prisma.MessageOrderByRelationAggregateInput
 }
@@ -367,6 +371,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   comments?: Prisma.CommentListRelationFilter
   projectMemberships?: Prisma.ProjectMemberListRelationFilter
   workspaceMembers?: Prisma.WorkspaceMemberListRelationFilter
+  reportedTasks?: Prisma.TaskListRelationFilter
+  approvedTimesheets?: Prisma.TimesheetListRelationFilter
   conversations?: Prisma.ConversationParticipantListRelationFilter
   messages?: Prisma.MessageListRelationFilter
 }, "id" | "email">
@@ -439,6 +445,8 @@ export type UserCreateInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -466,6 +474,8 @@ export type UserUncheckedCreateInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -492,6 +502,8 @@ export type UserUpdateInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -519,6 +531,8 @@ export type UserUncheckedUpdateInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -726,6 +740,12 @@ export type UserCreateNestedOneWithoutTasksInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutReportedTasksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportedTasksInput, Prisma.UserUncheckedCreateWithoutReportedTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportedTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneRequiredWithoutTasksNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksInput
@@ -734,9 +754,25 @@ export type UserUpdateOneRequiredWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTasksInput, Prisma.UserUpdateWithoutTasksInput>, Prisma.UserUncheckedUpdateWithoutTasksInput>
 }
 
+export type UserUpdateOneWithoutReportedTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportedTasksInput, Prisma.UserUncheckedCreateWithoutReportedTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportedTasksInput
+  upsert?: Prisma.UserUpsertWithoutReportedTasksInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportedTasksInput, Prisma.UserUpdateWithoutReportedTasksInput>, Prisma.UserUncheckedUpdateWithoutReportedTasksInput>
+}
+
 export type UserCreateNestedOneWithoutTimesheetsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTimesheetsInput, Prisma.UserUncheckedCreateWithoutTimesheetsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTimesheetsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutApprovedTimesheetsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedTimesheetsInput, Prisma.UserUncheckedCreateWithoutApprovedTimesheetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedTimesheetsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
@@ -746,6 +782,16 @@ export type UserUpdateOneRequiredWithoutTimesheetsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutTimesheetsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTimesheetsInput, Prisma.UserUpdateWithoutTimesheetsInput>, Prisma.UserUncheckedUpdateWithoutTimesheetsInput>
+}
+
+export type UserUpdateOneWithoutApprovedTimesheetsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedTimesheetsInput, Prisma.UserUncheckedCreateWithoutApprovedTimesheetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedTimesheetsInput
+  upsert?: Prisma.UserUpsertWithoutApprovedTimesheetsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedTimesheetsInput, Prisma.UserUpdateWithoutApprovedTimesheetsInput>, Prisma.UserUncheckedUpdateWithoutApprovedTimesheetsInput>
 }
 
 export type UserCreateNestedOneWithoutCommentsInput = {
@@ -825,6 +871,8 @@ export type UserCreateWithoutWorkspaceMembersInput = {
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -851,6 +899,8 @@ export type UserUncheckedCreateWithoutWorkspaceMembersInput = {
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -892,6 +942,8 @@ export type UserUpdateWithoutWorkspaceMembersInput = {
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -918,6 +970,8 @@ export type UserUncheckedUpdateWithoutWorkspaceMembersInput = {
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -943,6 +997,8 @@ export type UserCreateWithoutProjectsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -969,6 +1025,8 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -1010,6 +1068,8 @@ export type UserUpdateWithoutProjectsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -1036,6 +1096,8 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -1061,6 +1123,8 @@ export type UserCreateWithoutTasksInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -1087,6 +1151,8 @@ export type UserUncheckedCreateWithoutTasksInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -1094,6 +1160,66 @@ export type UserUncheckedCreateWithoutTasksInput = {
 export type UserCreateOrConnectWithoutTasksInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>
+}
+
+export type UserCreateWithoutReportedTasksInput = {
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  mobile?: string | null
+  firstName: string
+  lastName?: string | null
+  status?: boolean
+  address?: string | null
+  bio?: string | null
+  birthDate?: Date | string | null
+  gender?: $Enums.Gender | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
+  timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutReportedTasksInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  mobile?: string | null
+  firstName: string
+  lastName?: string | null
+  status?: boolean
+  address?: string | null
+  bio?: string | null
+  birthDate?: Date | string | null
+  gender?: $Enums.Gender | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
+  timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutReportedTasksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportedTasksInput, Prisma.UserUncheckedCreateWithoutReportedTasksInput>
 }
 
 export type UserUpsertWithoutTasksInput = {
@@ -1128,6 +1254,8 @@ export type UserUpdateWithoutTasksInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -1154,6 +1282,74 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUpsertWithoutReportedTasksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReportedTasksInput, Prisma.UserUncheckedUpdateWithoutReportedTasksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportedTasksInput, Prisma.UserUncheckedCreateWithoutReportedTasksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReportedTasksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReportedTasksInput, Prisma.UserUncheckedUpdateWithoutReportedTasksInput>
+}
+
+export type UserUpdateWithoutReportedTasksInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
+  timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReportedTasksInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
+  timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -1179,6 +1375,8 @@ export type UserCreateWithoutTimesheetsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -1205,6 +1403,8 @@ export type UserUncheckedCreateWithoutTimesheetsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -1212,6 +1412,66 @@ export type UserUncheckedCreateWithoutTimesheetsInput = {
 export type UserCreateOrConnectWithoutTimesheetsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutTimesheetsInput, Prisma.UserUncheckedCreateWithoutTimesheetsInput>
+}
+
+export type UserCreateWithoutApprovedTimesheetsInput = {
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  mobile?: string | null
+  firstName: string
+  lastName?: string | null
+  status?: boolean
+  address?: string | null
+  bio?: string | null
+  birthDate?: Date | string | null
+  gender?: $Enums.Gender | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
+  timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  mobile?: string | null
+  firstName: string
+  lastName?: string | null
+  status?: boolean
+  address?: string | null
+  bio?: string | null
+  birthDate?: Date | string | null
+  gender?: $Enums.Gender | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
+  timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedTimesheetsInput, Prisma.UserUncheckedCreateWithoutApprovedTimesheetsInput>
 }
 
 export type UserUpsertWithoutTimesheetsInput = {
@@ -1246,6 +1506,8 @@ export type UserUpdateWithoutTimesheetsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -1272,6 +1534,74 @@ export type UserUncheckedUpdateWithoutTimesheetsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUpsertWithoutApprovedTimesheetsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovedTimesheetsInput, Prisma.UserUncheckedUpdateWithoutApprovedTimesheetsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedTimesheetsInput, Prisma.UserUncheckedCreateWithoutApprovedTimesheetsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovedTimesheetsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovedTimesheetsInput, Prisma.UserUncheckedUpdateWithoutApprovedTimesheetsInput>
+}
+
+export type UserUpdateWithoutApprovedTimesheetsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
+  timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
+  timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -1297,6 +1627,8 @@ export type UserCreateWithoutCommentsInput = {
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -1323,6 +1655,8 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -1364,6 +1698,8 @@ export type UserUpdateWithoutCommentsInput = {
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -1390,6 +1726,8 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -1415,6 +1753,8 @@ export type UserCreateWithoutProjectMembershipsInput = {
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -1441,6 +1781,8 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -1482,6 +1824,8 @@ export type UserUpdateWithoutProjectMembershipsInput = {
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -1508,6 +1852,8 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -1534,6 +1880,8 @@ export type UserCreateWithoutConversationsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
 
@@ -1560,6 +1908,8 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
 
@@ -1601,6 +1951,8 @@ export type UserUpdateWithoutConversationsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
 
@@ -1627,6 +1979,8 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
 
@@ -1652,6 +2006,8 @@ export type UserCreateWithoutMessagesInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
 }
 
@@ -1678,6 +2034,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1719,6 +2077,8 @@ export type UserUpdateWithoutMessagesInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
 }
 
@@ -1745,6 +2105,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
   workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1760,6 +2122,8 @@ export type UserCountOutputType = {
   comments: number
   projectMemberships: number
   workspaceMembers: number
+  reportedTasks: number
+  approvedTimesheets: number
   conversations: number
   messages: number
 }
@@ -1771,6 +2135,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   comments?: boolean | UserCountOutputTypeCountCommentsArgs
   projectMemberships?: boolean | UserCountOutputTypeCountProjectMembershipsArgs
   workspaceMembers?: boolean | UserCountOutputTypeCountWorkspaceMembersArgs
+  reportedTasks?: boolean | UserCountOutputTypeCountReportedTasksArgs
+  approvedTimesheets?: boolean | UserCountOutputTypeCountApprovedTimesheetsArgs
   conversations?: boolean | UserCountOutputTypeCountConversationsArgs
   messages?: boolean | UserCountOutputTypeCountMessagesArgs
 }
@@ -1830,6 +2196,20 @@ export type UserCountOutputTypeCountWorkspaceMembersArgs<ExtArgs extends runtime
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountReportedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovedTimesheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimesheetWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ConversationParticipantWhereInput
 }
@@ -1865,6 +2245,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   projectMemberships?: boolean | Prisma.User$projectMembershipsArgs<ExtArgs>
   workspaceMembers?: boolean | Prisma.User$workspaceMembersArgs<ExtArgs>
+  reportedTasks?: boolean | Prisma.User$reportedTasksArgs<ExtArgs>
+  approvedTimesheets?: boolean | Prisma.User$approvedTimesheetsArgs<ExtArgs>
   conversations?: boolean | Prisma.User$conversationsArgs<ExtArgs>
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1935,6 +2317,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   projectMemberships?: boolean | Prisma.User$projectMembershipsArgs<ExtArgs>
   workspaceMembers?: boolean | Prisma.User$workspaceMembersArgs<ExtArgs>
+  reportedTasks?: boolean | Prisma.User$reportedTasksArgs<ExtArgs>
+  approvedTimesheets?: boolean | Prisma.User$approvedTimesheetsArgs<ExtArgs>
   conversations?: boolean | Prisma.User$conversationsArgs<ExtArgs>
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1951,6 +2335,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     comments: Prisma.$CommentPayload<ExtArgs>[]
     projectMemberships: Prisma.$ProjectMemberPayload<ExtArgs>[]
     workspaceMembers: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
+    reportedTasks: Prisma.$TaskPayload<ExtArgs>[]
+    approvedTimesheets: Prisma.$TimesheetPayload<ExtArgs>[]
     conversations: Prisma.$ConversationParticipantPayload<ExtArgs>[]
     messages: Prisma.$MessagePayload<ExtArgs>[]
   }
@@ -2371,6 +2757,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   comments<T extends Prisma.User$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectMemberships<T extends Prisma.User$projectMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   workspaceMembers<T extends Prisma.User$workspaceMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$workspaceMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reportedTasks<T extends Prisma.User$reportedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvedTimesheets<T extends Prisma.User$approvedTimesheetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedTimesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversations<T extends Prisma.User$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2947,6 +3335,54 @@ export type User$workspaceMembersArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.WorkspaceMemberScalarFieldEnum | Prisma.WorkspaceMemberScalarFieldEnum[]
+}
+
+/**
+ * User.reportedTasks
+ */
+export type User$reportedTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * User.approvedTimesheets
+ */
+export type User$approvedTimesheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Timesheet
+   */
+  select?: Prisma.TimesheetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Timesheet
+   */
+  omit?: Prisma.TimesheetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimesheetInclude<ExtArgs> | null
+  where?: Prisma.TimesheetWhereInput
+  orderBy?: Prisma.TimesheetOrderByWithRelationInput | Prisma.TimesheetOrderByWithRelationInput[]
+  cursor?: Prisma.TimesheetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimesheetScalarFieldEnum | Prisma.TimesheetScalarFieldEnum[]
 }
 
 /**

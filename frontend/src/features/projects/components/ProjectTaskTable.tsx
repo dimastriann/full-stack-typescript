@@ -10,6 +10,7 @@ import {
 } from '../../tasks/gql/task.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { useWorkspaceStore } from '../../../store/workspaceStore';
+import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
 import type { TaskType, TaskStage } from '../../../types/Tasks';
 import { Plus, Save, X, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -55,6 +56,9 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
       description: '',
       userId: undefined,
       projectId: Number(projectId),
+      estimatedHours: 0,
+      priority: TaskPriority.MEDIUM,
+      type: TaskTypeEnum.TASK,
     });
   };
 
@@ -79,6 +83,9 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
         description: editForm.description,
         projectId: Number(projectId),
         userId: Number(editForm.userId),
+        estimatedHours: Number(editForm.estimatedHours || 0),
+        priority: editForm.priority || TaskPriority.MEDIUM,
+        type: editForm.type || TaskTypeEnum.TASK,
       };
 
       if (editForm.stageId) {
@@ -86,11 +93,13 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
       }
 
       if (editingId === 'new') {
-        await createTask({ variables: { createTaskInput: input } });
+        await createTask({
+          variables: { input },
+        });
       } else {
         await updateTask({
           variables: {
-            updateTaskInput: { ...input, id: Number(editingId) },
+            input: { ...input, id: Number(editingId) },
           },
         });
       }
@@ -144,10 +153,22 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                 Title
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Type
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Assignee
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Priority
+              </th>
+              <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
+                Est.
+              </th>
+              <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
+                Act.
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
                 Actions
@@ -174,6 +195,20 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                     placeholder="Description"
                     className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border mt-1"
                   />
+                </td>
+                <td className="px-4 py-2">
+                  <select
+                    name="type"
+                    value={editForm.type || TaskTypeEnum.TASK}
+                    onChange={handleChange}
+                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                  >
+                    {Object.values(TaskTypeEnum).map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
                 </td>
                 <td className="px-4 py-2">
                   <select
@@ -205,6 +240,30 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                     ))}
                   </select>
                 </td>
+                <td className="px-4 py-2">
+                  <select
+                    name="priority"
+                    value={editForm.priority || TaskPriority.MEDIUM}
+                    onChange={handleChange}
+                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                  >
+                    {Object.values(TaskPriority).map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-2">
+                  <input
+                    type="number"
+                    name="estimatedHours"
+                    value={editForm.estimatedHours || 0}
+                    onChange={handleChange}
+                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                  />
+                </td>
+                <td className="px-4 py-2 text-center">-</td>
                 <td className="px-4 py-2 text-right whitespace-nowrap">
                   <button
                     onClick={handleSave}
@@ -248,6 +307,20 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                     </td>
                     <td className="px-4 py-2">
                       <select
+                        name="type"
+                        value={editForm.type || TaskTypeEnum.TASK}
+                        onChange={handleChange}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                      >
+                        {Object.values(TaskTypeEnum).map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="px-4 py-2">
+                      <select
                         name="userId"
                         value={editForm.userId || ''}
                         onChange={handleChange}
@@ -276,6 +349,32 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                         ))}
                       </select>
                     </td>
+                    <td className="px-4 py-2">
+                      <select
+                        name="priority"
+                        value={editForm.priority || TaskPriority.MEDIUM}
+                        onChange={handleChange}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                      >
+                        {Object.values(TaskPriority).map((p) => (
+                          <option key={p} value={p}>
+                            {p}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="px-4 py-2">
+                      <input
+                        type="number"
+                        name="estimatedHours"
+                        value={editForm.estimatedHours || 0}
+                        onChange={handleChange}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                      />
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-500 text-center">
+                      {task.actualHours || 0}h
+                    </td>
                     <td className="px-4 py-2 text-right whitespace-nowrap">
                       <button
                         onClick={handleSave}
@@ -300,6 +399,16 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       </div>
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-500">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        task.type === 'BUG' ? 'bg-red-100 text-red-600' :
+                        task.type === 'STORY' ? 'bg-green-100 text-green-600' :
+                        task.type === 'EPIC' ? 'bg-purple-100 text-purple-600' :
+                        'bg-blue-100 text-blue-600'
+                      }`}>
+                        {task.type}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-500">
                       {task.user?.name}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-500">
@@ -313,6 +422,22 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       >
                         {task.stage?.title || 'No Stage'}
                       </span>
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-500">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        task.priority === 'URGENT' ? 'bg-red-100 text-red-600' :
+                        task.priority === 'HIGH' ? 'bg-orange-100 text-orange-600' :
+                        task.priority === 'MEDIUM' ? 'bg-blue-100 text-blue-600' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {task.priority}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-500 text-center">
+                      {task.estimatedHours}h
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-500 text-center">
+                      {task.actualHours || 0}h
                     </td>
                     <td className="px-4 py-2 text-right text-sm font-medium">
                       <button
@@ -341,7 +466,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
             {tasks.length === 0 && editingId !== 'new' && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={7}
                   className="px-4 py-8 text-center text-gray-500 text-sm"
                 >
                   No tasks found for this project.

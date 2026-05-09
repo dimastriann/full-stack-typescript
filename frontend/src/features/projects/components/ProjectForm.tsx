@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client';
 import Logger from '../../../lib/logger';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
+import { ProjectMethodology, ProjectVisibility, ProjectPriority } from '../../../types/Projects';
 import type { ProjectType, ProjectStage } from '../../../types/Projects';
 import ProjectTaskTable from './ProjectTaskTable';
 import { useProjects } from '../hooks/useProjects';
@@ -27,6 +28,14 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     description: '',
     stageId: '',
     responsibleId: '',
+    budgetPlanned: 0,
+    startDate: '',
+    endDate: '',
+    phasesCount: 1,
+    methodology: ProjectMethodology.KANBAN,
+    visibility: ProjectVisibility.TEAM,
+    priority: ProjectPriority.MEDIUM,
+    currency: 'USD',
   };
 
   const { projectId } = useParams();
@@ -85,6 +94,14 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
           description: project.description,
           stageId: project.stageId?.toString() || '',
           responsibleId: project.responsibleId.toString(),
+          budgetPlanned: project.budgetPlanned,
+          startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
+          endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
+          phasesCount: project.phasesCount,
+          methodology: project.methodology,
+          visibility: project.visibility,
+          priority: project.priority,
+          currency: project.currency,
         });
       }
     } else if (!isEditMode && userId && users.length) {
@@ -113,6 +130,15 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       } else {
         delete projectFormData.stageId;
       }
+
+      if (projectFormData.budgetPlanned) {
+        projectFormData.budgetPlanned = parseFloat(projectFormData.budgetPlanned);
+      }
+      if (projectFormData.phasesCount) {
+        projectFormData.phasesCount = parseInt(projectFormData.phasesCount);
+      }
+      if (!projectFormData.startDate) delete projectFormData.startDate;
+      if (!projectFormData.endDate) delete projectFormData.endDate;
 
       if (isEditMode) {
         if ('__typename' in projectFormData) delete projectFormData.__typename;
@@ -226,6 +252,126 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
                   {errors.responsibleId.message?.toString()}
                 </span>
               )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="budgetPlanned" className="block text-sm font-medium text-gray-700">
+                Planned Budget
+              </label>
+              <input
+                id="budgetPlanned"
+                type="number"
+                step="0.01"
+                {...register('budgetPlanned')}
+                placeholder="0.00"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="methodology" className="block text-sm font-medium text-gray-700">
+                Methodology
+              </label>
+              <select
+                id="methodology"
+                {...register('methodology')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                {Object.values(ProjectMethodology).map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                Visibility
+              </label>
+              <select
+                id="visibility"
+                {...register('visibility')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                {Object.values(ProjectVisibility).map((v) => (
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="priority" className="block text-sm font-medium text-gray-700">
+                Priority
+              </label>
+              <select
+                id="priority"
+                {...register('priority')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              >
+                {Object.values(ProjectPriority).map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
+                Currency
+              </label>
+              <input
+                id="currency"
+                {...register('currency')}
+                placeholder="USD"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+                Start Date
+              </label>
+              <input
+                id="startDate"
+                type="date"
+                {...register('startDate')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
+                End Date
+              </label>
+              <input
+                id="endDate"
+                type="date"
+                {...register('endDate')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="phasesCount" className="block text-sm font-medium text-gray-700">
+                Number of Phases
+              </label>
+              <input
+                id="phasesCount"
+                type="number"
+                min="1"
+                {...register('phasesCount')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              />
             </div>
           </div>
 

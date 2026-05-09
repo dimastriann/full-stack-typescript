@@ -5,6 +5,16 @@ import { User } from 'src/user/entities/user.entity';
 import { Attachment } from 'src/attachment/entities/attachment.entity';
 import { Comment as CommentChat } from 'src/comment/entities/comment.entity';
 import { TaskStage } from 'src/task-stage/entities/task-stage.entity';
+import { registerEnumType } from '@nestjs/graphql';
+import { TaskPriority, TaskType } from '../../../prisma/generated/enums';
+
+registerEnumType(TaskPriority, {
+  name: 'TaskPriority',
+});
+
+registerEnumType(TaskType, {
+  name: 'TaskType',
+});
 
 @ObjectType()
 export class Task extends Base {
@@ -40,4 +50,52 @@ export class Task extends Base {
 
   @Field(() => Int, { nullable: true })
   sequence?: number;
+
+  @Field(() => Number, { defaultValue: 0 })
+  estimatedHours: number;
+
+  @Field({ nullable: true })
+  dueDate?: Date;
+
+  @Field(() => TaskPriority, { defaultValue: TaskPriority.MEDIUM })
+  priority: TaskPriority;
+
+  @Field(() => Number, { defaultValue: 0 })
+  actualHours?: number;
+
+  @Field(() => Int, { nullable: true })
+  parentTaskId?: number;
+
+  @Field(() => Task, { nullable: true })
+  parentTask?: Task;
+
+  @Field(() => [Task], { nullable: 'items' })
+  subtasks?: Task[];
+
+  @Field(() => TaskType, { defaultValue: TaskType.TASK })
+  type: TaskType;
+
+  @Field(() => Int, { nullable: true })
+  reporterId?: number;
+
+  @Field(() => User, { nullable: true })
+  reporter?: User;
+
+  @Field({ nullable: true })
+  startDate?: Date;
+
+  @Field({ nullable: true })
+  completedAt?: Date;
+
+  @Field(() => Number, { defaultValue: 0 })
+  remainingHours: number;
+
+  @Field(() => Number, { defaultValue: 0 })
+  progress: number;
+
+  @Field(() => [String], { nullable: 'items' })
+  tags?: string[];
+
+  @Field({ nullable: true })
+  deletedAt?: Date;
 }

@@ -55,4 +55,10 @@ export class User extends Base {
 
   @Field(() => [CommentChat], { nullable: 'items' })
   comments?: [CommentChat];
+
+  @Field(() => [Task], { nullable: 'items' })
+  reportedTasks?: [Task];
+
+  @Field(() => [Timesheet], { nullable: 'items' })
+  approvedTimesheets?: [Timesheet];
 }

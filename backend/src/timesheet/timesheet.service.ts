@@ -17,7 +17,7 @@ export class TimesheetService {
   ) {}
 
   get includeRelation() {
-    return { user: true, project: true, task: true };
+    return { user: true, project: true, task: true, approvedBy: true };
   }
 
   async create(createTimesheetInput: CreateTimesheetInput, userId: number) {
@@ -28,8 +28,12 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER],
     );
 
+    const cost = createTimesheetInput.hourlyRate
+      ? createTimesheetInput.hourlyRate * createTimesheetInput.timeSpent
+      : undefined;
+
     return this.prisma.timesheet.create({
-      data: createTimesheetInput,
+      data: { ...createTimesheetInput, cost },
       include: { ...this.includeRelation },
     });
   }
@@ -81,9 +85,21 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER],
     );
 
+    let cost = updateTimesheetInput.cost;
+    if (
+      !cost &&
+      (updateTimesheetInput.hourlyRate || updateTimesheetInput.timeSpent)
+    ) {
+      const rate = updateTimesheetInput.hourlyRate || timesheet.hourlyRate;
+      const hours = updateTimesheetInput.timeSpent || timesheet.timeSpent;
+      if (rate && hours) {
+        cost = Number(rate) * hours;
+      }
+    }
+
     return this.prisma.timesheet.update({
       where: { id },
-      data: updateTimesheetInput,
+      data: { ...updateTimesheetInput, cost },
       include: { ...this.includeRelation },
     });
   }

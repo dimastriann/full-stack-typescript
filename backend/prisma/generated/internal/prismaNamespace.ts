@@ -1577,6 +1577,22 @@ export const ProjectScalarFieldEnum = {
   responsibleId: 'responsibleId',
   stageId: 'stageId',
   workspaceId: 'workspaceId',
+  key: 'key',
+  visibility: 'visibility',
+  priority: 'priority',
+  budgetPlanned: 'budgetPlanned',
+  budgetActual: 'budgetActual',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  actualStartDate: 'actualStartDate',
+  actualEndDate: 'actualEndDate',
+  progress: 'progress',
+  currency: 'currency',
+  phasesCount: 'phasesCount',
+  methodology: 'methodology',
+  tags: 'tags',
+  customFields: 'customFields',
+  archivedAt: 'archivedAt',
   sequence: 'sequence',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1592,6 +1608,22 @@ export const TaskScalarFieldEnum = {
   userId: 'userId',
   projectId: 'projectId',
   stageId: 'stageId',
+  parentTaskId: 'parentTaskId',
+  type: 'type',
+  reporterId: 'reporterId',
+  watchers: 'watchers',
+  startDate: 'startDate',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  estimatedHours: 'estimatedHours',
+  remainingHours: 'remainingHours',
+  progress: 'progress',
+  priority: 'priority',
+  tags: 'tags',
+  checklist: 'checklist',
+  dependencies: 'dependencies',
+  customFields: 'customFields',
+  deletedAt: 'deletedAt',
   sequence: 'sequence',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1608,6 +1640,17 @@ export const TimesheetScalarFieldEnum = {
   userId: 'userId',
   projectId: 'projectId',
   taskId: 'taskId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  billable: 'billable',
+  hourlyRate: 'hourlyRate',
+  cost: 'cost',
+  source: 'source',
+  approvalStatus: 'approvalStatus',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  tags: 'tags',
+  customFields: 'customFields',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1841,6 +1884,34 @@ export type ListEnumWorkspaceRoleFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'ProjectVisibility'
+ */
+export type EnumProjectVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectVisibility'>
+    
+
+
+/**
+ * Reference to a field of type 'ProjectVisibility[]'
+ */
+export type ListEnumProjectVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectVisibility[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ProjectPriority'
+ */
+export type EnumProjectPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectPriority'>
+    
+
+
+/**
+ * Reference to a field of type 'ProjectPriority[]'
+ */
+export type ListEnumProjectPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectPriority[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1851,6 +1922,104 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ProjectMethodology'
+ */
+export type EnumProjectMethodologyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectMethodology'>
+    
+
+
+/**
+ * Reference to a field of type 'ProjectMethodology[]'
+ */
+export type ListEnumProjectMethodologyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectMethodology[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskType'
+ */
+export type EnumTaskTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskType'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskType[]'
+ */
+export type ListEnumTaskTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskPriority'
+ */
+export type EnumTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskPriority'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskPriority[]'
+ */
+export type ListEnumTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskPriority[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TimesheetSource'
+ */
+export type EnumTimesheetSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TimesheetSource'>
+    
+
+
+/**
+ * Reference to a field of type 'TimesheetSource[]'
+ */
+export type ListEnumTimesheetSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TimesheetSource[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalStatus'
+ */
+export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalStatus[]'
+ */
+export type ListEnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus[]'>
     
 
 
@@ -1879,20 +2048,6 @@ export type EnumConversationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'ConversationType[]'
  */
 export type ListEnumConversationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

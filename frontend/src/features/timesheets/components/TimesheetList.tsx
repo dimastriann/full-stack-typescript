@@ -9,11 +9,14 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  Check,
+  X,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import ErrorSection from '../../../components/ErrorSection';
 import TimesheetForm from './TimesheetForm';
 import Logger from '../../../lib/logger';
+import { useAuthStore } from '../../../store/authStore';
 
 const TimesheetRow = React.memo(
   ({
@@ -23,6 +26,9 @@ const TimesheetRow = React.memo(
     onEdit,
     onDelete,
     onToggle,
+    onApprove,
+    onReject,
+    isAdmin,
   }: {
     timesheet: TimesheetType;
     isChecked: boolean;
@@ -30,6 +36,9 @@ const TimesheetRow = React.memo(
     onEdit: (timesheet: TimesheetType) => void;
     onDelete: (timesheet: TimesheetType) => void;
     onToggle: (id: number) => void;
+    onApprove: (id: number) => void;
+    onReject: (id: number) => void;
+    isAdmin: boolean;
   }) => (
     <tr
       className={`hover:bg-gray-50 cursor-pointer transition-colors ${isChecked ? 'bg-indigo-50' : ''}`}
@@ -68,6 +77,19 @@ const TimesheetRow = React.memo(
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
         {timesheet.task?.title || '-'}
       </td>
+      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+        <span className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full
+          ${
+            timesheet.approvalStatus === 'APPROVED' ? 'bg-green-100 text-green-800' :
+            timesheet.approvalStatus === 'REJECTED' ? 'bg-red-100 text-red-800' :
+            'bg-yellow-100 text-yellow-800'
+          }`}>
+          {timesheet.approvalStatus}
+        </span>
+      </td>
+      <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+        ${timesheet.cost?.toLocaleString() || '0.00'}
+      </td>
       <td className="px-4 py-3 border-b border-gray-100">
         <div className="flex items-center justify-center space-x-3">
           <button
@@ -80,6 +102,30 @@ const TimesheetRow = React.memo(
           >
             <Eye className="h-5 w-5" />
           </button>
+          {isAdmin && timesheet.approvalStatus === 'PENDING' && (
+            <>
+              <button
+                title="Approve"
+                className="text-green-600 hover:text-green-900 font-medium text-sm transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  timesheet.id && onApprove(timesheet.id);
+                }}
+              >
+                <Check className="h-5 w-5" />
+              </button>
+              <button
+                title="Reject"
+                className="text-orange-600 hover:text-orange-900 font-medium text-sm transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  timesheet.id && onReject(timesheet.id);
+                }}
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </>
+          )}
           {!isSelectionMode && (
             <button
               title="Delete"
@@ -111,7 +157,11 @@ export default function TimesheetList() {
     page,
     setPage,
     pageSize,
+    approveRecord,
+    rejectRecord,
   } = useTimesheets();
+  const authUser = useAuthStore((state) => state.user);
+  const isAdmin = authUser?.role === 'ADMIN' || authUser?.role === 'OWNER';
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -307,6 +357,12 @@ export default function TimesheetList() {
                 <th className="px-4 py-3 font-medium border-b border-gray-200">
                   Task
                 </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200">
+                  Status
+                </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200">
+                  Cost
+                </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200 text-center">
                   Actions
                 </th>
@@ -322,6 +378,9 @@ export default function TimesheetList() {
                   onEdit={handleEditTimesheet}
                   onDelete={handleDeleteClick}
                   onToggle={handleToggleSelect}
+                  onApprove={(id) => approveRecord({ variables: { id } }).then(() => refetch())}
+                  onReject={(id) => rejectRecord({ variables: { id } }).then(() => refetch())}
+                  isAdmin={isAdmin}
                 />
               ))}
               {filteredRecords.length === 0 && (

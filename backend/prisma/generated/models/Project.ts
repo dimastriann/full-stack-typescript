@@ -31,6 +31,10 @@ export type ProjectAvgAggregateOutputType = {
   responsibleId: number | null
   stageId: number | null
   workspaceId: number | null
+  budgetPlanned: number | null
+  budgetActual: number | null
+  progress: number | null
+  phasesCount: number | null
   sequence: number | null
 }
 
@@ -39,6 +43,10 @@ export type ProjectSumAggregateOutputType = {
   responsibleId: number | null
   stageId: number | null
   workspaceId: number | null
+  budgetPlanned: number | null
+  budgetActual: number | null
+  progress: number | null
+  phasesCount: number | null
   sequence: number | null
 }
 
@@ -49,6 +57,20 @@ export type ProjectMinAggregateOutputType = {
   responsibleId: number | null
   stageId: number | null
   workspaceId: number | null
+  key: string | null
+  visibility: $Enums.ProjectVisibility | null
+  priority: $Enums.ProjectPriority | null
+  budgetPlanned: number | null
+  budgetActual: number | null
+  startDate: Date | null
+  endDate: Date | null
+  actualStartDate: Date | null
+  actualEndDate: Date | null
+  progress: number | null
+  currency: string | null
+  phasesCount: number | null
+  methodology: $Enums.ProjectMethodology | null
+  archivedAt: Date | null
   sequence: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -61,6 +83,20 @@ export type ProjectMaxAggregateOutputType = {
   responsibleId: number | null
   stageId: number | null
   workspaceId: number | null
+  key: string | null
+  visibility: $Enums.ProjectVisibility | null
+  priority: $Enums.ProjectPriority | null
+  budgetPlanned: number | null
+  budgetActual: number | null
+  startDate: Date | null
+  endDate: Date | null
+  actualStartDate: Date | null
+  actualEndDate: Date | null
+  progress: number | null
+  currency: string | null
+  phasesCount: number | null
+  methodology: $Enums.ProjectMethodology | null
+  archivedAt: Date | null
   sequence: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,6 +109,22 @@ export type ProjectCountAggregateOutputType = {
   responsibleId: number
   stageId: number
   workspaceId: number
+  key: number
+  visibility: number
+  priority: number
+  budgetPlanned: number
+  budgetActual: number
+  startDate: number
+  endDate: number
+  actualStartDate: number
+  actualEndDate: number
+  progress: number
+  currency: number
+  phasesCount: number
+  methodology: number
+  tags: number
+  customFields: number
+  archivedAt: number
   sequence: number
   createdAt: number
   updatedAt: number
@@ -85,6 +137,10 @@ export type ProjectAvgAggregateInputType = {
   responsibleId?: true
   stageId?: true
   workspaceId?: true
+  budgetPlanned?: true
+  budgetActual?: true
+  progress?: true
+  phasesCount?: true
   sequence?: true
 }
 
@@ -93,6 +149,10 @@ export type ProjectSumAggregateInputType = {
   responsibleId?: true
   stageId?: true
   workspaceId?: true
+  budgetPlanned?: true
+  budgetActual?: true
+  progress?: true
+  phasesCount?: true
   sequence?: true
 }
 
@@ -103,6 +163,20 @@ export type ProjectMinAggregateInputType = {
   responsibleId?: true
   stageId?: true
   workspaceId?: true
+  key?: true
+  visibility?: true
+  priority?: true
+  budgetPlanned?: true
+  budgetActual?: true
+  startDate?: true
+  endDate?: true
+  actualStartDate?: true
+  actualEndDate?: true
+  progress?: true
+  currency?: true
+  phasesCount?: true
+  methodology?: true
+  archivedAt?: true
   sequence?: true
   createdAt?: true
   updatedAt?: true
@@ -115,6 +189,20 @@ export type ProjectMaxAggregateInputType = {
   responsibleId?: true
   stageId?: true
   workspaceId?: true
+  key?: true
+  visibility?: true
+  priority?: true
+  budgetPlanned?: true
+  budgetActual?: true
+  startDate?: true
+  endDate?: true
+  actualStartDate?: true
+  actualEndDate?: true
+  progress?: true
+  currency?: true
+  phasesCount?: true
+  methodology?: true
+  archivedAt?: true
   sequence?: true
   createdAt?: true
   updatedAt?: true
@@ -127,6 +215,22 @@ export type ProjectCountAggregateInputType = {
   responsibleId?: true
   stageId?: true
   workspaceId?: true
+  key?: true
+  visibility?: true
+  priority?: true
+  budgetPlanned?: true
+  budgetActual?: true
+  startDate?: true
+  endDate?: true
+  actualStartDate?: true
+  actualEndDate?: true
+  progress?: true
+  currency?: true
+  phasesCount?: true
+  methodology?: true
+  tags?: true
+  customFields?: true
+  archivedAt?: true
   sequence?: true
   createdAt?: true
   updatedAt?: true
@@ -226,6 +330,22 @@ export type ProjectGroupByOutputType = {
   responsibleId: number | null
   stageId: number | null
   workspaceId: number
+  key: string | null
+  visibility: $Enums.ProjectVisibility
+  priority: $Enums.ProjectPriority
+  budgetPlanned: number
+  budgetActual: number
+  startDate: Date | null
+  endDate: Date | null
+  actualStartDate: Date | null
+  actualEndDate: Date | null
+  progress: number
+  currency: string
+  phasesCount: number
+  methodology: $Enums.ProjectMethodology
+  tags: string[]
+  customFields: runtime.JsonValue | null
+  archivedAt: Date | null
   sequence: number
   createdAt: Date
   updatedAt: Date
@@ -261,6 +381,22 @@ export type ProjectWhereInput = {
   responsibleId?: Prisma.IntNullableFilter<"Project"> | number | null
   stageId?: Prisma.IntNullableFilter<"Project"> | number | null
   workspaceId?: Prisma.IntFilter<"Project"> | number
+  key?: Prisma.StringNullableFilter<"Project"> | string | null
+  visibility?: Prisma.EnumProjectVisibilityFilter<"Project"> | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFilter<"Project"> | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFilter<"Project"> | number
+  budgetActual?: Prisma.FloatFilter<"Project"> | number
+  startDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  endDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  actualStartDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  actualEndDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  progress?: Prisma.FloatFilter<"Project"> | number
+  currency?: Prisma.StringFilter<"Project"> | string
+  phasesCount?: Prisma.IntFilter<"Project"> | number
+  methodology?: Prisma.EnumProjectMethodologyFilter<"Project"> | $Enums.ProjectMethodology
+  tags?: Prisma.StringNullableListFilter<"Project">
+  customFields?: Prisma.JsonNullableFilter<"Project">
+  archivedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   sequence?: Prisma.IntFilter<"Project"> | number
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
@@ -281,6 +417,22 @@ export type ProjectOrderByWithRelationInput = {
   responsibleId?: Prisma.SortOrderInput | Prisma.SortOrder
   stageId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  key?: Prisma.SortOrderInput | Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  startDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  actualStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  actualEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
+  methodology?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
+  customFields?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sequence?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -296,6 +448,7 @@ export type ProjectOrderByWithRelationInput = {
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  key?: string
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
@@ -304,6 +457,21 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   responsibleId?: Prisma.IntNullableFilter<"Project"> | number | null
   stageId?: Prisma.IntNullableFilter<"Project"> | number | null
   workspaceId?: Prisma.IntFilter<"Project"> | number
+  visibility?: Prisma.EnumProjectVisibilityFilter<"Project"> | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFilter<"Project"> | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFilter<"Project"> | number
+  budgetActual?: Prisma.FloatFilter<"Project"> | number
+  startDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  endDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  actualStartDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  actualEndDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  progress?: Prisma.FloatFilter<"Project"> | number
+  currency?: Prisma.StringFilter<"Project"> | string
+  phasesCount?: Prisma.IntFilter<"Project"> | number
+  methodology?: Prisma.EnumProjectMethodologyFilter<"Project"> | $Enums.ProjectMethodology
+  tags?: Prisma.StringNullableListFilter<"Project">
+  customFields?: Prisma.JsonNullableFilter<"Project">
+  archivedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   sequence?: Prisma.IntFilter<"Project"> | number
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
@@ -315,7 +483,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   attachments?: Prisma.AttachmentListRelationFilter
   timesheets?: Prisma.TimesheetListRelationFilter
   members?: Prisma.ProjectMemberListRelationFilter
-}, "id">
+}, "id" | "key">
 
 export type ProjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -324,6 +492,22 @@ export type ProjectOrderByWithAggregationInput = {
   responsibleId?: Prisma.SortOrderInput | Prisma.SortOrder
   stageId?: Prisma.SortOrderInput | Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  key?: Prisma.SortOrderInput | Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  startDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  actualStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  actualEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
+  methodology?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
+  customFields?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sequence?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -344,6 +528,22 @@ export type ProjectScalarWhereWithAggregatesInput = {
   responsibleId?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   stageId?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   workspaceId?: Prisma.IntWithAggregatesFilter<"Project"> | number
+  key?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  visibility?: Prisma.EnumProjectVisibilityWithAggregatesFilter<"Project"> | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityWithAggregatesFilter<"Project"> | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatWithAggregatesFilter<"Project"> | number
+  budgetActual?: Prisma.FloatWithAggregatesFilter<"Project"> | number
+  startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+  endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+  actualStartDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+  actualEndDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+  progress?: Prisma.FloatWithAggregatesFilter<"Project"> | number
+  currency?: Prisma.StringWithAggregatesFilter<"Project"> | string
+  phasesCount?: Prisma.IntWithAggregatesFilter<"Project"> | number
+  methodology?: Prisma.EnumProjectMethodologyWithAggregatesFilter<"Project"> | $Enums.ProjectMethodology
+  tags?: Prisma.StringNullableListFilter<"Project">
+  customFields?: Prisma.JsonNullableWithAggregatesFilter<"Project">
+  archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   sequence?: Prisma.IntWithAggregatesFilter<"Project"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -352,6 +552,22 @@ export type ProjectScalarWhereWithAggregatesInput = {
 export type ProjectCreateInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -372,6 +588,22 @@ export type ProjectUncheckedCreateInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -385,6 +617,22 @@ export type ProjectUncheckedCreateInput = {
 export type ProjectUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -405,6 +653,22 @@ export type ProjectUncheckedUpdateInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -422,6 +686,22 @@ export type ProjectCreateManyInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -430,6 +710,22 @@ export type ProjectCreateManyInput = {
 export type ProjectUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,6 +738,22 @@ export type ProjectUncheckedUpdateManyInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,6 +769,14 @@ export type ProjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type ProjectCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -464,6 +784,22 @@ export type ProjectCountOrderByAggregateInput = {
   responsibleId?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  key?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  actualStartDate?: Prisma.SortOrder
+  actualEndDate?: Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
+  methodology?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
+  customFields?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -474,6 +810,10 @@ export type ProjectAvgOrderByAggregateInput = {
   responsibleId?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
 }
 
@@ -484,6 +824,20 @@ export type ProjectMaxOrderByAggregateInput = {
   responsibleId?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  key?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  actualStartDate?: Prisma.SortOrder
+  actualEndDate?: Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
+  methodology?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -496,6 +850,20 @@ export type ProjectMinOrderByAggregateInput = {
   responsibleId?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  key?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  actualStartDate?: Prisma.SortOrder
+  actualEndDate?: Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
+  methodology?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -506,6 +874,10 @@ export type ProjectSumOrderByAggregateInput = {
   responsibleId?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   workspaceId?: Prisma.SortOrder
+  budgetPlanned?: Prisma.SortOrder
+  budgetActual?: Prisma.SortOrder
+  progress?: Prisma.SortOrder
+  phasesCount?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
 }
 
@@ -645,6 +1017,35 @@ export type ProjectUncheckedUpdateManyWithoutStageNestedInput = {
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
+export type ProjectCreatetagsInput = {
+  set: string[]
+}
+
+export type EnumProjectVisibilityFieldUpdateOperationsInput = {
+  set?: $Enums.ProjectVisibility
+}
+
+export type EnumProjectPriorityFieldUpdateOperationsInput = {
+  set?: $Enums.ProjectPriority
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type EnumProjectMethodologyFieldUpdateOperationsInput = {
+  set?: $Enums.ProjectMethodology
+}
+
+export type ProjectUpdatetagsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -730,6 +1131,22 @@ export type ProjectUpdateOneRequiredWithoutMembersNestedInput = {
 export type ProjectCreateWithoutResponsibleInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -748,6 +1165,22 @@ export type ProjectUncheckedCreateWithoutResponsibleInput = {
   description?: string | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -794,6 +1227,22 @@ export type ProjectScalarWhereInput = {
   responsibleId?: Prisma.IntNullableFilter<"Project"> | number | null
   stageId?: Prisma.IntNullableFilter<"Project"> | number | null
   workspaceId?: Prisma.IntFilter<"Project"> | number
+  key?: Prisma.StringNullableFilter<"Project"> | string | null
+  visibility?: Prisma.EnumProjectVisibilityFilter<"Project"> | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFilter<"Project"> | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFilter<"Project"> | number
+  budgetActual?: Prisma.FloatFilter<"Project"> | number
+  startDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  endDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  actualStartDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  actualEndDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  progress?: Prisma.FloatFilter<"Project"> | number
+  currency?: Prisma.StringFilter<"Project"> | string
+  phasesCount?: Prisma.IntFilter<"Project"> | number
+  methodology?: Prisma.EnumProjectMethodologyFilter<"Project"> | $Enums.ProjectMethodology
+  tags?: Prisma.StringNullableListFilter<"Project">
+  customFields?: Prisma.JsonNullableFilter<"Project">
+  archivedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   sequence?: Prisma.IntFilter<"Project"> | number
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
@@ -802,6 +1251,22 @@ export type ProjectScalarWhereInput = {
 export type ProjectCreateWithoutWorkspaceInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -820,6 +1285,22 @@ export type ProjectUncheckedCreateWithoutWorkspaceInput = {
   description?: string | null
   responsibleId?: number | null
   stageId?: number | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -859,6 +1340,22 @@ export type ProjectUpdateManyWithWhereWithoutWorkspaceInput = {
 export type ProjectCreateWithoutStageInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -877,6 +1374,22 @@ export type ProjectUncheckedCreateWithoutStageInput = {
   description?: string | null
   responsibleId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -916,6 +1429,22 @@ export type ProjectUpdateManyWithWhereWithoutStageInput = {
 export type ProjectCreateWithoutTasksInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -935,6 +1464,22 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -963,6 +1508,22 @@ export type ProjectUpdateToOneWithWhereWithoutTasksInput = {
 export type ProjectUpdateWithoutTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -982,6 +1543,22 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -994,6 +1571,22 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
 export type ProjectCreateWithoutTimesheetsInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1013,6 +1606,22 @@ export type ProjectUncheckedCreateWithoutTimesheetsInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1041,6 +1650,22 @@ export type ProjectUpdateToOneWithWhereWithoutTimesheetsInput = {
 export type ProjectUpdateWithoutTimesheetsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1060,6 +1685,22 @@ export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1072,6 +1713,22 @@ export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
 export type ProjectCreateWithoutCommentsInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1091,6 +1748,22 @@ export type ProjectUncheckedCreateWithoutCommentsInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1119,6 +1792,22 @@ export type ProjectUpdateToOneWithWhereWithoutCommentsInput = {
 export type ProjectUpdateWithoutCommentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1138,6 +1827,22 @@ export type ProjectUncheckedUpdateWithoutCommentsInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1150,6 +1855,22 @@ export type ProjectUncheckedUpdateWithoutCommentsInput = {
 export type ProjectCreateWithoutAttachmentsInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1169,6 +1890,22 @@ export type ProjectUncheckedCreateWithoutAttachmentsInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1197,6 +1934,22 @@ export type ProjectUpdateToOneWithWhereWithoutAttachmentsInput = {
 export type ProjectUpdateWithoutAttachmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1216,6 +1969,22 @@ export type ProjectUncheckedUpdateWithoutAttachmentsInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1228,6 +1997,22 @@ export type ProjectUncheckedUpdateWithoutAttachmentsInput = {
 export type ProjectCreateWithoutMembersInput = {
   name: string
   description?: string | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1247,6 +2032,22 @@ export type ProjectUncheckedCreateWithoutMembersInput = {
   responsibleId?: number | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1275,6 +2076,22 @@ export type ProjectUpdateToOneWithWhereWithoutMembersInput = {
 export type ProjectUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1294,6 +2111,22 @@ export type ProjectUncheckedUpdateWithoutMembersInput = {
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1309,6 +2142,22 @@ export type ProjectCreateManyResponsibleInput = {
   description?: string | null
   stageId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1317,6 +2166,22 @@ export type ProjectCreateManyResponsibleInput = {
 export type ProjectUpdateWithoutResponsibleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1335,6 +2200,22 @@ export type ProjectUncheckedUpdateWithoutResponsibleInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1351,6 +2232,22 @@ export type ProjectUncheckedUpdateManyWithoutResponsibleInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1362,6 +2259,22 @@ export type ProjectCreateManyWorkspaceInput = {
   description?: string | null
   responsibleId?: number | null
   stageId?: number | null
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1370,6 +2283,22 @@ export type ProjectCreateManyWorkspaceInput = {
 export type ProjectUpdateWithoutWorkspaceInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1388,6 +2317,22 @@ export type ProjectUncheckedUpdateWithoutWorkspaceInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1404,6 +2349,22 @@ export type ProjectUncheckedUpdateManyWithoutWorkspaceInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1415,6 +2376,22 @@ export type ProjectCreateManyStageInput = {
   description?: string | null
   responsibleId?: number | null
   workspaceId: number
+  key?: string | null
+  visibility?: $Enums.ProjectVisibility
+  priority?: $Enums.ProjectPriority
+  budgetPlanned?: number
+  budgetActual?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  actualStartDate?: Date | string | null
+  actualEndDate?: Date | string | null
+  progress?: number
+  currency?: string
+  phasesCount?: number
+  methodology?: $Enums.ProjectMethodology
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Date | string | null
   sequence?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1423,6 +2400,22 @@ export type ProjectCreateManyStageInput = {
 export type ProjectUpdateWithoutStageInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1441,6 +2434,22 @@ export type ProjectUncheckedUpdateWithoutStageInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1457,6 +2466,22 @@ export type ProjectUncheckedUpdateManyWithoutStageInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responsibleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   workspaceId?: Prisma.IntFieldUpdateOperationsInput | number
+  key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumProjectVisibilityFieldUpdateOperationsInput | $Enums.ProjectVisibility
+  priority?: Prisma.EnumProjectPriorityFieldUpdateOperationsInput | $Enums.ProjectPriority
+  budgetPlanned?: Prisma.FloatFieldUpdateOperationsInput | number
+  budgetActual?: Prisma.FloatFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actualEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  progress?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  phasesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  methodology?: Prisma.EnumProjectMethodologyFieldUpdateOperationsInput | $Enums.ProjectMethodology
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1536,6 +2561,22 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   responsibleId?: boolean
   stageId?: boolean
   workspaceId?: boolean
+  key?: boolean
+  visibility?: boolean
+  priority?: boolean
+  budgetPlanned?: boolean
+  budgetActual?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  actualStartDate?: boolean
+  actualEndDate?: boolean
+  progress?: boolean
+  currency?: boolean
+  phasesCount?: boolean
+  methodology?: boolean
+  tags?: boolean
+  customFields?: boolean
+  archivedAt?: boolean
   sequence?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1557,6 +2598,22 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   responsibleId?: boolean
   stageId?: boolean
   workspaceId?: boolean
+  key?: boolean
+  visibility?: boolean
+  priority?: boolean
+  budgetPlanned?: boolean
+  budgetActual?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  actualStartDate?: boolean
+  actualEndDate?: boolean
+  progress?: boolean
+  currency?: boolean
+  phasesCount?: boolean
+  methodology?: boolean
+  tags?: boolean
+  customFields?: boolean
+  archivedAt?: boolean
   sequence?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1572,6 +2629,22 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   responsibleId?: boolean
   stageId?: boolean
   workspaceId?: boolean
+  key?: boolean
+  visibility?: boolean
+  priority?: boolean
+  budgetPlanned?: boolean
+  budgetActual?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  actualStartDate?: boolean
+  actualEndDate?: boolean
+  progress?: boolean
+  currency?: boolean
+  phasesCount?: boolean
+  methodology?: boolean
+  tags?: boolean
+  customFields?: boolean
+  archivedAt?: boolean
   sequence?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1587,12 +2660,28 @@ export type ProjectSelectScalar = {
   responsibleId?: boolean
   stageId?: boolean
   workspaceId?: boolean
+  key?: boolean
+  visibility?: boolean
+  priority?: boolean
+  budgetPlanned?: boolean
+  budgetActual?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  actualStartDate?: boolean
+  actualEndDate?: boolean
+  progress?: boolean
+  currency?: boolean
+  phasesCount?: boolean
+  methodology?: boolean
+  tags?: boolean
+  customFields?: boolean
+  archivedAt?: boolean
   sequence?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "responsibleId" | "stageId" | "workspaceId" | "sequence" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "responsibleId" | "stageId" | "workspaceId" | "key" | "visibility" | "priority" | "budgetPlanned" | "budgetActual" | "startDate" | "endDate" | "actualStartDate" | "actualEndDate" | "progress" | "currency" | "phasesCount" | "methodology" | "tags" | "customFields" | "archivedAt" | "sequence" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   responsible?: boolean | Prisma.Project$responsibleArgs<ExtArgs>
@@ -1634,6 +2723,22 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     responsibleId: number | null
     stageId: number | null
     workspaceId: number
+    key: string | null
+    visibility: $Enums.ProjectVisibility
+    priority: $Enums.ProjectPriority
+    budgetPlanned: number
+    budgetActual: number
+    startDate: Date | null
+    endDate: Date | null
+    actualStartDate: Date | null
+    actualEndDate: Date | null
+    progress: number
+    currency: string
+    phasesCount: number
+    methodology: $Enums.ProjectMethodology
+    tags: string[]
+    customFields: runtime.JsonValue | null
+    archivedAt: Date | null
     sequence: number
     createdAt: Date
     updatedAt: Date
@@ -2074,6 +3179,22 @@ export interface ProjectFieldRefs {
   readonly responsibleId: Prisma.FieldRef<"Project", 'Int'>
   readonly stageId: Prisma.FieldRef<"Project", 'Int'>
   readonly workspaceId: Prisma.FieldRef<"Project", 'Int'>
+  readonly key: Prisma.FieldRef<"Project", 'String'>
+  readonly visibility: Prisma.FieldRef<"Project", 'ProjectVisibility'>
+  readonly priority: Prisma.FieldRef<"Project", 'ProjectPriority'>
+  readonly budgetPlanned: Prisma.FieldRef<"Project", 'Float'>
+  readonly budgetActual: Prisma.FieldRef<"Project", 'Float'>
+  readonly startDate: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly endDate: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly actualStartDate: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly actualEndDate: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly progress: Prisma.FieldRef<"Project", 'Float'>
+  readonly currency: Prisma.FieldRef<"Project", 'String'>
+  readonly phasesCount: Prisma.FieldRef<"Project", 'Int'>
+  readonly methodology: Prisma.FieldRef<"Project", 'ProjectMethodology'>
+  readonly tags: Prisma.FieldRef<"Project", 'String[]'>
+  readonly customFields: Prisma.FieldRef<"Project", 'Json'>
+  readonly archivedAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly sequence: Prisma.FieldRef<"Project", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>

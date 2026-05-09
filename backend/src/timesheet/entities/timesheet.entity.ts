@@ -3,6 +3,16 @@ import { Base } from 'src/base/entities/base.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Project } from 'src/project/entities/project.entity';
 import { Task } from 'src/task/entities/task.entity';
+import { registerEnumType } from '@nestjs/graphql';
+import { TimesheetSource, ApprovalStatus } from '../../../prisma/generated/enums';
+
+registerEnumType(TimesheetSource, {
+  name: 'TimesheetSource',
+});
+
+registerEnumType(ApprovalStatus, {
+  name: 'ApprovalStatus',
+});
 
 @ObjectType()
 export class Timesheet extends Base {
@@ -32,4 +42,37 @@ export class Timesheet extends Base {
 
   @Field(() => Int)
   taskId: number;
+
+  @Field({ nullable: true })
+  startTime?: Date;
+
+  @Field({ nullable: true })
+  endTime?: Date;
+
+  @Field({ defaultValue: true })
+  billable: boolean;
+
+  @Field(() => Number, { nullable: true })
+  hourlyRate?: number;
+
+  @Field(() => Number, { nullable: true })
+  cost?: number;
+
+  @Field(() => TimesheetSource, { defaultValue: TimesheetSource.MANUAL })
+  source: TimesheetSource;
+
+  @Field(() => ApprovalStatus, { defaultValue: ApprovalStatus.PENDING })
+  approvalStatus: ApprovalStatus;
+
+  @Field(() => Int, { nullable: true })
+  approvedById?: number;
+
+  @Field(() => User, { nullable: true })
+  approvedBy?: User;
+
+  @Field({ nullable: true })
+  approvedAt?: Date;
+
+  @Field(() => [String], { nullable: 'items' })
+  tags?: string[];
 }

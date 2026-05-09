@@ -21,6 +21,9 @@ export class TaskService {
       user: true,
       project: true,
       stage: true,
+      reporter: true,
+      parentTask: true,
+      subtasks: true,
       attachments: true,
       comments: {
         where: { parentId: null },
@@ -88,6 +91,10 @@ export class TaskService {
       include: {
         user: true,
         project: true,
+        stage: true,
+        reporter: true,
+        parentTask: true,
+        subtasks: true,
         comments: {
           where: { parentId: null },
           include: {
@@ -127,7 +134,7 @@ export class TaskService {
     return this.prisma.task.update({
       where: { id },
       data: updateTaskInput,
-      include: { user: true, project: true, attachments: true },
+      include: this.includeRelation,
     });
   }
 

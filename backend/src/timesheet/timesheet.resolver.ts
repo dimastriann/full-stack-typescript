@@ -6,6 +6,7 @@ import { CreateTimesheetInput } from './dto/create-timesheet.input';
 import { UpdateTimesheetInput } from './dto/update-timesheet.input';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { ApprovalStatus } from '../../prisma/generated/enums';
 
 @Resolver(() => Timesheet)
 export class TimesheetResolver {
@@ -60,5 +61,39 @@ export class TimesheetResolver {
     @CurrentUser() user: any,
   ) {
     return this.timesheetService.remove(id, user.id);
+  }
+
+  @Mutation(() => Timesheet)
+  @UseGuards(GqlAuthGuard)
+  approveTimesheet(
+    @Args('id', { type: () => Int }) id: number,
+    @CurrentUser() user: any,
+  ) {
+    return this.timesheetService.update(
+      id,
+      {
+        id,
+        approvalStatus: ApprovalStatus.APPROVED,
+        approvedById: user.id,
+        approvedAt: new Date(),
+      },
+      user.id,
+    );
+  }
+
+  @Mutation(() => Timesheet)
+  @UseGuards(GqlAuthGuard)
+  rejectTimesheet(
+    @Args('id', { type: () => Int }) id: number,
+    @CurrentUser() user: any,
+  ) {
+    return this.timesheetService.update(
+      id,
+      {
+        id,
+        approvalStatus: ApprovalStatus.REJECTED,
+      },
+      user.id,
+    );
   }
 }

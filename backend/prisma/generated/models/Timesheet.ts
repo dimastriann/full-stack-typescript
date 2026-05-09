@@ -32,6 +32,9 @@ export type TimesheetAvgAggregateOutputType = {
   userId: number | null
   projectId: number | null
   taskId: number | null
+  hourlyRate: runtime.Decimal | null
+  cost: runtime.Decimal | null
+  approvedById: number | null
 }
 
 export type TimesheetSumAggregateOutputType = {
@@ -40,6 +43,9 @@ export type TimesheetSumAggregateOutputType = {
   userId: number | null
   projectId: number | null
   taskId: number | null
+  hourlyRate: runtime.Decimal | null
+  cost: runtime.Decimal | null
+  approvedById: number | null
 }
 
 export type TimesheetMinAggregateOutputType = {
@@ -50,6 +56,15 @@ export type TimesheetMinAggregateOutputType = {
   userId: number | null
   projectId: number | null
   taskId: number | null
+  startTime: Date | null
+  endTime: Date | null
+  billable: boolean | null
+  hourlyRate: runtime.Decimal | null
+  cost: runtime.Decimal | null
+  source: $Enums.TimesheetSource | null
+  approvalStatus: $Enums.ApprovalStatus | null
+  approvedById: number | null
+  approvedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +77,15 @@ export type TimesheetMaxAggregateOutputType = {
   userId: number | null
   projectId: number | null
   taskId: number | null
+  startTime: Date | null
+  endTime: Date | null
+  billable: boolean | null
+  hourlyRate: runtime.Decimal | null
+  cost: runtime.Decimal | null
+  source: $Enums.TimesheetSource | null
+  approvalStatus: $Enums.ApprovalStatus | null
+  approvedById: number | null
+  approvedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +98,17 @@ export type TimesheetCountAggregateOutputType = {
   userId: number
   projectId: number
   taskId: number
+  startTime: number
+  endTime: number
+  billable: number
+  hourlyRate: number
+  cost: number
+  source: number
+  approvalStatus: number
+  approvedById: number
+  approvedAt: number
+  tags: number
+  customFields: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -86,6 +121,9 @@ export type TimesheetAvgAggregateInputType = {
   userId?: true
   projectId?: true
   taskId?: true
+  hourlyRate?: true
+  cost?: true
+  approvedById?: true
 }
 
 export type TimesheetSumAggregateInputType = {
@@ -94,6 +132,9 @@ export type TimesheetSumAggregateInputType = {
   userId?: true
   projectId?: true
   taskId?: true
+  hourlyRate?: true
+  cost?: true
+  approvedById?: true
 }
 
 export type TimesheetMinAggregateInputType = {
@@ -104,6 +145,15 @@ export type TimesheetMinAggregateInputType = {
   userId?: true
   projectId?: true
   taskId?: true
+  startTime?: true
+  endTime?: true
+  billable?: true
+  hourlyRate?: true
+  cost?: true
+  source?: true
+  approvalStatus?: true
+  approvedById?: true
+  approvedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,6 +166,15 @@ export type TimesheetMaxAggregateInputType = {
   userId?: true
   projectId?: true
   taskId?: true
+  startTime?: true
+  endTime?: true
+  billable?: true
+  hourlyRate?: true
+  cost?: true
+  source?: true
+  approvalStatus?: true
+  approvedById?: true
+  approvedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -128,6 +187,17 @@ export type TimesheetCountAggregateInputType = {
   userId?: true
   projectId?: true
   taskId?: true
+  startTime?: true
+  endTime?: true
+  billable?: true
+  hourlyRate?: true
+  cost?: true
+  source?: true
+  approvalStatus?: true
+  approvedById?: true
+  approvedAt?: true
+  tags?: true
+  customFields?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -227,6 +297,17 @@ export type TimesheetGroupByOutputType = {
   userId: number
   projectId: number
   taskId: number | null
+  startTime: Date | null
+  endTime: Date | null
+  billable: boolean
+  hourlyRate: runtime.Decimal | null
+  cost: runtime.Decimal | null
+  source: $Enums.TimesheetSource
+  approvalStatus: $Enums.ApprovalStatus
+  approvedById: number | null
+  approvedAt: Date | null
+  tags: string[]
+  customFields: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: TimesheetCountAggregateOutputType | null
@@ -262,11 +343,23 @@ export type TimesheetWhereInput = {
   userId?: Prisma.IntFilter<"Timesheet"> | number
   projectId?: Prisma.IntFilter<"Timesheet"> | number
   taskId?: Prisma.IntNullableFilter<"Timesheet"> | number | null
+  startTime?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  billable?: Prisma.BoolFilter<"Timesheet"> | boolean
+  hourlyRate?: Prisma.DecimalNullableFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.DecimalNullableFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFilter<"Timesheet"> | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFilter<"Timesheet"> | $Enums.ApprovalStatus
+  approvedById?: Prisma.IntNullableFilter<"Timesheet"> | number | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"Timesheet">
+  customFields?: Prisma.JsonNullableFilter<"Timesheet">
   createdAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
+  approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type TimesheetOrderByWithRelationInput = {
@@ -277,11 +370,23 @@ export type TimesheetOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  billable?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  cost?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  tags?: Prisma.SortOrder
+  customFields?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   task?: Prisma.TaskOrderByWithRelationInput
+  approvedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type TimesheetWhereUniqueInput = Prisma.AtLeast<{
@@ -295,11 +400,23 @@ export type TimesheetWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Timesheet"> | number
   projectId?: Prisma.IntFilter<"Timesheet"> | number
   taskId?: Prisma.IntNullableFilter<"Timesheet"> | number | null
+  startTime?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  billable?: Prisma.BoolFilter<"Timesheet"> | boolean
+  hourlyRate?: Prisma.DecimalNullableFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.DecimalNullableFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFilter<"Timesheet"> | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFilter<"Timesheet"> | $Enums.ApprovalStatus
+  approvedById?: Prisma.IntNullableFilter<"Timesheet"> | number | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"Timesheet">
+  customFields?: Prisma.JsonNullableFilter<"Timesheet">
   createdAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
+  approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type TimesheetOrderByWithAggregationInput = {
@@ -310,6 +427,17 @@ export type TimesheetOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  billable?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  cost?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  tags?: Prisma.SortOrder
+  customFields?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TimesheetCountOrderByAggregateInput
@@ -330,6 +458,17 @@ export type TimesheetScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Timesheet"> | number
   projectId?: Prisma.IntWithAggregatesFilter<"Timesheet"> | number
   taskId?: Prisma.IntNullableWithAggregatesFilter<"Timesheet"> | number | null
+  startTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Timesheet"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Timesheet"> | Date | string | null
+  billable?: Prisma.BoolWithAggregatesFilter<"Timesheet"> | boolean
+  hourlyRate?: Prisma.DecimalNullableWithAggregatesFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.DecimalNullableWithAggregatesFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceWithAggregatesFilter<"Timesheet"> | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusWithAggregatesFilter<"Timesheet"> | $Enums.ApprovalStatus
+  approvedById?: Prisma.IntNullableWithAggregatesFilter<"Timesheet"> | number | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Timesheet"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"Timesheet">
+  customFields?: Prisma.JsonNullableWithAggregatesFilter<"Timesheet">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Timesheet"> | Date | string
 }
@@ -338,11 +477,22 @@ export type TimesheetCreateInput = {
   description: string
   date: Date | string
   timeSpent: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
 }
 
 export type TimesheetUncheckedCreateInput = {
@@ -353,6 +503,17 @@ export type TimesheetUncheckedCreateInput = {
   userId: number
   projectId: number
   taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -361,11 +522,22 @@ export type TimesheetUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
 }
 
 export type TimesheetUncheckedUpdateInput = {
@@ -376,6 +548,17 @@ export type TimesheetUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,6 +571,17 @@ export type TimesheetCreateManyInput = {
   userId: number
   projectId: number
   taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -396,6 +590,16 @@ export type TimesheetUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,6 +612,17 @@ export type TimesheetUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -430,6 +645,17 @@ export type TimesheetCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
+  billable?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
+  customFields?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -440,6 +666,9 @@ export type TimesheetAvgOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
 }
 
 export type TimesheetMaxOrderByAggregateInput = {
@@ -450,6 +679,15 @@ export type TimesheetMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
+  billable?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -462,6 +700,15 @@ export type TimesheetMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
+  billable?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -472,6 +719,9 @@ export type TimesheetSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  cost?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
 }
 
 export type TimesheetCreateNestedManyWithoutUserInput = {
@@ -481,10 +731,24 @@ export type TimesheetCreateNestedManyWithoutUserInput = {
   connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
 }
 
+export type TimesheetCreateNestedManyWithoutApprovedByInput = {
+  create?: Prisma.XOR<Prisma.TimesheetCreateWithoutApprovedByInput, Prisma.TimesheetUncheckedCreateWithoutApprovedByInput> | Prisma.TimesheetCreateWithoutApprovedByInput[] | Prisma.TimesheetUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.TimesheetCreateOrConnectWithoutApprovedByInput | Prisma.TimesheetCreateOrConnectWithoutApprovedByInput[]
+  createMany?: Prisma.TimesheetCreateManyApprovedByInputEnvelope
+  connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+}
+
 export type TimesheetUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.TimesheetCreateWithoutUserInput, Prisma.TimesheetUncheckedCreateWithoutUserInput> | Prisma.TimesheetCreateWithoutUserInput[] | Prisma.TimesheetUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.TimesheetCreateOrConnectWithoutUserInput | Prisma.TimesheetCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.TimesheetCreateManyUserInputEnvelope
+  connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+}
+
+export type TimesheetUncheckedCreateNestedManyWithoutApprovedByInput = {
+  create?: Prisma.XOR<Prisma.TimesheetCreateWithoutApprovedByInput, Prisma.TimesheetUncheckedCreateWithoutApprovedByInput> | Prisma.TimesheetCreateWithoutApprovedByInput[] | Prisma.TimesheetUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.TimesheetCreateOrConnectWithoutApprovedByInput | Prisma.TimesheetCreateOrConnectWithoutApprovedByInput[]
+  createMany?: Prisma.TimesheetCreateManyApprovedByInputEnvelope
   connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
 }
 
@@ -502,6 +766,20 @@ export type TimesheetUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TimesheetScalarWhereInput | Prisma.TimesheetScalarWhereInput[]
 }
 
+export type TimesheetUpdateManyWithoutApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.TimesheetCreateWithoutApprovedByInput, Prisma.TimesheetUncheckedCreateWithoutApprovedByInput> | Prisma.TimesheetCreateWithoutApprovedByInput[] | Prisma.TimesheetUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.TimesheetCreateOrConnectWithoutApprovedByInput | Prisma.TimesheetCreateOrConnectWithoutApprovedByInput[]
+  upsert?: Prisma.TimesheetUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.TimesheetUpsertWithWhereUniqueWithoutApprovedByInput[]
+  createMany?: Prisma.TimesheetCreateManyApprovedByInputEnvelope
+  set?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  disconnect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  delete?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  update?: Prisma.TimesheetUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.TimesheetUpdateWithWhereUniqueWithoutApprovedByInput[]
+  updateMany?: Prisma.TimesheetUpdateManyWithWhereWithoutApprovedByInput | Prisma.TimesheetUpdateManyWithWhereWithoutApprovedByInput[]
+  deleteMany?: Prisma.TimesheetScalarWhereInput | Prisma.TimesheetScalarWhereInput[]
+}
+
 export type TimesheetUncheckedUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.TimesheetCreateWithoutUserInput, Prisma.TimesheetUncheckedCreateWithoutUserInput> | Prisma.TimesheetCreateWithoutUserInput[] | Prisma.TimesheetUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.TimesheetCreateOrConnectWithoutUserInput | Prisma.TimesheetCreateOrConnectWithoutUserInput[]
@@ -513,6 +791,20 @@ export type TimesheetUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
   update?: Prisma.TimesheetUpdateWithWhereUniqueWithoutUserInput | Prisma.TimesheetUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.TimesheetUpdateManyWithWhereWithoutUserInput | Prisma.TimesheetUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.TimesheetScalarWhereInput | Prisma.TimesheetScalarWhereInput[]
+}
+
+export type TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.TimesheetCreateWithoutApprovedByInput, Prisma.TimesheetUncheckedCreateWithoutApprovedByInput> | Prisma.TimesheetCreateWithoutApprovedByInput[] | Prisma.TimesheetUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.TimesheetCreateOrConnectWithoutApprovedByInput | Prisma.TimesheetCreateOrConnectWithoutApprovedByInput[]
+  upsert?: Prisma.TimesheetUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.TimesheetUpsertWithWhereUniqueWithoutApprovedByInput[]
+  createMany?: Prisma.TimesheetCreateManyApprovedByInputEnvelope
+  set?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  disconnect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  delete?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  connect?: Prisma.TimesheetWhereUniqueInput | Prisma.TimesheetWhereUniqueInput[]
+  update?: Prisma.TimesheetUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.TimesheetUpdateWithWhereUniqueWithoutApprovedByInput[]
+  updateMany?: Prisma.TimesheetUpdateManyWithWhereWithoutApprovedByInput | Prisma.TimesheetUpdateManyWithWhereWithoutApprovedByInput[]
   deleteMany?: Prisma.TimesheetScalarWhereInput | Prisma.TimesheetScalarWhereInput[]
 }
 
@@ -600,22 +892,50 @@ export type TimesheetUncheckedUpdateManyWithoutTaskNestedInput = {
   deleteMany?: Prisma.TimesheetScalarWhereInput | Prisma.TimesheetScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type TimesheetCreatetagsInput = {
+  set: string[]
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumTimesheetSourceFieldUpdateOperationsInput = {
+  set?: $Enums.TimesheetSource
+}
+
+export type EnumApprovalStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ApprovalStatus
+}
+
+export type TimesheetUpdatetagsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type TimesheetCreateWithoutUserInput = {
   description: string
   date: Date | string
   timeSpent: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
 }
 
 export type TimesheetUncheckedCreateWithoutUserInput = {
@@ -625,6 +945,17 @@ export type TimesheetUncheckedCreateWithoutUserInput = {
   timeSpent: number
   projectId: number
   taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -636,6 +967,59 @@ export type TimesheetCreateOrConnectWithoutUserInput = {
 
 export type TimesheetCreateManyUserInputEnvelope = {
   data: Prisma.TimesheetCreateManyUserInput | Prisma.TimesheetCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type TimesheetCreateWithoutApprovedByInput = {
+  description: string
+  date: Date | string
+  timeSpent: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
+  user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
+  task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
+}
+
+export type TimesheetUncheckedCreateWithoutApprovedByInput = {
+  id?: number
+  description: string
+  date: Date | string
+  timeSpent: number
+  userId: number
+  projectId: number
+  taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TimesheetCreateOrConnectWithoutApprovedByInput = {
+  where: Prisma.TimesheetWhereUniqueInput
+  create: Prisma.XOR<Prisma.TimesheetCreateWithoutApprovedByInput, Prisma.TimesheetUncheckedCreateWithoutApprovedByInput>
+}
+
+export type TimesheetCreateManyApprovedByInputEnvelope = {
+  data: Prisma.TimesheetCreateManyApprovedByInput | Prisma.TimesheetCreateManyApprovedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -666,18 +1050,56 @@ export type TimesheetScalarWhereInput = {
   userId?: Prisma.IntFilter<"Timesheet"> | number
   projectId?: Prisma.IntFilter<"Timesheet"> | number
   taskId?: Prisma.IntNullableFilter<"Timesheet"> | number | null
+  startTime?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  billable?: Prisma.BoolFilter<"Timesheet"> | boolean
+  hourlyRate?: Prisma.DecimalNullableFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.DecimalNullableFilter<"Timesheet"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFilter<"Timesheet"> | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFilter<"Timesheet"> | $Enums.ApprovalStatus
+  approvedById?: Prisma.IntNullableFilter<"Timesheet"> | number | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
+  tags?: Prisma.StringNullableListFilter<"Timesheet">
+  customFields?: Prisma.JsonNullableFilter<"Timesheet">
   createdAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
+}
+
+export type TimesheetUpsertWithWhereUniqueWithoutApprovedByInput = {
+  where: Prisma.TimesheetWhereUniqueInput
+  update: Prisma.XOR<Prisma.TimesheetUpdateWithoutApprovedByInput, Prisma.TimesheetUncheckedUpdateWithoutApprovedByInput>
+  create: Prisma.XOR<Prisma.TimesheetCreateWithoutApprovedByInput, Prisma.TimesheetUncheckedCreateWithoutApprovedByInput>
+}
+
+export type TimesheetUpdateWithWhereUniqueWithoutApprovedByInput = {
+  where: Prisma.TimesheetWhereUniqueInput
+  data: Prisma.XOR<Prisma.TimesheetUpdateWithoutApprovedByInput, Prisma.TimesheetUncheckedUpdateWithoutApprovedByInput>
+}
+
+export type TimesheetUpdateManyWithWhereWithoutApprovedByInput = {
+  where: Prisma.TimesheetScalarWhereInput
+  data: Prisma.XOR<Prisma.TimesheetUpdateManyMutationInput, Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByInput>
 }
 
 export type TimesheetCreateWithoutProjectInput = {
   description: string
   date: Date | string
   timeSpent: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
 }
 
 export type TimesheetUncheckedCreateWithoutProjectInput = {
@@ -687,6 +1109,17 @@ export type TimesheetUncheckedCreateWithoutProjectInput = {
   timeSpent: number
   userId: number
   taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -721,10 +1154,21 @@ export type TimesheetCreateWithoutTaskInput = {
   description: string
   date: Date | string
   timeSpent: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
 }
 
 export type TimesheetUncheckedCreateWithoutTaskInput = {
@@ -734,6 +1178,17 @@ export type TimesheetUncheckedCreateWithoutTaskInput = {
   timeSpent: number
   userId: number
   projectId: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -771,6 +1226,39 @@ export type TimesheetCreateManyUserInput = {
   timeSpent: number
   projectId: number
   taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TimesheetCreateManyApprovedByInput = {
+  id?: number
+  description: string
+  date: Date | string
+  timeSpent: number
+  userId: number
+  projectId: number
+  taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -779,10 +1267,21 @@ export type TimesheetUpdateWithoutUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
 }
 
 export type TimesheetUncheckedUpdateWithoutUserInput = {
@@ -792,6 +1291,17 @@ export type TimesheetUncheckedUpdateWithoutUserInput = {
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -803,6 +1313,82 @@ export type TimesheetUncheckedUpdateManyWithoutUserInput = {
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TimesheetUpdateWithoutApprovedByInput = {
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
+  task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
+}
+
+export type TimesheetUncheckedUpdateWithoutApprovedByInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TimesheetUncheckedUpdateManyWithoutApprovedByInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -814,6 +1400,17 @@ export type TimesheetCreateManyProjectInput = {
   timeSpent: number
   userId: number
   taskId?: number | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -822,10 +1419,21 @@ export type TimesheetUpdateWithoutProjectInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
 }
 
 export type TimesheetUncheckedUpdateWithoutProjectInput = {
@@ -835,6 +1443,17 @@ export type TimesheetUncheckedUpdateWithoutProjectInput = {
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -846,6 +1465,17 @@ export type TimesheetUncheckedUpdateManyWithoutProjectInput = {
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   taskId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -857,6 +1487,17 @@ export type TimesheetCreateManyTaskInput = {
   timeSpent: number
   userId: number
   projectId: number
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  billable?: boolean
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: $Enums.TimesheetSource
+  approvalStatus?: $Enums.ApprovalStatus
+  approvedById?: number | null
+  approvedAt?: Date | string | null
+  tags?: Prisma.TimesheetCreatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -865,10 +1506,21 @@ export type TimesheetUpdateWithoutTaskInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
 }
 
 export type TimesheetUncheckedUpdateWithoutTaskInput = {
@@ -878,6 +1530,17 @@ export type TimesheetUncheckedUpdateWithoutTaskInput = {
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -889,6 +1552,17 @@ export type TimesheetUncheckedUpdateManyWithoutTaskInput = {
   timeSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  source?: Prisma.EnumTimesheetSourceFieldUpdateOperationsInput | $Enums.TimesheetSource
+  approvalStatus?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  approvedById?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tags?: Prisma.TimesheetUpdatetagsInput | string[]
+  customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -903,11 +1577,23 @@ export type TimesheetSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   userId?: boolean
   projectId?: boolean
   taskId?: boolean
+  startTime?: boolean
+  endTime?: boolean
+  billable?: boolean
+  hourlyRate?: boolean
+  cost?: boolean
+  source?: boolean
+  approvalStatus?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  tags?: boolean
+  customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Timesheet$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["timesheet"]>
 
 export type TimesheetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -918,11 +1604,23 @@ export type TimesheetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   userId?: boolean
   projectId?: boolean
   taskId?: boolean
+  startTime?: boolean
+  endTime?: boolean
+  billable?: boolean
+  hourlyRate?: boolean
+  cost?: boolean
+  source?: boolean
+  approvalStatus?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  tags?: boolean
+  customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Timesheet$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["timesheet"]>
 
 export type TimesheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -933,11 +1631,23 @@ export type TimesheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   userId?: boolean
   projectId?: boolean
   taskId?: boolean
+  startTime?: boolean
+  endTime?: boolean
+  billable?: boolean
+  hourlyRate?: boolean
+  cost?: boolean
+  source?: boolean
+  approvalStatus?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  tags?: boolean
+  customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Timesheet$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["timesheet"]>
 
 export type TimesheetSelectScalar = {
@@ -948,25 +1658,39 @@ export type TimesheetSelectScalar = {
   userId?: boolean
   projectId?: boolean
   taskId?: boolean
+  startTime?: boolean
+  endTime?: boolean
+  billable?: boolean
+  hourlyRate?: boolean
+  cost?: boolean
+  source?: boolean
+  approvalStatus?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  tags?: boolean
+  customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TimesheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "date" | "timeSpent" | "userId" | "projectId" | "taskId" | "createdAt" | "updatedAt", ExtArgs["result"]["timesheet"]>
+export type TimesheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "date" | "timeSpent" | "userId" | "projectId" | "taskId" | "startTime" | "endTime" | "billable" | "hourlyRate" | "cost" | "source" | "approvalStatus" | "approvedById" | "approvedAt" | "tags" | "customFields" | "createdAt" | "updatedAt", ExtArgs["result"]["timesheet"]>
 export type TimesheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Timesheet$approvedByArgs<ExtArgs>
 }
 export type TimesheetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Timesheet$approvedByArgs<ExtArgs>
 }
 export type TimesheetIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Timesheet$approvedByArgs<ExtArgs>
 }
 
 export type $TimesheetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -975,6 +1699,7 @@ export type $TimesheetPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     project: Prisma.$ProjectPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     task: Prisma.$TaskPayload<ExtArgs> | null
+    approvedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -984,6 +1709,17 @@ export type $TimesheetPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     userId: number
     projectId: number
     taskId: number | null
+    startTime: Date | null
+    endTime: Date | null
+    billable: boolean
+    hourlyRate: runtime.Decimal | null
+    cost: runtime.Decimal | null
+    source: $Enums.TimesheetSource
+    approvalStatus: $Enums.ApprovalStatus
+    approvedById: number | null
+    approvedAt: Date | null
+    tags: string[]
+    customFields: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["timesheet"]>
@@ -1383,6 +2119,7 @@ export interface Prisma__TimesheetClient<T, Null = never, ExtArgs extends runtim
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   task<T extends Prisma.Timesheet$taskArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Timesheet$taskArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  approvedBy<T extends Prisma.Timesheet$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Timesheet$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1419,6 +2156,17 @@ export interface TimesheetFieldRefs {
   readonly userId: Prisma.FieldRef<"Timesheet", 'Int'>
   readonly projectId: Prisma.FieldRef<"Timesheet", 'Int'>
   readonly taskId: Prisma.FieldRef<"Timesheet", 'Int'>
+  readonly startTime: Prisma.FieldRef<"Timesheet", 'DateTime'>
+  readonly endTime: Prisma.FieldRef<"Timesheet", 'DateTime'>
+  readonly billable: Prisma.FieldRef<"Timesheet", 'Boolean'>
+  readonly hourlyRate: Prisma.FieldRef<"Timesheet", 'Decimal'>
+  readonly cost: Prisma.FieldRef<"Timesheet", 'Decimal'>
+  readonly source: Prisma.FieldRef<"Timesheet", 'TimesheetSource'>
+  readonly approvalStatus: Prisma.FieldRef<"Timesheet", 'ApprovalStatus'>
+  readonly approvedById: Prisma.FieldRef<"Timesheet", 'Int'>
+  readonly approvedAt: Prisma.FieldRef<"Timesheet", 'DateTime'>
+  readonly tags: Prisma.FieldRef<"Timesheet", 'String[]'>
+  readonly customFields: Prisma.FieldRef<"Timesheet", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Timesheet", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Timesheet", 'DateTime'>
 }
@@ -1833,6 +2581,25 @@ export type Timesheet$taskArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.TaskInclude<ExtArgs> | null
   where?: Prisma.TaskWhereInput
+}
+
+/**
+ * Timesheet.approvedBy
+ */
+export type Timesheet$approvedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

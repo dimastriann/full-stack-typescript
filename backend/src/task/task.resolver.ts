@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './entities/task.entity';
@@ -6,10 +6,14 @@ import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => Task)
 export class TaskResolver {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Mutation(() => Task)
   @UseGuards(GqlAuthGuard)
@@ -60,5 +64,14 @@ export class TaskResolver {
     @CurrentUser() user: any,
   ) {
     return this.taskService.remove(id, user.id);
+  }
+
+  @ResolveField(() => Number)
+  async actualHours(@Parent() task: Task) {
+    const result = await this.prisma.timesheet.aggregate({
+      where: { taskId: task.id },
+      _sum: { timeSpent: true },
+    });
+    return result._sum.timeSpent || 0;
   }
 }

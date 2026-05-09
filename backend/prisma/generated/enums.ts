@@ -60,6 +60,74 @@ export const TaskStatus = {
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
 
 
+export const ProjectMethodology = {
+  SCRUM: 'SCRUM',
+  WATERFALL: 'WATERFALL',
+  KANBAN: 'KANBAN',
+  AGILE: 'AGILE',
+  OTHER: 'OTHER'
+} as const
+
+export type ProjectMethodology = (typeof ProjectMethodology)[keyof typeof ProjectMethodology]
+
+
+export const ProjectVisibility = {
+  PRIVATE: 'PRIVATE',
+  TEAM: 'TEAM',
+  PUBLIC: 'PUBLIC'
+} as const
+
+export type ProjectVisibility = (typeof ProjectVisibility)[keyof typeof ProjectVisibility]
+
+
+export const ProjectPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type ProjectPriority = (typeof ProjectPriority)[keyof typeof ProjectPriority]
+
+
+export const TaskType = {
+  TASK: 'TASK',
+  BUG: 'BUG',
+  STORY: 'STORY',
+  EPIC: 'EPIC'
+} as const
+
+export type TaskType = (typeof TaskType)[keyof typeof TaskType]
+
+
+export const TaskPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority]
+
+
+export const TimesheetSource = {
+  MANUAL: 'MANUAL',
+  TIMER: 'TIMER',
+  INTEGRATION: 'INTEGRATION'
+} as const
+
+export type TimesheetSource = (typeof TimesheetSource)[keyof typeof TimesheetSource]
+
+
+export const ApprovalStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
+
+
 export const ProjectRole = {
   OWNER: 'OWNER',
   ADMIN: 'ADMIN',

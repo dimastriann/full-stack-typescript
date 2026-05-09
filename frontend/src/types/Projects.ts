@@ -28,6 +28,27 @@ export type ProjectMember = {
   };
 };
 
+export enum ProjectMethodology {
+  SCRUM = 'SCRUM',
+  WATERFALL = 'WATERFALL',
+  KANBAN = 'KANBAN',
+  AGILE = 'AGILE',
+  OTHER = 'OTHER',
+}
+
+export enum ProjectVisibility {
+  PRIVATE = 'PRIVATE',
+  TEAM = 'TEAM',
+  PUBLIC = 'PUBLIC',
+}
+
+export enum ProjectPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
 export type ProjectType = {
   id?: number;
   name: string;
@@ -36,6 +57,22 @@ export type ProjectType = {
   workspaceId: number;
   stageId?: number;
   sequence: number;
+  budgetPlanned: number;
+  budgetActual: number;
+  totalHours?: number;
+  startDate?: string;
+  endDate?: string;
+  actualStartDate?: string;
+  actualEndDate?: string;
+  phasesCount: number;
+  methodology: ProjectMethodology;
+  key?: string;
+  visibility: ProjectVisibility;
+  priority: ProjectPriority;
+  progress: number;
+  currency: string;
+  tags?: string[];
+  archivedAt?: string;
   responsible?: {
     id: number;
     name: string;

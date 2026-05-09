@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { Project } from './entities/project.entity';
@@ -10,10 +10,14 @@ import { ProjectPermissionGuard } from 'src/auth/guards/project-permission.guard
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { RequireProjectRole } from 'src/auth/decorators/require-project-role.decorator';
 import { ProjectRole } from 'prisma/generated/enums';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => Project)
 export class ProjectResolver {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   /**
    * Create a new project - user is automatically added as OWNER
@@ -82,5 +86,14 @@ export class ProjectResolver {
     @CurrentUser() user: any,
   ) {
     return this.projectService.delete(id, user.id);
+  }
+
+  @ResolveField(() => Number)
+  async totalHours(@Parent() project: Project) {
+    const result = await this.prisma.timesheet.aggregate({
+      where: { projectId: project.id },
+      _sum: { timeSpent: true },
+    });
+    return result._sum.timeSpent || 0;
   }
 }

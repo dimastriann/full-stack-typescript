@@ -16,6 +16,9 @@ import {
   ArrowUpDown,
   ChevronDown,
   User,
+  DollarSign,
+  BarChart2,
+  Calendar,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import Logger from '../../../lib/logger';
@@ -319,6 +322,9 @@ export default function ProjectKanban() {
                                   <h3 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
                                     {project.name}
                                   </h3>
+                                  <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[9px] font-bold">
+                                    {project.methodology}
+                                  </span>
                                 </div>
 
                                 {project.description && (
@@ -326,6 +332,25 @@ export default function ProjectKanban() {
                                     {project.description}
                                   </p>
                                 )}
+
+                                <div className="space-y-2 mb-4">
+                                  <div className="flex items-center justify-between text-[10px] text-gray-500">
+                                    <div className="flex items-center gap-1">
+                                      <DollarSign size={12} />
+                                      <span>${project.budgetActual?.toLocaleString()} / ${project.budgetPlanned?.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <BarChart2 size={12} />
+                                      <span>{project.totalHours || 0}h</span>
+                                    </div>
+                                  </div>
+                                  {project.startDate && (
+                                    <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                                      <Calendar size={12} />
+                                      <span>{new Date(project.startDate).toLocaleDateString()} - {project.endDate ? new Date(project.endDate).toLocaleDateString() : '...'}</span>
+                                    </div>
+                                  )}
+                                </div>
 
                                 <div className="flex items-center justify-between pt-3 border-t border-gray-50">
                                   <div className="flex items-center gap-1.5 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">

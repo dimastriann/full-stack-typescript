@@ -62,17 +62,57 @@ const ProjectRow = React.memo(
           {project.id}
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm font-medium text-gray-900">
-          {project.name}
+          <div className="flex flex-col">
+            <span>{project.name}</span>
+            <span className="text-[10px] text-indigo-500 font-bold uppercase">{project.key}</span>
+          </div>
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
           {project.description}
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-          {project.stage?.title || '-'}
+          <span
+            className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full
+            ${
+              project.stage?.isCompleted
+                ? 'bg-green-100 text-green-800'
+                : 'bg-indigo-100 text-indigo-800'
+            }`}
+          >
+            {project.stage?.title || 'No Stage'}
+          </span>
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
           {/* @ts-ignore - responsible might be populated */}
           {project.responsible?.name || project.responsibleId}
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+            project.priority === 'CRITICAL' ? 'bg-red-100 text-red-600' :
+            project.priority === 'HIGH' ? 'bg-orange-100 text-orange-600' :
+            project.priority === 'MEDIUM' ? 'bg-blue-100 text-blue-600' :
+            'bg-gray-100 text-gray-600'
+          }`}>
+            {project.priority}
+          </span>
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+          <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+            <div
+              className="bg-indigo-600 h-1.5 rounded-full"
+              style={{ width: `${project.progress}%` }}
+            ></div>
+          </div>
+          <span className="text-[10px] text-gray-400">{project.progress}%</span>
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-400">P: ${project.budgetPlanned?.toLocaleString()}</span>
+            <span className="text-xs text-gray-400">A: ${project.budgetActual?.toLocaleString()}</span>
+          </div>
+        </td>
+        <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600 text-center">
+          {project.totalHours || 0}h
         </td>
         <td className="px-4 py-3 border-b border-gray-100">
           <div className="flex items-center justify-center space-x-3">
@@ -313,6 +353,18 @@ export default function ProjectList() {
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200">
                   Responsible
+                </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200">
+                  Priority
+                </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200">
+                  Progress
+                </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200">
+                  Budget (P/A)
+                </th>
+                <th className="px-4 py-3 font-medium border-b border-gray-200 text-center">
+                  Total Hours
                 </th>
                 <th className="px-4 py-3 font-medium border-b border-gray-200 text-center">
                   Actions

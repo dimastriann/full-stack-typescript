@@ -8,6 +8,16 @@ export const GET_TASKS = gql`
       description
       stageId
       sequence
+      type
+      priority
+      estimatedHours
+      actualHours
+      remainingHours
+      progress
+      dueDate
+      startDate
+      completedAt
+      tags
       stage {
         id
         title
@@ -16,10 +26,14 @@ export const GET_TASKS = gql`
       user {
         name
       }
+      reporter {
+        name
+      }
       project {
         id
         name
       }
+      parentTaskId
     }
   }
 `;
@@ -32,6 +46,16 @@ export const GET_TASK = gql`
       description
       stageId
       sequence
+      type
+      priority
+      estimatedHours
+      actualHours
+      remainingHours
+      progress
+      dueDate
+      startDate
+      completedAt
+      tags
       stage {
         id
         title
@@ -45,9 +69,25 @@ export const GET_TASK = gql`
         id
         name
       }
+      reporterId
+      reporter {
+        id
+        name
+      }
       project {
         id
         name
+      }
+      parentTaskId
+      parentTask {
+        id
+        title
+      }
+      subtasks {
+        id
+        title
+        type
+        priority
       }
       comments {
         id
@@ -92,6 +132,16 @@ export const UPDATE_TASK = gql`
       id
       title
       stageId
+      type
+      priority
+      estimatedHours
+      remainingHours
+      progress
+      dueDate
+      startDate
+      completedAt
+      tags
+      parentTaskId
     }
   }
 `;

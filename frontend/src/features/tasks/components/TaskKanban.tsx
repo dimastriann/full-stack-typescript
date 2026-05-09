@@ -18,6 +18,8 @@ import {
   TestTube,
   FileEdit,
   User,
+  AlertCircle,
+  BarChart2,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import Logger from '../../../lib/logger';
@@ -316,9 +318,20 @@ export default function TaskKanban() {
                               }`}
                             >
                               <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
-                                  {task.title}
-                                </h3>
+                                <div className="flex flex-col gap-1">
+                                  <h3 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
+                                    {task.title}
+                                  </h3>
+                                  <span className="text-[10px] text-indigo-500 font-medium uppercase tracking-wider">{task.type}</span>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${
+                                  task.priority === 'URGENT' ? 'bg-red-100 text-red-600' :
+                                  task.priority === 'HIGH' ? 'bg-orange-100 text-orange-600' :
+                                  task.priority === 'MEDIUM' ? 'bg-blue-100 text-blue-600' :
+                                  'bg-gray-100 text-gray-600'
+                                }`}>
+                                  {task.priority}
+                                </span>
                               </div>
 
                               {task.description && (
@@ -326,6 +339,19 @@ export default function TaskKanban() {
                                   {task.description}
                                 </p>
                               )}
+
+                              <div className="flex items-center gap-4 mb-4">
+                                <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                                  <BarChart2 size={12} />
+                                  <span>{task.actualHours || 0} / {task.estimatedHours || 0}h</span>
+                                </div>
+                                {task.dueDate && (
+                                  <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                                    <AlertCircle size={12} />
+                                    <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                                  </div>
+                                )}
+                              </div>
 
                               <div className="flex items-center justify-between pt-3 border-t border-gray-50">
                                 <div className="flex items-center gap-1.5 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">

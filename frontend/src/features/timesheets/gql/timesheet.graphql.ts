@@ -19,6 +19,12 @@ export const GET_TIMESHEETS = gql`
       task {
         title
       }
+      approvalStatus
+      cost
+      billable
+      hourlyRate
+      startTime
+      endTime
     }
   }
 `;
@@ -33,6 +39,12 @@ export const GET_TIMESHEET = gql`
       userId
       projectId
       taskId
+      approvalStatus
+      cost
+      billable
+      hourlyRate
+      startTime
+      endTime
     }
   }
 `;
@@ -57,6 +69,23 @@ export const DELETE_TIMESHEET = gql`
   mutation RemoveTimesheet($id: Int!) {
     removeTimesheet(id: $id) {
       id
+    }
+  }
+`;
+export const APPROVE_TIMESHEET = gql`
+  mutation ApproveTimesheet($id: Int!) {
+    approveTimesheet(id: $id) {
+      id
+      approvalStatus
+    }
+  }
+`;
+
+export const REJECT_TIMESHEET = gql`
+  mutation RejectTimesheet($id: Int!) {
+    rejectTimesheet(id: $id) {
+      id
+      approvalStatus
     }
   }
 `;
