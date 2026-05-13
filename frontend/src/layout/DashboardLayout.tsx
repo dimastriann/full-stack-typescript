@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from '../components/dashboard/Sidebar';
+import Breadcrumbs from '../components/Breadcrumbs';
 import DashboardStats from '../components/dashboard/DashboardStats';
 import UserList from '../features/users/components/UserList';
 import UserEditPage from '../features/users/pages/UserFormPage';
@@ -21,44 +22,46 @@ import { WorkspaceSwitcher } from '../components/WorkspaceSwitcher';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role === 'ADMIN';
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex justify-between items-center z-10">
-          <div className="flex items-center">
+    <div className="flex h-screen bg-surface-50">
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        {/* ── Top Header ── */}
+        <header className="bg-white/80 backdrop-blur-md border-b border-surface-200 px-6 h-[57px] flex items-center justify-between z-10 flex-shrink-0">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden text-gray-500 hover:text-gray-700 mr-4"
+              className="lg:hidden text-gray-400 hover:text-gray-700 transition-colors"
             >
-              <Menu size={24} />
+              <Menu size={20} />
             </button>
-            <h1 className="text-xl font-bold text-gray-800 hidden md:block">
-              ProjectFlow
-            </h1>
-            <span className="md:hidden font-semibold text-lg text-gray-700">
-              Dashboard
-            </span>
+            <Breadcrumbs />
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-3">
             <WorkspaceSwitcher />
-            <div className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+            <div className="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold shadow-sm ring-2 ring-primary-100">
               {user?.firstName?.[0]}
             </div>
           </div>
         </header>
 
-        <main className="flex-1 flex flex-col min-h-0 bg-gray-100 overflow-hidden">
+        {/* ── Main Content ── */}
+        <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
           <Routes>
             <Route
               path="/"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <DashboardStats />
                 </div>
               }
@@ -68,7 +71,7 @@ export default function DashboardLayout() {
                 <Route
                   path="/users"
                   element={
-                    <div className="flex-1 overflow-y-auto p-6">
+                    <div className="flex-1 overflow-y-auto p-6 page-enter">
                       <UserList />
                     </div>
                   }
@@ -76,7 +79,7 @@ export default function DashboardLayout() {
                 <Route
                   path="/user/:userId"
                   element={
-                    <div className="flex-1 overflow-y-auto p-6">
+                    <div className="flex-1 overflow-y-auto p-6 page-enter">
                       <UserEditPage />
                     </div>
                   }
@@ -94,7 +97,7 @@ export default function DashboardLayout() {
             <Route
               path="/projects"
               element={
-                <div className="flex-1 flex flex-col min-h-0 p-6">
+                <div className="flex-1 flex flex-col min-h-0 p-6 page-enter">
                   <ProjectKanban />
                 </div>
               }
@@ -102,7 +105,7 @@ export default function DashboardLayout() {
             <Route
               path="/projects/list"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <ProjectList />
                 </div>
               }
@@ -110,7 +113,7 @@ export default function DashboardLayout() {
             <Route
               path="/project/:projectId"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <ProjectEditPage />
                 </div>
               }
@@ -118,7 +121,7 @@ export default function DashboardLayout() {
             <Route
               path="/tasks"
               element={
-                <div className="flex-1 flex flex-col min-h-0 p-6">
+                <div className="flex-1 flex flex-col min-h-0 p-6 page-enter">
                   <TaskKanban />
                 </div>
               }
@@ -126,7 +129,7 @@ export default function DashboardLayout() {
             <Route
               path="/tasks/list"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <TaskPage />
                 </div>
               }
@@ -134,7 +137,7 @@ export default function DashboardLayout() {
             <Route
               path="task/:taskId"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <TaskFormPage />
                 </div>
               }
@@ -142,7 +145,7 @@ export default function DashboardLayout() {
             <Route
               path="timesheets"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <TimesheetPage />
                 </div>
               }
@@ -150,7 +153,7 @@ export default function DashboardLayout() {
             <Route
               path="timesheet/:timesheetId"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <TimesheetFormPage />
                 </div>
               }
@@ -158,7 +161,7 @@ export default function DashboardLayout() {
             <Route
               path="profile"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <ProfilePage />
                 </div>
               }
@@ -166,7 +169,7 @@ export default function DashboardLayout() {
             <Route
               path="workspace/settings"
               element={
-                <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
                   <WorkspaceSettingsPage />
                 </div>
               }

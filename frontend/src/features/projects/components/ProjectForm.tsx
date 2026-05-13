@@ -1,14 +1,24 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import {
+  X,
+  FileText,
+  Calendar,
+  DollarSign,
+  Settings2,
+  AlertCircle,
+} from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Logger from '../../../lib/logger';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { ProjectMethodology, ProjectVisibility, ProjectPriority } from '../../../types/Projects';
+import {
+  ProjectMethodology,
+  ProjectVisibility,
+  ProjectPriority,
+} from '../../../types/Projects';
 import type { ProjectType, ProjectStage } from '../../../types/Projects';
-import ProjectTaskTable from './ProjectTaskTable';
 import { useProjects } from '../hooks/useProjects';
 import { useAuthStore } from '../../../store/authStore';
 import { useWorkspaceStore } from '../../../store/workspaceStore';
@@ -40,15 +50,6 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
 
   const { projectId } = useParams();
   const isEditMode = !!projectId;
-
-  // Fetch project data if in edit mode
-  // Note: GET_PROJECTS returns all projects, we might want a GET_PROJECT query for single item
-  // For now, we'll filter from GET_PROJECTS or use the one from context if available,
-  // but standard way is to fetch single item.
-  // Since we don't have GET_PROJECT yet, let's rely on the list or add GET_PROJECT later.
-  // Actually, let's use the list from cache or fetch all.
-  // Better: Let's assume we can find it in the list for now, or just use the list query.
-  // Ideally we should add GET_PROJECT query.
 
   const { data: projectsData } = useQuery(GET_PROJECTS, {
     variables: { workspaceId: activeWorkspace?.id },
@@ -95,8 +96,12 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
           stageId: project.stageId?.toString() || '',
           responsibleId: project.responsibleId.toString(),
           budgetPlanned: project.budgetPlanned,
-          startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
-          endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
+          startDate: project.startDate
+            ? new Date(project.startDate).toISOString().split('T')[0]
+            : '',
+          endDate: project.endDate
+            ? new Date(project.endDate).toISOString().split('T')[0]
+            : '',
           phasesCount: project.phasesCount,
           methodology: project.methodology,
           visibility: project.visibility,
@@ -121,7 +126,6 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
         workspaceId: activeWorkspace.id,
       };
 
-      // Convert IDs to number
       if (projectFormData.responsibleId) {
         projectFormData.responsibleId = parseInt(projectFormData.responsibleId);
       }
@@ -132,7 +136,9 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       }
 
       if (projectFormData.budgetPlanned) {
-        projectFormData.budgetPlanned = parseFloat(projectFormData.budgetPlanned);
+        projectFormData.budgetPlanned = parseFloat(
+          projectFormData.budgetPlanned,
+        );
       }
       if (projectFormData.phasesCount) {
         projectFormData.phasesCount = parseInt(projectFormData.phasesCount);
@@ -142,8 +148,6 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
 
       if (isEditMode) {
         if ('__typename' in projectFormData) delete projectFormData.__typename;
-
-        // Ensure id is present
         projectFormData.id = parseInt(projectId!);
         await updateRecord({
           variables: {
@@ -167,250 +171,272 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     }
   });
 
-  const project = projects.find(
-    (p: ProjectType) => p.id === parseInt(projectId || '0'),
-  );
-
   return (
-    <div>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
-          <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4">
-            Project Details
-          </h3>
+    <form onSubmit={onSubmit} className="space-y-6">
+      {/* ── Error Banner ── */}
+      {errorMsg && (
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl animate-slide-in-up">
+          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-red-700">{errorMsg}</div>
+          <button
+            type="button"
+            onClick={() => setErrorMsg('')}
+            className="text-red-400 hover:text-red-600 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {/* ── Section: General ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <FileText size={16} className="text-primary-500" />
+          General Information
+        </div>
+
+        <div>
+          <label htmlFor="name" className="label-modern">
+            Project Name
+          </label>
+          <input
+            id="name"
+            {...register('name', { required: 'Project Name is required' })}
+            placeholder="e.g. Marketing Campaign Q3"
+            className="input-modern"
+          />
+          {errors.name && (
+            <span className="text-red-500 text-xs mt-1 block">
+              {errors.name.message}
+            </span>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="description" className="label-modern">
+            Description
+          </label>
+          <textarea
+            id="description"
+            {...register('description')}
+            placeholder="What is this project about?"
+            rows={3}
+            className="input-modern resize-none"
+          />
+        </div>
+      </div>
+
+      {/* ── Section: Planning ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <Calendar size={16} className="text-primary-500" />
+          Planning
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Project Name
+            <label htmlFor="methodology" className="label-modern">
+              Methodology
+            </label>
+            <select
+              id="methodology"
+              {...register('methodology')}
+              className="select-modern"
+            >
+              {Object.values(ProjectMethodology).map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="phasesCount" className="label-modern">
+              Number of Phases
             </label>
             <input
-              id="name"
-              {...register('name', { required: 'Project Name is required' })}
-              placeholder="Project Name"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              id="phasesCount"
+              type="number"
+              min="1"
+              {...register('phasesCount')}
+              className="input-modern"
             />
-            {errors.name && (
-              <span className="text-red-500 text-xs">
-                {errors.name.message}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="startDate" className="label-modern">
+              Start Date
+            </label>
+            <input
+              id="startDate"
+              type="date"
+              {...register('startDate')}
+              className="input-modern"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="endDate" className="label-modern">
+              End Date
+            </label>
+            <input
+              id="endDate"
+              type="date"
+              {...register('endDate')}
+              className="input-modern"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Section: Financial ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <DollarSign size={16} className="text-primary-500" />
+          Financial
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="budgetPlanned" className="label-modern">
+              Planned Budget
+            </label>
+            <input
+              id="budgetPlanned"
+              type="number"
+              step="0.01"
+              {...register('budgetPlanned')}
+              placeholder="0.00"
+              className="input-modern"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="currency" className="label-modern">
+              Currency
+            </label>
+            <input
+              id="currency"
+              {...register('currency')}
+              placeholder="USD"
+              className="input-modern"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Section: Settings ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <Settings2 size={16} className="text-primary-500" />
+          Settings
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="stageId" className="label-modern">
+              Stage
+            </label>
+            <select
+              id="stageId"
+              {...register('stageId')}
+              className="select-modern"
+            >
+              <option value="">Select Stage</option>
+              {stages.map((stage) => (
+                <option key={stage.id} value={stage.id}>
+                  {stage.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="responsibleId" className="label-modern">
+              Responsible Person
+            </label>
+            <select
+              id="responsibleId"
+              {...register('responsibleId', {
+                required: 'Responsible person is required',
+              })}
+              disabled={currentUser?.role === 'USER'}
+              className="select-modern disabled:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <option value="">Select User</option>
+              {users.map((u: UserType) => (
+                <option key={u.id} value={u.id}>
+                  {u.name} ({u.email})
+                </option>
+              ))}
+            </select>
+            {errors.responsibleId && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.responsibleId.message?.toString()}
               </span>
             )}
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="visibility" className="label-modern">
+              Visibility
+            </label>
+            <select
+              id="visibility"
+              {...register('visibility')}
+              className="select-modern"
+            >
+              {Object.values(ProjectVisibility).map((v) => (
+                <option key={v} value={v}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Description
+            <label htmlFor="priority" className="label-modern">
+              Priority
             </label>
-            <textarea
-              id="description"
-              {...register('description')}
-              placeholder="Project Description"
-              rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="stageId" className="block text-sm font-medium text-gray-700">
-                Stage
-              </label>
-              <select
-                id="stageId"
-                {...register('stageId')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                <option value="">Select Stage</option>
-                {stages.map((stage) => (
-                  <option key={stage.id} value={stage.id}>
-                    {stage.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="responsibleId" className="block text-sm font-medium text-gray-700">
-                Responsible Person
-              </label>
-              <select
-                id="responsibleId"
-                {...register('responsibleId', {
-                  required: 'Responsible person is required',
-                })}
-                disabled={currentUser?.role === 'USER'}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">Select User</option>
-                {users.map((u: UserType) => (
-                  <option key={u.id} value={u.id}>
-                    {u.name} ({u.email})
-                  </option>
-                ))}
-              </select>
-
-              {errors.responsibleId && (
-                <span className="text-red-500 text-xs">
-                  {errors.responsibleId.message?.toString()}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="budgetPlanned" className="block text-sm font-medium text-gray-700">
-                Planned Budget
-              </label>
-              <input
-                id="budgetPlanned"
-                type="number"
-                step="0.01"
-                {...register('budgetPlanned')}
-                placeholder="0.00"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="methodology" className="block text-sm font-medium text-gray-700">
-                Methodology
-              </label>
-              <select
-                id="methodology"
-                {...register('methodology')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                {Object.values(ProjectMethodology).map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
-                Visibility
-              </label>
-              <select
-                id="visibility"
-                {...register('visibility')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                {Object.values(ProjectVisibility).map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="priority" className="block text-sm font-medium text-gray-700">
-                Priority
-              </label>
-              <select
-                id="priority"
-                {...register('priority')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                {Object.values(ProjectPriority).map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
-                Currency
-              </label>
-              <input
-                id="currency"
-                {...register('currency')}
-                placeholder="USD"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
-                Start Date
-              </label>
-              <input
-                id="startDate"
-                type="date"
-                {...register('startDate')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
-                End Date
-              </label>
-              <input
-                id="endDate"
-                type="date"
-                {...register('endDate')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phasesCount" className="block text-sm font-medium text-gray-700">
-                Number of Phases
-              </label>
-              <input
-                id="phasesCount"
-                type="number"
-                min="1"
-                {...register('phasesCount')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              />
-            </div>
-          </div>
-
-          {errorMsg && (
-            <div className="border-red-600 border-[1px] rounded-md my-2 p-2 text-red-600 bg-red-100 relative">
-              {errorMsg}
-              <X
-                className="cursor-pointer text-black absolute top-1 right-1 size-5"
-                onClick={() => setErrorMsg('')}
-              />
-            </div>
-          )}
-
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            {onCancel && (
-              <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Cancel
-              </button>
-            )}
-            <button
-              type="submit"
-              disabled={mutationLoading}
-              className="inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            <select
+              id="priority"
+              {...register('priority')}
+              className="select-modern"
             >
-              {mutationLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create'}
-            </button>
+              {Object.values(ProjectPriority).map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
-      </form>
+      </div>
 
-      {isEditMode && project && (
-        <div className="space-y-4 mt-6">
-          <ProjectTaskTable projectId={project.id} />
-        </div>
-      )}
-    </div>
+      {/* ── Actions ── */}
+      <div className="flex justify-end gap-3 pt-2">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-5 py-2.5 rounded-xl border border-surface-200 text-sm font-medium text-gray-600 bg-white hover:bg-surface-50 hover:border-surface-300 transition-all"
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={mutationLoading}
+          className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {mutationLoading ? 'Saving...' : isEditMode ? 'Update Project' : 'Create Project'}
+        </button>
+      </div>
+    </form>
   );
 }

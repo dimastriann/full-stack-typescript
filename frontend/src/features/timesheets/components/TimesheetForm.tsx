@@ -8,7 +8,14 @@ import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm } from 'react-hook-form';
-import { X } from 'lucide-react';
+import {
+  X,
+  FileText,
+  Clock,
+  Briefcase,
+  DollarSign,
+  AlertCircle,
+} from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import type { UserType } from '../../../types/Users';
 import { GET_TASKS } from '../../tasks/gql/task.graphql';
@@ -84,8 +91,12 @@ export default function TimesheetForm({
         userId: timesheet.userId.toString(),
         projectId: timesheet.projectId.toString(),
         taskId: timesheet.taskId?.toString(),
-        startTime: timesheet.startTime ? new Date(timesheet.startTime).toISOString().slice(0, 16) : '',
-        endTime: timesheet.endTime ? new Date(timesheet.endTime).toISOString().slice(0, 16) : '',
+        startTime: timesheet.startTime
+          ? new Date(timesheet.startTime).toISOString().slice(0, 16)
+          : '',
+        endTime: timesheet.endTime
+          ? new Date(timesheet.endTime).toISOString().slice(0, 16)
+          : '',
         billable: timesheet.billable,
         hourlyRate: timesheet.hourlyRate || 0,
       });
@@ -106,8 +117,12 @@ export default function TimesheetForm({
         projectId: Number(formData.projectId),
         taskId: formData.taskId ? Number(formData.taskId) : undefined,
         date: new Date(formData.date).toISOString(),
-        startTime: formData.startTime ? new Date(formData.startTime).toISOString() : undefined,
-        endTime: formData.endTime ? new Date(formData.endTime).toISOString() : undefined,
+        startTime: formData.startTime
+          ? new Date(formData.startTime).toISOString()
+          : undefined,
+        endTime: formData.endTime
+          ? new Date(formData.endTime).toISOString()
+          : undefined,
         billable: formData.billable,
         hourlyRate: Number(formData.hourlyRate || 0),
       };
@@ -129,212 +144,256 @@ export default function TimesheetForm({
   if (queryLoading)
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
     );
   if (!data?.getTimesheet && timesheetId && !queryLoading)
     return <p className="p-4 text-red-600">Timesheet not found</p>;
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="space-y-4 p-4 border rounded-lg bg-white shadow-md"
-    >
-      <h2 className="text-xl font-semibold">
-        {isEditMode ? 'Edit Timesheet' : 'Create Timesheet'}
-      </h2>
-
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Description
-        </label>
-        <textarea
-          id="description"
-          {...register('description', { required: 'Description is required' })}
-          placeholder="Description"
-          rows={3}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-        />
-        {errors.description && (
-          <span className="text-red-500 text-xs">
-            {errors.description.message}
-          </span>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-            Date
-          </label>
-          <input
-            id="date"
-            type="date"
-            {...register('date', { required: 'Date is required' })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          />
-          {errors.date && (
-            <span className="text-red-500 text-xs">{errors.date.message}</span>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="timeSpent" className="block text-sm font-medium text-gray-700">
-            Time Spent (Hours)
-          </label>
-          <input
-            id="timeSpent"
-            type="number"
-            step="0.1"
-            {...register('timeSpent', {
-              required: 'Time spent is required',
-              min: 0,
-            })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          />
-          {errors.timeSpent && (
-            <span className="text-red-500 text-xs">
-              {errors.timeSpent.message}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="hourlyRate" className="block text-sm font-medium text-gray-700">
-            Hourly Rate
-          </label>
-          <input
-            id="hourlyRate"
-            type="number"
-            step="0.01"
-            {...register('hourlyRate')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          />
-        </div>
-
-        <div className="flex items-center mt-6">
-          <input
-            id="billable"
-            type="checkbox"
-            {...register('billable')}
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-          />
-          <label htmlFor="billable" className="ml-2 block text-sm font-medium text-gray-700">
-            Billable
-          </label>
-        </div>
-
-        <div>
-          <label htmlFor="startTime" className="block text-sm font-medium text-gray-700">
-            Start Time
-          </label>
-          <input
-            id="startTime"
-            type="datetime-local"
-            {...register('startTime')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="endTime" className="block text-sm font-medium text-gray-700">
-            End Time
-          </label>
-          <input
-            id="endTime"
-            type="datetime-local"
-            {...register('endTime')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="userId_ts" className="block text-sm font-medium text-gray-700">
-            User
-          </label>
-          <select
-            id="userId_ts"
-            {...register('userId', { required: 'User is required' })}
-            disabled={currentUser?.role === 'USER'}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
-          >
-            <option value="">Select User</option>
-            {users?.map((u: any) => (
-              <option key={u.id} value={u.id}>
-                {u.name}
-              </option>
-            ))}
-          </select>
-          {errors.userId && (
-            <span className="text-red-500 text-xs">
-              {errors.userId.message?.toString()}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="projectId_ts" className="block text-sm font-medium text-gray-700">
-            Project
-          </label>
-          <select
-            id="projectId_ts"
-            {...register('projectId', { required: 'Project is required' })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          >
-            <option value="">Select Project</option>
-            {projects?.map((p: ProjectType) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-          {errors.projectId && (
-            <span className="text-red-500 text-xs">
-              {errors.projectId.message}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="taskId_ts" className="block text-sm font-medium text-gray-700">
-            Task
-          </label>
-          <select
-            id="taskId_ts"
-            {...register('taskId', { required: 'Task is required' })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-          >
-            <option value="">Select Task</option>
-            {projectTasks?.map((t: TaskType) => (
-              <option key={t.id} value={t.id}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-          {errors.taskId && (
-            <span className="text-red-500 text-xs">
-              {errors.taskId.message}
-            </span>
-          )}
-        </div>
-      </div>
-
+    <form onSubmit={onSubmit} className="space-y-6">
+      {/* ── Error Banner ── */}
       {errorMsg && (
-        <div className="border-red-600 border-[1px] rounded-md my-2 p-2 text-red-600 bg-red-100 relative">
-          {errorMsg}
-          <X
-            className="cursor-pointer text-black absolute top-1 right-1 size-5"
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl animate-slide-in-up">
+          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-red-700">{errorMsg}</div>
+          <button
+            type="button"
             onClick={() => setErrorMsg('')}
-          />
+            className="text-red-400 hover:text-red-600 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       )}
 
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+      {/* ── Section: General ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <FileText size={16} className="text-primary-500" />
+          General Information
+        </div>
+
+        <div>
+          <label htmlFor="description" className="label-modern">
+            Description
+          </label>
+          <textarea
+            id="description"
+            {...register('description', { required: 'Description is required' })}
+            placeholder="What did you work on?"
+            rows={3}
+            className="input-modern resize-none"
+          />
+          {errors.description && (
+            <span className="text-red-500 text-xs mt-1 block">
+              {errors.description.message}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* ── Section: Time Entry ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <Clock size={16} className="text-primary-500" />
+          Time Entry
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="date" className="label-modern">
+              Date
+            </label>
+            <input
+              id="date"
+              type="date"
+              {...register('date', { required: 'Date is required' })}
+              className="input-modern"
+            />
+            {errors.date && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.date.message}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="timeSpent" className="label-modern">
+              Time Spent (Hours)
+            </label>
+            <input
+              id="timeSpent"
+              type="number"
+              step="0.1"
+              {...register('timeSpent', {
+                required: 'Time spent is required',
+                min: 0,
+              })}
+              placeholder="0.0"
+              className="input-modern"
+            />
+            {errors.timeSpent && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.timeSpent.message}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="startTime" className="label-modern">
+              Start Time
+            </label>
+            <input
+              id="startTime"
+              type="datetime-local"
+              {...register('startTime')}
+              className="input-modern"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="endTime" className="label-modern">
+              End Time
+            </label>
+            <input
+              id="endTime"
+              type="datetime-local"
+              {...register('endTime')}
+              className="input-modern"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Section: Billing ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <DollarSign size={16} className="text-primary-500" />
+          Billing
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <div>
+            <label htmlFor="hourlyRate" className="label-modern">
+              Hourly Rate
+            </label>
+            <input
+              id="hourlyRate"
+              type="number"
+              step="0.01"
+              {...register('hourlyRate')}
+              placeholder="0.00"
+              className="input-modern"
+            />
+          </div>
+
+          <div className="flex items-center pt-5">
+            <input
+              id="billable"
+              type="checkbox"
+              {...register('billable')}
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-surface-300 rounded"
+            />
+            <label
+              htmlFor="billable"
+              className="ml-2 block text-sm font-medium text-gray-700 cursor-pointer"
+            >
+              This is a billable entry
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Section: Assignment ── */}
+      <div className="card p-6 space-y-5">
+        <div className="form-section-title">
+          <Briefcase size={16} className="text-primary-500" />
+          Assignment
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="userId_ts" className="label-modern">
+              User
+            </label>
+            <select
+              id="userId_ts"
+              {...register('userId', { required: 'User is required' })}
+              disabled={currentUser?.role === 'USER'}
+              className="select-modern disabled:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <option value="">Select User</option>
+              {users?.map((u: any) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
+            {errors.userId && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.userId.message?.toString()}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="projectId_ts" className="label-modern">
+              Project
+            </label>
+            <select
+              id="projectId_ts"
+              {...register('projectId', { required: 'Project is required' })}
+              className="select-modern"
+            >
+              <option value="">Select Project</option>
+              {projects?.map((p: ProjectType) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            {errors.projectId && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.projectId.message}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="taskId_ts" className="label-modern">
+              Task
+            </label>
+            <select
+              id="taskId_ts"
+              {...register('taskId', { required: 'Task is required' })}
+              className="select-modern"
+            >
+              <option value="">Select Task</option>
+              {projectTasks?.map((t: TaskType) => (
+                <option key={t.id} value={t.id}>
+                  {t.title}
+                </option>
+              ))}
+            </select>
+            {errors.taskId && (
+              <span className="text-red-500 text-xs mt-1 block">
+                {errors.taskId.message}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Actions ── */}
+      <div className="flex justify-end gap-3 pt-2">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-5 py-2.5 rounded-xl border border-surface-200 text-sm font-medium text-gray-600 bg-white hover:bg-surface-50 hover:border-surface-300 transition-all"
           >
             Cancel
           </button>
@@ -342,9 +401,9 @@ export default function TimesheetForm({
         <button
           type="submit"
           disabled={mutationLoading}
-          className="inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {mutationLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create'}
+          {mutationLoading ? 'Saving...' : isEditMode ? 'Update Timesheet' : 'Create Timesheet'}
         </button>
       </div>
     </form>

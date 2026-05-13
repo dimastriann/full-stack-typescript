@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { GET_DASHBOARD_STATS } from '../../features/dashboard/gql/dashboard.graphql';
-
 import { useWorkspaceStore } from '../../store/workspaceStore';
+import { Users, FolderGit2, ListTodo } from 'lucide-react';
 
 export default function DashboardStats() {
   const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
@@ -14,9 +14,12 @@ export default function DashboardStats() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-lg shadow p-6 animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div key={i} className="card p-6 h-[116px] animate-pulse flex items-center gap-4">
+            <div className="h-12 w-12 bg-surface-200 rounded-xl"></div>
+            <div className="flex-1 space-y-3">
+              <div className="h-4 bg-surface-200 rounded w-1/2"></div>
+              <div className="h-6 bg-surface-200 rounded w-1/4"></div>
+            </div>
           </div>
         ))}
       </div>
@@ -25,8 +28,9 @@ export default function DashboardStats() {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
-        Error loading statistics: {error.message}
+      <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl mb-6 shadow-sm">
+        <div className="font-semibold mb-1">Error loading statistics</div>
+        <div className="text-sm">{error.message}</div>
       </div>
     );
   }
@@ -39,24 +43,55 @@ export default function DashboardStats() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div className="bg-white rounded-lg shadow p-6 border border-gray-100 hover:shadow-md transition-shadow">
-        <h3 className="text-gray-500 text-sm font-medium">Total Users</h3>
-        <p className="text-3xl font-bold text-indigo-600 mt-2">
-          {stats.totalUsers}
-        </p>
+      
+      {/* Users Card */}
+      <div className="card p-6 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary-400 to-primary-600"></div>
+        <div className="flex items-center gap-4 pl-2">
+          <div className="h-12 w-12 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+            <Users size={24} />
+          </div>
+          <div>
+            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Total Users</h3>
+            <p className="text-3xl font-black text-gray-900 tracking-tight">
+              {stats.totalUsers}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="bg-white rounded-lg shadow p-6 border border-gray-100 hover:shadow-md transition-shadow">
-        <h3 className="text-gray-500 text-sm font-medium">Active Projects</h3>
-        <p className="text-3xl font-bold text-green-600 mt-2">
-          {stats.activeProjects}
-        </p>
+
+      {/* Projects Card */}
+      <div className="card p-6 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-emerald-400 to-emerald-600"></div>
+        <div className="flex items-center gap-4 pl-2">
+          <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+            <FolderGit2 size={24} />
+          </div>
+          <div>
+            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Active Projects</h3>
+            <p className="text-3xl font-black text-gray-900 tracking-tight">
+              {stats.activeProjects}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="bg-white rounded-lg shadow p-6 border border-gray-100 hover:shadow-md transition-shadow">
-        <h3 className="text-gray-500 text-sm font-medium">Pending Tasks</h3>
-        <p className="text-3xl font-bold text-amber-600 mt-2">
-          {stats.pendingTasks}
-        </p>
+
+      {/* Tasks Card */}
+      <div className="card p-6 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-amber-600"></div>
+        <div className="flex items-center gap-4 pl-2">
+          <div className="h-12 w-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+            <ListTodo size={24} />
+          </div>
+          <div>
+            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Pending Tasks</h3>
+            <p className="text-3xl font-black text-gray-900 tracking-tight">
+              {stats.pendingTasks}
+            </p>
+          </div>
+        </div>
       </div>
+
     </div>
   );
 }

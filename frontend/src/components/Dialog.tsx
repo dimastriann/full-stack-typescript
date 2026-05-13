@@ -21,7 +21,7 @@ export default function Modal({
   onClose,
   title,
   children,
-  maxWidth = 'sm:max-w-lg',
+  maxWidth = 'sm:max-w-2xl',
 }: ModalProps) {
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -35,11 +35,11 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-all" />
         </TransitionChild>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
             <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
@@ -50,28 +50,28 @@ export default function Modal({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                className={`relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full ${maxWidth}`}
+                className={`relative transform overflow-hidden rounded-3xl bg-white text-left shadow-float transition-all sm:my-8 w-full ${maxWidth}`}
               >
-                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  <div className="flex justify-between items-center mb-4">
+                <div className="bg-white">
+                  <div className="flex justify-between items-center px-6 py-5 border-b border-surface-100 bg-surface-50/50">
                     {title && (
                       <DialogTitle
                         as="h3"
-                        className="text-lg font-semibold leading-6 text-gray-900"
+                        className="text-lg font-bold leading-6 text-gray-900 tracking-tight"
                       >
                         {title}
                       </DialogTitle>
                     )}
                     <button
                       type="button"
-                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+                      className="rounded-full p-1.5 bg-white border border-surface-200 text-gray-400 hover:text-gray-600 hover:bg-surface-50 focus:outline-none transition-colors"
                       onClick={onClose}
                     >
                       <span className="sr-only">Close</span>
-                      <X className="h-6 w-6" aria-hidden="true" />
+                      <X className="h-5 w-5" aria-hidden="true" />
                     </button>
                   </div>
-                  <div className="mt-2">{children}</div>
+                  <div className="px-6 py-6 max-h-[80vh] overflow-y-auto no-scrollbar">{children}</div>
                 </div>
               </DialogPanel>
             </TransitionChild>

@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GET_PROJECT_STAGES } from '../../projects/gql/project.graphql';
 import { GET_TASK_STAGES } from '../../tasks/gql/task.graphql';
 import { GET_ME } from '../../auth/gql/auth.graphql';
+import { GET_USERS } from '../../users/gql/user.graphql';
 import {
   UPDATE_WORKSPACE,
   INVITE_TO_WORKSPACE,
@@ -44,6 +45,7 @@ export default function WorkspaceSettingsPage() {
 
   // Invite state
   const [inviteEmail, setInviteEmail] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [inviteRole, setInviteRole] = useState<WorkspaceRole>(
     WorkspaceRole.MEMBER,
   );
@@ -63,6 +65,16 @@ export default function WorkspaceSettingsPage() {
   );
 
   const fullWorkspace = workspaceData?.workspace || activeWorkspace;
+
+  const { data: usersData } = useQuery(GET_USERS);
+  const allUsers = usersData?.users || [];
+  const filteredUsers = inviteEmail.trim()
+    ? allUsers.filter(
+        (u: any) =>
+          u.email.toLowerCase().includes(inviteEmail.toLowerCase()) ||
+          u.name.toLowerCase().includes(inviteEmail.toLowerCase()),
+      ).slice(0, 5) // Limit suggestions to 5
+    : [];
 
   const { data: projectStagesData, refetch: refetchProjectStages } = useQuery(
     GET_PROJECT_STAGES,
@@ -279,7 +291,7 @@ export default function WorkspaceSettingsPage() {
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="relative">
                   <label className="block text-xs font-medium text-gray-700 mb-1">
                     Email Address
                   </label>
@@ -287,9 +299,32 @@ export default function WorkspaceSettingsPage() {
                     type="email"
                     className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
                     value={inviteEmail}
-                    onChange={(e) => setInviteEmail(e.target.value)}
-                    placeholder="user@example.com"
+                    onChange={(e) => {
+                      setInviteEmail(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    placeholder="Search name or user@example.com"
                   />
+                  {/* Autocomplete Dropdown */}
+                  {showSuggestions && filteredUsers.length > 0 && (
+                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-y-auto">
+                      {filteredUsers.map((u: any) => (
+                        <div
+                          key={u.id}
+                          className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex flex-col border-b border-gray-50 last:border-0"
+                          onClick={() => {
+                            setInviteEmail(u.email);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          <span className="text-sm font-medium text-gray-900">{u.name}</span>
+                          <span className="text-xs text-gray-500">{u.email}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
