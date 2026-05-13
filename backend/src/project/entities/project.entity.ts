@@ -8,7 +8,11 @@ import { ProjectMember } from 'src/project-member/entities/project-member.entity
 import { Workspace } from 'src/workspace/entities/workspace.entity';
 import { ProjectStage } from 'src/project-stage/entities/project-stage.entity';
 import { registerEnumType } from '@nestjs/graphql';
-import { ProjectMethodology, ProjectVisibility, ProjectPriority } from '../../../prisma/generated/enums';
+import {
+  ProjectMethodology,
+  ProjectVisibility,
+  ProjectPriority,
+} from '../../../prisma/generated/enums';
 
 registerEnumType(ProjectVisibility, {
   name: 'ProjectVisibility',
@@ -74,7 +78,7 @@ export class Project {
 
   @Field(() => Int, { nullable: true })
   sequence?: number;
-  
+
   @Field(() => Number, { defaultValue: 0 })
   budgetPlanned: number;
 

@@ -33,7 +33,7 @@ export default function PublicLayout() {
                   Sign in
                 </Link>
               )}
-              
+
               {location.pathname !== '/register' && (
                 <Link
                   to="/register"
@@ -57,12 +57,19 @@ export default function PublicLayout() {
       <footer className="bg-white border-t border-surface-200 py-8 text-center text-sm text-gray-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div>
-            <span className="font-bold text-gray-900">ProjectFlow</span> © {new Date().getFullYear()}
+            <span className="font-bold text-gray-900">ProjectFlow</span> ©{' '}
+            {new Date().getFullYear()}
           </div>
           <div className="flex gap-6">
-            <Link to="#" className="hover:text-primary-600 transition-colors">Privacy Policy</Link>
-            <Link to="#" className="hover:text-primary-600 transition-colors">Terms of Service</Link>
-            <Link to="#" className="hover:text-primary-600 transition-colors">Contact</Link>
+            <Link to="#" className="hover:text-primary-600 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="#" className="hover:text-primary-600 transition-colors">
+              Terms of Service
+            </Link>
+            <Link to="#" className="hover:text-primary-600 transition-colors">
+              Contact
+            </Link>
           </div>
         </div>
       </footer>

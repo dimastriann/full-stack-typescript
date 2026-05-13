@@ -52,7 +52,7 @@ describe('CommentResolver', () => {
       mockService.create.mockResolvedValue({ id: 1, ...input });
 
       await resolver.createComment(input as any, user);
-      
+
       expect(mockService.create).toHaveBeenCalledWith(input, user.id);
     });
   });

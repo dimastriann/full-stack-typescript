@@ -12,9 +12,11 @@ vi.mock('../../../store/authStore', () => ({
 }));
 
 const mockLogin = vi.fn();
-(useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) => {
-  return selector({ setAuth: mockLogin });
-});
+(useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+  (selector) => {
+    return selector({ setAuth: mockLogin });
+  },
+);
 
 describe('LoginPage', () => {
   const mocks = [
@@ -40,12 +42,14 @@ describe('LoginPage', () => {
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     expect(screen.getByPlaceholderText(/Email address/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Sign in/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Sign in/i }),
+    ).toBeInTheDocument();
   });
 
   it('handles successful login', async () => {
@@ -54,7 +58,7 @@ describe('LoginPage', () => {
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     fireEvent.change(screen.getByPlaceholderText(/Email address/i), {
@@ -68,7 +72,7 @@ describe('LoginPage', () => {
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith(
         { id: 1, email: 'test@example.com', firstName: 'Test' },
-        'logged_in'
+        'logged_in',
       );
     });
   });
@@ -89,7 +93,7 @@ describe('LoginPage', () => {
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     fireEvent.change(screen.getByPlaceholderText(/Email address/i), {
@@ -101,7 +105,9 @@ describe('LoginPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /Sign in/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Invalid email or password/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Invalid email or password/i),
+      ).toBeInTheDocument();
     });
   });
 });

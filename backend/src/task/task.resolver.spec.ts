@@ -45,7 +45,7 @@ describe('TaskResolver', () => {
       mockTaskService.create.mockResolvedValue({ id: 1, ...input });
 
       await resolver.createTask(input as any, user);
-      
+
       expect(mockTaskService.create).toHaveBeenCalledWith(input, user.id);
     });
   });

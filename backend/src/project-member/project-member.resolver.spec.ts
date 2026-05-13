@@ -38,12 +38,16 @@ describe('ProjectMemberResolver', () => {
 
   describe('inviteToProject', () => {
     it('should call service with correct arguments', async () => {
-      const input = { projectId: 1, email: 'test@test.com', role: ProjectRole.MEMBER };
+      const input = {
+        projectId: 1,
+        email: 'test@test.com',
+        role: ProjectRole.MEMBER,
+      };
       const user = { id: 1 };
       mockService.inviteUser.mockResolvedValue({ id: 1, ...input, userId: 2 });
 
       await resolver.inviteToProject(input, user);
-      
+
       expect(mockService.inviteUser).toHaveBeenCalledWith(
         input.projectId,
         user.id,

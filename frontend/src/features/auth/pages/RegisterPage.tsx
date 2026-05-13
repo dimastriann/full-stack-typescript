@@ -45,7 +45,9 @@ export default function RegisterPage() {
       }
     } catch (err: any) {
       Logger.error(err as string);
-      setErrorMsg('Registration failed. Please check your details and try again.');
+      setErrorMsg(
+        'Registration failed. Please check your details and try again.',
+      );
     }
   };
 
@@ -56,12 +58,13 @@ export default function RegisterPage() {
       <div className="absolute bottom-[10%] left-[10%] w-96 h-96 bg-emerald-200/50 rounded-full blur-3xl mix-blend-multiply opacity-50 animate-blob animation-delay-2000"></div>
 
       <div className="max-w-md w-full relative z-10">
-        
         <div className="text-center mb-8">
           <div className="mx-auto h-16 w-16 bg-gradient-to-br from-primary-500 to-indigo-700 rounded-2xl flex items-center justify-center text-white mb-6 shadow-glow">
             <UserPlus size={32} strokeWidth={2.5} />
           </div>
-          <h2 className="text-3xl font-black text-gray-900 tracking-tight">Create an account</h2>
+          <h2 className="text-3xl font-black text-gray-900 tracking-tight">
+            Create an account
+          </h2>
           <p className="mt-2 text-sm text-gray-500">
             Join ProjectFlow and start managing your team
           </p>
@@ -69,17 +72,20 @@ export default function RegisterPage() {
 
         <div className="card p-8 shadow-float">
           <form className="space-y-5" onSubmit={handleSubmit}>
-            
             {errorMsg && (
               <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-slide-in-up">
                 <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <div className="flex-1 text-sm text-red-700 font-medium">{errorMsg}</div>
+                <div className="flex-1 text-sm text-red-700 font-medium">
+                  {errorMsg}
+                </div>
               </div>
             )}
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="label-modern">First Name</label>
+                <label htmlFor="firstName" className="label-modern">
+                  First Name
+                </label>
                 <input
                   id="firstName"
                   name="firstName"
@@ -92,7 +98,9 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="label-modern">Last Name</label>
+                <label htmlFor="lastName" className="label-modern">
+                  Last Name
+                </label>
                 <input
                   id="lastName"
                   name="lastName"
@@ -106,7 +114,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="name" className="label-modern">Username</label>
+              <label htmlFor="name" className="label-modern">
+                Username
+              </label>
               <div className="relative mt-1">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                   <User size={18} />
@@ -125,7 +135,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="label-modern">Email address</label>
+              <label htmlFor="email" className="label-modern">
+                Email address
+              </label>
               <div className="relative mt-1">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                   <Mail size={18} />
@@ -145,7 +157,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="label-modern">Password</label>
+              <label htmlFor="password" className="label-modern">
+                Password
+              </label>
               <div className="relative mt-1">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                   <Lock size={18} />

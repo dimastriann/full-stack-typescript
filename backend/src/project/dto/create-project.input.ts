@@ -1,5 +1,9 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { ProjectMethodology, ProjectVisibility, ProjectPriority } from '../../../prisma/generated/enums';
+import {
+  ProjectMethodology,
+  ProjectVisibility,
+  ProjectPriority,
+} from '../../../prisma/generated/enums';
 
 @InputType()
 export class CreateProjectInput {

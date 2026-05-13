@@ -33,7 +33,10 @@ export class CreateTimesheetInput {
   @Field(() => Number, { nullable: true })
   hourlyRate?: number;
 
-  @Field(() => TimesheetSource, { nullable: true, defaultValue: TimesheetSource.MANUAL })
+  @Field(() => TimesheetSource, {
+    nullable: true,
+    defaultValue: TimesheetSource.MANUAL,
+  })
   source?: TimesheetSource;
 
   @Field(() => [String], { nullable: true })

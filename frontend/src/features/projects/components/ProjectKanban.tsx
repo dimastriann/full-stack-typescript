@@ -337,7 +337,12 @@ export default function ProjectKanban() {
                                   <div className="flex items-center justify-between text-[10px] text-gray-500">
                                     <div className="flex items-center gap-1">
                                       <DollarSign size={12} />
-                                      <span>${project.budgetActual?.toLocaleString()} / ${project.budgetPlanned?.toLocaleString()}</span>
+                                      <span>
+                                        $
+                                        {project.budgetActual?.toLocaleString()}{' '}
+                                        / $
+                                        {project.budgetPlanned?.toLocaleString()}
+                                      </span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                       <BarChart2 size={12} />
@@ -347,7 +352,17 @@ export default function ProjectKanban() {
                                   {project.startDate && (
                                     <div className="flex items-center gap-1 text-[10px] text-gray-500">
                                       <Calendar size={12} />
-                                      <span>{new Date(project.startDate).toLocaleDateString()} - {project.endDate ? new Date(project.endDate).toLocaleDateString() : '...'}</span>
+                                      <span>
+                                        {new Date(
+                                          project.startDate,
+                                        ).toLocaleDateString()}{' '}
+                                        -{' '}
+                                        {project.endDate
+                                          ? new Date(
+                                              project.endDate,
+                                            ).toLocaleDateString()
+                                          : '...'}
+                                      </span>
                                     </div>
                                   )}
                                 </div>

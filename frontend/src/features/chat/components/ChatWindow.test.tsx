@@ -26,8 +26,16 @@ describe('ChatWindow', () => {
     id: 1,
     name: 'Test Room',
     participants: [
-      { id: 101, userId: 1, user: { id: 1, name: 'Sender', email: 'sender@test.com' } },
-      { id: 102, userId: 2, user: { id: 2, name: 'Recipient', email: 'recipient@test.com' } },
+      {
+        id: 101,
+        userId: 1,
+        user: { id: 1, name: 'Sender', email: 'sender@test.com' },
+      },
+      {
+        id: 102,
+        userId: 2,
+        user: { id: 2, name: 'Recipient', email: 'recipient@test.com' },
+      },
     ],
   };
 
@@ -67,8 +75,8 @@ describe('ChatWindow', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
-      selector({ user: { id: 1 } }),
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (selector) => selector({ user: { id: 1 } }),
     );
   });
 
@@ -76,7 +84,7 @@ describe('ChatWindow', () => {
     render(
       <MockedProvider mocks={apolloMocks} addTypename={false}>
         <ChatWindow conversation={mockConversation} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitFor(() => {
@@ -109,7 +117,7 @@ describe('ChatWindow', () => {
     render(
       <MockedProvider mocks={emptyMocks} addTypename={false}>
         <ChatWindow conversation={mockConversation} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitFor(() => {

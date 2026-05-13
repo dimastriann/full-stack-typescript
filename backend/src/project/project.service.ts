@@ -171,7 +171,10 @@ export class ProjectService {
   }
 
   private async generateProjectKey(name: string): Promise<string> {
-    let prefix = name.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, '');
+    let prefix = name
+      .substring(0, 3)
+      .toUpperCase()
+      .replace(/[^A-Z]/g, '');
     if (prefix.length < 2) prefix = 'PRJ';
 
     const latestProject = await this.prisma.project.findFirst({

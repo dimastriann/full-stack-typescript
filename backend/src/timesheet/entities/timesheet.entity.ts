@@ -4,7 +4,10 @@ import { User } from 'src/user/entities/user.entity';
 import { Project } from 'src/project/entities/project.entity';
 import { Task } from 'src/task/entities/task.entity';
 import { registerEnumType } from '@nestjs/graphql';
-import { TimesheetSource, ApprovalStatus } from '../../../prisma/generated/enums';
+import {
+  TimesheetSource,
+  ApprovalStatus,
+} from '../../../prisma/generated/enums';
 
 registerEnumType(TimesheetSource, {
   name: 'TimesheetSource',

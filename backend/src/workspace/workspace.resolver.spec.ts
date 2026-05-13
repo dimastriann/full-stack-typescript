@@ -4,7 +4,6 @@ import { WorkspaceService } from './workspace.service';
 
 describe('WorkspaceResolver', () => {
   let resolver: WorkspaceResolver;
-  let service: WorkspaceService;
 
   const mockService = {
     create: jest.fn(),
@@ -24,7 +23,6 @@ describe('WorkspaceResolver', () => {
     }).compile();
 
     resolver = module.get<WorkspaceResolver>(WorkspaceResolver);
-    service = module.get<WorkspaceService>(WorkspaceService);
   });
 
   afterEach(() => {
@@ -38,11 +36,11 @@ describe('WorkspaceResolver', () => {
   describe('createWorkspace', () => {
     it('should call service with correct arguments', async () => {
       const input = { name: 'Test Workspace', description: 'Test Description' };
-      const user = { id: 1 };
+      const user = { id: 1 } as any;
       mockService.create.mockResolvedValue({ id: 1, ...input, ownerId: 1 });
 
       await resolver.createWorkspace(input, user);
-      
+
       expect(mockService.create).toHaveBeenCalledWith(input, user.id);
     });
   });

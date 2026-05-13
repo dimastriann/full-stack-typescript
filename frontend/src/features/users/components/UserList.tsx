@@ -203,7 +203,7 @@ export default function UserList() {
           navigate('/dashboard/discuss');
         }
       } catch (err) {
-        Logger.error('Failed to start conversation:', err as any);
+        Logger.error('Failed to start conversation:', err as unknown);
         setErrorMsg('Failed to start conversation');
       }
     },

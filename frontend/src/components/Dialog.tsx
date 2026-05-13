@@ -71,7 +71,9 @@ export default function Modal({
                       <X className="h-5 w-5" aria-hidden="true" />
                     </button>
                   </div>
-                  <div className="px-6 py-6 max-h-[80vh] overflow-y-auto no-scrollbar">{children}</div>
+                  <div className="px-6 py-6 max-h-[80vh] overflow-y-auto no-scrollbar">
+                    {children}
+                  </div>
                 </div>
               </DialogPanel>
             </TransitionChild>

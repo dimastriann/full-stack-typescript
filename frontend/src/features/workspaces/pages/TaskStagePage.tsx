@@ -2,7 +2,12 @@ import { Layers, Plus, GripVertical } from 'lucide-react';
 import TaskStageForm from './TaskStageForm';
 import type { TaskStage } from '../../../types/Tasks';
 import { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DropResult,
+} from '@hello-pangea/dnd';
 import { useMutation } from '@apollo/client';
 import { UPDATE_TASK_STAGE } from '../gql/workspace.graphql';
 
@@ -23,16 +28,18 @@ export default function TaskStagePage({
   // Sync local state with props for optimistic drag updates
   useEffect(() => {
     // Sort by sequence just in case
-    const sorted = [...(taskStages || [])].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+    const sorted = [...(taskStages || [])].sort(
+      (a, b) => (a.sequence || 0) - (b.sequence || 0),
+    );
     setStages(sorted);
   }, [taskStages]);
 
   const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
-    
+
     const sourceIndex = result.source.index;
     const destinationIndex = result.destination.index;
-    
+
     if (sourceIndex === destinationIndex) return;
 
     // Optimistically reorder local state
@@ -52,8 +59,8 @@ export default function TaskStagePage({
               updateTaskStageInput: {
                 id: stage.id,
                 sequence: newSequence,
-              }
-            }
+              },
+            },
           });
         }
         return Promise.resolve();
@@ -62,9 +69,11 @@ export default function TaskStagePage({
       await Promise.all(promises);
       refetch();
     } catch (error) {
-      console.error("Failed to update sequence", error);
+      console.error('Failed to update sequence', error);
       // Revert on error
-      setStages([...taskStages].sort((a, b) => (a.sequence || 0) - (b.sequence || 0)));
+      setStages(
+        [...taskStages].sort((a, b) => (a.sequence || 0) - (b.sequence || 0)),
+      );
     }
   };
 
@@ -86,13 +95,17 @@ export default function TaskStagePage({
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="task-stages">
             {(provided) => (
-              <div 
+              <div
                 className="space-y-2"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
                 {stages.map((stage: TaskStage, index: number) => (
-                  <Draggable key={stage.id.toString()} draggableId={stage.id.toString()} index={index}>
+                  <Draggable
+                    key={stage.id.toString()}
+                    draggableId={stage.id.toString()}
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
@@ -101,14 +114,14 @@ export default function TaskStagePage({
                           ${snapshot.isDragging ? 'border-indigo-400 shadow-lg scale-[1.02] z-50' : 'border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/30'}
                         `}
                       >
-                        <div 
-                          {...provided.dragHandleProps} 
+                        <div
+                          {...provided.dragHandleProps}
                           className="mr-3 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing px-1"
                         >
                           <GripVertical size={18} />
                         </div>
                         <div className="flex-1 flex items-center justify-between">
-                           <TaskStageForm stage={stage} refetch={refetch} />
+                          <TaskStageForm stage={stage} refetch={refetch} />
                         </div>
                       </div>
                     )}

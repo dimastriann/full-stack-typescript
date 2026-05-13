@@ -11,7 +11,6 @@ import { ProjectPermissionGuard } from 'src/auth/guards/project-permission.guard
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { RequireProjectRole } from 'src/auth/decorators/require-project-role.decorator';
 import { ProjectRole } from 'prisma/generated/enums';
-import { Project } from 'src/project/entities/project.entity';
 
 @Resolver(() => ProjectMember)
 export class ProjectMemberResolver {
@@ -79,7 +78,7 @@ export class ProjectMemberResolver {
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
   async updateMemberRole(
     @Args('input') input: UpdateMemberRoleInput,
-    @CurrentUser() user: any,
+    @CurrentUser() _user: any,
   ) {
     return this.projectMemberService.updateMemberRole(
       input.projectId,
@@ -97,7 +96,7 @@ export class ProjectMemberResolver {
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
   async removeMemberFromProject(
     @Args('input') input: RemoveMemberInput,
-    @CurrentUser() user: any,
+    @CurrentUser() _user: any,
   ) {
     return this.projectMemberService.removeMember(
       input.projectId,

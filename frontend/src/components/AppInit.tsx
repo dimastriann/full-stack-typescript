@@ -11,7 +11,7 @@ export const AppInit = ({ children }: { children: React.ReactNode }) => {
   const setLoadingAuth = useAuthStore((state) => state.setLoading);
   const loadingAuth = useAuthStore((state) => state.loading);
   const user = useAuthStore((state) => state.user);
-  
+
   const setWorkspaces = useWorkspaceStore((state) => state.setWorkspaces);
 
   useEffect(() => {

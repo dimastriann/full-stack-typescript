@@ -12,7 +12,15 @@ import ProjectMembersList from '../components/ProjectMembersList';
 import ProjectTaskTable from '../components/ProjectTaskTable';
 
 import { REMOVE_ATTACHMENT } from '../../attachments/gql/attachment.graphql';
-import { Trash2, Download, FileText, ListCheck, Users, Paperclip, MessageSquare } from 'lucide-react';
+import {
+  Trash2,
+  Download,
+  FileText,
+  ListCheck,
+  Users,
+  Paperclip,
+  MessageSquare,
+} from 'lucide-react';
 import { useAttachments } from '../../attachments/hooks/useAttachments';
 
 export default function ProjectFormPage() {
@@ -21,8 +29,10 @@ export default function ProjectFormPage() {
   const currentUserId = user?.id || 0;
   const { projectId } = useParams();
   const id = projectId ? parseInt(projectId, 10) : 0;
-  
-  const [activeTab, setActiveTab] = useState<'details' | 'tasks' | 'members' | 'attachments'>('details');
+
+  const [activeTab, setActiveTab] = useState<
+    'details' | 'tasks' | 'members' | 'attachments'
+  >('details');
 
   const { data, refetch } = useQuery(GET_PROJECT, {
     variables: { id },
@@ -74,13 +84,15 @@ export default function ProjectFormPage() {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
           </div>
-          
+
           <div className="flex items-center gap-4 text-sm text-gray-500">
             <div className="flex flex-col items-end">
-              <span className="text-xs uppercase font-semibold tracking-wider mb-1">Progress</span>
+              <span className="text-xs uppercase font-semibold tracking-wider mb-1">
+                Progress
+              </span>
               <div className="w-32 h-2 bg-surface-100 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary-500 rounded-full" 
+                <div
+                  className="h-full bg-primary-500 rounded-full"
                   style={{ width: `${project.progress || 0}%` }}
                 ></div>
               </div>
@@ -91,17 +103,19 @@ export default function ProjectFormPage() {
 
       {!id && (
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Create New Project</h1>
-          <p className="text-gray-500 text-sm mt-1">Fill in the details below to start a new project.</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Create New Project
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Fill in the details below to start a new project.
+          </p>
         </div>
       )}
 
       {/* ── Main Content Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
-        
         {/* Left Column: Tabs & Content */}
         <div className="lg:col-span-2 flex flex-col min-h-0">
-          
           {/* Tabs */}
           {id > 0 && (
             <div className="flex items-center gap-2 mb-4 border-b border-surface-200 overflow-x-auto no-scrollbar pb-1">
@@ -129,7 +143,9 @@ export default function ProjectFormPage() {
               >
                 <Paperclip size={16} /> Attachments
                 {project?.attachments?.length > 0 && (
-                  <span className="ml-1 bg-surface-200 text-gray-600 text-xs px-1.5 rounded-full">{project.attachments.length}</span>
+                  <span className="ml-1 bg-surface-200 text-gray-600 text-xs px-1.5 rounded-full">
+                    {project.attachments.length}
+                  </span>
                 )}
               </button>
             </div>
@@ -139,7 +155,10 @@ export default function ProjectFormPage() {
           <div className="flex-1 overflow-y-auto no-scrollbar">
             {activeTab === 'details' && (
               <div className="pb-6">
-                <ProjectForm onSuccess={handleSuccess} onCancel={handleCancel} />
+                <ProjectForm
+                  onSuccess={handleSuccess}
+                  onCancel={handleCancel}
+                />
               </div>
             )}
 
@@ -151,7 +170,10 @@ export default function ProjectFormPage() {
 
             {activeTab === 'members' && id > 0 && (
               <div className="pb-6">
-                <ProjectMembersList projectId={id} currentUserId={currentUserId} />
+                <ProjectMembersList
+                  projectId={id}
+                  currentUserId={currentUserId}
+                />
               </div>
             )}
 
@@ -254,7 +276,6 @@ export default function ProjectFormPage() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

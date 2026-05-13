@@ -77,40 +77,52 @@ const CommentItem = ({
   return (
     <div className={`flex flex-col mb-4 ${isReply ? 'ml-8 mt-2' : ''}`}>
       <div className={`flex gap-3 ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
-        
         {/* Avatar */}
-        <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm
+        <div
+          className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm
           ${isMine ? 'bg-primary-600' : 'bg-gray-400'}
-        `}>
+        `}
+        >
           {getInitials(comment.user.name)}
         </div>
 
         {/* Comment Content */}
-        <div className={`flex flex-col max-w-[85%] ${isMine ? 'items-end' : 'items-start'}`}>
+        <div
+          className={`flex flex-col max-w-[85%] ${isMine ? 'items-end' : 'items-start'}`}
+        >
           <div className="flex items-baseline gap-2 mb-1 px-1">
-            <span className="text-xs font-semibold text-gray-700">{isMine ? 'You' : comment.user.name}</span>
+            <span className="text-xs font-semibold text-gray-700">
+              {isMine ? 'You' : comment.user.name}
+            </span>
             <span className="text-[10px] text-gray-400">
-              {new Date(comment.createdAt).toLocaleDateString()} {new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {new Date(comment.createdAt).toLocaleDateString()}{' '}
+              {new Date(comment.createdAt).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </span>
           </div>
 
-          <div className={`px-4 py-2.5 rounded-2xl shadow-sm text-sm relative group
-            ${isMine 
-              ? 'bg-primary-600 text-white rounded-tr-sm' 
-              : 'bg-surface-100 text-gray-800 rounded-tl-sm border border-surface-200'
+          <div
+            className={`px-4 py-2.5 rounded-2xl shadow-sm text-sm relative group
+            ${
+              isMine
+                ? 'bg-primary-600 text-white rounded-tr-sm'
+                : 'bg-surface-100 text-gray-800 rounded-tl-sm border border-surface-200'
             }
-          `}>
+          `}
+          >
             <p className="whitespace-pre-wrap break-words">{comment.content}</p>
-            
+
             {/* Reply Button (Only show on hover, and usually only useful on root comments or 1-level deep) */}
             {depth < 2 && (
-               <button
-                 onClick={() => setShowReply(!showReply)}
-                 className={`absolute ${isMine ? '-left-8' : '-right-8'} top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white border border-surface-200 text-gray-400 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary-600`}
-                 title="Reply"
-               >
-                 <CornerDownRight size={14} />
-               </button>
+              <button
+                onClick={() => setShowReply(!showReply)}
+                className={`absolute ${isMine ? '-left-8' : '-right-8'} top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white border border-surface-200 text-gray-400 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary-600`}
+                title="Reply"
+              >
+                <CornerDownRight size={14} />
+              </button>
             )}
           </div>
         </div>
@@ -118,7 +130,9 @@ const CommentItem = ({
 
       {/* Reply Input Box */}
       {showReply && (
-        <div className={`mt-2 flex gap-2 ${isMine ? 'justify-end pr-11' : 'pl-11'}`}>
+        <div
+          className={`mt-2 flex gap-2 ${isMine ? 'justify-end pr-11' : 'pl-11'}`}
+        >
           <div className="flex-1 max-w-[80%] relative">
             <textarea
               value={replyContent}
@@ -133,8 +147,8 @@ const CommentItem = ({
                 }
               }}
             />
-            <button 
-              onClick={handleReply} 
+            <button
+              onClick={handleReply}
               disabled={loading || !replyContent.trim()}
               className="absolute right-2 bottom-2 p-1 text-primary-600 hover:bg-primary-50 rounded-lg disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
             >
@@ -197,7 +211,6 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
 
   return (
     <div className="flex flex-col h-full relative">
-      
       {/* Comments List */}
       <div className="flex-1 overflow-y-auto pr-2 pb-4 space-y-2 no-scrollbar">
         {!comments || comments.length === 0 ? (
@@ -248,10 +261,17 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
           </button>
         </div>
         <div className="mt-2 text-[10px] text-gray-400 text-center">
-          Press <kbd className="px-1 py-0.5 rounded bg-surface-100 border border-surface-200 font-sans">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-surface-100 border border-surface-200 font-sans">Shift + Enter</kbd> for new line
+          Press{' '}
+          <kbd className="px-1 py-0.5 rounded bg-surface-100 border border-surface-200 font-sans">
+            Enter
+          </kbd>{' '}
+          to send,{' '}
+          <kbd className="px-1 py-0.5 rounded bg-surface-100 border border-surface-200 font-sans">
+            Shift + Enter
+          </kbd>{' '}
+          for new line
         </div>
       </div>
-      
     </div>
   );
 };

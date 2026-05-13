@@ -27,7 +27,10 @@ export class CreateTaskInput {
   @Field({ nullable: true })
   dueDate?: Date;
 
-  @Field(() => TaskPriority, { nullable: true, defaultValue: TaskPriority.MEDIUM })
+  @Field(() => TaskPriority, {
+    nullable: true,
+    defaultValue: TaskPriority.MEDIUM,
+  })
   priority?: TaskPriority;
 
   @Field(() => Int, { nullable: true })

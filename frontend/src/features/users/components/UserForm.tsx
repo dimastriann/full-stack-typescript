@@ -7,6 +7,21 @@ import { useQuery } from '@apollo/client';
 import { GET_USER } from '../gql/user.graphql';
 import { useUserContext } from '../hooks/useUsers';
 
+const defaultValues = {
+  name: '',
+  email: '',
+  password: '',
+  phone: '',
+  mobile: '',
+  firstName: '',
+  lastName: '',
+  status: true,
+  address: '',
+  bio: '',
+  birthDate: '',
+  role: 'USER',
+};
+
 interface UserFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -20,21 +35,6 @@ export default function UserForm({
   userId: propUserId,
   isFromProfile,
 }: UserFormProps) {
-  const defaultValues = {
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    mobile: '',
-    firstName: '',
-    lastName: '',
-    status: true,
-    address: '',
-    bio: '',
-    birthDate: '',
-    role: 'USER',
-  };
-
   const { userId: paramUserId } = useParams();
   // Use propUserId if provided (converted to string for consistency), else paramUserId
   const userId = propUserId ? String(propUserId) : paramUserId;
@@ -79,11 +79,9 @@ export default function UserForm({
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      const userFormData: any = { ...formData };
+      const userFormData = { ...formData } as any;
       if (isEditMode) {
         // Remove password if empty to avoid overwriting with empty string
-        // Remove password if empty to avoid overwriting with empty string
-        // const updateData: any = { ...formData };
         if (!userFormData.password) delete userFormData.password;
         if ('__typename' in userFormData) delete userFormData.__typename;
 
@@ -105,8 +103,6 @@ export default function UserForm({
       if (onSuccess) {
         onSuccess();
       } else {
-        // If no onSuccess prop (e.g. page mode), maybe redirect or show success
-        // For now, just refetch
         await refetch();
       }
     } catch (err) {

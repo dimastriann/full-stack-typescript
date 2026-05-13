@@ -36,7 +36,9 @@ describe('ProjectForm', () => {
     },
     {
       request: { query: GET_USERS },
-      result: { data: { users: [{ id: 1, name: 'Admin', email: 'admin@test.com' }] } },
+      result: {
+        data: { users: [{ id: 1, name: 'Admin', email: 'admin@test.com' }] },
+      },
     },
     {
       request: {
@@ -49,10 +51,12 @@ describe('ProjectForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
-      selector({ user: { id: 1, role: 'ADMIN' } }),
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (selector) => selector({ user: { id: 1, role: 'ADMIN' } }),
     );
-    (useWorkspaceStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+    (
+      useWorkspaceStore as unknown as ReturnType<typeof vi.fn>
+    ).mockImplementation((selector) =>
       selector({ activeWorkspace: { id: 1, name: 'Test WS' } }),
     );
     (useProjects as any).mockReturnValue({
@@ -69,7 +73,7 @@ describe('ProjectForm', () => {
         <MemoryRouter>
           <ProjectForm onSuccess={vi.fn()} />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Wait for data to load
@@ -80,7 +84,7 @@ describe('ProjectForm', () => {
     fireEvent.change(screen.getByPlaceholderText(/Project Name/i), {
       target: { value: 'New Test Project' },
     });
-    
+
     fireEvent.change(screen.getByPlaceholderText(/Project Description/i), {
       target: { value: 'Test description' },
     });
@@ -90,7 +94,9 @@ describe('ProjectForm', () => {
     await waitFor(() => {
       expect(mockCreateRecord).toHaveBeenCalled();
       const callArgs = mockCreateRecord.mock.calls[0][0];
-      expect(callArgs.variables.createProjectInput.name).toBe('New Test Project');
+      expect(callArgs.variables.createProjectInput.name).toBe(
+        'New Test Project',
+      );
     });
   });
 
@@ -100,7 +106,7 @@ describe('ProjectForm', () => {
         <MemoryRouter>
           <ProjectForm />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Create/i }));

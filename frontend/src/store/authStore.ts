@@ -1,10 +1,11 @@
 import { create } from 'zustand';
+import type { UserType } from '../types/Users';
 
 export interface AuthState {
   session: string;
-  user: any;
+  user: UserType | null;
   loading: boolean;
-  setAuth: (user: any, session: string) => void;
+  setAuth: (user: UserType, session: string) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
 }

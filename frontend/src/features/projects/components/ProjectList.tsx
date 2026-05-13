@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useProjects } from '../hooks/useProjects';
-import type { ProjectType } from '../../../types/Projects';
+import type { ProjectType, ProjectMember } from '../../../types/Projects';
 import ErrorSection from '../../../components/ErrorSection';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -36,7 +36,7 @@ const ProjectRow = React.memo(
     onToggle: (id: number) => void;
   }) => {
     const userMembership = project.members?.find(
-      (m: any) => parseInt(m.user.id) === currentUserId,
+      (m: ProjectMember) => m.userId === currentUserId,
     );
     const canDelete =
       userMembership?.role === 'OWNER' || userMembership?.role === 'ADMIN';
@@ -64,7 +64,9 @@ const ProjectRow = React.memo(
         <td className="px-4 py-3 border-b border-gray-100 text-sm font-medium text-gray-900">
           <div className="flex flex-col">
             <span>{project.name}</span>
-            <span className="text-[10px] text-indigo-500 font-bold uppercase">{project.key}</span>
+            <span className="text-[10px] text-indigo-500 font-bold uppercase">
+              {project.key}
+            </span>
           </div>
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
@@ -83,16 +85,20 @@ const ProjectRow = React.memo(
           </span>
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-          {/* @ts-ignore - responsible might be populated */}
           {project.responsible?.name || project.responsibleId}
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-            project.priority === 'CRITICAL' ? 'bg-red-100 text-red-600' :
-            project.priority === 'HIGH' ? 'bg-orange-100 text-orange-600' :
-            project.priority === 'MEDIUM' ? 'bg-blue-100 text-blue-600' :
-            'bg-gray-100 text-gray-600'
-          }`}>
+          <span
+            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+              project.priority === 'CRITICAL'
+                ? 'bg-red-100 text-red-600'
+                : project.priority === 'HIGH'
+                  ? 'bg-orange-100 text-orange-600'
+                  : project.priority === 'MEDIUM'
+                    ? 'bg-blue-100 text-blue-600'
+                    : 'bg-gray-100 text-gray-600'
+            }`}
+          >
             {project.priority}
           </span>
         </td>
@@ -107,8 +113,12 @@ const ProjectRow = React.memo(
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
           <div className="flex flex-col">
-            <span className="text-xs text-gray-400">P: ${project.budgetPlanned?.toLocaleString()}</span>
-            <span className="text-xs text-gray-400">A: ${project.budgetActual?.toLocaleString()}</span>
+            <span className="text-xs text-gray-400">
+              P: ${project.budgetPlanned?.toLocaleString()}
+            </span>
+            <span className="text-xs text-gray-400">
+              A: ${project.budgetActual?.toLocaleString()}
+            </span>
           </div>
         </td>
         <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600 text-center">

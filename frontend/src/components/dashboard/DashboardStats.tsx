@@ -14,7 +14,10 @@ export default function DashboardStats() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="card p-6 h-[116px] animate-pulse flex items-center gap-4">
+          <div
+            key={i}
+            className="card p-6 h-[116px] animate-pulse flex items-center gap-4"
+          >
             <div className="h-12 w-12 bg-surface-200 rounded-xl"></div>
             <div className="flex-1 space-y-3">
               <div className="h-4 bg-surface-200 rounded w-1/2"></div>
@@ -43,7 +46,6 @@ export default function DashboardStats() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      
       {/* Users Card */}
       <div className="card p-6 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
         <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary-400 to-primary-600"></div>
@@ -52,7 +54,9 @@ export default function DashboardStats() {
             <Users size={24} />
           </div>
           <div>
-            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Total Users</h3>
+            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">
+              Total Users
+            </h3>
             <p className="text-3xl font-black text-gray-900 tracking-tight">
               {stats.totalUsers}
             </p>
@@ -68,7 +72,9 @@ export default function DashboardStats() {
             <FolderGit2 size={24} />
           </div>
           <div>
-            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Active Projects</h3>
+            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">
+              Active Projects
+            </h3>
             <p className="text-3xl font-black text-gray-900 tracking-tight">
               {stats.activeProjects}
             </p>
@@ -84,14 +90,15 @@ export default function DashboardStats() {
             <ListTodo size={24} />
           </div>
           <div>
-            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Pending Tasks</h3>
+            <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">
+              Pending Tasks
+            </h3>
             <p className="text-3xl font-black text-gray-900 tracking-tight">
               {stats.pendingTasks}
             </p>
           </div>
         </div>
       </div>
-
     </div>
   );
 }

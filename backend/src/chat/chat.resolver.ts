@@ -8,6 +8,7 @@ import {
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { ConversationType } from '../../prisma/generated/client';
+import { GqlContext } from '../auth/types/context.type';
 
 @Resolver()
 export class ChatResolver {
@@ -15,8 +16,8 @@ export class ChatResolver {
 
   @Query(() => [Conversation])
   @UseGuards(GqlAuthGuard)
-  async myConversations(@Context() context: any) {
-    return this.chatService.getUserConversations(context.req.user.id);
+  async myConversations(@Context() context: GqlContext) {
+    return this.chatService.getUserConversations(context.req.user!.id);
   }
 
   @Query(() => [Message])
@@ -33,10 +34,10 @@ export class ChatResolver {
   @UseGuards(GqlAuthGuard)
   async createDirectConversation(
     @Args('otherUserId', { type: () => Int }) otherUserId: number,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
     return this.chatService.findOrCreateDirectConversation(
-      context.req.user.id,
+      context.req.user!.id,
       otherUserId,
     );
   }
@@ -47,10 +48,10 @@ export class ChatResolver {
     @Args('name') name: string,
     @Args('workspaceId', { type: () => Int }) workspaceId: number,
     @Args('userIds', { type: () => [Int] }) userIds: number[],
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
     // Ensure the creator is included
-    const allUserIds = Array.from(new Set([...userIds, context.req.user.id]));
+    const allUserIds = Array.from(new Set([...userIds, context.req.user!.id]));
     return this.chatService.createConversation(
       allUserIds,
       ConversationType.CHANNEL,
@@ -89,9 +90,9 @@ export class ChatResolver {
   @UseGuards(GqlAuthGuard)
   async markAsRead(
     @Args('conversationId', { type: () => Int }) conversationId: number,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
-    await this.chatService.markAsRead(conversationId, context.req.user.id);
+    await this.chatService.markAsRead(conversationId, context.req.user!.id);
     return true;
   }
 
@@ -100,18 +101,18 @@ export class ChatResolver {
   async updateMessage(
     @Args('id', { type: () => Int }) id: number,
     @Args('content') content: string,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
-    return this.chatService.updateMessage(id, context.req.user.id, content);
+    return this.chatService.updateMessage(id, context.req.user!.id, content);
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async deleteMessage(
     @Args('id', { type: () => Int }) id: number,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
-    await this.chatService.deleteMessage(id, context.req.user.id);
+    await this.chatService.deleteMessage(id, context.req.user!.id);
     return true;
   }
 }

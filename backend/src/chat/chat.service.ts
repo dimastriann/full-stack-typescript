@@ -115,8 +115,8 @@ export class ChatService {
         fileName: fileData?.name,
         fileSize: fileData?.size,
         mimeType: fileData?.mimeType,
-        metadata: metadata ? (metadata as any) : undefined,
-        linkPreview: linkPreviewData as any,
+        metadata: metadata ? metadata : undefined,
+        linkPreview: linkPreviewData,
         attachments: attachmentIds
           ? {
               connect: attachmentIds.map((id) => ({ id })),

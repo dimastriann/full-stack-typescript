@@ -31,7 +31,7 @@ describe('AuthService', () => {
     it('should return an access token and user info', () => {
       const user = { id: 1, email: 'test@example.com' };
       const result = service.login(user);
-      
+
       expect(result).toEqual({
         access_token: 'mockToken',
         user: user,

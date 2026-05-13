@@ -10,6 +10,7 @@ import { AuthService } from '../auth/auth.service';
 import { LoginResponse } from '../auth/dto/login-response';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { GqlContext } from '../auth/types/context.type';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -30,7 +31,7 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  me(@Context() context: any) {
+  me(@Context() context: GqlContext) {
     return context.req.user;
   }
 
@@ -62,7 +63,7 @@ export class UserResolver {
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
     const user = await this.userService.findByEmail(email);
     if (!user) {
@@ -77,7 +78,7 @@ export class UserResolver {
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
-    const loginResponse = await this.authService.login(user);
+    const loginResponse = this.authService.login(user);
 
     context.res.cookie('access_token', loginResponse.access_token, {
       httpOnly: true,
@@ -92,7 +93,7 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   async register(
     @Args('createUserInput') createUserInput: CreateUserInput,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
     // Ensure role is always USER for public registration
     const inputWithUserRole = {
@@ -100,7 +101,7 @@ export class UserResolver {
       role: UserRole.USER,
     };
     const user = await this.userService.create(inputWithUserRole);
-    const loginResponse = await this.authService.login(user);
+    const loginResponse = this.authService.login(user);
 
     context.res.cookie('access_token', loginResponse.access_token, {
       httpOnly: true,
@@ -113,7 +114,7 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async logout(@Context() context: any) {
+  logout(@Context() context: GqlContext) {
     context.res.clearCookie('access_token');
     return true;
   }

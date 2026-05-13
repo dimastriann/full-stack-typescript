@@ -26,21 +26,31 @@ export default function TimesheetFormPage() {
                 TS-{id}
               </span>
               {timesheet.billable && (
-                <span className="badge bg-green-100 text-green-700">Billable</span>
+                <span className="badge bg-green-100 text-green-700">
+                  Billable
+                </span>
               )}
             </div>
             <h1 className="text-2xl font-bold text-gray-900">Edit Timesheet</h1>
           </div>
-          
+
           <div className="flex items-center gap-4 text-sm bg-surface-50 p-3 rounded-xl border border-surface-200">
-             <div className="flex flex-col items-end border-r border-surface-200 pr-4">
-               <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-0.5">Time Spent</span>
-               <span className="font-bold text-gray-900 text-lg">{timesheet.timeSpent}h</span>
-             </div>
-             <div className="flex flex-col items-end pl-2">
-               <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-0.5">Total Cost</span>
-               <span className="font-bold text-primary-600 text-lg">${timesheet.cost?.toLocaleString() || '0.00'}</span>
-             </div>
+            <div className="flex flex-col items-end border-r border-surface-200 pr-4">
+              <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-0.5">
+                Time Spent
+              </span>
+              <span className="font-bold text-gray-900 text-lg">
+                {timesheet.timeSpent}h
+              </span>
+            </div>
+            <div className="flex flex-col items-end pl-2">
+              <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-0.5">
+                Total Cost
+              </span>
+              <span className="font-bold text-primary-600 text-lg">
+                ${timesheet.cost?.toLocaleString() || '0.00'}
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -48,7 +58,9 @@ export default function TimesheetFormPage() {
       {!id && (
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Create Timesheet</h1>
-          <p className="text-gray-500 text-sm mt-1">Log your work hours below.</p>
+          <p className="text-gray-500 text-sm mt-1">
+            Log your work hours below.
+          </p>
         </div>
       )}
 

@@ -180,7 +180,9 @@ export default function TimesheetForm({
           </label>
           <textarea
             id="description"
-            {...register('description', { required: 'Description is required' })}
+            {...register('description', {
+              required: 'Description is required',
+            })}
             placeholder="What did you work on?"
             rows={3}
             className="input-modern resize-none"
@@ -403,7 +405,11 @@ export default function TimesheetForm({
           disabled={mutationLoading}
           className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {mutationLoading ? 'Saving...' : isEditMode ? 'Update Timesheet' : 'Create Timesheet'}
+          {mutationLoading
+            ? 'Saving...'
+            : isEditMode
+              ? 'Update Timesheet'
+              : 'Create Timesheet'}
         </button>
       </div>
     </form>

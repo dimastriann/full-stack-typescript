@@ -15,13 +15,13 @@ export const useLogout = () => {
     } catch (error) {
       Logger.error('Logout mutation failed:', error);
     }
-    
+
     // Clear Zustand store and storage
     clearAuth();
-    
+
     // Reset Apollo store
     await client.resetStore();
-    
+
     // Navigate to login
     navigate('/login');
   };

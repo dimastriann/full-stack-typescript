@@ -49,7 +49,8 @@ describe('TaskService', () => {
 
     service = module.get<TaskService>(TaskService);
     prisma = module.get<PrismaService>(PrismaService);
-    projectMemberService = module.get<ProjectMemberService>(ProjectMemberService);
+    projectMemberService =
+      module.get<ProjectMemberService>(ProjectMemberService);
   });
 
   it('should be defined', () => {
@@ -65,13 +66,13 @@ describe('TaskService', () => {
       };
 
       const result = await service.create(createDto as any, 1);
-      
+
       expect(result).toEqual(mockTask);
-      expect(projectMemberService.checkPermission).toHaveBeenCalledWith(
-        1,
-        1,
-        [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER]
-      );
+      expect(projectMemberService.checkPermission).toHaveBeenCalledWith(1, 1, [
+        ProjectRole.OWNER,
+        ProjectRole.ADMIN,
+        ProjectRole.MEMBER,
+      ]);
       expect(prisma.task.create).toHaveBeenCalled();
     });
   });

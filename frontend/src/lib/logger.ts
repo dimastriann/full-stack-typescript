@@ -20,7 +20,7 @@ class Logger {
    * @param message The message to log
    * @param args Optional arguments to log
    */
-  static info(message: string, ...args: any[]) {
+  static info(message: string, ...args: unknown[]) {
     if (CURRENT_LOG_LEVEL <= LOG_LEVEL.INFO) {
       console.log(`INFO: ${message}`, ...args);
     }
@@ -31,7 +31,7 @@ class Logger {
    * @param message The message to log
    * @param args Optional arguments to log
    */
-  static error(message: string, ...args: any[]) {
+  static error(message: string, ...args: unknown[]) {
     if (CURRENT_LOG_LEVEL <= LOG_LEVEL.ERROR) {
       console.error(`ERROR: ${message}`, ...args);
     }
@@ -42,7 +42,7 @@ class Logger {
    * @param message The message to log
    * @param args Optional arguments to log
    */
-  static warn(message: string, ...args: any[]) {
+  static warn(message: string, ...args: unknown[]) {
     if (CURRENT_LOG_LEVEL <= LOG_LEVEL.WARN) {
       console.warn(`WARN: ${message}`, ...args);
     }
@@ -53,7 +53,7 @@ class Logger {
    * @param message The message to log
    * @param args Optional arguments to log
    */
-  static debug(message: string, ...args: any[]) {
+  static debug(message: string, ...args: unknown[]) {
     if (CURRENT_LOG_LEVEL <= LOG_LEVEL.DEBUG) {
       console.debug(`DEBUG: ${message}`, ...args);
     }
@@ -64,7 +64,7 @@ class Logger {
    * @param message The message to log
    * @param args Optional arguments to log
    */
-  static trace(message: string, ...args: any[]) {
+  static trace(message: string, ...args: unknown[]) {
     if (CURRENT_LOG_LEVEL <= LOG_LEVEL.TRACE) {
       console.trace(`TRACE: ${message}`, ...args);
     }

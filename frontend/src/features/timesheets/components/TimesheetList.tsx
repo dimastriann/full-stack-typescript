@@ -17,6 +17,7 @@ import ErrorSection from '../../../components/ErrorSection';
 import TimesheetForm from './TimesheetForm';
 import Logger from '../../../lib/logger';
 import { useAuthStore } from '../../../store/authStore';
+import { UserRole } from '../../../types/Users';
 
 const TimesheetRow = React.memo(
   ({
@@ -78,12 +79,16 @@ const TimesheetRow = React.memo(
         {timesheet.task?.title || '-'}
       </td>
       <td className="px-4 py-3 border-b border-gray-100 text-sm text-gray-600">
-        <span className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full
+        <span
+          className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full
           ${
-            timesheet.approvalStatus === 'APPROVED' ? 'bg-green-100 text-green-800' :
-            timesheet.approvalStatus === 'REJECTED' ? 'bg-red-100 text-red-800' :
-            'bg-yellow-100 text-yellow-800'
-          }`}>
+            timesheet.approvalStatus === 'APPROVED'
+              ? 'bg-green-100 text-green-800'
+              : timesheet.approvalStatus === 'REJECTED'
+                ? 'bg-red-100 text-red-800'
+                : 'bg-yellow-100 text-yellow-800'
+          }`}
+        >
           {timesheet.approvalStatus}
         </span>
       </td>
@@ -109,7 +114,7 @@ const TimesheetRow = React.memo(
                 className="text-green-600 hover:text-green-900 font-medium text-sm transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
-                  timesheet.id && onApprove(timesheet.id);
+                  if (timesheet.id) onApprove(timesheet.id);
                 }}
               >
                 <Check className="h-5 w-5" />
@@ -119,7 +124,7 @@ const TimesheetRow = React.memo(
                 className="text-orange-600 hover:text-orange-900 font-medium text-sm transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
-                  timesheet.id && onReject(timesheet.id);
+                  if (timesheet.id) onReject(timesheet.id);
                 }}
               >
                 <X className="h-5 w-5" />
@@ -161,7 +166,7 @@ export default function TimesheetList() {
     rejectRecord,
   } = useTimesheets();
   const authUser = useAuthStore((state) => state.user);
-  const isAdmin = authUser?.role === 'ADMIN' || authUser?.role === 'OWNER';
+  const isAdmin = authUser?.role === UserRole.ADMIN;
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -378,8 +383,12 @@ export default function TimesheetList() {
                   onEdit={handleEditTimesheet}
                   onDelete={handleDeleteClick}
                   onToggle={handleToggleSelect}
-                  onApprove={(id) => approveRecord({ variables: { id } }).then(() => refetch())}
-                  onReject={(id) => rejectRecord({ variables: { id } }).then(() => refetch())}
+                  onApprove={(id) =>
+                    approveRecord({ variables: { id } }).then(() => refetch())
+                  }
+                  onReject={(id) =>
+                    rejectRecord({ variables: { id } }).then(() => refetch())
+                  }
                   isAdmin={isAdmin}
                 />
               ))}

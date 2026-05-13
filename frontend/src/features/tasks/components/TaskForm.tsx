@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useTasks } from '../hooks/useTasks';
 import { useParams } from 'react-router-dom';
 import { GET_TASK, GET_TASK_STAGES } from '../gql/task.graphql';
@@ -8,15 +8,7 @@ import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm } from 'react-hook-form';
 import Logger from '../../../lib/logger';
-import {
-  X,
-  FileText,
-  Calendar,
-  Settings2,
-  AlertCircle,
-  Briefcase,
-  User,
-} from 'lucide-react';
+import { X, FileText, AlertCircle, Briefcase, User } from 'lucide-react';
 import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
 import type { TaskStage } from '../../../types/Tasks';
 import { useAuthStore } from '../../../store/authStore';
@@ -58,9 +50,18 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   const task = data?.getTask;
-  const projects: ProjectType[] = projectsData?.projects ?? [];
-  const users: UserType[] = usersData?.users ?? [];
-  const stages: TaskStage[] = stagesData?.taskStages ?? [];
+  const projects = useMemo<ProjectType[]>(
+    () => projectsData?.projects ?? [],
+    [projectsData?.projects],
+  );
+  const users = useMemo<UserType[]>(
+    () => usersData?.users ?? [],
+    [usersData?.users],
+  );
+  const stages = useMemo<TaskStage[]>(
+    () => stagesData?.taskStages ?? [],
+    [stagesData?.taskStages],
+  );
   const userId = currentUser?.id;
 
   const {
@@ -274,11 +275,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
             <label htmlFor="type" className="label-modern">
               Task Type
             </label>
-            <select
-              id="type"
-              {...register('type')}
-              className="select-modern"
-            >
+            <select id="type" {...register('type')} className="select-modern">
               {Object.values(TaskTypeEnum).map((t) => (
                 <option key={t} value={t}>
                   {t}
@@ -415,7 +412,11 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
           disabled={mutationLoading}
           className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {mutationLoading ? 'Saving...' : isEditMode ? 'Update Task' : 'Create Task'}
+          {mutationLoading
+            ? 'Saving...'
+            : isEditMode
+              ? 'Update Task'
+              : 'Create Task'}
         </button>
       </div>
     </form>

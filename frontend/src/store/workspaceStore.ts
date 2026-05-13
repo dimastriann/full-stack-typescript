@@ -28,7 +28,9 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     let newActiveWorkspace = null;
 
     if (workspaces.length > 0) {
-      const restored = workspaces.find((w) => w.id.toString() === storedWorkspaceId);
+      const restored = workspaces.find(
+        (w) => w.id.toString() === storedWorkspaceId,
+      );
       newActiveWorkspace = restored ? restored : workspaces[0];
       localStorage.setItem('lastWorkspaceId', newActiveWorkspace.id.toString());
     }

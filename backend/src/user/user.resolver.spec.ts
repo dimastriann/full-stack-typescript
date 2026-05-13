@@ -5,8 +5,6 @@ import { AuthService } from '../auth/auth.service';
 
 describe('UserResolver', () => {
   let resolver: UserResolver;
-  let userService: UserService;
-  let authService: AuthService;
 
   const mockUserService = {
     findAll: jest.fn(),
@@ -31,8 +29,6 @@ describe('UserResolver', () => {
     }).compile();
 
     resolver = module.get<UserResolver>(UserResolver);
-    userService = module.get<UserService>(UserService);
-    authService = module.get<AuthService>(AuthService);
   });
 
   afterEach(() => {
@@ -49,7 +45,10 @@ describe('UserResolver', () => {
       mockUserService.findAll.mockResolvedValue(result);
 
       expect(await resolver.users()).toBe(result);
-      expect(mockUserService.findAll).toHaveBeenCalledWith(undefined, undefined);
+      expect(mockUserService.findAll).toHaveBeenCalledWith(
+        undefined,
+        undefined,
+      );
     });
   });
 });

@@ -69,9 +69,7 @@ export default function Sidebar({
                 <h2 className="text-sm font-bold text-white tracking-tight">
                   ProjectFlow
                 </h2>
-                <p className="text-[10px] text-sidebar-text/60">
-                  Workspace
-                </p>
+                <p className="text-[10px] text-sidebar-text/60">Workspace</p>
               </div>
             </div>
           )}
@@ -95,22 +93,39 @@ export default function Sidebar({
         <nav className="flex-1 overflow-y-auto py-3 px-2.5 space-y-0.5">
           {/* MAIN */}
           {!isCollapsed && <div className="nav-group-label">Main</div>}
-          <NavLink to="/dashboard" end onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard"
+            end
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <CircleGauge size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Overview</span>}
           </NavLink>
 
           {/* WORK */}
           {!isCollapsed && <div className="nav-group-label">Work</div>}
-          <NavLink to="/dashboard/projects" onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard/projects"
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <FolderIcon size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Projects</span>}
           </NavLink>
-          <NavLink to="/dashboard/tasks" onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard/tasks"
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <ListCheck size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Tasks</span>}
           </NavLink>
-          <NavLink to="/dashboard/timesheets" onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard/timesheets"
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <Timer size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Timesheets</span>}
           </NavLink>
@@ -118,23 +133,39 @@ export default function Sidebar({
           {/* PEOPLE */}
           {!isCollapsed && <div className="nav-group-label">People</div>}
           {user?.role === 'ADMIN' && (
-            <NavLink to="/dashboard/users" onClick={onClose} className={navLinkClass}>
+            <NavLink
+              to="/dashboard/users"
+              onClick={onClose}
+              className={navLinkClass}
+            >
               <UsersIcon size={18} className="flex-shrink-0" />
               {!isCollapsed && <span>Users</span>}
             </NavLink>
           )}
-          <NavLink to="/dashboard/discuss" onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard/discuss"
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <MessageSquare size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Discuss</span>}
           </NavLink>
 
           {/* SETTINGS */}
           {!isCollapsed && <div className="nav-group-label">Settings</div>}
-          <NavLink to="/dashboard/profile" onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard/profile"
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <User size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Profile</span>}
           </NavLink>
-          <NavLink to="/dashboard/workspace/settings" onClick={onClose} className={navLinkClass}>
+          <NavLink
+            to="/dashboard/workspace/settings"
+            onClick={onClose}
+            className={navLinkClass}
+          >
             <Settings size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Workspace</span>}
           </NavLink>

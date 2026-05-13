@@ -33,14 +33,16 @@ describe('TimesheetForm', () => {
     },
     {
       request: { query: GET_TASKS },
-      result: { data: { tasks: [{ id: 1, title: 'Test Task', project: { id: 1 } }] } },
+      result: {
+        data: { tasks: [{ id: 1, title: 'Test Task', project: { id: 1 } }] },
+      },
     },
   ];
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
-      selector({ user: { id: 1, role: 'ADMIN' } }),
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (selector) => selector({ user: { id: 1, role: 'ADMIN' } }),
     );
     (useTimesheets as any).mockReturnValue({
       createRecord: mockCreateRecord,
@@ -56,7 +58,7 @@ describe('TimesheetForm', () => {
         <MemoryRouter>
           <TimesheetForm onSuccess={vi.fn()} />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Wait for data to load
@@ -67,7 +69,7 @@ describe('TimesheetForm', () => {
     fireEvent.change(screen.getByPlaceholderText(/Description/i), {
       target: { value: 'Working on project' },
     });
-    
+
     fireEvent.change(screen.getByLabelText(/Time Spent/i), {
       target: { value: '5' },
     });
@@ -76,7 +78,7 @@ describe('TimesheetForm', () => {
     fireEvent.change(screen.getByLabelText(/Project/i), {
       target: { value: '1' },
     });
-    
+
     // Task depends on project selection
     await waitFor(() => {
       fireEvent.change(screen.getByLabelText(/Task/i), {
@@ -100,7 +102,7 @@ describe('TimesheetForm', () => {
         <MemoryRouter>
           <TimesheetForm />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Create/i }));

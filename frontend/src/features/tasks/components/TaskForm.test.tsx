@@ -6,7 +6,7 @@ import { useAuthStore } from '../../../store/authStore';
 import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { useTasks } from '../hooks/useTasks';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { GET_TASK, GET_TASK_STAGES } from '../gql/task.graphql';
+import { GET_TASK_STAGES } from '../gql/task.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 
@@ -52,10 +52,12 @@ describe('TaskForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
-      selector({ user: { id: 1, role: 'ADMIN' } }),
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (selector) => selector({ user: { id: 1, role: 'ADMIN' } }),
     );
-    (useWorkspaceStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) =>
+    (
+      useWorkspaceStore as unknown as ReturnType<typeof vi.fn>
+    ).mockImplementation((selector) =>
       selector({ activeWorkspace: { id: 1, name: 'Test WS' } }),
     );
     (useTasks as any).mockReturnValue({
@@ -72,7 +74,7 @@ describe('TaskForm', () => {
         <MemoryRouter>
           <TaskForm onSuccess={vi.fn()} />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Wait for data to load
@@ -83,7 +85,7 @@ describe('TaskForm', () => {
     fireEvent.change(screen.getByPlaceholderText(/Task Title/i), {
       target: { value: 'New Test Task' },
     });
-    
+
     // Select user and project
     fireEvent.change(screen.getByLabelText(/Assigned User/i), {
       target: { value: '1' },
@@ -108,7 +110,7 @@ describe('TaskForm', () => {
         <MemoryRouter>
           <TaskForm />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Create/i }));

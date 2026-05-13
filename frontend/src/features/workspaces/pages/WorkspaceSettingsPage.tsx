@@ -24,6 +24,8 @@ import {
   UserX,
 } from 'lucide-react';
 import { WorkspaceRole } from '../../../types/Workspaces';
+import type { WorkspaceMember } from '../../../types/Workspaces';
+import type { UserType } from '../../../types/Users';
 import ProjectStagePage from './ProjectStagePage';
 import TaskStagePage from './TaskStagePage';
 
@@ -69,11 +71,13 @@ export default function WorkspaceSettingsPage() {
   const { data: usersData } = useQuery(GET_USERS);
   const allUsers = usersData?.users || [];
   const filteredUsers = inviteEmail.trim()
-    ? allUsers.filter(
-        (u: any) =>
-          u.email.toLowerCase().includes(inviteEmail.toLowerCase()) ||
-          u.name.toLowerCase().includes(inviteEmail.toLowerCase()),
-      ).slice(0, 5) // Limit suggestions to 5
+    ? allUsers
+        .filter(
+          (u: UserType) =>
+            u.email.toLowerCase().includes(inviteEmail.toLowerCase()) ||
+            u.name.toLowerCase().includes(inviteEmail.toLowerCase()),
+        )
+        .slice(0, 5) // Limit suggestions to 5
     : [];
 
   const { data: projectStagesData, refetch: refetchProjectStages } = useQuery(
@@ -146,9 +150,10 @@ export default function WorkspaceSettingsPage() {
       });
       setInviteEmail('');
       setEditingId(null);
-    } catch (err: any) {
-      Logger.error(err as string);
-      alert(err.message || 'Failed to invite user');
+    } catch (err) {
+      const error = err as any;
+      Logger.error(error.message || 'Failed to invite user');
+      alert(error.message || 'Failed to invite user');
     }
   };
 
@@ -164,9 +169,10 @@ export default function WorkspaceSettingsPage() {
           },
         },
       });
-    } catch (err: any) {
-      Logger.error(err as string);
-      alert(err.message || 'Failed to update role');
+    } catch (err) {
+      const error = err as any;
+      Logger.error(error.message || 'Failed to update role');
+      alert(error.message || 'Failed to update role');
     }
   };
 
@@ -185,9 +191,10 @@ export default function WorkspaceSettingsPage() {
           },
         },
       });
-    } catch (err: any) {
-      Logger.error(err as string);
-      alert(err.message || 'Failed to remove member');
+    } catch (err) {
+      const error = err as any;
+      Logger.error(error.message || 'Failed to remove member');
+      alert(error.message || 'Failed to remove member');
     }
   };
 
@@ -304,13 +311,15 @@ export default function WorkspaceSettingsPage() {
                       setShowSuggestions(true);
                     }}
                     onFocus={() => setShowSuggestions(true)}
-                    onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    onBlur={() =>
+                      setTimeout(() => setShowSuggestions(false), 200)
+                    }
                     placeholder="Search name or user@example.com"
                   />
                   {/* Autocomplete Dropdown */}
                   {showSuggestions && filteredUsers.length > 0 && (
                     <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-y-auto">
-                      {filteredUsers.map((u: any) => (
+                      {filteredUsers.map((u: UserType) => (
                         <div
                           key={u.id}
                           className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex flex-col border-b border-gray-50 last:border-0"
@@ -319,8 +328,12 @@ export default function WorkspaceSettingsPage() {
                             setShowSuggestions(false);
                           }}
                         >
-                          <span className="text-sm font-medium text-gray-900">{u.name}</span>
-                          <span className="text-xs text-gray-500">{u.email}</span>
+                          <span className="text-sm font-medium text-gray-900">
+                            {u.name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {u.email}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -370,7 +383,7 @@ export default function WorkspaceSettingsPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {fullWorkspace.members?.map((member: any) => (
+                {fullWorkspace.members?.map((member: WorkspaceMember) => (
                   <tr key={member.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">

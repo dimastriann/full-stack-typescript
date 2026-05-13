@@ -8,7 +8,14 @@ import { GET_TASK } from '../gql/task.graphql';
 import { CommentThread } from '../../../components/comments/CommentThread';
 import { FileUpload } from '../../../components/upload/FileUpload';
 import { REMOVE_ATTACHMENT } from '../../attachments/gql/attachment.graphql';
-import { Trash2, Download, FileText, Timer, Paperclip, MessageSquare } from 'lucide-react';
+import {
+  Trash2,
+  Download,
+  FileText,
+  Timer,
+  Paperclip,
+  MessageSquare,
+} from 'lucide-react';
 import { useAttachments } from '../../attachments/hooks/useAttachments';
 import TaskTimesheetTable from '../components/TaskTimesheetTable';
 
@@ -16,8 +23,10 @@ export default function TaskFormPage() {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const id = taskId ? parseInt(taskId, 10) : 0;
-  
-  const [activeTab, setActiveTab] = useState<'details' | 'timesheets' | 'attachments'>('details');
+
+  const [activeTab, setActiveTab] = useState<
+    'details' | 'timesheets' | 'attachments'
+  >('details');
 
   const { data, refetch } = useQuery(GET_TASK, {
     variables: { id },
@@ -69,19 +78,23 @@ export default function TaskFormPage() {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">{task.title}</h1>
           </div>
-          
+
           <div className="flex items-center gap-4 text-sm">
-             {task.user && (
-               <div className="flex flex-col items-end">
-                 <span className="text-xs uppercase font-semibold text-gray-500 tracking-wider mb-1">Assignee</span>
-                 <div className="flex items-center gap-2">
-                   <div className="h-6 w-6 rounded-full bg-primary-600 flex items-center justify-center text-white text-[10px] font-bold">
-                     {task.user.firstName?.[0] || 'U'}
-                   </div>
-                   <span className="font-medium text-gray-900">{task.user.name}</span>
-                 </div>
-               </div>
-             )}
+            {task.user && (
+              <div className="flex flex-col items-end">
+                <span className="text-xs uppercase font-semibold text-gray-500 tracking-wider mb-1">
+                  Assignee
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded-full bg-primary-600 flex items-center justify-center text-white text-[10px] font-bold">
+                    {task.user.firstName?.[0] || 'U'}
+                  </div>
+                  <span className="font-medium text-gray-900">
+                    {task.user.name}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -89,16 +102,16 @@ export default function TaskFormPage() {
       {!id && (
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Create New Task</h1>
-          <p className="text-gray-500 text-sm mt-1">Fill in the details below to start a new task.</p>
+          <p className="text-gray-500 text-sm mt-1">
+            Fill in the details below to start a new task.
+          </p>
         </div>
       )}
 
       {/* ── Main Content Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
-        
         {/* Left Column: Tabs & Content */}
         <div className="lg:col-span-2 flex flex-col min-h-0">
-          
           {/* Tabs */}
           {id > 0 && (
             <div className="flex items-center gap-2 mb-4 border-b border-surface-200 overflow-x-auto no-scrollbar pb-1">
@@ -120,7 +133,9 @@ export default function TaskFormPage() {
               >
                 <Paperclip size={16} /> Attachments
                 {task?.attachments?.length > 0 && (
-                  <span className="ml-1 bg-surface-200 text-gray-600 text-xs px-1.5 rounded-full">{task.attachments.length}</span>
+                  <span className="ml-1 bg-surface-200 text-gray-600 text-xs px-1.5 rounded-full">
+                    {task.attachments.length}
+                  </span>
                 )}
               </button>
             </div>
@@ -243,7 +258,6 @@ export default function TaskFormPage() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

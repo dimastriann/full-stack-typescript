@@ -46,12 +46,19 @@ describe('ProjectMemberService', () => {
   describe('addMember', () => {
     it('should add a member successfully', async () => {
       mockPrisma.projectMember.findUnique.mockResolvedValue(null);
-      mockPrisma.project.findUnique.mockResolvedValue({ id: 1, workspaceId: 1 });
+      mockPrisma.project.findUnique.mockResolvedValue({
+        id: 1,
+        workspaceId: 1,
+      });
       mockPrisma.user.findUnique.mockResolvedValue({ id: 1 });
-      mockPrisma.projectMember.create.mockResolvedValue({ id: 1, userId: 1, projectId: 1 });
+      mockPrisma.projectMember.create.mockResolvedValue({
+        id: 1,
+        userId: 1,
+        projectId: 1,
+      });
 
       const result = await service.addMember(1, 1, ProjectRole.MEMBER);
-      
+
       expect(result).toBeDefined();
       expect(mockPrisma.projectMember.create).toHaveBeenCalled();
     });

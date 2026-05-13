@@ -399,12 +399,17 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       </div>
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-500">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        task.type === 'BUG' ? 'bg-red-100 text-red-600' :
-                        task.type === 'STORY' ? 'bg-green-100 text-green-600' :
-                        task.type === 'EPIC' ? 'bg-purple-100 text-purple-600' :
-                        'bg-blue-100 text-blue-600'
-                      }`}>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          task.type === 'BUG'
+                            ? 'bg-red-100 text-red-600'
+                            : task.type === 'STORY'
+                              ? 'bg-green-100 text-green-600'
+                              : task.type === 'EPIC'
+                                ? 'bg-purple-100 text-purple-600'
+                                : 'bg-blue-100 text-blue-600'
+                        }`}
+                      >
                         {task.type}
                       </span>
                     </td>
@@ -424,12 +429,17 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       </span>
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-500">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        task.priority === 'URGENT' ? 'bg-red-100 text-red-600' :
-                        task.priority === 'HIGH' ? 'bg-orange-100 text-orange-600' :
-                        task.priority === 'MEDIUM' ? 'bg-blue-100 text-blue-600' :
-                        'bg-gray-100 text-gray-600'
-                      }`}>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          task.priority === 'URGENT'
+                            ? 'bg-red-100 text-red-600'
+                            : task.priority === 'HIGH'
+                              ? 'bg-orange-100 text-orange-600'
+                              : task.priority === 'MEDIUM'
+                                ? 'bg-blue-100 text-blue-600'
+                                : 'bg-gray-100 text-gray-600'
+                        }`}
+                      >
                         {task.priority}
                       </span>
                     </td>

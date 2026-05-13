@@ -49,7 +49,8 @@ describe('TimesheetService', () => {
 
     service = module.get<TimesheetService>(TimesheetService);
     prisma = module.get<PrismaService>(PrismaService);
-    projectMemberService = module.get<ProjectMemberService>(ProjectMemberService);
+    projectMemberService =
+      module.get<ProjectMemberService>(ProjectMemberService);
   });
 
   it('should be defined', () => {
@@ -66,13 +67,13 @@ describe('TimesheetService', () => {
       };
 
       const result = await service.create(createDto as any, 1);
-      
+
       expect(result).toEqual(mockTimesheet);
-      expect(projectMemberService.checkPermission).toHaveBeenCalledWith(
-        1,
-        1,
-        [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER]
-      );
+      expect(projectMemberService.checkPermission).toHaveBeenCalledWith(1, 1, [
+        ProjectRole.OWNER,
+        ProjectRole.ADMIN,
+        ProjectRole.MEMBER,
+      ]);
       expect(prisma.timesheet.create).toHaveBeenCalled();
     });
   });
