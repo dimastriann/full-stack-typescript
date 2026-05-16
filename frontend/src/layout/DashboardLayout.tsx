@@ -19,6 +19,7 @@ import DiscussPage from '../pages/DiscussPage';
 import { Menu } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { WorkspaceSwitcher } from '../components/WorkspaceSwitcher';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -27,7 +28,7 @@ export default function DashboardLayout() {
   const isAdmin = user?.role === 'ADMIN';
 
   return (
-    <div className="flex h-screen bg-surface-50">
+    <div className="flex h-screen bg-surface-50 dark:bg-slate-950 transition-colors duration-300">
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -36,11 +37,11 @@ export default function DashboardLayout() {
       />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* ── Top Header ── */}
-        <header className="bg-white/80 backdrop-blur-md border-b border-surface-200 px-6 h-[57px] flex items-center justify-between z-10 flex-shrink-0">
+        <header className="bg-slate-950/95 backdrop-blur-md border-b border-slate-900 px-6 h-[57px] flex items-center justify-between z-10 flex-shrink-0 transition-colors duration-300">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden text-gray-400 hover:text-gray-700 transition-colors"
+              className="lg:hidden text-gray-400 hover:text-gray-200 transition-colors"
             >
               <Menu size={20} />
             </button>
@@ -48,8 +49,9 @@ export default function DashboardLayout() {
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <WorkspaceSwitcher />
-            <div className="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold shadow-sm ring-2 ring-primary-100">
+            <div className="h-8 w-8 rounded-full bg-primary-600 dark:bg-primary-500 flex items-center justify-center text-white text-xs font-bold shadow-sm ring-2 ring-primary-100 dark:ring-primary-900/20 transition-all">
               {user?.firstName?.[0]}
             </div>
           </div>

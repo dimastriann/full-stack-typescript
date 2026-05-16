@@ -78,15 +78,17 @@ export default function TaskStagePage({
   };
 
   return (
-    <div className="bg-white shadow rounded-lg mb-8 overflow-hidden">
-      <div className="p-6 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+    <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl mb-8 overflow-hidden border border-surface-200 dark:border-slate-800">
+      <div className="p-6 border-b border-surface-200 dark:border-slate-800 bg-surface-50 dark:bg-slate-900/50 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Layers className="h-5 w-5 text-gray-500" />
-          <h2 className="text-lg font-semibold text-gray-800">Task Stages</h2>
+          <Layers className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+            Task Stages
+          </h2>
         </div>
         <button
           onClick={() => setToAdd(true)}
-          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-bold rounded-xl text-white bg-primary-600 hover:bg-primary-700 shadow-sm hover:shadow transition-all"
         >
           <Plus className="mr-1 h-4 w-4" /> Add Stage
         </button>
@@ -110,13 +112,13 @@ export default function TaskStagePage({
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
-                        className={`flex items-center justify-between p-3 bg-white border rounded-lg group transition-all shadow-sm
-                          ${snapshot.isDragging ? 'border-indigo-400 shadow-lg scale-[1.02] z-50' : 'border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/30'}
+                        className={`flex items-center justify-between p-3 bg-white dark:bg-slate-900 border rounded-xl group transition-all shadow-sm
+                          ${snapshot.isDragging ? 'border-primary-400 dark:border-primary-500 shadow-float scale-[1.02] z-50' : 'border-surface-200 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-primary-50/30 dark:hover:bg-primary-900/10'}
                         `}
                       >
                         <div
                           {...provided.dragHandleProps}
-                          className="mr-3 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing px-1"
+                          className="mr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 cursor-grab active:cursor-grabbing px-1"
                         >
                           <GripVertical size={18} />
                         </div>
@@ -134,7 +136,7 @@ export default function TaskStagePage({
         </DragDropContext>
 
         {toAdd && (
-          <div className="mt-4 flex items-center justify-between p-3 bg-white border border-indigo-200 rounded-lg shadow-sm">
+          <div className="mt-4 flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-primary-200 dark:border-primary-800 rounded-xl shadow-sm animate-slide-in-up">
             <TaskStageForm
               isNew={toAdd}
               onReset={() => setToAdd(false)}

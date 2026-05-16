@@ -129,63 +129,67 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
   };
 
   if (loading)
-    return <div className="animate-pulse h-20 bg-gray-100 rounded"></div>;
+    return (
+      <div className="animate-pulse h-20 bg-gray-100 dark:bg-slate-800 rounded"></div>
+    );
 
   return (
-    <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-        <h3 className="font-semibold text-gray-700">Project Tasks</h3>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-card border border-surface-200 dark:border-slate-800 overflow-hidden transition-colors">
+      <div className="p-4 border-b border-surface-200 dark:border-slate-800 flex justify-between items-center bg-surface-50 dark:bg-slate-900/50">
+        <h3 className="font-bold text-gray-900 dark:text-white">
+          Project Tasks
+        </h3>
         <button
           onClick={handleAddRow}
           disabled={!!editingId}
-          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none disabled:opacity-50"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-xs font-bold rounded-xl text-white bg-primary-600 hover:bg-primary-700 shadow-sm transition-all disabled:opacity-50"
         >
-          <Plus className="mr-1 h-3 w-3" />
+          <Plus className="mr-1.5 h-3.5 w-3.5" />
           Add Task
         </button>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-surface-200 dark:divide-slate-800">
+          <thead className="bg-surface-50 dark:bg-slate-900/80">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                 Title
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                 Type
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                 Assignee
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                 Status
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                 Priority
               </th>
-              <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
+              <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest text-center">
                 Est.
               </th>
-              <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
+              <th className="px-4 py-3 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest text-center">
                 Act.
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+              <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest w-24">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-slate-900 divide-y divide-surface-100 dark:divide-slate-800/50">
             {editingId === 'new' && (
-              <tr className="bg-indigo-50">
-                <td className="px-4 py-2">
+              <tr className="bg-primary-50/50 dark:bg-primary-900/10">
+                <td className="px-4 py-3">
                   <input
                     type="text"
                     name="title"
                     value={editForm.title || ''}
                     onChange={handleChange}
                     placeholder="Task Title"
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                    className="input-modern !p-1.5 !text-xs mb-1.5"
                   />
                   <input
                     type="text"
@@ -193,90 +197,104 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                     value={editForm.description || ''}
                     onChange={handleChange}
                     placeholder="Description"
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border mt-1"
+                    className="input-modern !p-1.5 !text-xs"
                   />
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3">
                   <select
                     name="type"
                     value={editForm.type || TaskTypeEnum.TASK}
                     onChange={handleChange}
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                    className="select-modern !p-1.5 !text-xs"
                   >
                     {Object.values(TaskTypeEnum).map((t) => (
-                      <option key={t} value={t}>
+                      <option key={t} value={t} className="dark:bg-slate-900">
                         {t}
                       </option>
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3">
                   <select
                     name="userId"
                     value={editForm.userId || ''}
                     onChange={handleChange}
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                    className="select-modern !p-1.5 !text-xs"
                   >
-                    <option value="">Select User</option>
+                    <option value="" className="dark:bg-slate-900">
+                      Select User
+                    </option>
                     {usersData?.users?.map((u: any) => (
-                      <option key={u.id} value={u.id}>
+                      <option
+                        key={u.id}
+                        value={u.id}
+                        className="dark:bg-slate-900"
+                      >
                         {u.name}
                       </option>
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3">
                   <select
                     name="stageId"
                     value={editForm.stageId || ''}
                     onChange={handleChange}
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                    className="select-modern !p-1.5 !text-xs"
                   >
-                    <option value="">Select Stage</option>
+                    <option value="" className="dark:bg-slate-900">
+                      Select Stage
+                    </option>
                     {stages.map((s) => (
-                      <option key={s.id} value={s.id}>
+                      <option
+                        key={s.id}
+                        value={s.id}
+                        className="dark:bg-slate-900"
+                      >
                         {s.title}
                       </option>
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3">
                   <select
                     name="priority"
                     value={editForm.priority || TaskPriority.MEDIUM}
                     onChange={handleChange}
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                    className="select-modern !p-1.5 !text-xs"
                   >
                     {Object.values(TaskPriority).map((p) => (
-                      <option key={p} value={p}>
+                      <option key={p} value={p} className="dark:bg-slate-900">
                         {p}
                       </option>
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3">
                   <input
                     type="number"
                     name="estimatedHours"
                     value={editForm.estimatedHours || 0}
                     onChange={handleChange}
-                    className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                    className="input-modern !p-1.5 !text-xs text-center"
                   />
                 </td>
-                <td className="px-4 py-2 text-center">-</td>
-                <td className="px-4 py-2 text-right whitespace-nowrap">
-                  <button
-                    onClick={handleSave}
-                    className="text-green-600 hover:text-green-900 mr-2"
-                  >
-                    <Save className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+                <td className="px-4 py-3 text-center dark:text-gray-500">-</td>
+                <td className="px-4 py-3 text-right whitespace-nowrap">
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={handleSave}
+                      className="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                    >
+                      <Save className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             )}
@@ -284,190 +302,217 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
               <tr
                 key={task.id}
                 className={
-                  editingId === task.id ? 'bg-indigo-50' : 'hover:bg-gray-50'
+                  editingId === task.id
+                    ? 'bg-primary-50/50 dark:bg-primary-900/10'
+                    : 'hover:bg-surface-50 dark:hover:bg-slate-800/50 transition-colors'
                 }
               >
                 {editingId === task.id ? (
                   <>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <input
                         type="text"
                         name="title"
                         value={editForm.title || ''}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                        className="input-modern !p-1.5 !text-xs mb-1.5"
                       />
                       <input
                         type="text"
                         name="description"
                         value={editForm.description || ''}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border mt-1"
+                        className="input-modern !p-1.5 !text-xs"
                       />
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <select
                         name="type"
                         value={editForm.type || TaskTypeEnum.TASK}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                        className="select-modern !p-1.5 !text-xs"
                       >
                         {Object.values(TaskTypeEnum).map((t) => (
-                          <option key={t} value={t}>
+                          <option
+                            key={t}
+                            value={t}
+                            className="dark:bg-slate-900"
+                          >
                             {t}
                           </option>
                         ))}
                       </select>
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <select
                         name="userId"
                         value={editForm.userId || ''}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                        className="select-modern !p-1.5 !text-xs"
                       >
-                        <option value="">Select User</option>
+                        <option value="" className="dark:bg-slate-900">
+                          Select User
+                        </option>
                         {usersData?.users?.map((u: any) => (
-                          <option key={u.id} value={u.id}>
+                          <option
+                            key={u.id}
+                            value={u.id}
+                            className="dark:bg-slate-900"
+                          >
                             {u.name}
                           </option>
                         ))}
                       </select>
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <select
                         name="stageId"
                         value={editForm.stageId || ''}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                        className="select-modern !p-1.5 !text-xs"
                       >
-                        <option value="">Select Stage</option>
+                        <option value="" className="dark:bg-slate-900">
+                          Select Stage
+                        </option>
                         {stages.map((s) => (
-                          <option key={s.id} value={s.id}>
+                          <option
+                            key={s.id}
+                            value={s.id}
+                            className="dark:bg-slate-900"
+                          >
                             {s.title}
                           </option>
                         ))}
                       </select>
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <select
                         name="priority"
                         value={editForm.priority || TaskPriority.MEDIUM}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                        className="select-modern !p-1.5 !text-xs"
                       >
                         {Object.values(TaskPriority).map((p) => (
-                          <option key={p} value={p}>
+                          <option
+                            key={p}
+                            value={p}
+                            className="dark:bg-slate-900"
+                          >
                             {p}
                           </option>
                         ))}
                       </select>
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <input
                         type="number"
                         name="estimatedHours"
                         value={editForm.estimatedHours || 0}
                         onChange={handleChange}
-                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-1 border"
+                        className="input-modern !p-1.5 !text-xs text-center"
                       />
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-500 text-center">
                       {task.actualHours || 0}h
                     </td>
-                    <td className="px-4 py-2 text-right whitespace-nowrap">
-                      <button
-                        onClick={handleSave}
-                        className="text-green-600 hover:text-green-900 mr-2"
-                      >
-                        <Save className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={handleSave}
+                          className="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                        >
+                          <Save className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={handleCancel}
+                          className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td className="px-4 py-2 text-sm text-gray-900">
-                      <div className="font-medium">{task.title}</div>
-                      <div className="text-gray-500 text-xs truncate max-w-[200px]">
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                      <div className="font-bold">{task.title}</div>
+                      <div className="text-gray-500 dark:text-gray-500 text-[11px] truncate max-w-[200px] mt-0.5">
                         {task.description}
                       </div>
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
                           task.type === 'BUG'
-                            ? 'bg-red-100 text-red-600'
+                            ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
                             : task.type === 'STORY'
-                              ? 'bg-green-100 text-green-600'
+                              ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
                               : task.type === 'EPIC'
-                                ? 'bg-purple-100 text-purple-600'
-                                : 'bg-blue-100 text-blue-600'
+                                ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                                : 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
                         }`}
                       >
                         {task.type}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 font-medium">
                       {task.user?.name}
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm">
                       <span
-                        className={`inline-flex px-2 text-xs leading-5 font-semibold rounded-full
+                        className={`inline-flex px-2.5 py-0.5 text-[10px] font-bold rounded-full transition-colors
                         ${
                           task.stage?.isCompleted
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-indigo-100 text-indigo-800'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                            : 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
                         }`}
                       >
                         {task.stage?.title || 'No Stage'}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
                           task.priority === 'URGENT'
-                            ? 'bg-red-100 text-red-600'
+                            ? 'bg-red-500 text-white'
                             : task.priority === 'HIGH'
-                              ? 'bg-orange-100 text-orange-600'
+                              ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
                               : task.priority === 'MEDIUM'
-                                ? 'bg-blue-100 text-blue-600'
-                                : 'bg-gray-100 text-gray-600'
+                                ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400'
+                                : 'bg-surface-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400'
                         }`}
                       >
                         {task.priority}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-500 text-center">
+                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-center font-mono">
                       {task.estimatedHours}h
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-500 text-center">
+                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-center font-mono">
                       {task.actualHours || 0}h
                     </td>
-                    <td className="px-4 py-2 text-right text-sm font-medium">
-                      <button
-                        onClick={() => navigate(`/dashboard/task/${task.id}`)}
-                        className="text-gray-600 hover:text-gray-900 mr-3"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleEditRow(task)}
-                        className="text-indigo-600 hover:text-indigo-900 mr-3"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => task.id && handleDelete(task.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        Delete
-                      </button>
+                    <td className="px-4 py-3 text-right text-sm font-medium">
+                      <div className="flex justify-end items-center gap-1.5">
+                        <button
+                          onClick={() => navigate(`/dashboard/task/${task.id}`)}
+                          className="p-1.5 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-surface-100 dark:hover:bg-slate-800 rounded-lg transition-all"
+                          title="View Details"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleEditRow(task)}
+                          className="px-2.5 py-1.5 text-xs font-bold text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => task.id && handleDelete(task.id)}
+                          className="px-2.5 py-1.5 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </>
                 )}

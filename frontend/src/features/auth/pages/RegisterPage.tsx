@@ -190,7 +190,9 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-8 text-center text-sm">
-            <span className="text-gray-500 dark:text-gray-400">Already have an account? </span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Already have an account?{' '}
+            </span>
             <Link
               to="/login"
               className="font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"

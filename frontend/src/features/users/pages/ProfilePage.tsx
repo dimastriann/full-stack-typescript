@@ -12,14 +12,16 @@ export default function ProfilePage() {
   return (
     <div className="max-w-3xl mx-auto py-6">
       <div className="mb-6 flex items-center">
-        <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          My Profile
+        </h1>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl p-8 border border-surface-200 dark:border-slate-800">
         {user ? (
           <UserForm userId={user.id} onSuccess={handleSuccess} isFromProfile />
         ) : (
-          <p>Loading profile...</p>
+          <p className="text-gray-500 dark:text-gray-400">Loading profile...</p>
         )}
       </div>
     </div>

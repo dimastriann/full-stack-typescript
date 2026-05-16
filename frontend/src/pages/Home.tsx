@@ -124,7 +124,9 @@ export default function HomePage(): React.ReactElement {
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{feature.desc}</p>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {feature.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -146,12 +148,16 @@ export default function HomePage(): React.ReactElement {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Free */}
             <div className="card p-8 border border-surface-200 dark:border-slate-800 flex flex-col relative overflow-hidden">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Starter</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                Starter
+              </h3>
               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
                 Perfect for individuals and small teams.
               </p>
               <div className="mb-6">
-                <span className="text-4xl font-black text-gray-900 dark:text-white">$0</span>
+                <span className="text-4xl font-black text-gray-900 dark:text-white">
+                  $0
+                </span>
                 <span className="text-gray-500 dark:text-gray-400">/mo</span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
@@ -161,7 +167,10 @@ export default function HomePage(): React.ReactElement {
                   'Basic Task Management',
                   'Community Support',
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-gray-600 dark:text-gray-400"
+                  >
                     <CheckCircle2
                       size={18}
                       className="text-primary-500 flex-shrink-0"
@@ -190,8 +199,12 @@ export default function HomePage(): React.ReactElement {
                 For growing teams that need more power.
               </p>
               <div className="mb-6">
-                <span className="text-4xl font-black text-gray-900 dark:text-white">$12</span>
-                <span className="text-gray-500 dark:text-gray-400">/user/mo</span>
+                <span className="text-4xl font-black text-gray-900 dark:text-white">
+                  $12
+                </span>
+                <span className="text-gray-500 dark:text-gray-400">
+                  /user/mo
+                </span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 {[
@@ -201,7 +214,10 @@ export default function HomePage(): React.ReactElement {
                   'Advanced Reporting',
                   'Priority Support',
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-gray-600 dark:text-gray-300"
+                  >
                     <CheckCircle2
                       size={18}
                       className="text-primary-500 flex-shrink-0"
@@ -239,7 +255,10 @@ export default function HomePage(): React.ReactElement {
                   'SSO & SAML',
                   '99.99% Uptime SLA',
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-gray-600 dark:text-gray-400"
+                  >
                     <CheckCircle2
                       size={18}
                       className="text-gray-400 dark:text-gray-600 flex-shrink-0"

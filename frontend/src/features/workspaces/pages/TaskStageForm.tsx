@@ -50,7 +50,7 @@ export default function TaskStageForm({
     } else {
       reset(stage);
     }
-  }, [stage, isNew]);
+  }, [stage, isNew, reset]);
 
   const onSubmitTaskStage = handleSubmit(async (data) => {
     if ('__typename' in data) {
@@ -101,13 +101,13 @@ export default function TaskStageForm({
             </label>
             <input
               type="number"
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-2 py-1"
+              className="input-modern px-3 py-2 text-sm"
               {...register('sequence', {
                 valueAsNumber: true,
               })}
             />
             {errors.sequence && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="text-red-500 dark:text-red-400 text-[10px] font-bold mt-1 px-1">
                 {errors.sequence.message}
               </p>
             )}
@@ -118,20 +118,20 @@ export default function TaskStageForm({
             </label>
             <input
               type="text"
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-2 py-1"
+              className="input-modern px-3 py-2 text-sm"
               {...register('title')}
               autoFocus
             />
             {errors.title && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="text-red-500 dark:text-red-400 text-[10px] font-bold mt-1 px-1">
                 {errors.title.message}
               </p>
             )}
           </div>
-          <div className="flex items-end h-full">
+          <div className="flex items-end gap-2">
             <button
               onClick={() => onSubmitTaskStage()}
-              className="p-1 px-2 text-green-600 hover:bg-green-100 rounded-md shadow-sm border border-green-200"
+              className="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800 transition-all"
             >
               <Check className="h-5 w-5" />
             </button>
@@ -140,7 +140,7 @@ export default function TaskStageForm({
                 if (onReset) onReset();
                 setEditingId(null);
               }}
-              className="ml-1 p-1 px-2 text-gray-400 hover:bg-gray-100 rounded-md border border-gray-200"
+              className="p-2 text-gray-400 hover:bg-surface-50 dark:hover:bg-slate-800 rounded-xl border border-surface-200 dark:border-slate-800 transition-all"
             >
               <X className="h-5 w-5" />
             </button>
@@ -150,14 +150,16 @@ export default function TaskStageForm({
         <>
           <div className="flex items-center space-x-4">
             <div
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-[10px] font-bold text-gray-500 border border-gray-200"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-surface-100 dark:bg-slate-800 text-[10px] font-black text-gray-500 dark:text-gray-400 border border-surface-200 dark:border-slate-700"
               title="Sequence"
             >
               {stage?.sequence}
             </div>
-            <span className="font-medium text-gray-700">{stage?.title}</span>
+            <span className="font-bold text-gray-900 dark:text-white">
+              {stage?.title}
+            </span>
             {stage?.isCompleted && (
-              <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-black uppercase tracking-wider">
                 Completed
               </span>
             )}
@@ -165,14 +167,14 @@ export default function TaskStageForm({
           <div className="invisible group-hover:visible flex items-center space-x-1">
             <button
               onClick={() => setEditingId(stage?.id)}
-              className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-white rounded-md transition-colors"
+              className="p-2 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all"
               title="Edit"
             >
               <Edit2 className="h-4 w-4" />
             </button>
             <button
               onClick={() => handleRemoveTaskStage()}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-white rounded-md transition-colors"
+              className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
               title="Delete"
             >
               <Trash2 className="h-4 w-4" />

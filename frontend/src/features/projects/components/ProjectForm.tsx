@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   X,
   FileText,
@@ -29,24 +29,24 @@ interface ProjectFormProps {
   onCancel?: () => void;
 }
 
+const defaultValues = {
+  name: '',
+  description: '',
+  stageId: '',
+  responsibleId: '',
+  budgetPlanned: 0,
+  startDate: '',
+  endDate: '',
+  phasesCount: 1,
+  methodology: ProjectMethodology.KANBAN,
+  visibility: ProjectVisibility.TEAM,
+  priority: ProjectPriority.MEDIUM,
+  currency: 'USD',
+};
+
 export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   const currentUser = useAuthStore((state) => state.user);
   const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
-
-  const defaultValues = {
-    name: '',
-    description: '',
-    stageId: '',
-    responsibleId: '',
-    budgetPlanned: 0,
-    startDate: '',
-    endDate: '',
-    phasesCount: 1,
-    methodology: ProjectMethodology.KANBAN,
-    visibility: ProjectVisibility.TEAM,
-    priority: ProjectPriority.MEDIUM,
-    currency: 'USD',
-  };
 
   const { projectId } = useParams();
   const isEditMode = !!projectId;
@@ -71,9 +71,9 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   const userId = currentUser?.id?.toString();
-  const users: UserType[] = usersData?.users ?? [];
-  const projects: ProjectType[] = projectsData?.projects ?? [];
-  const stages: ProjectStage[] = stagesData?.projectStages ?? [];
+  const users = useMemo(() => usersData?.users ?? [], [usersData]);
+  const projects = useMemo(() => projectsData?.projects ?? [], [projectsData]);
+  const stages = useMemo(() => stagesData?.projectStages ?? [], [stagesData]);
 
   const {
     register,
@@ -175,13 +175,15 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     <form onSubmit={onSubmit} className="space-y-6">
       {/* ── Error Banner ── */}
       {errorMsg && (
-        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl animate-slide-in-up">
-          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-          <div className="flex-1 text-sm text-red-700">{errorMsg}</div>
+        <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl animate-slide-in-up transition-colors">
+          <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-red-700 dark:text-red-400 font-medium">
+            {errorMsg}
+          </div>
           <button
             type="button"
             onClick={() => setErrorMsg('')}
-            className="text-red-400 hover:text-red-600 transition-colors"
+            className="text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -189,8 +191,8 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       )}
 
       {/* ── Section: General ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <FileText size={16} className="text-primary-500" />
           General Information
         </div>
@@ -206,7 +208,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
             className="input-modern"
           />
           {errors.name && (
-            <span className="text-red-500 text-xs mt-1 block">
+            <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
               {errors.name.message}
             </span>
           )}
@@ -227,8 +229,8 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       </div>
 
       {/* ── Section: Planning ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <Calendar size={16} className="text-primary-500" />
           Planning
         </div>
@@ -244,7 +246,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               className="select-modern"
             >
               {Object.values(ProjectMethodology).map((m) => (
-                <option key={m} value={m}>
+                <option key={m} value={m} className="dark:bg-slate-900">
                   {m}
                 </option>
               ))}
@@ -293,8 +295,8 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       </div>
 
       {/* ── Section: Financial ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <DollarSign size={16} className="text-primary-500" />
           Financial
         </div>
@@ -329,8 +331,8 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       </div>
 
       {/* ── Section: Settings ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <Settings2 size={16} className="text-primary-500" />
           Settings
         </div>
@@ -345,9 +347,15 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               {...register('stageId')}
               className="select-modern"
             >
-              <option value="">Select Stage</option>
-              {stages.map((stage) => (
-                <option key={stage.id} value={stage.id}>
+              <option value="" className="dark:bg-slate-900">
+                Select Stage
+              </option>
+              {stages.map((stage: ProjectStage) => (
+                <option
+                  key={stage.id}
+                  value={stage.id}
+                  className="dark:bg-slate-900"
+                >
                   {stage.title}
                 </option>
               ))}
@@ -364,17 +372,19 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
                 required: 'Responsible person is required',
               })}
               disabled={currentUser?.role === 'USER'}
-              className="select-modern disabled:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-60"
+              className="select-modern disabled:bg-surface-100 dark:disabled:bg-slate-800/50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <option value="">Select User</option>
+              <option value="" className="dark:bg-slate-900">
+                Select User
+              </option>
               {users.map((u: UserType) => (
-                <option key={u.id} value={u.id}>
+                <option key={u.id} value={u.id} className="dark:bg-slate-900">
                   {u.name} ({u.email})
                 </option>
               ))}
             </select>
             {errors.responsibleId && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.responsibleId.message?.toString()}
               </span>
             )}
@@ -392,7 +402,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               className="select-modern"
             >
               {Object.values(ProjectVisibility).map((v) => (
-                <option key={v} value={v}>
+                <option key={v} value={v} className="dark:bg-slate-900">
                   {v}
                 </option>
               ))}
@@ -409,7 +419,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               className="select-modern"
             >
               {Object.values(ProjectPriority).map((p) => (
-                <option key={p} value={p}>
+                <option key={p} value={p} className="dark:bg-slate-900">
                   {p}
                 </option>
               ))}
@@ -424,7 +434,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-2.5 rounded-xl border border-surface-200 text-sm font-medium text-gray-600 bg-white hover:bg-surface-50 hover:border-surface-300 transition-all"
+            className="px-6 py-2.5 rounded-xl border border-surface-200 dark:border-slate-800 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 hover:bg-surface-50 dark:hover:bg-slate-800 transition-all"
           >
             Cancel
           </button>

@@ -37,7 +37,7 @@ export const WorkspaceSwitcher = () => {
   // Even if 1 workspace, show it to allow creating others
   return (
     <div className="flex items-center space-x-2">
-      <div className="flex items-center space-x-2 p-1 bg-white rounded-lg border border-gray-200 shadow-sm transition-all duration-200 hover:border-blue-400">
+      <div className="flex items-center space-x-2 p-1 bg-slate-900 rounded-xl border border-slate-800 shadow-sm transition-all duration-200 hover:border-primary-500">
         <select
           value={activeWorkspace?.id || ''}
           onChange={(e) => {
@@ -50,14 +50,21 @@ export const WorkspaceSwitcher = () => {
             );
             if (workspace) setActiveWorkspace(workspace);
           }}
-          className="block w-full pl-2 pr-8 py-1 text-sm bg-transparent border-none focus:ring-0 cursor-pointer font-medium text-gray-700"
+          className="block w-full pl-2 pr-8 py-1 text-sm bg-transparent border-none focus:ring-0 cursor-pointer font-bold text-white"
         >
           {workspaces.map((workspace) => (
-            <option key={workspace.id} value={workspace.id}>
+            <option
+              key={workspace.id}
+              value={workspace.id}
+              className="bg-slate-900 text-white"
+            >
               {workspace.name}
             </option>
           ))}
-          <option value="new" className="text-blue-600 font-bold">
+          <option
+            value="new"
+            className="text-primary-400 font-bold bg-slate-900"
+          >
             + Create Workspace
           </option>
         </select>
@@ -70,28 +77,26 @@ export const WorkspaceSwitcher = () => {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
+            <label className="label-modern">Workspace Name</label>
             <input
               type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
               value={newWorkspaceName}
               onChange={(e) => setNewWorkspaceName(e.target.value)}
               placeholder="My Awesome Team"
               autoFocus
             />
           </div>
-          <div className="flex justify-end space-x-3 mt-6">
+          <div className="flex justify-end space-x-3 mt-8">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center"
+              className="px-6 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 border border-surface-200 dark:border-slate-800 rounded-xl hover:bg-surface-50 dark:hover:bg-slate-800 transition-all"
             >
               Cancel
             </button>
             <button
               onClick={handleCreate}
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-8 py-2 text-sm font-bold text-white bg-primary-600 border border-transparent rounded-xl hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all"
             >
               Create
             </button>

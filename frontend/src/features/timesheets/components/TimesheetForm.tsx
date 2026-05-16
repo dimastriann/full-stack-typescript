@@ -148,19 +148,25 @@ export default function TimesheetForm({
       </div>
     );
   if (!data?.getTimesheet && timesheetId && !queryLoading)
-    return <p className="p-4 text-red-600">Timesheet not found</p>;
+    return (
+      <p className="p-4 text-red-600 dark:text-red-400 font-medium text-center">
+        Timesheet not found
+      </p>
+    );
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {/* ── Error Banner ── */}
       {errorMsg && (
-        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl animate-slide-in-up">
-          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-          <div className="flex-1 text-sm text-red-700">{errorMsg}</div>
+        <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl animate-slide-in-up transition-colors">
+          <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-red-700 dark:text-red-400 font-medium">
+            {errorMsg}
+          </div>
           <button
             type="button"
             onClick={() => setErrorMsg('')}
-            className="text-red-400 hover:text-red-600 transition-colors"
+            className="text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -168,8 +174,8 @@ export default function TimesheetForm({
       )}
 
       {/* ── Section: General ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <FileText size={16} className="text-primary-500" />
           General Information
         </div>
@@ -188,7 +194,7 @@ export default function TimesheetForm({
             className="input-modern resize-none"
           />
           {errors.description && (
-            <span className="text-red-500 text-xs mt-1 block">
+            <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
               {errors.description.message}
             </span>
           )}
@@ -196,8 +202,8 @@ export default function TimesheetForm({
       </div>
 
       {/* ── Section: Time Entry ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <Clock size={16} className="text-primary-500" />
           Time Entry
         </div>
@@ -214,7 +220,7 @@ export default function TimesheetForm({
               className="input-modern"
             />
             {errors.date && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.date.message}
               </span>
             )}
@@ -236,7 +242,7 @@ export default function TimesheetForm({
               className="input-modern"
             />
             {errors.timeSpent && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.timeSpent.message}
               </span>
             )}
@@ -271,8 +277,8 @@ export default function TimesheetForm({
       </div>
 
       {/* ── Section: Billing ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <DollarSign size={16} className="text-primary-500" />
           Billing
         </div>
@@ -301,7 +307,7 @@ export default function TimesheetForm({
             />
             <label
               htmlFor="billable"
-              className="ml-2 block text-sm font-medium text-gray-700 cursor-pointer"
+              className="ml-2 block text-sm font-bold text-gray-700 dark:text-gray-300 cursor-pointer"
             >
               This is a billable entry
             </label>
@@ -310,8 +316,8 @@ export default function TimesheetForm({
       </div>
 
       {/* ── Section: Assignment ── */}
-      <div className="card p-6 space-y-5">
-        <div className="form-section-title">
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
           <Briefcase size={16} className="text-primary-500" />
           Assignment
         </div>
@@ -325,17 +331,19 @@ export default function TimesheetForm({
               id="userId_ts"
               {...register('userId', { required: 'User is required' })}
               disabled={currentUser?.role === 'USER'}
-              className="select-modern disabled:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-60"
+              className="select-modern disabled:bg-surface-100 dark:disabled:bg-slate-800/50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <option value="">Select User</option>
-              {users?.map((u: any) => (
-                <option key={u.id} value={u.id}>
+              <option value="" className="dark:bg-slate-900">
+                Select User
+              </option>
+              {users?.map((u: UserType) => (
+                <option key={u.id} value={u.id} className="dark:bg-slate-900">
                   {u.name}
                 </option>
               ))}
             </select>
             {errors.userId && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.userId.message?.toString()}
               </span>
             )}
@@ -350,15 +358,17 @@ export default function TimesheetForm({
               {...register('projectId', { required: 'Project is required' })}
               className="select-modern"
             >
-              <option value="">Select Project</option>
+              <option value="" className="dark:bg-slate-900">
+                Select Project
+              </option>
               {projects?.map((p: ProjectType) => (
-                <option key={p.id} value={p.id}>
+                <option key={p.id} value={p.id} className="dark:bg-slate-900">
                   {p.name}
                 </option>
               ))}
             </select>
             {errors.projectId && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.projectId.message}
               </span>
             )}
@@ -373,15 +383,17 @@ export default function TimesheetForm({
               {...register('taskId', { required: 'Task is required' })}
               className="select-modern"
             >
-              <option value="">Select Task</option>
+              <option value="" className="dark:bg-slate-900">
+                Select Task
+              </option>
               {projectTasks?.map((t: TaskType) => (
-                <option key={t.id} value={t.id}>
+                <option key={t.id} value={t.id} className="dark:bg-slate-900">
                   {t.title}
                 </option>
               ))}
             </select>
             {errors.taskId && (
-              <span className="text-red-500 text-xs mt-1 block">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.taskId.message}
               </span>
             )}
@@ -395,7 +407,7 @@ export default function TimesheetForm({
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-2.5 rounded-xl border border-surface-200 text-sm font-medium text-gray-600 bg-white hover:bg-surface-50 hover:border-surface-300 transition-all"
+            className="px-6 py-2.5 rounded-xl border border-surface-200 dark:border-slate-800 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 hover:bg-surface-50 dark:hover:bg-slate-800 transition-all"
           >
             Cancel
           </button>

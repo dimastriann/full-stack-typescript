@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   UsersIcon,
   FolderIcon,
@@ -34,9 +34,6 @@ export default function Sidebar({
 }: SidebarProps) {
   const logout = useLogout();
   const user = useAuthStore((state) => state.user);
-  const location = useLocation();
-
-  const isActive = (path: string) => location.pathname.startsWith(path);
 
   return (
     <>

@@ -50,21 +50,21 @@ export default function Modal({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                className={`relative transform overflow-hidden rounded-3xl bg-white text-left shadow-float transition-all sm:my-8 w-full ${maxWidth}`}
+                className={`relative transform overflow-hidden rounded-3xl bg-white dark:bg-slate-900 text-left shadow-float transition-all sm:my-8 w-full ${maxWidth} border border-surface-200 dark:border-slate-800`}
               >
-                <div className="bg-white">
-                  <div className="flex justify-between items-center px-6 py-5 border-b border-surface-100 bg-surface-50/50">
+                <div className="bg-white dark:bg-slate-900">
+                  <div className="flex justify-between items-center px-6 py-5 border-b border-surface-100 dark:border-slate-800 bg-surface-50/50 dark:bg-slate-900/50">
                     {title && (
                       <DialogTitle
                         as="h3"
-                        className="text-lg font-bold leading-6 text-gray-900 tracking-tight"
+                        className="text-lg font-bold leading-6 text-gray-900 dark:text-white tracking-tight"
                       >
                         {title}
                       </DialogTitle>
                     )}
                     <button
                       type="button"
-                      className="rounded-full p-1.5 bg-white border border-surface-200 text-gray-400 hover:text-gray-600 hover:bg-surface-50 focus:outline-none transition-colors"
+                      className="rounded-full p-1.5 bg-white dark:bg-slate-800 border border-surface-200 dark:border-slate-700 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-surface-50 dark:hover:bg-slate-700 focus:outline-none transition-colors"
                       onClick={onClose}
                     >
                       <span className="sr-only">Close</span>

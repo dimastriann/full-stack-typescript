@@ -69,30 +69,32 @@ export default function ProjectFormPage() {
     <div className="mx-auto py-6 h-full flex flex-col page-enter">
       {/* ── Header Card ── */}
       {id > 0 && project && (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-200 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-card border border-surface-200 dark:border-slate-800 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="bg-primary-100 text-primary-700 text-xs font-bold px-2.5 py-1 rounded-md tracking-wider">
+              <span className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-bold px-2.5 py-1 rounded-md tracking-wider">
                 #{id}
               </span>
-              <span className="badge bg-surface-100 text-gray-600">
+              <span className="badge bg-surface-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400">
                 {project.methodology}
               </span>
-              <span className="badge bg-surface-100 text-gray-600">
+              <span className="badge bg-surface-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400">
                 {project.stage?.title || 'No Stage'}
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {project.name}
+            </h1>
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex flex-col items-end">
               <span className="text-xs uppercase font-semibold tracking-wider mb-1">
                 Progress
               </span>
-              <div className="w-32 h-2 bg-surface-100 rounded-full overflow-hidden">
+              <div className="w-32 h-2 bg-surface-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-primary-500 rounded-full"
+                  className="h-full bg-primary-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"
                   style={{ width: `${project.progress || 0}%` }}
                 ></div>
               </div>
@@ -103,10 +105,10 @@ export default function ProjectFormPage() {
 
       {!id && (
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Create New Project
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Fill in the details below to start a new project.
           </p>
         </div>
@@ -118,7 +120,7 @@ export default function ProjectFormPage() {
         <div className="lg:col-span-2 flex flex-col min-h-0">
           {/* Tabs */}
           {id > 0 && (
-            <div className="flex items-center gap-2 mb-4 border-b border-surface-200 overflow-x-auto no-scrollbar pb-1">
+            <div className="flex items-center gap-2 mb-4 border-b border-surface-200 dark:border-slate-800 overflow-x-auto no-scrollbar pb-1">
               <button
                 onClick={() => setActiveTab('details')}
                 className={`tab-item flex items-center gap-2 ${activeTab === 'details' ? 'tab-item-active' : ''}`}
@@ -143,7 +145,7 @@ export default function ProjectFormPage() {
               >
                 <Paperclip size={16} /> Attachments
                 {project?.attachments?.length > 0 && (
-                  <span className="ml-1 bg-surface-200 text-gray-600 text-xs px-1.5 rounded-full">
+                  <span className="ml-1 bg-surface-200 dark:bg-slate-800 text-gray-600 dark:text-gray-400 text-xs px-1.5 rounded-full">
                     {project.attachments.length}
                   </span>
                 )}
@@ -201,20 +203,23 @@ export default function ProjectFormPage() {
                       {project.attachments.map((file: any) => (
                         <li
                           key={file.id}
-                          className="py-3 flex justify-between items-center group"
+                          className="py-3 flex justify-between items-center group border-b last:border-0 border-surface-100 dark:border-slate-800/50"
                         >
                           <div className="flex items-center space-x-3 overflow-hidden">
-                            <div className="p-2 bg-surface-50 rounded-lg">
-                              <FileText size={16} className="text-gray-400" />
+                            <div className="p-2 bg-surface-50 dark:bg-slate-800 rounded-lg">
+                              <FileText
+                                size={16}
+                                className="text-gray-400 dark:text-gray-500"
+                              />
                             </div>
                             <div className="flex flex-col truncate">
                               <button
                                 onClick={() => handlePreviewFile(file)}
-                                className="text-sm font-medium text-gray-900 hover:text-primary-600 truncate text-left transition-colors"
+                                className="text-sm font-medium text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 truncate text-left transition-colors"
                               >
                                 {file.filename}
                               </button>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-gray-500 dark:text-gray-500">
                                 {(file.size / 1024).toFixed(1)} KB
                               </span>
                             </div>
@@ -222,14 +227,14 @@ export default function ProjectFormPage() {
                           <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleDownloadFile(file)}
-                              className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                              className="p-1.5 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
                               title="Download"
                             >
                               <Download className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteAttachment(file.id)}
-                              className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                              className="p-1.5 text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                               title="Delete attachment"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -252,11 +257,13 @@ export default function ProjectFormPage() {
         {/* Right Column: Comments */}
         <div className="lg:col-span-1 flex flex-col min-h-0">
           <div className="card flex-1 flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-surface-200 bg-surface-50/50 flex items-center gap-2">
+            <div className="p-4 border-b border-surface-200 dark:border-slate-800 bg-surface-50/50 dark:bg-slate-900/50 flex items-center gap-2">
               <MessageSquare size={16} className="text-primary-500" />
-              <h3 className="font-semibold text-gray-700 text-sm">Comments</h3>
+              <h3 className="font-semibold text-gray-700 dark:text-gray-300 text-sm">
+                Comments
+              </h3>
               {project?.comments?.length > 0 && (
-                <span className="ml-auto bg-white border border-surface-200 text-gray-600 text-xs px-2 py-0.5 rounded-full shadow-sm font-medium">
+                <span className="ml-auto bg-white dark:bg-slate-900 border border-surface-200 dark:border-slate-800 text-gray-600 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full shadow-sm font-medium">
                   {project.comments.length}
                 </span>
               )}

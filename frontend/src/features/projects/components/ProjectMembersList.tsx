@@ -92,16 +92,16 @@ export default function ProjectMembersList({
   if (loading) return <div>Loading members...</div>;
 
   return (
-    <div className="bg-white shadow rounded-lg p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium text-gray-900 flex items-center">
-          <User className="mr-2 h-5 w-5 text-indigo-500" />
+    <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl p-6 border border-surface-200 dark:border-slate-800 transition-colors">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+          <User className="mr-2.5 h-5 w-5 text-primary-500" />
           Members
         </h3>
         {canManage && (
           <button
             onClick={() => setIsInviteOpen(!isInviteOpen)}
-            className="p-1 rounded-full text-indigo-600 hover:bg-indigo-50 transition-colors"
+            className="p-2 rounded-xl text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all shadow-sm"
             title="Invite Member"
           >
             <UserPlus className="h-5 w-5" />
@@ -112,76 +112,80 @@ export default function ProjectMembersList({
       {isInviteOpen && (
         <form
           onSubmit={handleInvite}
-          className="mb-4 p-3 bg-gray-50 rounded-md border border-gray-200"
+          className="mb-6 p-4 bg-surface-50 dark:bg-slate-800/50 rounded-xl border border-surface-200 dark:border-slate-700/50 animate-slide-in-down"
         >
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-700 uppercase">
-                Email Address
-              </label>
+              <label className="label-modern mb-1.5">Email Address</label>
               <input
                 type="email"
                 required
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="colleague@example.com"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-2 py-1"
+                className="input-modern"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 uppercase">
-                Role
-              </label>
+              <label className="label-modern mb-1.5">Role</label>
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-2 py-1"
+                className="select-modern"
               >
-                <option value="ADMIN">Admin</option>
-                <option value="MEMBER">Member</option>
-                <option value="VIEWER">Viewer</option>
+                <option value="ADMIN" className="dark:bg-slate-900">
+                  Admin
+                </option>
+                <option value="MEMBER" className="dark:bg-slate-900">
+                  Member
+                </option>
+                <option value="VIEWER" className="dark:bg-slate-900">
+                  Viewer
+                </option>
               </select>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setIsInviteOpen(false)}
-                className="px-2 py-1 text-xs text-gray-600 hover:text-gray-800"
+                className="px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-3 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                className="px-5 py-2 text-sm font-bold bg-primary-600 text-white rounded-xl hover:bg-primary-700 shadow-sm transition-all"
               >
-                Invite
+                Invite Member
               </button>
             </div>
           </div>
         </form>
       )}
 
-      <ul className="divide-y divide-gray-200">
+      <ul className="divide-y divide-surface-100 dark:divide-slate-800/50">
         {members.map((member: any) => (
           <li key={member.id} className="py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                  <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-300 font-black text-sm shadow-inner">
                     {member.user.firstName?.[0] ||
                       member.user.email[0].toUpperCase()}
                   </div>
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
+                <div className="ml-4">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                     {member.user.firstName} {member.user.lastName}
                     {parseInt(member.user.id) === currentUserId && (
-                      <span className="ml-2 text-xs text-indigo-600 font-semibold">
-                        (You)
+                      <span className="text-[10px] bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 px-1.5 py-0.5 rounded-md font-black uppercase tracking-wider">
+                        You
                       </span>
                     )}
                   </p>
-                  <p className="text-xs text-gray-500">{member.user.email}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500">
+                    {member.user.email}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center">
@@ -191,23 +195,31 @@ export default function ProjectMembersList({
                     onChange={(e) =>
                       handleUpdateRole(parseInt(member.user.id), e.target.value)
                     }
-                    className="text-xs border-none bg-transparent focus:ring-0 text-gray-600 cursor-pointer hover:text-indigo-600"
+                    className="text-xs border-none bg-transparent focus:ring-0 text-gray-600 dark:text-gray-400 font-bold cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                   >
-                    <option value="OWNER">Owner</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="MEMBER">Member</option>
-                    <option value="VIEWER">Viewer</option>
+                    <option value="OWNER" className="dark:bg-slate-900">
+                      Owner
+                    </option>
+                    <option value="ADMIN" className="dark:bg-slate-900">
+                      Admin
+                    </option>
+                    <option value="MEMBER" className="dark:bg-slate-900">
+                      Member
+                    </option>
+                    <option value="VIEWER" className="dark:bg-slate-900">
+                      Viewer
+                    </option>
                   </select>
                 ) : (
                   <span
-                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    className={`text-[10px] px-2 py-0.5 rounded-md font-black uppercase tracking-wider ${
                       member.role === 'OWNER'
-                        ? 'bg-purple-100 text-purple-700'
+                        ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
                         : member.role === 'ADMIN'
-                          ? 'bg-blue-100 text-blue-700'
+                          ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
                           : member.role === 'MEMBER'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                            : 'bg-surface-100 dark:bg-slate-800 text-gray-700 dark:text-gray-400'
                     }`}
                   >
                     {member.role}
@@ -219,7 +231,8 @@ export default function ProjectMembersList({
                   member.role !== 'OWNER' && (
                     <button
                       onClick={() => handleRemove(parseInt(member.user.id))}
-                      className="ml-2 text-gray-400 hover:text-red-600 transition-colors"
+                      className="ml-3 p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                      title="Remove Member"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

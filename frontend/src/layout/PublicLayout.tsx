@@ -8,7 +8,7 @@ export default function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-surface-50 dark:bg-slate-950 font-inter text-gray-900 dark:text-gray-100 transition-colors duration-300">
       {/* ── Public Header ── */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-surface-200 dark:border-slate-800">
+      <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-lg border-b border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -17,8 +17,9 @@ export default function PublicLayout() {
                 <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-glow group-hover:scale-105 transition-transform duration-300">
                   P
                 </div>
-                <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
-                  Project<span className="text-primary-600 dark:text-primary-500">Flow</span>
+                <span className="font-bold text-xl tracking-tight text-white">
+                  Project
+                  <span className="text-primary-500">Flow</span>
                 </span>
               </Link>
             </div>
@@ -28,7 +29,7 @@ export default function PublicLayout() {
               {location.pathname !== '/login' && (
                 <Link
                   to="/login"
-                  className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors px-3 py-2"
+                  className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-primary-400 transition-colors px-3 py-2"
                 >
                   <LogIn size={18} />
                   Sign in
@@ -57,20 +58,20 @@ export default function PublicLayout() {
       </main>
 
       {/* ── Public Footer ── */}
-      <footer className="bg-white dark:bg-slate-900 border-t border-surface-200 dark:border-slate-800 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+      <footer className="bg-slate-950 border-t border-slate-900 py-8 text-center text-sm text-gray-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div>
-            <span className="font-bold text-gray-900 dark:text-white">ProjectFlow</span> ©{' '}
+            <span className="font-bold text-white">ProjectFlow</span> ©{' '}
             {new Date().getFullYear()}
           </div>
           <div className="flex gap-6">
-            <Link to="#" className="hover:text-primary-600 transition-colors">
+            <Link to="#" className="hover:text-primary-400 transition-colors">
               Privacy Policy
             </Link>
-            <Link to="#" className="hover:text-primary-600 transition-colors">
+            <Link to="#" className="hover:text-primary-400 transition-colors">
               Terms of Service
             </Link>
-            <Link to="#" className="hover:text-primary-600 transition-colors">
+            <Link to="#" className="hover:text-primary-400 transition-colors">
               Contact
             </Link>
           </div>

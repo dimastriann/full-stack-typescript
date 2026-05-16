@@ -111,44 +111,44 @@ export default function UserForm({
     }
   });
 
-  if (queryLoading) return <p className="p-4">Loading user data...</p>;
-  if (!data?.getUser && userId) return <p className="p-4">User not found</p>;
+  if (queryLoading)
+    return (
+      <p className="p-6 text-gray-500 dark:text-gray-400">
+        Loading user data...
+      </p>
+    );
+  if (!data?.getUser && userId)
+    return <p className="p-6 text-red-500 dark:text-red-400">User not found</p>;
 
   return (
     <>
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              First Name
-            </label>
+            <label className="label-modern">First Name</label>
             <input
               {...register('name', { required: 'First name is required' })}
               placeholder="First Name"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
             {errors.name && (
-              <span className="text-red-500 text-xs">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.name.message}
               </span>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Last Name
-            </label>
+            <label className="label-modern">Last Name</label>
             <input
               {...register('lastName')}
               placeholder="Last Name"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+            <label className="label-modern">Email</label>
             <input
               {...register('email', {
                 required: 'Email is required',
@@ -159,10 +159,10 @@ export default function UserForm({
               })}
               type="email"
               placeholder="Email"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
             {errors.email && (
-              <span className="text-red-500 text-xs">
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.email.message}
               </span>
             )}
@@ -170,9 +170,7 @@ export default function UserForm({
 
           {!isEditMode && (
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <label className="label-modern">Password</label>
               <input
                 {...register('password', {
                   required: 'Password is required',
@@ -180,10 +178,10 @@ export default function UserForm({
                 })}
                 type="password"
                 placeholder="Password"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+                className="input-modern"
               />
               {errors.password && (
-                <span className="text-red-500 text-xs">
+                <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                   {errors.password.message}
                 </span>
               )}
@@ -191,84 +189,79 @@ export default function UserForm({
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Mobile
-            </label>
+            <label className="label-modern">Mobile</label>
             <input
               {...register('mobile')}
               placeholder="Mobile Phone"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Birth Date
-            </label>
+            <label className="label-modern">Birth Date</label>
             <input
               {...register('birthDate')}
               type="date"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
           </div>
 
           {!isFromProfile && (
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Role
-              </label>
-              <select
-                {...register('role')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                <option value="USER">User</option>
-                <option value="MANAGER">Manager</option>
-                <option value="ADMIN">Admin</option>
+              <label className="label-modern">Role</label>
+              <select {...register('role')} className="select-modern">
+                <option value="USER" className="dark:bg-slate-900">
+                  User
+                </option>
+                <option value="MANAGER" className="dark:bg-slate-900">
+                  Manager
+                </option>
+                <option value="ADMIN" className="dark:bg-slate-900">
+                  Admin
+                </option>
               </select>
             </div>
           )}
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
+            <label className="label-modern">Address</label>
             <textarea
               {...register('address')}
               placeholder="Address"
               rows={2}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Bio
-            </label>
+            <label className="label-modern">Bio</label>
             <textarea
               {...register('bio')}
               placeholder="Bio"
               rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
             />
           </div>
         </div>
 
         {errorMsg && (
-          <div className="border-red-600 border-[1px] rounded-md my-2 p-2 text-red-600 bg-red-100 relative">
-            {errorMsg}
-            <X
-              className="cursor-pointer text-black absolute top-1 right-1 size-5"
-              onClick={() => setErrorMsg('')}
-            />
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl my-4 p-4 text-red-700 dark:text-red-400 relative animate-slide-in-up transition-colors">
+            <div className="flex items-center gap-3">
+              <span className="flex-1 text-sm font-bold">{errorMsg}</span>
+              <X
+                className="cursor-pointer text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors size-5"
+                onClick={() => setErrorMsg('')}
+              />
+            </div>
           </div>
         )}
 
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <div className="flex justify-end gap-3 pt-6 border-t border-surface-100 dark:border-slate-800">
           {onCancel && (
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-6 py-2.5 border border-surface-200 dark:border-slate-800 rounded-xl shadow-sm text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 hover:bg-surface-50 dark:hover:bg-slate-800 transition-all"
             >
               Cancel
             </button>
@@ -276,9 +269,13 @@ export default function UserForm({
           <button
             type="submit"
             disabled={mutationLoading}
-            className="inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex justify-center px-8 py-2.5 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 transition-all"
           >
-            {mutationLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create'}
+            {mutationLoading
+              ? 'Saving...'
+              : isEditMode
+                ? 'Update Profile'
+                : 'Create Account'}
           </button>
         </div>
       </form>
