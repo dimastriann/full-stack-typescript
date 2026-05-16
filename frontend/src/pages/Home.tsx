@@ -16,28 +16,28 @@ export default function HomePage(): React.ReactElement {
       {/* ── Hero Section ── */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         {/* Background Gradients */}
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-200/40 rounded-full blur-[120px] mix-blend-multiply opacity-50 animate-blob"></div>
-        <div className="absolute top-[10%] right-[-10%] w-[40%] h-[40%] bg-indigo-200/40 rounded-full blur-[120px] mix-blend-multiply opacity-50 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-200/40 dark:bg-primary-900/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-soft-light opacity-50 animate-blob"></div>
+        <div className="absolute top-[10%] right-[-10%] w-[40%] h-[40%] bg-indigo-200/40 dark:bg-indigo-900/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-soft-light opacity-50 animate-blob animation-delay-2000"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-sm font-semibold mb-8 animate-slide-in-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-sm font-semibold mb-8 animate-slide-in-up">
             <span className="flex h-2 w-2 rounded-full bg-primary-500"></span>
             ProjectFlow is now live
           </div>
 
           <h1
-            className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight mb-8 leading-tight animate-slide-in-up"
+            className="text-5xl md:text-7xl font-black text-gray-900 dark:text-white tracking-tight mb-8 leading-tight animate-slide-in-up"
             style={{ animationDelay: '100ms' }}
           >
             Manage work.
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600 dark:from-primary-400 dark:to-indigo-400">
               Deliver faster.
             </span>
           </h1>
 
           <p
-            className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 animate-slide-in-up"
+            className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 animate-slide-in-up"
             style={{ animationDelay: '200ms' }}
           >
             The most intuitive project management platform built for modern
@@ -60,7 +60,7 @@ export default function HomePage(): React.ReactElement {
             </Link>
             <Link
               to="/login"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl text-gray-700 bg-white border border-surface-200 hover:bg-surface-50 font-bold text-lg shadow-sm transition-all"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-900 border border-surface-200 dark:border-slate-800 hover:bg-surface-50 dark:hover:bg-slate-800 font-bold text-lg shadow-sm transition-all"
             >
               Sign in
             </Link>
@@ -69,13 +69,13 @@ export default function HomePage(): React.ReactElement {
       </section>
 
       {/* ── Features Section ── */}
-      <section className="py-24 bg-surface-50 border-y border-surface-200 relative">
+      <section className="py-24 bg-surface-50 dark:bg-slate-950/50 border-y border-surface-200 dark:border-slate-800 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Everything you need to succeed
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Powerful features disguised in a simple, beautiful interface.
               Focus on your work, not on learning the tool.
             </p>
@@ -118,13 +118,13 @@ export default function HomePage(): React.ReactElement {
                 key={idx}
                 className="card p-8 group hover:-translate-y-1 transition-transform duration-300"
               >
-                <div className="h-12 w-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <div className="h-12 w-12 rounded-2xl bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <feature.icon size={24} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -132,27 +132,27 @@ export default function HomePage(): React.ReactElement {
       </section>
 
       {/* ── Pricing Section ── */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Simple, transparent pricing
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Start for free, upgrade when you need more power.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Free */}
-            <div className="card p-8 border border-surface-200 flex flex-col relative overflow-hidden">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Starter</h3>
-              <p className="text-gray-500 text-sm mb-6">
+            <div className="card p-8 border border-surface-200 dark:border-slate-800 flex flex-col relative overflow-hidden">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Starter</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
                 Perfect for individuals and small teams.
               </p>
               <div className="mb-6">
-                <span className="text-4xl font-black text-gray-900">$0</span>
-                <span className="text-gray-500">/mo</span>
+                <span className="text-4xl font-black text-gray-900 dark:text-white">$0</span>
+                <span className="text-gray-500 dark:text-gray-400">/mo</span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 {[
@@ -161,7 +161,7 @@ export default function HomePage(): React.ReactElement {
                   'Basic Task Management',
                   'Community Support',
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-600">
+                  <li key={i} className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                     <CheckCircle2
                       size={18}
                       className="text-primary-500 flex-shrink-0"
@@ -172,7 +172,7 @@ export default function HomePage(): React.ReactElement {
               </ul>
               <Link
                 to="/register"
-                className="w-full py-3 px-4 rounded-xl text-center font-bold text-gray-700 bg-surface-100 hover:bg-surface-200 transition-colors"
+                className="w-full py-3 px-4 rounded-xl text-center font-bold text-gray-700 dark:text-gray-200 bg-surface-100 dark:bg-slate-800 hover:bg-surface-200 dark:hover:bg-slate-700 transition-colors"
               >
                 Get Started
               </Link>
@@ -183,15 +183,15 @@ export default function HomePage(): React.ReactElement {
               <div className="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
                 POPULAR
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 Professional
               </h3>
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
                 For growing teams that need more power.
               </p>
               <div className="mb-6">
-                <span className="text-4xl font-black text-gray-900">$12</span>
-                <span className="text-gray-500">/user/mo</span>
+                <span className="text-4xl font-black text-gray-900 dark:text-white">$12</span>
+                <span className="text-gray-500 dark:text-gray-400">/user/mo</span>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 {[
@@ -201,7 +201,7 @@ export default function HomePage(): React.ReactElement {
                   'Advanced Reporting',
                   'Priority Support',
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-600">
+                  <li key={i} className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                     <CheckCircle2
                       size={18}
                       className="text-primary-500 flex-shrink-0"
@@ -219,15 +219,15 @@ export default function HomePage(): React.ReactElement {
             </div>
 
             {/* Enterprise */}
-            <div className="card p-8 border border-surface-200 flex flex-col relative overflow-hidden">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="card p-8 border border-surface-200 dark:border-slate-800 flex flex-col relative overflow-hidden">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 Enterprise
               </h3>
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
                 Custom solutions for large organizations.
               </p>
               <div className="mb-6">
-                <span className="text-4xl font-black text-gray-900">
+                <span className="text-4xl font-black text-gray-900 dark:text-white">
                   Custom
                 </span>
               </div>
@@ -239,10 +239,10 @@ export default function HomePage(): React.ReactElement {
                   'SSO & SAML',
                   '99.99% Uptime SLA',
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-600">
+                  <li key={i} className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                     <CheckCircle2
                       size={18}
-                      className="text-gray-400 flex-shrink-0"
+                      className="text-gray-400 dark:text-gray-600 flex-shrink-0"
                     />
                     <span>{f}</span>
                   </li>
@@ -250,7 +250,7 @@ export default function HomePage(): React.ReactElement {
               </ul>
               <Link
                 to="/contact"
-                className="w-full py-3 px-4 rounded-xl text-center font-bold text-gray-700 bg-surface-100 hover:bg-surface-200 transition-colors"
+                className="w-full py-3 px-4 rounded-xl text-center font-bold text-gray-700 dark:text-gray-200 bg-surface-100 dark:bg-slate-800 hover:bg-surface-200 dark:hover:bg-slate-700 transition-colors"
               >
                 Contact Sales
               </Link>
