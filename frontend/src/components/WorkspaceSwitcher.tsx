@@ -1,5 +1,6 @@
 import { useWorkspaceStore } from '../store/workspaceStore';
 import Modal from './Dialog';
+import Select from './Select';
 import { useMutation } from '@apollo/client';
 import { GET_ME } from '../features/auth/gql/auth.graphql';
 import { CREATE_WORKSPACE } from '../features/workspaces/gql/workspace.graphql';
@@ -34,41 +35,27 @@ export const WorkspaceSwitcher = () => {
     }
   };
 
-  // Even if 1 workspace, show it to allow creating others
+  const selectOptions = [
+    ...workspaces.map((w) => ({ id: w.id, label: w.name })),
+    { id: 'new', label: '+ Create Workspace' },
+  ];
+
   return (
     <div className="flex items-center space-x-2">
-      <div className="flex items-center space-x-2 p-1 bg-slate-900 rounded-xl border border-slate-800 shadow-sm transition-all duration-200 hover:border-primary-500">
-        <select
-          value={activeWorkspace?.id || ''}
-          onChange={(e) => {
-            if (e.target.value === 'new') {
-              setIsModalOpen(true);
-              return;
-            }
-            const workspace = workspaces.find(
-              (w) => w.id.toString() === e.target.value,
-            );
+      <Select
+        value={activeWorkspace?.id || ''}
+        options={selectOptions}
+        onChange={(val: string | number) => {
+          if (val === 'new') {
+            setIsModalOpen(true);
+          } else {
+            const workspace = workspaces.find((w) => w.id === val);
             if (workspace) setActiveWorkspace(workspace);
-          }}
-          className="block w-full pl-2 pr-8 py-1 text-sm bg-transparent border-none focus:ring-0 cursor-pointer font-bold text-white"
-        >
-          {workspaces.map((workspace) => (
-            <option
-              key={workspace.id}
-              value={workspace.id}
-              className="bg-slate-900 text-white"
-            >
-              {workspace.name}
-            </option>
-          ))}
-          <option
-            value="new"
-            className="text-primary-400 font-bold bg-slate-900"
-          >
-            + Create Workspace
-          </option>
-        </select>
-      </div>
+          }
+        }}
+        alwaysDark
+        className="w-48"
+      />
 
       <Modal
         isOpen={isModalOpen}

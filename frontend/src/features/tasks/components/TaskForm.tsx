@@ -6,8 +6,9 @@ import { useQuery } from '@apollo/client';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import Logger from '../../../lib/logger';
+import Select from '../../../components/Select';
 import { X, FileText, AlertCircle, Briefcase, User } from 'lucide-react';
 import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
 import type { TaskStage, TaskType } from '../../../types/Tasks';
@@ -68,6 +69,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -237,20 +239,23 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
             <label htmlFor="projectId" className="label-modern">
               Project
             </label>
-            <select
-              id="projectId"
-              {...register('projectId', { required: 'Project is required' })}
-              className="select-modern"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select Project
-              </option>
-              {projects?.map((p: ProjectType) => (
-                <option key={p.id} value={p.id} className="dark:bg-slate-900">
-                  {p.name}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="projectId"
+              control={control}
+              rules={{ required: 'Project is required' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={projects.map((p) => ({
+                    id: p.id?.toString() || '',
+                    label: p.name,
+                  }))}
+                  placeholder="Select Project"
+                  error={!!errors.projectId}
+                />
+              )}
+            />
             {errors.projectId && (
               <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.projectId.message}
@@ -262,23 +267,25 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
             <label htmlFor="parentTaskId" className="label-modern">
               Parent Task
             </label>
-            <select
-              id="parentTaskId"
-              {...register('parentTaskId')}
-              className="select-modern"
-            >
-              <option value="" className="dark:bg-slate-900">
-                No Parent (Root Task)
-              </option>
-              {/* Ideally filter to only show tasks from same project */}
-              {data?.tasks
-                ?.filter((t: TaskType) => t.id !== Number(taskId))
-                .map((t: TaskType) => (
-                  <option key={t.id} value={t.id} className="dark:bg-slate-900">
-                    {t.title}
-                  </option>
-                ))}
-            </select>
+            <Controller
+              name="parentTaskId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={
+                    data?.tasks
+                      ?.filter((t: TaskType) => t.id !== Number(taskId))
+                      .map((t: TaskType) => ({
+                        id: t.id?.toString() || '',
+                        label: t.title,
+                      })) || []
+                  }
+                  placeholder="No Parent (Root Task)"
+                />
+              )}
+            />
           </div>
         </div>
 
@@ -287,30 +294,40 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
             <label htmlFor="type" className="label-modern">
               Task Type
             </label>
-            <select id="type" {...register('type')} className="select-modern">
-              {Object.values(TaskTypeEnum).map((t) => (
-                <option key={t} value={t} className="dark:bg-slate-900">
-                  {t}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(TaskTypeEnum).map((t) => ({
+                    id: t,
+                    label: t,
+                  }))}
+                />
+              )}
+            />
           </div>
 
           <div>
             <label htmlFor="priority" className="label-modern">
               Priority
             </label>
-            <select
-              id="priority"
-              {...register('priority')}
-              className="select-modern"
-            >
-              {Object.values(TaskPriority).map((p) => (
-                <option key={p} value={p} className="dark:bg-slate-900">
-                  {p}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="priority"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(TaskPriority).map((p) => ({
+                    id: p,
+                    label: p,
+                  }))}
+                />
+              )}
+            />
           </div>
         </div>
       </div>
@@ -327,21 +344,23 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
             <label htmlFor="userId" className="label-modern">
               Assigned User
             </label>
-            <select
-              id="userId"
-              {...register('userId', { required: 'User is required' })}
-              disabled={currentUser?.role === 'USER'}
-              className="select-modern disabled:bg-surface-100 dark:disabled:bg-slate-800/50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select User
-              </option>
-              {users?.map((u: UserType) => (
-                <option key={u.id} value={u.id} className="dark:bg-slate-900">
-                  {u.name}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="userId"
+              control={control}
+              rules={{ required: 'User is required' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={users.map((u) => ({
+                    id: u.id?.toString() || '',
+                    label: u.name,
+                  }))}
+                  placeholder="Select User"
+                  error={!!errors.userId}
+                />
+              )}
+            />
 
             {errors.userId && (
               <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
@@ -354,24 +373,21 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
             <label htmlFor="stageId" className="label-modern">
               Stage
             </label>
-            <select
-              id="stageId"
-              {...register('stageId')}
-              className="select-modern"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select Stage
-              </option>
-              {stages.map((stage) => (
-                <option
-                  key={stage.id}
-                  value={stage.id}
-                  className="dark:bg-slate-900"
-                >
-                  {stage.title}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="stageId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={stages.map((s) => ({
+                    id: s.id.toString(),
+                    label: s.title,
+                  }))}
+                  placeholder="Select Stage"
+                />
+              )}
+            />
           </div>
         </div>
 

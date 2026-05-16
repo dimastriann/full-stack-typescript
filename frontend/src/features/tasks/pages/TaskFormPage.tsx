@@ -44,7 +44,7 @@ export default function TaskFormPage() {
       });
       refetch();
     } catch (error) {
-      Logger.error('Error deleting attachment:', error as any);
+      Logger.error('Error deleting attachment:', error as Error);
       alert('Failed to delete attachment');
     }
   };

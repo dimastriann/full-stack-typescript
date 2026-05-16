@@ -7,7 +7,8 @@ import { useQuery } from '@apollo/client';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import Select from '../../../components/Select';
 import {
   X,
   FileText,
@@ -61,6 +62,7 @@ export default function TimesheetForm({
     handleSubmit,
     reset,
     watch,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -327,21 +329,25 @@ export default function TimesheetForm({
             <label htmlFor="userId_ts" className="label-modern">
               User
             </label>
-            <select
-              id="userId_ts"
-              {...register('userId', { required: 'User is required' })}
-              disabled={currentUser?.role === 'USER'}
-              className="select-modern disabled:bg-surface-100 dark:disabled:bg-slate-800/50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select User
-              </option>
-              {users?.map((u: UserType) => (
-                <option key={u.id} value={u.id} className="dark:bg-slate-900">
-                  {u.name}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="userId"
+              control={control}
+              rules={{ required: 'User is required' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={
+                    users?.map((u: UserType) => ({
+                      id: u.id?.toString() || '',
+                      label: u.name,
+                    })) || []
+                  }
+                  placeholder="Select User"
+                  error={!!errors.userId}
+                />
+              )}
+            />
             {errors.userId && (
               <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.userId.message?.toString()}
@@ -353,20 +359,25 @@ export default function TimesheetForm({
             <label htmlFor="projectId_ts" className="label-modern">
               Project
             </label>
-            <select
-              id="projectId_ts"
-              {...register('projectId', { required: 'Project is required' })}
-              className="select-modern"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select Project
-              </option>
-              {projects?.map((p: ProjectType) => (
-                <option key={p.id} value={p.id} className="dark:bg-slate-900">
-                  {p.name}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="projectId"
+              control={control}
+              rules={{ required: 'Project is required' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={
+                    projects?.map((p: ProjectType) => ({
+                      id: p.id?.toString() || '',
+                      label: p.name,
+                    })) || []
+                  }
+                  placeholder="Select Project"
+                  error={!!errors.projectId}
+                />
+              )}
+            />
             {errors.projectId && (
               <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.projectId.message}
@@ -378,20 +389,25 @@ export default function TimesheetForm({
             <label htmlFor="taskId_ts" className="label-modern">
               Task
             </label>
-            <select
-              id="taskId_ts"
-              {...register('taskId', { required: 'Task is required' })}
-              className="select-modern"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select Task
-              </option>
-              {projectTasks?.map((t: TaskType) => (
-                <option key={t.id} value={t.id} className="dark:bg-slate-900">
-                  {t.title}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="taskId"
+              control={control}
+              rules={{ required: 'Task is required' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={
+                    projectTasks?.map((t: TaskType) => ({
+                      id: t.id?.toString() || '',
+                      label: t.title,
+                    })) || []
+                  }
+                  placeholder="Select Task"
+                  error={!!errors.taskId}
+                />
+              )}
+            />
             {errors.taskId && (
               <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.taskId.message}

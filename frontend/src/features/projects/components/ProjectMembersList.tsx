@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { User, UserPlus, Trash2 } from 'lucide-react';
 import Logger from '../../../lib/logger';
+import Select from '../../../components/Select';
 import {
   GET_PROJECT_MEMBERS,
   INVITE_TO_PROJECT,
@@ -128,21 +129,15 @@ export default function ProjectMembersList({
             </div>
             <div>
               <label className="label-modern mb-1.5">Role</label>
-              <select
+              <Select
                 value={inviteRole}
-                onChange={(e) => setInviteRole(e.target.value)}
-                className="select-modern"
-              >
-                <option value="ADMIN" className="dark:bg-slate-900">
-                  Admin
-                </option>
-                <option value="MEMBER" className="dark:bg-slate-900">
-                  Member
-                </option>
-                <option value="VIEWER" className="dark:bg-slate-900">
-                  Viewer
-                </option>
-              </select>
+                onChange={(val) => setInviteRole(val.toString())}
+                options={[
+                  { id: 'ADMIN', label: 'Admin' },
+                  { id: 'MEMBER', label: 'Member' },
+                  { id: 'VIEWER', label: 'Viewer' },
+                ]}
+              />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <button
@@ -190,26 +185,19 @@ export default function ProjectMembersList({
               </div>
               <div className="flex items-center">
                 {canManage && parseInt(member.user.id) !== currentUserId ? (
-                  <select
+                  <Select
                     value={member.role}
-                    onChange={(e) =>
-                      handleUpdateRole(parseInt(member.user.id), e.target.value)
+                    onChange={(val) =>
+                      handleUpdateRole(parseInt(member.user.id), val.toString())
                     }
-                    className="text-xs border-none bg-transparent focus:ring-0 text-gray-600 dark:text-gray-400 font-bold cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    <option value="OWNER" className="dark:bg-slate-900">
-                      Owner
-                    </option>
-                    <option value="ADMIN" className="dark:bg-slate-900">
-                      Admin
-                    </option>
-                    <option value="MEMBER" className="dark:bg-slate-900">
-                      Member
-                    </option>
-                    <option value="VIEWER" className="dark:bg-slate-900">
-                      Viewer
-                    </option>
-                  </select>
+                    options={[
+                      { id: 'OWNER', label: 'Owner' },
+                      { id: 'ADMIN', label: 'Admin' },
+                      { id: 'MEMBER', label: 'Member' },
+                      { id: 'VIEWER', label: 'Viewer' },
+                    ]}
+                    className="min-w-[110px]"
+                  />
                 ) : (
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-md font-black uppercase tracking-wider ${

@@ -13,7 +13,6 @@ import {
   List,
   Plus,
   Search,
-  ArrowUpDown,
   ChevronDown,
   User,
   DollarSign,
@@ -23,6 +22,7 @@ import {
 import Modal from '../../../components/Dialog';
 import Logger from '../../../lib/logger';
 import ProjectForm from './ProjectForm';
+import Select from '../../../components/Select';
 import type { ProjectStage } from '../../../types/Projects';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
@@ -241,28 +241,16 @@ export default function ProjectKanban() {
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="relative inline-block text-left w-full sm:w-auto">
-              <select
-                value={sortBy}
-                onChange={(e) =>
-                  setSortBy(e.target.value as 'name' | 'id' | 'sequence')
-                }
-                className="select-modern pr-10"
-              >
-                <option value="sequence" className="dark:bg-slate-900">
-                  Custom Order
-                </option>
-                <option value="id" className="dark:bg-slate-900">
-                  Sort by ID
-                </option>
-                <option value="name" className="dark:bg-slate-900">
-                  Sort by Name
-                </option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                <ArrowUpDown className="h-4 w-4" />
-              </div>
-            </div>
+            <Select
+              value={sortBy}
+              onChange={(val) => setSortBy(val as 'name' | 'id' | 'sequence')}
+              options={[
+                { id: 'sequence', label: 'Custom Order' },
+                { id: 'id', label: 'Sort by ID' },
+                { id: 'name', label: 'Sort by Name' },
+              ]}
+              className="w-full sm:w-44"
+            />
 
             <button
               onClick={() => setPageSize(pageSize + 20)}

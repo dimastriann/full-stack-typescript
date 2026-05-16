@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import Logger from '../../../lib/logger';
+import Select from '../../../components/Select';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_USER } from '../gql/user.graphql';
@@ -58,6 +59,7 @@ export default function UserForm({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -209,17 +211,21 @@ export default function UserForm({
           {!isFromProfile && (
             <div className="md:col-span-2">
               <label className="label-modern">Role</label>
-              <select {...register('role')} className="select-modern">
-                <option value="USER" className="dark:bg-slate-900">
-                  User
-                </option>
-                <option value="MANAGER" className="dark:bg-slate-900">
-                  Manager
-                </option>
-                <option value="ADMIN" className="dark:bg-slate-900">
-                  Admin
-                </option>
-              </select>
+              <Controller
+                name="role"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={[
+                      { id: 'USER', label: 'User' },
+                      { id: 'MANAGER', label: 'Manager' },
+                      { id: 'ADMIN', label: 'Admin' },
+                    ]}
+                  />
+                )}
+              />
             </div>
           )}
 

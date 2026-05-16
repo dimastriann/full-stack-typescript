@@ -89,7 +89,7 @@ export default function TaskTimesheetTable({
       setEditingId(null);
       setEditForm({});
     } catch (error) {
-      Logger.error('Failed to save timesheet', error as any);
+      Logger.error('Failed to save timesheet', error as Error);
       alert('Failed to save timesheet: ' + error);
     }
   };
@@ -100,7 +100,7 @@ export default function TaskTimesheetTable({
         await deleteTimesheet({ variables: { id } });
         await refetch();
       } catch (error) {
-        Logger.error('Failed to delete timesheet', error as any);
+        Logger.error('Failed to delete timesheet', error as Error);
       }
     }
   };

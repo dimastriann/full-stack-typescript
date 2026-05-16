@@ -7,10 +7,11 @@ import {
   Settings2,
   AlertCircle,
 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Logger from '../../../lib/logger';
+import Select from '../../../components/Select';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import {
@@ -79,6 +80,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -240,17 +242,20 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
             <label htmlFor="methodology" className="label-modern">
               Methodology
             </label>
-            <select
-              id="methodology"
-              {...register('methodology')}
-              className="select-modern"
-            >
-              {Object.values(ProjectMethodology).map((m) => (
-                <option key={m} value={m} className="dark:bg-slate-900">
-                  {m}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="methodology"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(ProjectMethodology).map((m) => ({
+                    id: m,
+                    label: m,
+                  }))}
+                />
+              )}
+            />
           </div>
 
           <div>
@@ -342,47 +347,44 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
             <label htmlFor="stageId" className="label-modern">
               Stage
             </label>
-            <select
-              id="stageId"
-              {...register('stageId')}
-              className="select-modern"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select Stage
-              </option>
-              {stages.map((stage: ProjectStage) => (
-                <option
-                  key={stage.id}
-                  value={stage.id}
-                  className="dark:bg-slate-900"
-                >
-                  {stage.title}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="stageId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={stages.map((stage: ProjectStage) => ({
+                    id: stage.id?.toString() || '',
+                    label: stage.title,
+                  }))}
+                  placeholder="Select Stage"
+                />
+              )}
+            />
           </div>
 
           <div>
             <label htmlFor="responsibleId" className="label-modern">
               Responsible Person
             </label>
-            <select
-              id="responsibleId"
-              {...register('responsibleId', {
-                required: 'Responsible person is required',
-              })}
-              disabled={currentUser?.role === 'USER'}
-              className="select-modern disabled:bg-surface-100 dark:disabled:bg-slate-800/50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <option value="" className="dark:bg-slate-900">
-                Select User
-              </option>
-              {users.map((u: UserType) => (
-                <option key={u.id} value={u.id} className="dark:bg-slate-900">
-                  {u.name} ({u.email})
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="responsibleId"
+              control={control}
+              rules={{ required: 'Responsible person is required' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={users.map((u: UserType) => ({
+                    id: u.id?.toString() || '',
+                    label: `${u.name} (${u.email})`,
+                  }))}
+                  placeholder="Select User"
+                  error={!!errors.responsibleId}
+                />
+              )}
+            />
             {errors.responsibleId && (
               <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
                 {errors.responsibleId.message?.toString()}
@@ -396,34 +398,40 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
             <label htmlFor="visibility" className="label-modern">
               Visibility
             </label>
-            <select
-              id="visibility"
-              {...register('visibility')}
-              className="select-modern"
-            >
-              {Object.values(ProjectVisibility).map((v) => (
-                <option key={v} value={v} className="dark:bg-slate-900">
-                  {v}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="visibility"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(ProjectVisibility).map((v) => ({
+                    id: v,
+                    label: v,
+                  }))}
+                />
+              )}
+            />
           </div>
 
           <div>
             <label htmlFor="priority" className="label-modern">
               Priority
             </label>
-            <select
-              id="priority"
-              {...register('priority')}
-              className="select-modern"
-            >
-              {Object.values(ProjectPriority).map((p) => (
-                <option key={p} value={p} className="dark:bg-slate-900">
-                  {p}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="priority"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(ProjectPriority).map((p) => ({
+                    id: p,
+                    label: p,
+                  }))}
+                />
+              )}
+            />
           </div>
         </div>
       </div>

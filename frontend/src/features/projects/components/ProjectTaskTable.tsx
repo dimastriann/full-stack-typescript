@@ -14,6 +14,7 @@ import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
 import type { TaskType, TaskStage } from '../../../types/Tasks';
 import { Plus, Save, X, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Select from '../../../components/Select';
 
 interface ProjectTaskTableProps {
   projectId: number | undefined;
@@ -107,7 +108,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
       setEditingId(null);
       setEditForm({});
     } catch (error) {
-      Logger.error('Failed to save task', error as any);
+      Logger.error('Failed to save task', error as Error);
     }
   };
 
@@ -117,7 +118,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
         await deleteTask({ variables: { id } });
         await refetch();
       } catch (error) {
-        Logger.error('Failed to delete task', error as any);
+        Logger.error('Failed to delete task', error as Error);
       }
     }
   };
@@ -201,74 +202,63 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                   />
                 </td>
                 <td className="px-4 py-3">
-                  <select
-                    name="type"
+                  <Select
                     value={editForm.type || TaskTypeEnum.TASK}
-                    onChange={handleChange}
-                    className="select-modern !p-1.5 !text-xs"
-                  >
-                    {Object.values(TaskTypeEnum).map((t) => (
-                      <option key={t} value={t} className="dark:bg-slate-900">
-                        {t}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) =>
+                      setEditForm({ ...editForm, type: val as TaskTypeEnum })
+                    }
+                    options={Object.values(TaskTypeEnum).map((t) => ({
+                      id: t,
+                      label: t,
+                    }))}
+                    className="w-32"
+                  />
                 </td>
                 <td className="px-4 py-3">
-                  <select
-                    name="userId"
+                  <Select
                     value={editForm.userId || ''}
-                    onChange={handleChange}
-                    className="select-modern !p-1.5 !text-xs"
-                  >
-                    <option value="" className="dark:bg-slate-900">
-                      Select User
-                    </option>
-                    {usersData?.users?.map((u: any) => (
-                      <option
-                        key={u.id}
-                        value={u.id}
-                        className="dark:bg-slate-900"
-                      >
-                        {u.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) =>
+                      setEditForm({ ...editForm, userId: Number(val) })
+                    }
+                    options={
+                      usersData?.users?.map((u: any) => ({
+                        id: u.id.toString(),
+                        label: u.name,
+                      })) || []
+                    }
+                    placeholder="Select User"
+                    className="w-36"
+                  />
                 </td>
                 <td className="px-4 py-3">
-                  <select
-                    name="stageId"
+                  <Select
                     value={editForm.stageId || ''}
-                    onChange={handleChange}
-                    className="select-modern !p-1.5 !text-xs"
-                  >
-                    <option value="" className="dark:bg-slate-900">
-                      Select Stage
-                    </option>
-                    {stages.map((s) => (
-                      <option
-                        key={s.id}
-                        value={s.id}
-                        className="dark:bg-slate-900"
-                      >
-                        {s.title}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) =>
+                      setEditForm({ ...editForm, stageId: Number(val) })
+                    }
+                    options={stages.map((s) => ({
+                      id: s.id.toString(),
+                      label: s.title,
+                    }))}
+                    placeholder="Select Stage"
+                    className="w-32"
+                  />
                 </td>
                 <td className="px-4 py-3">
-                  <select
-                    name="priority"
+                  <Select
                     value={editForm.priority || TaskPriority.MEDIUM}
-                    onChange={handleChange}
-                    className="select-modern !p-1.5 !text-xs"
-                  >
-                    {Object.values(TaskPriority).map((p) => (
-                      <option key={p} value={p} className="dark:bg-slate-900">
-                        {p}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) =>
+                      setEditForm({
+                        ...editForm,
+                        priority: val as TaskPriority,
+                      })
+                    }
+                    options={Object.values(TaskPriority).map((p) => ({
+                      id: p,
+                      label: p,
+                    }))}
+                    className="w-32"
+                  />
                 </td>
                 <td className="px-4 py-3">
                   <input
@@ -326,82 +316,66 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       />
                     </td>
                     <td className="px-4 py-3">
-                      <select
-                        name="type"
+                      <Select
                         value={editForm.type || TaskTypeEnum.TASK}
-                        onChange={handleChange}
-                        className="select-modern !p-1.5 !text-xs"
-                      >
-                        {Object.values(TaskTypeEnum).map((t) => (
-                          <option
-                            key={t}
-                            value={t}
-                            className="dark:bg-slate-900"
-                          >
-                            {t}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) =>
+                          setEditForm({
+                            ...editForm,
+                            type: val as TaskTypeEnum,
+                          })
+                        }
+                        options={Object.values(TaskTypeEnum).map((t) => ({
+                          id: t,
+                          label: t,
+                        }))}
+                        className="w-32"
+                      />
                     </td>
                     <td className="px-4 py-3">
-                      <select
-                        name="userId"
+                      <Select
                         value={editForm.userId || ''}
-                        onChange={handleChange}
-                        className="select-modern !p-1.5 !text-xs"
-                      >
-                        <option value="" className="dark:bg-slate-900">
-                          Select User
-                        </option>
-                        {usersData?.users?.map((u: any) => (
-                          <option
-                            key={u.id}
-                            value={u.id}
-                            className="dark:bg-slate-900"
-                          >
-                            {u.name}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) =>
+                          setEditForm({ ...editForm, userId: Number(val) })
+                        }
+                        options={
+                          usersData?.users?.map((u: any) => ({
+                            id: u.id.toString(),
+                            label: u.name,
+                          })) || []
+                        }
+                        placeholder="Select User"
+                        className="w-36"
+                      />
                     </td>
                     <td className="px-4 py-3">
-                      <select
-                        name="stageId"
+                      <Select
                         value={editForm.stageId || ''}
-                        onChange={handleChange}
-                        className="select-modern !p-1.5 !text-xs"
-                      >
-                        <option value="" className="dark:bg-slate-900">
-                          Select Stage
-                        </option>
-                        {stages.map((s) => (
-                          <option
-                            key={s.id}
-                            value={s.id}
-                            className="dark:bg-slate-900"
-                          >
-                            {s.title}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) =>
+                          setEditForm({ ...editForm, stageId: Number(val) })
+                        }
+                        options={stages.map((s) => ({
+                          id: s.id.toString(),
+                          label: s.title,
+                        }))}
+                        placeholder="Select Stage"
+                        className="w-32"
+                      />
                     </td>
                     <td className="px-4 py-3">
-                      <select
-                        name="priority"
+                      <Select
                         value={editForm.priority || TaskPriority.MEDIUM}
-                        onChange={handleChange}
-                        className="select-modern !p-1.5 !text-xs"
-                      >
-                        {Object.values(TaskPriority).map((p) => (
-                          <option
-                            key={p}
-                            value={p}
-                            className="dark:bg-slate-900"
-                          >
-                            {p}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) =>
+                          setEditForm({
+                            ...editForm,
+                            priority: val as TaskPriority,
+                          })
+                        }
+                        options={Object.values(TaskPriority).map((p) => ({
+                          id: p,
+                          label: p,
+                        }))}
+                        className="w-32"
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <input

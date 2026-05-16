@@ -28,6 +28,7 @@ import type { WorkspaceMember } from '../../../types/Workspaces';
 import type { UserType } from '../../../types/Users';
 import ProjectStagePage from './ProjectStagePage';
 import TaskStagePage from './TaskStagePage';
+import Select from '../../../components/Select';
 
 import { useWorkspaceStore } from '../../../store/workspaceStore';
 
@@ -341,32 +342,15 @@ export default function WorkspaceSettingsPage() {
                 </div>
                 <div>
                   <label className="label-modern">Role</label>
-                  <select
-                    className="select-modern"
+                  <Select
                     value={inviteRole}
-                    onChange={(e) =>
-                      setInviteRole(e.target.value as WorkspaceRole)
-                    }
-                  >
-                    <option
-                      value={WorkspaceRole.MEMBER}
-                      className="dark:bg-slate-900"
-                    >
-                      Member
-                    </option>
-                    <option
-                      value={WorkspaceRole.ADMIN}
-                      className="dark:bg-slate-900"
-                    >
-                      Admin
-                    </option>
-                    <option
-                      value={WorkspaceRole.VIEWER}
-                      className="dark:bg-slate-900"
-                    >
-                      Viewer
-                    </option>
-                  </select>
+                    onChange={(val) => setInviteRole(val as WorkspaceRole)}
+                    options={[
+                      { id: WorkspaceRole.MEMBER, label: 'Member' },
+                      { id: WorkspaceRole.ADMIN, label: 'Admin' },
+                      { id: WorkspaceRole.VIEWER, label: 'Viewer' },
+                    ]}
+                  />
                 </div>
               </div>
               <div className="flex justify-end">
@@ -417,43 +401,27 @@ export default function WorkspaceSettingsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <select
-                        className="text-sm border-none bg-transparent focus:ring-0 text-gray-700 dark:text-gray-300 cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 font-medium"
-                        value={member.role}
-                        onChange={(e) =>
-                          handleUpdateRole(
-                            member.userId,
-                            e.target.value as WorkspaceRole,
-                          )
-                        }
-                        disabled={member.role === WorkspaceRole.OWNER}
-                      >
-                        <option
-                          value={WorkspaceRole.OWNER}
-                          disabled
-                          className="dark:bg-slate-900"
-                        >
+                      {member.role === WorkspaceRole.OWNER ? (
+                        <span className="text-sm font-bold text-purple-600 dark:text-purple-400 px-3">
                           Owner
-                        </option>
-                        <option
-                          value={WorkspaceRole.ADMIN}
-                          className="dark:bg-slate-900"
-                        >
-                          Admin
-                        </option>
-                        <option
-                          value={WorkspaceRole.MEMBER}
-                          className="dark:bg-slate-900"
-                        >
-                          Member
-                        </option>
-                        <option
-                          value={WorkspaceRole.VIEWER}
-                          className="dark:bg-slate-900"
-                        >
-                          Viewer
-                        </option>
-                      </select>
+                        </span>
+                      ) : (
+                        <Select
+                          value={member.role}
+                          onChange={(val) =>
+                            handleUpdateRole(
+                              member.userId,
+                              val as WorkspaceRole,
+                            )
+                          }
+                          options={[
+                            { id: WorkspaceRole.ADMIN, label: 'Admin' },
+                            { id: WorkspaceRole.MEMBER, label: 'Member' },
+                            { id: WorkspaceRole.VIEWER, label: 'Viewer' },
+                          ]}
+                          className="w-32"
+                        />
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       {member.role !== WorkspaceRole.OWNER && (

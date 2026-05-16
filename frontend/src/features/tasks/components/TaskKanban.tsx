@@ -12,7 +12,6 @@ import {
   List,
   Plus,
   Search,
-  ArrowUpDown,
   ChevronDown,
   Rocket,
   TestTube,
@@ -24,6 +23,7 @@ import {
 import Modal from '../../../components/Dialog';
 import Logger from '../../../lib/logger';
 import TaskForm from './TaskForm';
+import Select from '../../../components/Select';
 import type { TaskStage } from '../../../types/Tasks';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
@@ -249,28 +249,16 @@ export default function TaskKanban() {
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="relative inline-block text-left w-full sm:w-auto">
-              <select
-                value={sortBy}
-                onChange={(e) =>
-                  setSortBy(e.target.value as 'title' | 'id' | 'sequence')
-                }
-                className="select-modern pr-10"
-              >
-                <option value="sequence" className="dark:bg-slate-900">
-                  Custom Order
-                </option>
-                <option value="id" className="dark:bg-slate-900">
-                  Sort by ID
-                </option>
-                <option value="title" className="dark:bg-slate-900">
-                  Sort by Title
-                </option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                <ArrowUpDown className="h-4 w-4" />
-              </div>
-            </div>
+            <Select
+              value={sortBy}
+              onChange={(val) => setSortBy(val as 'title' | 'id' | 'sequence')}
+              options={[
+                { id: 'sequence', label: 'Custom Order' },
+                { id: 'id', label: 'Sort by ID' },
+                { id: 'title', label: 'Sort by Title' },
+              ]}
+              className="w-full sm:w-44"
+            />
 
             <button
               onClick={() => setPageSize(pageSize + 20)}
