@@ -5,6 +5,7 @@ import { CreateUserInput, UserRole } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import * as bcrypt from 'bcrypt';
 import { UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { LoginResponse } from '../auth/dto/login-response';
@@ -60,6 +61,7 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginResponse)
+  @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
@@ -69,12 +71,7 @@ export class UserResolver {
     if (!user) {
       throw new Error('User not found');
     }
-    let isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      // if bcrypt compare failed, try to compare plain password
-      // (only for migration/dev, remove in prod ideally or re-hash)
-      isMatch = password === user.password;
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
@@ -91,6 +88,7 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginResponse)
+  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 registration attempts per minute
   async register(
     @Args('createUserInput') createUserInput: CreateUserInput,
     @Context() context: GqlContext,

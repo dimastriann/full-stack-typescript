@@ -1,18 +1,22 @@
-import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Subscription, Args, Int, Context } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import {
   Conversation,
   Message,
   ConversationParticipant,
 } from './entities/chat.entity';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, Inject } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { ConversationType } from '../../prisma/generated/client';
+import { ConversationType, MessageType } from '../../prisma/generated/client';
 import { GqlContext } from '../auth/types/context.type';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver()
 export class ChatResolver {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    @Inject('PUB_SUB') private readonly pubSub: any,
+  ) {}
 
   @Query(() => [Conversation])
   @UseGuards(GqlAuthGuard)
@@ -98,12 +102,42 @@ export class ChatResolver {
 
   @Mutation(() => Message)
   @UseGuards(GqlAuthGuard)
+  async sendMessage(
+    @Args('conversationId', { type: () => Int }) conversationId: number,
+    @Args('content') content: string,
+    @Args('type', { type: () => MessageType, nullable: true, defaultValue: MessageType.TEXT }) type?: MessageType,
+    @Args('attachmentIds', { type: () => [Int], nullable: true }) attachmentIds?: number[],
+    @Args('metadata', { type: () => String, nullable: true }) metadata?: string,
+    @Context() context?: GqlContext,
+  ) {
+    const senderId = context!.req.user!.id;
+    const message = await this.chatService.saveMessage(
+      conversationId,
+      senderId,
+      content,
+      type,
+      undefined,
+      metadata,
+      attachmentIds,
+    );
+
+    // Publish to subscribers
+    await this.pubSub.publish('messageSent', { messageSent: message });
+    return message;
+  }
+
+  @Mutation(() => Message)
+  @UseGuards(GqlAuthGuard)
   async updateMessage(
     @Args('id', { type: () => Int }) id: number,
     @Args('content') content: string,
     @Context() context: GqlContext,
   ) {
-    return this.chatService.updateMessage(id, context.req.user!.id, content);
+    const message = await this.chatService.updateMessage(id, context.req.user!.id, content);
+    
+    // Publish to subscribers
+    await this.pubSub.publish('messageUpdated', { messageUpdated: message });
+    return message;
   }
 
   @Mutation(() => Boolean)
@@ -112,7 +146,56 @@ export class ChatResolver {
     @Args('id', { type: () => Int }) id: number,
     @Context() context: GqlContext,
   ) {
-    await this.chatService.deleteMessage(id, context.req.user!.id);
+    const senderId = context.req.user!.id;
+    const message = await this.chatService.deleteMessage(id, senderId);
+    
+    // Publish to subscribers
+    await this.pubSub.publish('messageDeleted', { 
+      messageDeleted: { id, conversationId: message.conversationId } 
+    });
     return true;
+  }
+
+  // ==========================================
+  // GraphQL Subscriptions
+  // ==========================================
+
+  @Subscription(() => Message, {
+    filter: (payload, variables) => {
+      console.log('Subscription Filter payload:', payload, 'variables:', variables);
+      const isMatch = payload.messageSent.conversationId === variables.conversationId;
+      console.log('Subscription Filter isMatch:', isMatch);
+      return isMatch;
+    },
+  })
+  messageSent(
+    @Args('conversationId', { type: () => Int }) conversationId: number,
+  ) {
+    return this.pubSub.asyncIterableIterator('messageSent');
+  }
+
+  @Subscription(() => Message, {
+    filter: (payload, variables) => {
+      const isMatch = payload.messageUpdated.conversationId === variables.conversationId;
+      return isMatch;
+    },
+  })
+  messageUpdated(
+    @Args('conversationId', { type: () => Int }) conversationId: number,
+  ) {
+    return this.pubSub.asyncIterableIterator('messageUpdated');
+  }
+
+  @Subscription(() => Int, {
+    filter: (payload, variables) => {
+      const isMatch = payload.messageDeleted.conversationId === variables.conversationId;
+      return isMatch;
+    },
+    resolve: (payload) => payload.messageDeleted.id,
+  })
+  messageDeleted(
+    @Args('conversationId', { type: () => Int }) conversationId: number,
+  ) {
+    return this.pubSub.asyncIterableIterator('messageDeleted');
   }
 }

@@ -7,7 +7,7 @@ export default function LoginPage(): React.ReactElement {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setAuth({ name }, 'logged_in');
+    setAuth({ name } as any, 'logged_in');
   };
 
   return (

@@ -58,6 +58,7 @@ export class TaskService {
     skip?: number,
     take?: number,
     projectId?: number,
+    cursor?: number,
   ) {
     let projectIds: number[] = [];
 
@@ -73,8 +74,9 @@ export class TaskService {
     }
 
     return this.prisma.task.findMany({
-      skip,
+      skip: skip !== undefined ? skip : (cursor !== undefined ? 1 : undefined),
       take,
+      cursor: cursor !== undefined ? { id: cursor } : undefined,
       where: {
         projectId: { in: projectIds },
       },

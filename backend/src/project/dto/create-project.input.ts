@@ -4,13 +4,16 @@ import {
   ProjectVisibility,
   ProjectPriority,
 } from '../../../prisma/generated/enums';
+import { IsSanitizedString } from '../../common/decorators/sanitized-string.decorator';
 
 @InputType()
 export class CreateProjectInput {
   @Field()
+  @IsSanitizedString()
   name: string;
 
   @Field({ nullable: true })
+  @IsSanitizedString()
   description?: string;
 
   @Field(() => Int)

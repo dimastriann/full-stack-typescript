@@ -39,8 +39,9 @@ export class TaskResolver {
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
     @Args('projectId', { type: () => Int, nullable: true }) projectId?: number,
+    @Args('cursor', { type: () => Int, nullable: true }) cursor?: number,
   ) {
-    return this.taskService.findAll(user.id, skip, take, projectId);
+    return this.taskService.findAll(user.id, skip, take, projectId, cursor);
   }
 
   @Query(() => Task)

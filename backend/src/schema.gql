@@ -361,7 +361,7 @@ type Query {
   myRoleInProject(projectId: Int!): String
   projects(skip: Int, take: Int, workspaceId: Int): [Project!]!
   project(id: Int!): Project!
-  tasks(skip: Int, take: Int, projectId: Int): [Task!]!
+  tasks(skip: Int, take: Int, projectId: Int, cursor: Int): [Task!]!
   getTask(id: Int!): Task!
   timesheets(skip: Int, take: Int, taskId: Int): [Timesheet!]!
   getTimesheet(id: Int!): Timesheet!
@@ -423,6 +423,7 @@ type Mutation {
   addParticipant(conversationId: Int!, userId: Int!): ConversationParticipant!
   removeParticipant(conversationId: Int!, userId: Int!): Boolean!
   markAsRead(conversationId: Int!): Boolean!
+  sendMessage(conversationId: Int!, content: String!, type: MessageType = TEXT, attachmentIds: [Int!], metadata: String): Message!
   updateMessage(id: Int!, content: String!): Message!
   deleteMessage(id: Int!): Boolean!
 }
@@ -685,4 +686,10 @@ input UpdateTaskStageInput {
   workspaceId: Int
   sequence: Int = 5
   id: Int!
+}
+
+type Subscription {
+  messageSent(conversationId: Int!): Message!
+  messageUpdated(conversationId: Int!): Message!
+  messageDeleted(conversationId: Int!): Int!
 }

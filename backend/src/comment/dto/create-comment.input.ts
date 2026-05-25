@@ -1,8 +1,10 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { IsSanitizedString } from '../../common/decorators/sanitized-string.decorator';
 
 @InputType()
 export class CreateCommentInput {
   @Field()
+  @IsSanitizedString()
   content: string;
 
   @Field(() => Int)

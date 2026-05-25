@@ -1,5 +1,6 @@
 import { InputType, Field, registerEnumType } from '@nestjs/graphql';
 import { UserRole } from '../../../prisma/generated/client';
+import { IsSanitizedString } from '../../common/decorators/sanitized-string.decorator';
 export { UserRole };
 
 registerEnumType(UserRole, {
@@ -9,6 +10,7 @@ registerEnumType(UserRole, {
 @InputType()
 export class CreateUserInput {
   @Field()
+  @IsSanitizedString()
   name: string;
 
   @Field()
@@ -24,18 +26,22 @@ export class CreateUserInput {
   mobile: string;
 
   @Field()
+  @IsSanitizedString()
   firstName: string;
 
   @Field({ nullable: true })
+  @IsSanitizedString()
   lastName: string;
 
   @Field({ defaultValue: true })
   status: boolean;
 
   @Field({ nullable: true })
+  @IsSanitizedString()
   address: string;
 
   @Field({ nullable: true })
+  @IsSanitizedString()
   bio: string;
 
   @Field({ nullable: true })

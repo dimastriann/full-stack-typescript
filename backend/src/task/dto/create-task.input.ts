@@ -1,12 +1,15 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { TaskPriority, TaskType } from '../../../prisma/generated/enums';
+import { IsSanitizedString } from '../../common/decorators/sanitized-string.decorator';
 
 @InputType()
 export class CreateTaskInput {
   @Field()
+  @IsSanitizedString()
   title: string;
 
   @Field({ nullable: true })
+  @IsSanitizedString()
   description?: string;
 
   @Field(() => Int)

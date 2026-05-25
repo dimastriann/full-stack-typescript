@@ -155,3 +155,132 @@ export const DELETE_MESSAGE = gql`
     deleteMessage(id: $id)
   }
 `;
+
+export const SEND_MESSAGE = gql`
+  mutation SendMessage(
+    $conversationId: Int!
+    $content: String!
+    $type: MessageType
+    $attachmentIds: [Int!]
+    $metadata: String
+  ) {
+    sendMessage(
+      conversationId: $conversationId
+      content: $content
+      type: $type
+      attachmentIds: $attachmentIds
+      metadata: $metadata
+    ) {
+      id
+      content
+      senderId
+      sender {
+        id
+        name
+      }
+      createdAt
+      isEdited
+      type
+      fileUrl
+      fileName
+      fileSize
+      mimeType
+      metadata
+      linkPreview {
+        url
+        title
+        description
+        image
+        siteName
+        favicons
+      }
+      attachments {
+        id
+        filename
+        path
+        mimeType
+        size
+      }
+    }
+  }
+`;
+
+export const MESSAGE_SENT_SUBSCRIPTION = gql`
+  subscription OnMessageSent($conversationId: Int!) {
+    messageSent(conversationId: $conversationId) {
+      id
+      content
+      senderId
+      sender {
+        id
+        name
+      }
+      createdAt
+      isEdited
+      type
+      fileUrl
+      fileName
+      fileSize
+      mimeType
+      metadata
+      linkPreview {
+        url
+        title
+        description
+        image
+        siteName
+        favicons
+      }
+      attachments {
+        id
+        filename
+        path
+        mimeType
+        size
+      }
+    }
+  }
+`;
+
+export const MESSAGE_UPDATED_SUBSCRIPTION = gql`
+  subscription OnMessageUpdated($conversationId: Int!) {
+    messageUpdated(conversationId: $conversationId) {
+      id
+      content
+      senderId
+      sender {
+        id
+        name
+      }
+      createdAt
+      isEdited
+      type
+      fileUrl
+      fileName
+      fileSize
+      mimeType
+      metadata
+      linkPreview {
+        url
+        title
+        description
+        image
+        siteName
+        favicons
+      }
+      attachments {
+        id
+        filename
+        path
+        mimeType
+        size
+      }
+    }
+  }
+`;
+
+export const MESSAGE_DELETED_SUBSCRIPTION = gql`
+  subscription OnMessageDeleted($conversationId: Int!) {
+    messageDeleted(conversationId: $conversationId)
+  }
+`;

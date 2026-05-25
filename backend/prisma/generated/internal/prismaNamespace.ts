@@ -1595,7 +1595,8 @@ export const ProjectScalarFieldEnum = {
   archivedAt: 'archivedAt',
   sequence: 'sequence',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -1652,7 +1653,8 @@ export const TimesheetScalarFieldEnum = {
   tags: 'tags',
   customFields: 'customFields',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type TimesheetScalarFieldEnum = (typeof TimesheetScalarFieldEnum)[keyof typeof TimesheetScalarFieldEnum]
@@ -1663,6 +1665,7 @@ export const CommentScalarFieldEnum = {
   content: 'content',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   userId: 'userId',
   projectId: 'projectId',
   taskId: 'taskId',

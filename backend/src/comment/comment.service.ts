@@ -55,14 +55,15 @@ export class CommentService {
     return this.prisma.comment.findMany({
       where: {
         projectId: { in: projectIds },
+        deletedAt: null,
       },
       include: { user: true, project: true, task: true, parent: true },
     });
   }
 
   async findOne(id: number, userId: number) {
-    const comment = await this.prisma.comment.findUnique({
-      where: { id },
+    const comment = await this.prisma.comment.findFirst({
+      where: { id, deletedAt: null },
       include: { user: true, project: true, task: true, parent: true },
     });
 
@@ -118,15 +119,16 @@ export class CommentService {
       ProjectRole.ADMIN,
     ]);
 
-    return this.prisma.comment.delete({
+    return this.prisma.comment.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 
   async findByParentId(parentId: number, userId: number) {
     // This is used for tree structure, should also verify access
-    const parentComment = await this.prisma.comment.findUnique({
-      where: { id: parentId },
+    const parentComment = await this.prisma.comment.findFirst({
+      where: { id: parentId, deletedAt: null },
       select: { projectId: true },
     });
 
@@ -138,7 +140,7 @@ export class CommentService {
     }
 
     return this.prisma.comment.findMany({
-      where: { parentId },
+      where: { parentId, deletedAt: null },
       include: { user: true, project: true, task: true, parent: true },
     });
   }

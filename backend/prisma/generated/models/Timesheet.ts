@@ -67,6 +67,7 @@ export type TimesheetMinAggregateOutputType = {
   approvedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TimesheetMaxAggregateOutputType = {
@@ -88,6 +89,7 @@ export type TimesheetMaxAggregateOutputType = {
   approvedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TimesheetCountAggregateOutputType = {
@@ -111,6 +113,7 @@ export type TimesheetCountAggregateOutputType = {
   customFields: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -156,6 +159,7 @@ export type TimesheetMinAggregateInputType = {
   approvedAt?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
 }
 
 export type TimesheetMaxAggregateInputType = {
@@ -177,6 +181,7 @@ export type TimesheetMaxAggregateInputType = {
   approvedAt?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
 }
 
 export type TimesheetCountAggregateInputType = {
@@ -200,6 +205,7 @@ export type TimesheetCountAggregateInputType = {
   customFields?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -310,6 +316,7 @@ export type TimesheetGroupByOutputType = {
   customFields: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   _count: TimesheetCountAggregateOutputType | null
   _avg: TimesheetAvgAggregateOutputType | null
   _sum: TimesheetSumAggregateOutputType | null
@@ -356,6 +363,7 @@ export type TimesheetWhereInput = {
   customFields?: Prisma.JsonNullableFilter<"Timesheet">
   createdAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
@@ -383,6 +391,7 @@ export type TimesheetOrderByWithRelationInput = {
   customFields?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   task?: Prisma.TaskOrderByWithRelationInput
@@ -413,6 +422,7 @@ export type TimesheetWhereUniqueInput = Prisma.AtLeast<{
   customFields?: Prisma.JsonNullableFilter<"Timesheet">
   createdAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
@@ -440,6 +450,7 @@ export type TimesheetOrderByWithAggregationInput = {
   customFields?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TimesheetCountOrderByAggregateInput
   _avg?: Prisma.TimesheetAvgOrderByAggregateInput
   _max?: Prisma.TimesheetMaxOrderByAggregateInput
@@ -471,6 +482,7 @@ export type TimesheetScalarWhereWithAggregatesInput = {
   customFields?: Prisma.JsonNullableWithAggregatesFilter<"Timesheet">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Timesheet"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Timesheet"> | Date | string | null
 }
 
 export type TimesheetCreateInput = {
@@ -489,6 +501,7 @@ export type TimesheetCreateInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
@@ -516,6 +529,7 @@ export type TimesheetUncheckedCreateInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetUpdateInput = {
@@ -534,6 +548,7 @@ export type TimesheetUpdateInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
@@ -561,6 +576,7 @@ export type TimesheetUncheckedUpdateInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetCreateManyInput = {
@@ -584,6 +600,7 @@ export type TimesheetCreateManyInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetUpdateManyMutationInput = {
@@ -602,6 +619,7 @@ export type TimesheetUpdateManyMutationInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetUncheckedUpdateManyInput = {
@@ -625,6 +643,7 @@ export type TimesheetUncheckedUpdateManyInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetListRelationFilter = {
@@ -658,6 +677,7 @@ export type TimesheetCountOrderByAggregateInput = {
   customFields?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TimesheetAvgOrderByAggregateInput = {
@@ -690,6 +710,7 @@ export type TimesheetMaxOrderByAggregateInput = {
   approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TimesheetMinOrderByAggregateInput = {
@@ -711,6 +732,7 @@ export type TimesheetMinOrderByAggregateInput = {
   approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TimesheetSumOrderByAggregateInput = {
@@ -933,6 +955,7 @@ export type TimesheetCreateWithoutUserInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
@@ -958,6 +981,7 @@ export type TimesheetUncheckedCreateWithoutUserInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetCreateOrConnectWithoutUserInput = {
@@ -986,6 +1010,7 @@ export type TimesheetCreateWithoutApprovedByInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
@@ -1011,6 +1036,7 @@ export type TimesheetUncheckedCreateWithoutApprovedByInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetCreateOrConnectWithoutApprovedByInput = {
@@ -1063,6 +1089,7 @@ export type TimesheetScalarWhereInput = {
   customFields?: Prisma.JsonNullableFilter<"Timesheet">
   createdAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Timesheet"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Timesheet"> | Date | string | null
 }
 
 export type TimesheetUpsertWithWhereUniqueWithoutApprovedByInput = {
@@ -1097,6 +1124,7 @@ export type TimesheetCreateWithoutProjectInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
   task?: Prisma.TaskCreateNestedOneWithoutTimesheetsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
@@ -1122,6 +1150,7 @@ export type TimesheetUncheckedCreateWithoutProjectInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetCreateOrConnectWithoutProjectInput = {
@@ -1166,6 +1195,7 @@ export type TimesheetCreateWithoutTaskInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project: Prisma.ProjectCreateNestedOneWithoutTimesheetsInput
   user: Prisma.UserCreateNestedOneWithoutTimesheetsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTimesheetsInput
@@ -1191,6 +1221,7 @@ export type TimesheetUncheckedCreateWithoutTaskInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetCreateOrConnectWithoutTaskInput = {
@@ -1239,6 +1270,7 @@ export type TimesheetCreateManyUserInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetCreateManyApprovedByInput = {
@@ -1261,6 +1293,7 @@ export type TimesheetCreateManyApprovedByInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetUpdateWithoutUserInput = {
@@ -1279,6 +1312,7 @@ export type TimesheetUpdateWithoutUserInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
@@ -1304,6 +1338,7 @@ export type TimesheetUncheckedUpdateWithoutUserInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetUncheckedUpdateManyWithoutUserInput = {
@@ -1326,6 +1361,7 @@ export type TimesheetUncheckedUpdateManyWithoutUserInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetUpdateWithoutApprovedByInput = {
@@ -1344,6 +1380,7 @@ export type TimesheetUpdateWithoutApprovedByInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
@@ -1369,6 +1406,7 @@ export type TimesheetUncheckedUpdateWithoutApprovedByInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetUncheckedUpdateManyWithoutApprovedByInput = {
@@ -1391,6 +1429,7 @@ export type TimesheetUncheckedUpdateManyWithoutApprovedByInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetCreateManyProjectInput = {
@@ -1413,6 +1452,7 @@ export type TimesheetCreateManyProjectInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetUpdateWithoutProjectInput = {
@@ -1431,6 +1471,7 @@ export type TimesheetUpdateWithoutProjectInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
   task?: Prisma.TaskUpdateOneWithoutTimesheetsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
@@ -1456,6 +1497,7 @@ export type TimesheetUncheckedUpdateWithoutProjectInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetUncheckedUpdateManyWithoutProjectInput = {
@@ -1478,6 +1520,7 @@ export type TimesheetUncheckedUpdateManyWithoutProjectInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetCreateManyTaskInput = {
@@ -1500,6 +1543,7 @@ export type TimesheetCreateManyTaskInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TimesheetUpdateWithoutTaskInput = {
@@ -1518,6 +1562,7 @@ export type TimesheetUpdateWithoutTaskInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTimesheetsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTimesheetsNestedInput
@@ -1543,6 +1588,7 @@ export type TimesheetUncheckedUpdateWithoutTaskInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TimesheetUncheckedUpdateManyWithoutTaskInput = {
@@ -1565,6 +1611,7 @@ export type TimesheetUncheckedUpdateManyWithoutTaskInput = {
   customFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1590,6 +1637,7 @@ export type TimesheetSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
@@ -1617,6 +1665,7 @@ export type TimesheetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
@@ -1644,6 +1693,7 @@ export type TimesheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.Timesheet$taskArgs<ExtArgs>
@@ -1671,9 +1721,10 @@ export type TimesheetSelectScalar = {
   customFields?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type TimesheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "date" | "timeSpent" | "userId" | "projectId" | "taskId" | "startTime" | "endTime" | "billable" | "hourlyRate" | "cost" | "source" | "approvalStatus" | "approvedById" | "approvedAt" | "tags" | "customFields" | "createdAt" | "updatedAt", ExtArgs["result"]["timesheet"]>
+export type TimesheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "date" | "timeSpent" | "userId" | "projectId" | "taskId" | "startTime" | "endTime" | "billable" | "hourlyRate" | "cost" | "source" | "approvalStatus" | "approvedById" | "approvedAt" | "tags" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["timesheet"]>
 export type TimesheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1722,6 +1773,7 @@ export type $TimesheetPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     customFields: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["timesheet"]>
   composites: {}
 }
@@ -2169,6 +2221,7 @@ export interface TimesheetFieldRefs {
   readonly customFields: Prisma.FieldRef<"Timesheet", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Timesheet", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Timesheet", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Timesheet", 'DateTime'>
 }
     
 

@@ -45,15 +45,19 @@ export class TimesheetService {
       skip,
       take,
       where: {
-        AND: [taskId ? { taskId } : {}, { projectId: { in: projectIds } }],
+        AND: [
+          taskId ? { taskId } : {}, 
+          { projectId: { in: projectIds } },
+          { deletedAt: null }
+        ],
       },
       include: { ...this.includeRelation },
     });
   }
 
   async findOne(id: number, userId: number) {
-    const timesheet = await this.prisma.timesheet.findUnique({
-      where: { id },
+    const timesheet = await this.prisma.timesheet.findFirst({
+      where: { id, deletedAt: null },
       include: { ...this.includeRelation },
     });
 
@@ -110,8 +114,9 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN],
     );
 
-    return this.prisma.timesheet.delete({
+    return this.prisma.timesheet.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }

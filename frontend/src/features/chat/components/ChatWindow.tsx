@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
 import {
   GET_CONVERSATION_MESSAGES,
   ADD_PARTICIPANT,
@@ -8,12 +8,15 @@ import {
   MARK_AS_READ,
   UPDATE_MESSAGE,
   DELETE_MESSAGE,
+  SEND_MESSAGE,
+  MESSAGE_SENT_SUBSCRIPTION,
+  MESSAGE_UPDATED_SUBSCRIPTION,
+  MESSAGE_DELETED_SUBSCRIPTION,
 } from '../gql/chat.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { UPLOAD_FILE } from '../../attachments/gql/attachment.graphql';
 import type { Message, Conversation } from '../types';
 import type { UserType } from '../../../types/Users';
-import { socketService } from '../../../lib/socket';
 import { useAuthStore } from '../../../store/authStore';
 import {
   Info,
@@ -100,6 +103,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   });
   const [updateMessage] = useMutation(UPDATE_MESSAGE);
   const [deleteMessage] = useMutation(DELETE_MESSAGE);
+  const [sendMessage] = useMutation(SEND_MESSAGE);
   const [uploadFile] = useMutation(UPLOAD_FILE);
   const { handlePreviewFile, handleDownloadFile } = useAttachments();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -142,52 +146,48 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
 
   useEffect(() => {
     if (data?.conversationMessages) {
-      setMessages([...data.conversationMessages].reverse());
+      const sorted = [...data.conversationMessages].sort((a, b) => a.id - b.id);
+      setMessages(sorted);
       // Mark as read when messages are loaded
       markAsRead({ variables: { conversationId: conversation.id } });
     }
   }, [data, conversation.id, markAsRead]);
 
-  useEffect(() => {
-    socketService.connect();
-    socketService.emit('joinConversation', conversation.id);
-
-    const handleNewMessage = (message: Message) => {
-      if (message.conversationId === conversation.id) {
-        setMessages((prev) => [...prev, message]);
-        // Auto-mark as read if the conversation is active
+  useSubscription(MESSAGE_SENT_SUBSCRIPTION, {
+    variables: { conversationId: conversation.id },
+    onData: ({ data }) => {
+      const msg = data.data?.messageSent;
+      if (msg) {
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === msg.id)) return prev;
+          return [...prev, msg].sort((a, b) => a.id - b.id);
+        });
         markAsRead({ variables: { conversationId: conversation.id } });
       }
-    };
+    },
+  });
 
-    socketService.on('newMessage', handleNewMessage as any);
-
-    const handleMessageUpdated = (message: Message) => {
-      if (message.conversationId === conversation.id) {
+  useSubscription(MESSAGE_UPDATED_SUBSCRIPTION, {
+    variables: { conversationId: conversation.id },
+    onData: ({ data }) => {
+      const msg = data.data?.messageUpdated;
+      if (msg) {
         setMessages((prev) =>
-          prev.map((m) => (m.id === message.id ? message : m)),
+          prev.map((m) => (m.id === msg.id ? msg : m)),
         );
       }
-    };
+    },
+  });
 
-    const handleMessageDeleted = (data: {
-      id: number;
-      conversationId: number;
-    }) => {
-      if (data.conversationId === conversation.id) {
-        setMessages((prev) => prev.filter((m) => m.id !== data.id));
+  useSubscription(MESSAGE_DELETED_SUBSCRIPTION, {
+    variables: { conversationId: conversation.id },
+    onData: ({ data }) => {
+      const deletedId = data.data?.messageDeleted;
+      if (deletedId !== undefined) {
+        setMessages((prev) => prev.filter((m) => m.id !== deletedId));
       }
-    };
-
-    socketService.on('messageUpdated', handleMessageUpdated as any);
-    socketService.on('messageDeleted', handleMessageDeleted as any);
-
-    return () => {
-      socketService.off('newMessage', handleNewMessage as any);
-      socketService.off('messageUpdated', handleMessageUpdated as any);
-      socketService.off('messageDeleted', handleMessageDeleted as any);
-    };
-  }, [conversation.id, markAsRead]);
+    },
+  });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -251,13 +251,14 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
       type = first.mimeType.startsWith('image/') ? 'IMAGE' : 'DOCUMENT';
     }
 
-    socketService.emit('sendMessage', {
-      conversationId: conversation.id,
-      senderId: user?.id,
-      content: newMessage,
-      type,
-      attachmentIds,
-      metadata: pendingLocation ? JSON.stringify(pendingLocation) : undefined,
+    sendMessage({
+      variables: {
+        conversationId: conversation.id,
+        content: newMessage,
+        type,
+        attachmentIds,
+        metadata: pendingLocation ? JSON.stringify(pendingLocation) : undefined,
+      },
     });
 
     setNewMessage('');
@@ -354,13 +355,6 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
         variables: { id: editingMessageId, content: editContent },
       });
 
-      socketService.emit('updateMessage', {
-        id: editingMessageId,
-        conversationId: conversation.id,
-        senderId: user?.id,
-        content: editContent,
-      });
-
       setEditingMessageId(null);
       setEditContent('');
     } catch (err) {
@@ -376,12 +370,6 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
         setShowMenuId(null);
 
         await deleteMessage({ variables: { id: messageId } });
-
-        socketService.emit('deleteMessage', {
-          id: messageId,
-          conversationId: conversation.id,
-          senderId: user?.id,
-        });
       } catch (err) {
         Logger.error('Failed to delete message:', err);
         // Revert of deleted if failed? Maybe reload messages.

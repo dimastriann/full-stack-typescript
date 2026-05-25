@@ -89,6 +89,8 @@ model ProjectStage {
   projects    Project[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
 }
 
 model TaskStage {
@@ -104,6 +106,8 @@ model TaskStage {
   tasks       Task[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
 }
 
 model Project {
@@ -142,6 +146,11 @@ model Project {
   sequence      Int               @default(1000)
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
+  deletedAt     DateTime?
+
+  @@index([workspaceId])
+  @@index([responsibleId])
+  @@index([stageId])
 }
 
 model Task {
@@ -181,6 +190,11 @@ model Task {
   sequence       Int          @default(1000)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([stageId])
+  @@index([parentTaskId])
 }
 
 model Timesheet {
@@ -210,6 +224,11 @@ model Timesheet {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([taskId])
 }
 
 model Comment {
@@ -217,6 +236,7 @@ model Comment {
   content   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
   userId    Int
   projectId Int?
   taskId    Int?
@@ -226,6 +246,11 @@ model Comment {
   task      Task?     @relation(fields: [taskId], references: [id])
   parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies   Comment[] @relation("CommentReplies")
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([taskId])
+  @@index([parentId])
 }
 
 enum UserRole {

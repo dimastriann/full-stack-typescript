@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ConversationType, MessageType } from '../../prisma/generated/client';
 import { getLinkPreview } from 'link-preview-js';
 import { Logger } from '@nestjs/common';
+import { sanitizeString } from '../common/decorators/sanitized-string.decorator';
 
 @Injectable()
 export class ChatService {
@@ -63,7 +64,7 @@ export class ChatService {
   async saveMessage(
     conversationId: number,
     senderId: number,
-    content: string,
+    rawContent: string,
     type: MessageType = MessageType.TEXT,
     fileData?: {
       url: string;
@@ -74,6 +75,8 @@ export class ChatService {
     metadata?: any,
     attachmentIds?: number[],
   ) {
+    // Sanitize message content (WebSocket messages bypass DTO validation)
+    const content = sanitizeString(rawContent);
     let linkPreviewData: any = null;
 
     // Link preview only for TEXT messages
@@ -235,7 +238,9 @@ export class ChatService {
     });
   }
 
-  async updateMessage(id: number, senderId: number, content: string) {
+  async updateMessage(id: number, senderId: number, rawContent: string) {
+    // Sanitize message content (WebSocket messages bypass DTO validation)
+    const content = sanitizeString(rawContent);
     const message = await this.prisma.message.findUnique({
       where: { id },
     });
