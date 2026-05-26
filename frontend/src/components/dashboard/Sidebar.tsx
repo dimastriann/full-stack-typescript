@@ -12,6 +12,8 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
+  CalendarDays,
+  GanttChartIcon,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useLogout } from '../../hooks/useLogout';
@@ -117,6 +119,22 @@ export default function Sidebar({
           >
             <ListCheck size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Tasks</span>}
+          </NavLink>
+          <NavLink
+            to="/dashboard/calendar"
+            onClick={onClose}
+            className={navLinkClass}
+          >
+            <CalendarDays size={18} className="flex-shrink-0" />
+            {!isCollapsed && <span>Calendar</span>}
+          </NavLink>
+          <NavLink
+            to="/dashboard/timeline"
+            onClick={onClose}
+            className={navLinkClass}
+          >
+            <GanttChartIcon size={18} className="flex-shrink-0" />
+            {!isCollapsed && <span>Timeline</span>}
           </NavLink>
           <NavLink
             to="/dashboard/timesheets"
