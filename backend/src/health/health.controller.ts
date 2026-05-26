@@ -37,7 +37,7 @@ export class HealthController {
     const memoryUsage = process.memoryUsage();
     const heapUsedMB = Math.round(memoryUsage.heapUsed / 1024 / 1024);
     const heapTotalMB = Math.round(memoryUsage.heapTotal / 1024 / 1024);
-    
+
     healthStatus.details.memory = {
       status: 'up',
       heapUsedMB,
@@ -62,7 +62,9 @@ export class HealthController {
   @Get('liveness')
   checkLiveness(@Res() res: Response) {
     // Basic liveness probe (checks if container/service is alive/running)
-    return res.status(HttpStatus.OK).json({ status: 'alive', uptime: process.uptime() });
+    return res
+      .status(HttpStatus.OK)
+      .json({ status: 'alive', uptime: process.uptime() });
   }
 
   @Get('readiness')

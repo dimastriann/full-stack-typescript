@@ -24,11 +24,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         this.logger.log('Sentry successfully initialized with DSN.');
       } catch (err) {
         this.logger.warn(
-          'Sentry package (@sentry/node) not installed, falling back to local logging.'
+          'Sentry package (@sentry/node) not installed, falling back to local logging.',
         );
       }
     } else {
-      this.logger.log('No SENTRY_DSN found in environment. Sentry is disabled.');
+      this.logger.log(
+        'No SENTRY_DSN found in environment. Sentry is disabled.',
+      );
     }
   }
 
@@ -39,14 +41,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const message =
-      exception instanceof Error
-        ? exception.message
-        : 'Internal server error';
+      exception instanceof Error ? exception.message : 'Internal server error';
 
     // Log the error locally
     this.logger.error(
       `Unhandled Exception: ${message}`,
-      exception instanceof Error ? exception.stack : undefined
+      exception instanceof Error ? exception.stack : undefined,
     );
 
     // Send to Sentry if initialized
@@ -58,7 +58,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       }
     }
 
-    const ctxType = host.getType() as string;
+    const ctxType = host.getType();
 
     if (ctxType === 'graphql') {
       // In GraphQL, NestJS handles resolver errors, but we can return the error formatted

@@ -46,9 +46,9 @@ export class TimesheetService {
       take,
       where: {
         AND: [
-          taskId ? { taskId } : {}, 
+          taskId ? { taskId } : {},
           { projectId: { in: projectIds } },
-          { deletedAt: null }
+          { deletedAt: null },
         ],
       },
       include: { ...this.includeRelation },

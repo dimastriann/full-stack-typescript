@@ -89,21 +89,48 @@ export class AttachmentService {
     // Stage 1: Validation of filename extension & mimetype against malicious code/executable upload blocks
     const lowerFilename = filename.toLowerCase();
     const blockedExtensions = [
-      '.html', '.htm', '.js', '.jsx', '.ts', '.tsx', '.exe', '.bat', '.cmd', '.sh', 
-      '.php', '.pl', '.py', '.scr', '.vbs', '.msi', '.jsp', '.asp', '.aspx', '.jar'
+      '.html',
+      '.htm',
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx',
+      '.exe',
+      '.bat',
+      '.cmd',
+      '.sh',
+      '.php',
+      '.pl',
+      '.py',
+      '.scr',
+      '.vbs',
+      '.msi',
+      '.jsp',
+      '.asp',
+      '.aspx',
+      '.jar',
     ];
     const blockedMimeTypes = [
-      'text/html', 'application/javascript', 'application/x-javascript', 'text/javascript',
-      'application/x-msdownload', 'application/x-sh', 'application/x-bash', 
-      'application/x-php', 'application/x-python', 'application/x-httpd-php'
+      'text/html',
+      'application/javascript',
+      'application/x-javascript',
+      'text/javascript',
+      'application/x-msdownload',
+      'application/x-sh',
+      'application/x-bash',
+      'application/x-php',
+      'application/x-python',
+      'application/x-httpd-php',
     ];
 
-    const hasBlockedExt = blockedExtensions.some(ext => lowerFilename.endsWith(ext));
+    const hasBlockedExt = blockedExtensions.some((ext) =>
+      lowerFilename.endsWith(ext),
+    );
     const hasBlockedMime = blockedMimeTypes.includes(mimetype.toLowerCase());
 
     if (hasBlockedExt || hasBlockedMime) {
       throw new ForbiddenException(
-        `File upload blocked: File type not permitted for security reasons.`
+        `File upload blocked: File type not permitted for security reasons.`,
       );
     }
 
@@ -133,7 +160,9 @@ export class AttachmentService {
                 // file already deleted or not writable
               }
               return reject(
-                new ForbiddenException('File exceeds the maximum limit of 10MB.')
+                new ForbiddenException(
+                  'File exceeds the maximum limit of 10MB.',
+                ),
               );
             }
 
@@ -147,7 +176,8 @@ export class AttachmentService {
             if (relationType === 'project') data.projectId = relationId;
             else if (relationType === 'task') data.taskId = relationId;
             else if (relationType === 'comment') data.commentId = relationId;
-            else if (relationType === 'message') data.conversationId = relationId;
+            else if (relationType === 'message')
+              data.conversationId = relationId;
 
             const attachment = await this.prisma.attachment.create({
               data,

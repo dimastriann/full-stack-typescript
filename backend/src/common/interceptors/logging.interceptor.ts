@@ -18,24 +18,25 @@ export class LoggingInterceptor implements NestInterceptor {
     const startTime = Date.now();
     const requestId = randomUUID();
 
-    const ctxType = context.getType() as string;
+    const ctxType = context.getType();
 
     if (ctxType === 'graphql') {
       // GraphQL Request Logging
       const gqlCtx = GqlExecutionContext.create(context);
       const info = gqlCtx.getInfo();
       const req = gqlCtx.getContext().req;
-      
+
       const parentType = info.parentType.name;
       const fieldName = info.fieldName;
       const operation = info.operation.operation;
 
-      const clientIp = req?.ip || req?.headers?.['x-forwarded-for'] || 'unknown';
+      const clientIp =
+        req?.ip || req?.headers?.['x-forwarded-for'] || 'unknown';
       const userAgent = req?.headers?.['user-agent'] || 'unknown';
       const userId = req?.user?.id ? `User(${req.user.id})` : 'Guest';
 
       this.logger.log(
-        `[${requestId}] 🚀 GraphQL ${operation.toUpperCase()} | ${parentType}.${fieldName} | Caller: ${userId} | IP: ${clientIp} | UA: ${userAgent}`
+        `[${requestId}] 🚀 GraphQL ${operation.toUpperCase()} | ${parentType}.${fieldName} | Caller: ${userId} | IP: ${clientIp} | UA: ${userAgent}`,
       );
 
       return next.handle().pipe(
@@ -43,16 +44,16 @@ export class LoggingInterceptor implements NestInterceptor {
           next: () => {
             const duration = Date.now() - startTime;
             this.logger.log(
-              `[${requestId}] ✅ GraphQL ${parentType}.${fieldName} completed in ${duration}ms`
+              `[${requestId}] ✅ GraphQL ${parentType}.${fieldName} completed in ${duration}ms`,
             );
           },
           error: (err) => {
             const duration = Date.now() - startTime;
             this.logger.error(
-              `[${requestId}] ❌ GraphQL ${parentType}.${fieldName} failed in ${duration}ms | Error: ${err.message}`
+              `[${requestId}] ❌ GraphQL ${parentType}.${fieldName} failed in ${duration}ms | Error: ${err.message}`,
             );
           },
-        })
+        }),
       );
     } else {
       // HTTP Rest Request Logging (e.g., health checks, uploads)
@@ -71,7 +72,7 @@ export class LoggingInterceptor implements NestInterceptor {
       const isHealth = url.includes('/health');
       if (!isHealth) {
         this.logger.log(
-          `[${requestId}] 🌐 HTTP ${method} ${url} | IP: ${clientIp} | UA: ${userAgent}`
+          `[${requestId}] 🌐 HTTP ${method} ${url} | IP: ${clientIp} | UA: ${userAgent}`,
         );
       }
 
@@ -82,17 +83,17 @@ export class LoggingInterceptor implements NestInterceptor {
             const statusCode = res.statusCode;
             if (!isHealth) {
               this.logger.log(
-                `[${requestId}] ✅ HTTP ${method} ${url} returned ${statusCode} in ${duration}ms`
+                `[${requestId}] ✅ HTTP ${method} ${url} returned ${statusCode} in ${duration}ms`,
               );
             }
           },
           error: (err) => {
             const duration = Date.now() - startTime;
             this.logger.error(
-              `[${requestId}] ❌ HTTP ${method} ${url} failed in ${duration}ms | Error: ${err.message}`
+              `[${requestId}] ❌ HTTP ${method} ${url} failed in ${duration}ms | Error: ${err.message}`,
             );
           },
-        })
+        }),
       );
     }
   }

@@ -74,7 +74,7 @@ export class TaskService {
     }
 
     return this.prisma.task.findMany({
-      skip: skip !== undefined ? skip : (cursor !== undefined ? 1 : undefined),
+      skip: skip !== undefined ? skip : cursor !== undefined ? 1 : undefined,
       take,
       cursor: cursor !== undefined ? { id: cursor } : undefined,
       where: {

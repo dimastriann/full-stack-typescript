@@ -24,7 +24,7 @@ describe('Environment Variable Validation', () => {
     };
 
     expect(() => validate(invalidConfig)).toThrow(
-      /Missing or invalid required environment variables/
+      /Missing or invalid required environment variables/,
     );
   });
 
@@ -36,7 +36,7 @@ describe('Environment Variable Validation', () => {
     };
 
     expect(() => validate(invalidConfig)).toThrow(
-      /Missing or invalid required environment variables/
+      /Missing or invalid required environment variables/,
     );
   });
 });

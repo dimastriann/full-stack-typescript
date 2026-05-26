@@ -284,10 +284,70 @@ type LoginResponse {
   user: User!
 }
 
+type TasksByStageItem {
+  stage: String!
+  count: Int!
+  color: String!
+}
+
+type TasksByPriorityItem {
+  priority: String!
+  count: Int!
+}
+
+type ProjectProgressItem {
+  id: Int!
+  projectName: String!
+  progress: Float!
+  budgetPlanned: Float!
+  budgetActual: Float!
+}
+
+type TimelineEntry {
+  date: String!
+  tasksCreated: Int!
+  tasksCompleted: Int!
+  hoursLogged: Float!
+}
+
+type RecentActivityItem {
+  id: Int!
+  type: String!
+  title: String!
+  userName: String!
+  timestamp: String!
+  projectName: String
+}
+
+type UpcomingDeadlineItem {
+  id: Int!
+  title: String!
+  dueDate: String!
+  priority: String!
+  projectName: String
+  stageName: String
+  stageColor: String
+}
+
+type TimesheetSummary {
+  thisWeek: Float!
+  lastWeek: Float!
+  thisMonth: Float!
+}
+
 type DashboardStats {
   totalUsers: Int!
   activeProjects: Int!
   pendingTasks: Int!
+  completedThisWeek: Int!
+  overdueTasks: Int!
+  tasksByStage: [TasksByStageItem!]!
+  tasksByPriority: [TasksByPriorityItem!]!
+  projectsProgress: [ProjectProgressItem!]!
+  activityTimeline: [TimelineEntry!]!
+  upcomingDeadlines: [UpcomingDeadlineItem!]!
+  recentActivity: [RecentActivityItem!]!
+  timesheetSummary: TimesheetSummary!
 }
 
 type LinkPreview {

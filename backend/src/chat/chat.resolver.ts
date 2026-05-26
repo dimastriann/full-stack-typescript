@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Subscription, Args, Int, Context } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Subscription,
+  Args,
+  Int,
+  Context,
+} from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import {
   Conversation,
@@ -105,8 +113,14 @@ export class ChatResolver {
   async sendMessage(
     @Args('conversationId', { type: () => Int }) conversationId: number,
     @Args('content') content: string,
-    @Args('type', { type: () => MessageType, nullable: true, defaultValue: MessageType.TEXT }) type?: MessageType,
-    @Args('attachmentIds', { type: () => [Int], nullable: true }) attachmentIds?: number[],
+    @Args('type', {
+      type: () => MessageType,
+      nullable: true,
+      defaultValue: MessageType.TEXT,
+    })
+    type?: MessageType,
+    @Args('attachmentIds', { type: () => [Int], nullable: true })
+    attachmentIds?: number[],
     @Args('metadata', { type: () => String, nullable: true }) metadata?: string,
     @Context() context?: GqlContext,
   ) {
@@ -133,8 +147,12 @@ export class ChatResolver {
     @Args('content') content: string,
     @Context() context: GqlContext,
   ) {
-    const message = await this.chatService.updateMessage(id, context.req.user!.id, content);
-    
+    const message = await this.chatService.updateMessage(
+      id,
+      context.req.user!.id,
+      content,
+    );
+
     // Publish to subscribers
     await this.pubSub.publish('messageUpdated', { messageUpdated: message });
     return message;
@@ -148,10 +166,10 @@ export class ChatResolver {
   ) {
     const senderId = context.req.user!.id;
     const message = await this.chatService.deleteMessage(id, senderId);
-    
+
     // Publish to subscribers
-    await this.pubSub.publish('messageDeleted', { 
-      messageDeleted: { id, conversationId: message.conversationId } 
+    await this.pubSub.publish('messageDeleted', {
+      messageDeleted: { id, conversationId: message.conversationId },
     });
     return true;
   }
@@ -162,8 +180,14 @@ export class ChatResolver {
 
   @Subscription(() => Message, {
     filter: (payload, variables) => {
-      console.log('Subscription Filter payload:', payload, 'variables:', variables);
-      const isMatch = payload.messageSent.conversationId === variables.conversationId;
+      console.log(
+        'Subscription Filter payload:',
+        payload,
+        'variables:',
+        variables,
+      );
+      const isMatch =
+        payload.messageSent.conversationId === variables.conversationId;
       console.log('Subscription Filter isMatch:', isMatch);
       return isMatch;
     },
@@ -176,7 +200,8 @@ export class ChatResolver {
 
   @Subscription(() => Message, {
     filter: (payload, variables) => {
-      const isMatch = payload.messageUpdated.conversationId === variables.conversationId;
+      const isMatch =
+        payload.messageUpdated.conversationId === variables.conversationId;
       return isMatch;
     },
   })
@@ -188,7 +213,8 @@ export class ChatResolver {
 
   @Subscription(() => Int, {
     filter: (payload, variables) => {
-      const isMatch = payload.messageDeleted.conversationId === variables.conversationId;
+      const isMatch =
+        payload.messageDeleted.conversationId === variables.conversationId;
       return isMatch;
     },
     resolve: (payload) => payload.messageDeleted.id,

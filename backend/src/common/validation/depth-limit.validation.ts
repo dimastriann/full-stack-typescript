@@ -7,7 +7,7 @@ import { ValidationContext, GraphQLError, ASTVisitor } from 'graphql';
 export function depthLimitRule(maxDepth: number) {
   return (context: ValidationContext): ASTVisitor => {
     let depth = 0;
-    
+
     return {
       SelectionSet: {
         enter(node) {
@@ -16,7 +16,7 @@ export function depthLimitRule(maxDepth: number) {
             context.reportError(
               new GraphQLError(
                 `Query exceeds maximum allowed depth of ${maxDepth}.`,
-                { nodes: [node] }
+                { nodes: [node] },
               ),
             );
           }

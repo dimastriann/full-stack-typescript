@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
-  
+
   // Security headers with Helmet
   app.use(
     helmet({
@@ -24,9 +24,9 @@ async function bootstrap() {
       crossOriginEmbedderPolicy: false, // Disable for GraphQL playground
     }),
   );
-  
+
   app.use(cookieParser());
-  
+
   // Origin validation middleware (replaces deprecated csurf)
   // Since we use httpOnly cookies with sameSite: 'lax', CSRF is largely mitigated.
   // This middleware adds an extra layer by validating Origin/Referer on mutations.
@@ -59,7 +59,7 @@ async function bootstrap() {
 
     next();
   });
-  
+
   app.enableCors({
     origin: allowedOrigins,
     credentials: true,
@@ -71,4 +71,3 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
-

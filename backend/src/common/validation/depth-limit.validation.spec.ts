@@ -64,6 +64,8 @@ describe('depthLimitRule', () => {
 
     const errors = runValidation(query, [depthLimitRule(3)]);
     expect(errors.length).toBeGreaterThanOrEqual(1);
-    expect(errors[0].message).toContain('Query exceeds maximum allowed depth of 3');
+    expect(errors[0].message).toContain(
+      'Query exceeds maximum allowed depth of 3',
+    );
   });
 });
