@@ -5,6 +5,75 @@
 /* ── Google Fonts: Inter ── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+/* ── FullCalendar Theme Overrides ── */
+.fc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border-color: transparent;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+.dark .fc-theme-standard td,
+.dark .fc-theme-standard th {
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+.fc .fc-daygrid-day-number,
+.fc .fc-col-header-cell-cushion {
+  color: inherit;
+  font-weight: 600;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(99, 102, 241, 0.06);
+}
+
+.dark .fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.fc .fc-button-primary {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+.fc .fc-button-primary:not(:disabled):hover {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.fc .fc-day-sat,
+.fc .fc-day-sun {
+  background-color: rgba(148, 163, 184, 0.04);
+}
+
+.dark .fc .fc-day-sat,
+.dark .fc .fc-day-sun {
+  background-color: rgba(30, 41, 59, 0.4);
+}
+
+.fc .fc-list-empty-cushion {
+  color: #94a3b8;
+}
+
+.fc-event-completed {
+  opacity: 0.55;
+}
+
 /* ── Base Layer ── */
 @layer base {
   :root {
