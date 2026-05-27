@@ -1,5 +1,6 @@
 import { Injectable, ForbiddenException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '../../prisma/generated/client';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
 import {
@@ -84,7 +85,8 @@ export class AttachmentService {
     }
 
     // 3. Proceed with upload
-    const { createReadStream, filename, mimetype } = file;
+    const filename = file.filename;
+    const mimetype = file.mimetype;
 
     // Stage 1: Validation of filename extension & mimetype against malicious code/executable upload blocks
     const lowerFilename = filename.toLowerCase();
@@ -145,49 +147,53 @@ export class AttachmentService {
     const relativePath = `/uploads/${uniqueFilename}`;
 
     return new Promise((resolve, reject) => {
-      createReadStream()
+      file
+        .createReadStream()
         .pipe(createWriteStream(filePath))
-        .on('finish', async () => {
-          try {
-            const stats = statSync(filePath);
+        .on('finish', () => {
+          void (async () => {
+            try {
+              const stats = statSync(filePath);
 
-            // Stage 2: Size validation (Max 10MB)
-            const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-            if (stats.size > MAX_SIZE) {
-              try {
-                unlinkSync(filePath);
-              } catch (err) {
-                // file already deleted or not writable
+              // Stage 2: Size validation (Max 10MB)
+              const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+              if (stats.size > MAX_SIZE) {
+                try {
+                  unlinkSync(filePath);
+                } catch {
+                  // file already deleted or not writable
+                }
+                return reject(
+                  new ForbiddenException(
+                    'File exceeds the maximum limit of 10MB.',
+                  ),
+                );
               }
-              return reject(
-                new ForbiddenException(
-                  'File exceeds the maximum limit of 10MB.',
-                ),
-              );
+
+              const data: Prisma.AttachmentUncheckedCreateInput = {
+                filename,
+                path: relativePath,
+                mimeType: mimetype,
+                size: stats.size,
+              };
+
+              if (relationType === 'project') data.projectId = relationId;
+              else if (relationType === 'task') data.taskId = relationId;
+              else if (relationType === 'message')
+                data.conversationId = relationId;
+
+              const attachment = await this.prisma.attachment.create({
+                data,
+              });
+              resolve(attachment);
+            } catch (error) {
+              reject(error instanceof Error ? error : new Error(String(error)));
             }
-
-            const data: any = {
-              filename,
-              path: relativePath,
-              mimeType: mimetype,
-              size: stats.size,
-            };
-
-            if (relationType === 'project') data.projectId = relationId;
-            else if (relationType === 'task') data.taskId = relationId;
-            else if (relationType === 'comment') data.commentId = relationId;
-            else if (relationType === 'message')
-              data.conversationId = relationId;
-
-            const attachment = await this.prisma.attachment.create({
-              data,
-            });
-            resolve(attachment);
-          } catch (error) {
-            reject(error);
-          }
+          })();
         })
-        .on('error', (error: any) => reject(error));
+        .on('error', (error: unknown) =>
+          reject(error instanceof Error ? error : new Error(String(error))),
+        );
     });
   }
 

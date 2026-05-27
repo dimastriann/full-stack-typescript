@@ -123,27 +123,27 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     try {
       if (!activeWorkspace) throw new Error('No active workspace selected');
 
-      const projectFormData: any = {
+      const projectFormData = {
         ...formData,
         workspaceId: activeWorkspace.id,
-      };
+      } as Record<string, unknown>;
 
       if (projectFormData.responsibleId) {
-        projectFormData.responsibleId = parseInt(projectFormData.responsibleId);
+        projectFormData.responsibleId = parseInt(String(projectFormData.responsibleId));
       }
       if (projectFormData.stageId) {
-        projectFormData.stageId = parseInt(projectFormData.stageId);
+        projectFormData.stageId = parseInt(String(projectFormData.stageId));
       } else {
         delete projectFormData.stageId;
       }
 
       if (projectFormData.budgetPlanned) {
         projectFormData.budgetPlanned = parseFloat(
-          projectFormData.budgetPlanned,
+          String(projectFormData.budgetPlanned),
         );
       }
       if (projectFormData.phasesCount) {
-        projectFormData.phasesCount = parseInt(projectFormData.phasesCount);
+        projectFormData.phasesCount = parseInt(String(projectFormData.phasesCount));
       }
       if (!projectFormData.startDate) delete projectFormData.startDate;
       if (!projectFormData.endDate) delete projectFormData.endDate;

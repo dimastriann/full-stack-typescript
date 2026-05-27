@@ -2,13 +2,33 @@ import { Controller, Get, Res, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Response } from 'express';
 
+interface HealthDetails {
+  database: {
+    status: 'up' | 'down' | 'unknown';
+    error?: string;
+  };
+  memory: {
+    status: 'up' | 'degraded';
+    heapUsedMB?: number;
+    heapTotalMB?: number;
+    warning?: string;
+  };
+}
+
+interface HealthStatus {
+  status: 'up' | 'down' | 'degraded';
+  timestamp: string;
+  uptime: number;
+  details: HealthDetails;
+}
+
 @Controller('health')
 export class HealthController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
   async checkHealth(@Res() res: Response) {
-    const healthStatus: Record<string, any> = {
+    const healthStatus: HealthStatus = {
       status: 'up',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),

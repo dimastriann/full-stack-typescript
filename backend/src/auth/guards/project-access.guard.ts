@@ -28,11 +28,16 @@ export class ProjectAccessGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext().req;
-    const args = ctx.getArgs();
+    const gqlCtx = ctx.getContext<{ req: { user?: { id: number } } }>();
+    const request = gqlCtx.req;
+    const args = ctx.getArgs<{
+      id?: number;
+      projectId?: number;
+      input?: { projectId?: number };
+    }>();
 
     // Get the authenticated user
-    const user = request.user;
+    const user = request?.user;
     if (!user) {
       throw new ForbiddenException('User not authenticated');
     }

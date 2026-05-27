@@ -5,6 +5,7 @@ import { Attachment } from './entities/attachment.entity';
 import { FileUpload, GraphQLUpload } from 'graphql-upload-ts';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Attachment)
 export class AttachmentResolver {
@@ -17,7 +18,7 @@ export class AttachmentResolver {
     @Args('relationId', { type: () => Int }) relationId: number,
     @Args('relationType', { type: () => String })
     relationType: 'project' | 'task' | 'comment' | 'message',
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.attachmentService.uploadFile(
       file,
@@ -31,7 +32,7 @@ export class AttachmentResolver {
   @UseGuards(GqlAuthGuard)
   async removeAttachment(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.attachmentService.remove(id, user.id);
   }

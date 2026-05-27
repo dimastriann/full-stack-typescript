@@ -23,7 +23,7 @@ import { PubSub } from 'graphql-subscriptions';
 export class ChatResolver {
   constructor(
     private readonly chatService: ChatService,
-    @Inject('PUB_SUB') private readonly pubSub: any,
+    @Inject('PUB_SUB') private readonly pubSub: PubSub,
   ) {}
 
   @Query(() => [Conversation])
@@ -179,7 +179,10 @@ export class ChatResolver {
   // ==========================================
 
   @Subscription(() => Message, {
-    filter: (payload, variables) => {
+    filter: (
+      payload: { messageSent: { conversationId: number } },
+      variables: { conversationId: number },
+    ) => {
       console.log(
         'Subscription Filter payload:',
         payload,
@@ -195,11 +198,15 @@ export class ChatResolver {
   messageSent(
     @Args('conversationId', { type: () => Int }) conversationId: number,
   ) {
+    void conversationId;
     return this.pubSub.asyncIterableIterator('messageSent');
   }
 
   @Subscription(() => Message, {
-    filter: (payload, variables) => {
+    filter: (
+      payload: { messageUpdated: { conversationId: number } },
+      variables: { conversationId: number },
+    ) => {
       const isMatch =
         payload.messageUpdated.conversationId === variables.conversationId;
       return isMatch;
@@ -208,20 +215,26 @@ export class ChatResolver {
   messageUpdated(
     @Args('conversationId', { type: () => Int }) conversationId: number,
   ) {
+    void conversationId;
     return this.pubSub.asyncIterableIterator('messageUpdated');
   }
 
   @Subscription(() => Int, {
-    filter: (payload, variables) => {
+    filter: (
+      payload: { messageDeleted: { conversationId: number } },
+      variables: { conversationId: number },
+    ) => {
       const isMatch =
         payload.messageDeleted.conversationId === variables.conversationId;
       return isMatch;
     },
-    resolve: (payload) => payload.messageDeleted.id,
+    resolve: (payload: { messageDeleted: { id: number } }) =>
+      payload.messageDeleted.id,
   })
   messageDeleted(
     @Args('conversationId', { type: () => Int }) conversationId: number,
   ) {
+    void conversationId;
     return this.pubSub.asyncIterableIterator('messageDeleted');
   }
 }

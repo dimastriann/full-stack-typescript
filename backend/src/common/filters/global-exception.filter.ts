@@ -6,7 +6,12 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { GqlArgumentsHost } from '@nestjs/graphql';
+import { Request, Response } from 'express';
+
+interface SentryPlaceholder {
+  init?: (options: { dsn: string }) => void;
+  captureException?: (exception: unknown) => void;
+}
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -16,20 +21,26 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   constructor() {
     const dsn = process.env.SENTRY_DSN;
     if (dsn) {
-      try {
-        // Dynamically import @sentry/node if available so it doesn't fail if package is missing
-        // This is the absolute best way to build a robust placeholder!
-        require('@sentry/node').init({ dsn });
-        this.isSentryInitialized = true;
-        this.logger.log('Sentry successfully initialized with DSN.');
-      } catch (err) {
-        this.logger.warn(
-          'Sentry package (@sentry/node) not installed, falling back to local logging.',
-        );
-      }
+      void this.initSentry(dsn);
     } else {
       this.logger.log(
         'No SENTRY_DSN found in environment. Sentry is disabled.',
+      );
+    }
+  }
+
+  private async initSentry(dsn: string) {
+    try {
+      const packageName = '@sentry/node';
+      const sentry = (await import(packageName)) as SentryPlaceholder;
+      if (sentry.init) {
+        sentry.init({ dsn });
+      }
+      this.isSentryInitialized = true;
+      this.logger.log('Sentry successfully initialized with DSN.');
+    } catch {
+      this.logger.warn(
+        'Sentry package (@sentry/node) not installed, falling back to local logging.',
       );
     }
   }
@@ -51,11 +62,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     // Send to Sentry if initialized
     if (this.isSentryInitialized) {
-      try {
-        require('@sentry/node').captureException(exception);
-      } catch (err) {
-        // Safe fallback
-      }
+      void (async () => {
+        try {
+          const packageName = '@sentry/node';
+          const sentry = (await import(packageName)) as SentryPlaceholder;
+          if (sentry.captureException) {
+            sentry.captureException(exception);
+          }
+        } catch {
+          // Safe fallback
+        }
+      })();
     }
 
     const ctxType = host.getType();
@@ -66,8 +83,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } else {
       // Rest HTTP Response
       const ctx = host.switchToHttp();
-      const response = ctx.getResponse();
-      const request = ctx.getRequest();
+      const response = ctx.getResponse<Response>();
+      const request = ctx.getRequest<Request>();
 
       response.status(status).json({
         statusCode: status,

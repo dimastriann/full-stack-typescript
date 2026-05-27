@@ -15,6 +15,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtAuthRestGuard } from '../auth/guards/jwt-auth-rest.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ProjectRole } from 'prisma/generated/enums';
+import { User } from '../user/entities/user.entity';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
@@ -31,7 +32,7 @@ export class AttachmentController {
   async getFile(
     @Param('id', ParseIntPipe) id: number,
     @Query('download') download: string,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
     @Res() res: Response,
   ) {
     // 1. Find the attachment

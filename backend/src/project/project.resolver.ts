@@ -19,6 +19,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { RequireProjectRole } from 'src/auth/decorators/require-project-role.decorator';
 import { ProjectRole } from 'prisma/generated/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Project)
 export class ProjectResolver {
@@ -34,7 +35,7 @@ export class ProjectResolver {
   @UseGuards(GqlAuthGuard)
   createProject(
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectService.create(createProjectInput, user.id);
   }
@@ -45,7 +46,7 @@ export class ProjectResolver {
   @Query(() => [Project])
   @UseGuards(GqlAuthGuard)
   projects(
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
     @Args('workspaceId', { type: () => Int, nullable: true })
@@ -61,7 +62,7 @@ export class ProjectResolver {
   @UseGuards(GqlAuthGuard, ProjectAccessGuard)
   project(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectService.findOne(id, user.id);
   }
@@ -74,7 +75,7 @@ export class ProjectResolver {
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
   updateProject(
     @Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectService.update(
       updateProjectInput.id,
@@ -91,7 +92,7 @@ export class ProjectResolver {
   @RequireProjectRole(ProjectRole.OWNER)
   deleteProject(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectService.delete(id, user.id);
   }

@@ -1,8 +1,13 @@
 import { getAttachmentUrl } from '../../../config/api';
 import Logger from '../../../lib/logger';
 
+interface AttachmentFile {
+  id: number;
+  filename: string;
+}
+
 export const useAttachments = () => {
-  const handlePreviewFile = async (file: any) => {
+  const handlePreviewFile = async (file: AttachmentFile) => {
     try {
       const response = await fetch(getAttachmentUrl(file.id), {
         credentials: 'include',
@@ -14,12 +19,12 @@ export const useAttachments = () => {
       const url = window.URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (error) {
-      Logger.error('Error previewing file:', error as any);
+      Logger.error('Error previewing file:', error as Error);
       alert('Failed to preview file');
     }
   };
 
-  const handleDownloadFile = async (file: any) => {
+  const handleDownloadFile = async (file: AttachmentFile) => {
     try {
       const response = await fetch(getAttachmentUrl(file.id, true), {
         credentials: 'include',
@@ -40,7 +45,7 @@ export const useAttachments = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      Logger.error('Error downloading file:', error as any);
+      Logger.error('Error downloading file:', error as Error);
       alert('Failed to download file');
     }
   };

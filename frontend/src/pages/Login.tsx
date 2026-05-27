@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
+import type { UserType } from '../types/Users';
 
 export default function LoginPage(): React.ReactElement {
   const [name, setName] = useState<string>('');
@@ -7,7 +8,7 @@ export default function LoginPage(): React.ReactElement {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setAuth({ name } as any, 'logged_in');
+    setAuth({ name, email: '', password: '', status: true } as UserType, 'logged_in');
   };
 
   return (

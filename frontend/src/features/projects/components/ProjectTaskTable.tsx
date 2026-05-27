@@ -12,6 +12,7 @@ import { GET_USERS } from '../../users/gql/user.graphql';
 import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
 import type { TaskType, TaskStage } from '../../../types/Tasks';
+import type { UserType } from '../../../types/Users';
 import { Plus, Save, X, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Select from '../../../components/Select';
@@ -79,7 +80,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
 
   const handleSave = async () => {
     try {
-      const input: any = {
+      const input = {
         title: editForm.title,
         description: editForm.description,
         projectId: Number(projectId),
@@ -87,7 +88,7 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
         estimatedHours: Number(editForm.estimatedHours || 0),
         priority: editForm.priority || TaskPriority.MEDIUM,
         type: editForm.type || TaskTypeEnum.TASK,
-      };
+      } as Record<string, unknown>;
 
       if (editForm.stageId) {
         input.stageId = Number(editForm.stageId);
@@ -221,8 +222,8 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       setEditForm({ ...editForm, userId: Number(val) })
                     }
                     options={
-                      usersData?.users?.map((u: any) => ({
-                        id: u.id.toString(),
+                      (usersData?.users as UserType[] | undefined)?.map((u) => ({
+                        id: u.id?.toString() || '',
                         label: u.name,
                       })) || []
                     }
@@ -338,8 +339,8 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                           setEditForm({ ...editForm, userId: Number(val) })
                         }
                         options={
-                          usersData?.users?.map((u: any) => ({
-                            id: u.id.toString(),
+                          (usersData?.users as UserType[] | undefined)?.map((u) => ({
+                            id: u.id?.toString() || '',
                             label: u.name,
                           })) || []
                         }

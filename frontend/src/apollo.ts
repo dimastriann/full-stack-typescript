@@ -49,13 +49,15 @@ export const client = new ApolloClient({
             keyArgs: ['conversationId'],
             merge(existing = [], incoming) {
               // De-duplicate messages based on id
-              const merged = [...existing];
-              const incomingMap = new Map(incoming.map((item: any) => [item.__ref || item.id, item]));
+              const merged = [...existing] as { __ref?: string; id?: string | number }[];
+              const incomingMap = new Map<string | number | undefined, { __ref?: string; id?: string | number }>(
+                incoming.map((item: { __ref?: string; id?: string | number }) => [item.__ref || item.id, item])
+              );
               
               for (let i = 0; i < merged.length; i++) {
                 const itemRefOrId = merged[i].__ref || merged[i].id;
                 if (incomingMap.has(itemRefOrId)) {
-                  merged[i] = incomingMap.get(itemRefOrId);
+                  merged[i] = incomingMap.get(itemRefOrId) as { __ref?: string; id?: string | number };
                   incomingMap.delete(itemRefOrId);
                 }
               }

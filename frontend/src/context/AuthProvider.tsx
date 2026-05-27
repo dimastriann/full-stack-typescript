@@ -3,11 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
 import { GET_ME, LOGOUT_MUTATION } from '../features/auth/gql/auth.graphql';
 import Logger from '../lib/logger';
+import type { UserType } from '../types/Users';
+
+export interface LoginData {
+  access_token?: string;
+  user: UserType;
+}
 
 type AuthContext = {
   session: string;
-  user: any;
-  login: (userData: any) => void;
+  user: UserType | null;
+  login: (userData: LoginData) => void;
   logout: () => void;
 };
 
@@ -20,7 +26,7 @@ export const AuthContext = createContext<AuthContext>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<string>('');
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -34,7 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           fetchPolicy: 'network-only',
         });
         if (data?.me) {
-          setUser(data.me);
+          setUser(data.me as UserType);
           setSession('logged_in');
         }
       } catch (error) {
@@ -47,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkSession();
   }, [client]);
 
-  const login = (loginData: any) => {
+  const login = (loginData: LoginData) => {
     // loginData contains { access_token, user }
     // access_token is now set in httpOnly cookie by backend
     const userData = loginData.user;

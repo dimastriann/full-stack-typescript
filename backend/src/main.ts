@@ -4,6 +4,7 @@ import { graphqlUploadExpress } from 'graphql-upload-ts';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -35,17 +36,20 @@ async function bootstrap() {
     'http://localhost:3000', // Backend/GraphQL playground
   ];
 
-  app.use((req: any, res: any, next: any) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     // Skip validation for safe methods
-    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
-      return next();
+    const reqMethod = req.method;
+    if (['GET', 'HEAD', 'OPTIONS'].includes(reqMethod)) {
+      next();
+      return;
     }
 
-    const origin = req.headers['origin'] || req.headers['referer'];
+    const origin = req.get('origin') || req.get('referer');
 
     // Allow requests with no origin (same-origin requests, server-to-server)
     if (!origin) {
-      return next();
+      next();
+      return;
     }
 
     // Validate origin against allowlist
@@ -54,7 +58,8 @@ async function bootstrap() {
     );
 
     if (!isAllowed) {
-      return res.status(403).json({ message: 'Forbidden: Invalid origin' });
+      res.status(403).json({ message: 'Forbidden: Invalid origin' });
+      return;
     }
 
     next();

@@ -19,6 +19,14 @@ import {
 import { useAttachments } from '../../attachments/hooks/useAttachments';
 import TaskTimesheetTable from '../components/TaskTimesheetTable';
 
+interface TaskAttachment {
+  id: number;
+  filename: string;
+  size: number;
+  path: string;
+  mimeType: string;
+}
+
 export default function TaskFormPage() {
   const navigate = useNavigate();
   const { taskId } = useParams();
@@ -184,7 +192,7 @@ export default function TaskFormPage() {
                   </div>
                   {task?.attachments && task.attachments.length > 0 ? (
                     <ul className="divide-y divide-surface-100">
-                      {task.attachments.map((file: any) => (
+                      {task.attachments.map((file: TaskAttachment) => (
                         <li
                           key={file.id}
                           className="py-3 flex justify-between items-center group border-b last:border-0 border-surface-100 dark:border-slate-800/50"

@@ -43,8 +43,9 @@ export default function RegisterPage() {
         login(data.register.user, 'logged_in');
         navigate('/dashboard');
       }
-    } catch (err: any) {
-      Logger.error(err as string);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      Logger.error(errMsg);
       setErrorMsg(
         'Registration failed. Please check your details and try again.',
       );

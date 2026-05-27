@@ -876,10 +876,10 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
             />
           </div>
           <div className="max-h-60 overflow-y-auto space-y-2">
-            {nonParticipants.map((u: any) => (
+            {nonParticipants.map((u: UserType) => (
               <button
                 key={u.id}
-                onClick={() => handleAddMember(u.id)}
+                onClick={() => handleAddMember(u.id!)}
                 className="w-full flex items-center gap-3 p-3 hover:bg-surface-50 dark:hover:bg-slate-800 rounded-xl transition-all text-left group"
               >
                 <div className="h-9 w-9 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-400 font-bold text-sm transition-colors group-hover:bg-primary-600 group-hover:text-white">

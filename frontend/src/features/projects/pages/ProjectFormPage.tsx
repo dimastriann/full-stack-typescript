@@ -23,6 +23,14 @@ import {
 } from 'lucide-react';
 import { useAttachments } from '../../attachments/hooks/useAttachments';
 
+interface ProjectAttachment {
+  id: number;
+  filename: string;
+  size: number;
+  path: string;
+  mimeType: string;
+}
+
 export default function ProjectFormPage() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
@@ -200,7 +208,7 @@ export default function ProjectFormPage() {
                   </div>
                   {project?.attachments && project.attachments.length > 0 ? (
                     <ul className="divide-y divide-surface-100">
-                      {project.attachments.map((file: any) => (
+                      {project.attachments.map((file: ProjectAttachment) => (
                         <li
                           key={file.id}
                           className="py-3 flex justify-between items-center group border-b last:border-0 border-surface-100 dark:border-slate-800/50"

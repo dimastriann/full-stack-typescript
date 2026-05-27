@@ -169,7 +169,7 @@ const CommentItem = ({
               taskId={taskId}
               refetch={refetch}
               depth={depth + 1}
-              currentUser={currentUser as any}
+              currentUser={currentUser as User | null}
             />
           ))}
         </div>
@@ -236,7 +236,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
               projectId={projectId}
               taskId={taskId}
               refetch={refetch}
-              currentUser={currentUser as any}
+              currentUser={currentUser as User | null}
             />
           ))
         )}

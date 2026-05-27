@@ -3,6 +3,7 @@ import { useApolloClient } from '@apollo/client';
 import { GET_ME } from '../features/auth/gql/auth.graphql';
 import { useAuthStore } from '../store/authStore';
 import { useWorkspaceStore } from '../store/workspaceStore';
+import type { WorkspaceMember, Workspace } from '../types/Workspaces';
 import Logger from '../lib/logger';
 
 export const AppInit = ({ children }: { children: React.ReactNode }) => {
@@ -37,9 +38,9 @@ export const AppInit = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (user && user.workspaceMembers) {
-      const availableWorkspaces = user.workspaceMembers.map(
-        (m: any) => m.workspace,
-      );
+      const availableWorkspaces = user.workspaceMembers
+        .map((m: WorkspaceMember) => m.workspace)
+        .filter((w): w is Workspace => !!w);
       setWorkspaces(availableWorkspaces);
     }
   }, [user, setWorkspaces]);

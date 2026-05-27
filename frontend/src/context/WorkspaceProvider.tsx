@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { Workspace } from '../types/Workspaces';
+import type { Workspace, WorkspaceMember } from '../types/Workspaces';
 import { useAuth } from './AuthProvider';
 
 type WorkspaceContextType = {
@@ -28,7 +28,7 @@ export const WorkspaceProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (user && user.workspaceMembers) {
       const availableWorkspaces = user.workspaceMembers.map(
-        (m: any) => m.workspace,
+        (m: WorkspaceMember) => m.workspace as Workspace,
       );
       setWorkspaces(availableWorkspaces);
 

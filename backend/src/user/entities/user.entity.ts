@@ -15,50 +15,50 @@ export class User extends Base {
   password: string;
 
   @Field({ nullable: true })
-  phone?: string;
+  phone?: string | null;
 
   @Field({ nullable: true })
-  mobile?: string;
+  mobile?: string | null;
 
   @Field()
   firstName: string;
 
   @Field({ nullable: true })
-  lastName?: string;
+  lastName?: string | null;
 
   @Field({ defaultValue: true })
   status: boolean;
 
   @Field({ nullable: true })
-  address?: string;
+  address?: string | null;
 
   @Field({ nullable: true })
-  bio?: string;
+  bio?: string | null;
 
   @Field({ nullable: true })
-  birthDate?: Date;
+  birthDate?: Date | null;
 
   @Field()
   role: string;
 
   @Field(() => [ProjectMember], { nullable: 'items' })
-  projectMemberships?: [ProjectMember];
+  projectMemberships?: ProjectMember[];
 
   @Field(() => [WorkspaceMember], { nullable: 'items' })
-  workspaceMembers?: [WorkspaceMember];
+  workspaceMembers?: WorkspaceMember[];
 
   @Field(() => [Task], { nullable: 'items' })
-  tasks?: [Task];
+  tasks?: Task[];
 
   @Field(() => [Timesheet], { nullable: 'items' })
-  timesheets?: [Timesheet];
+  timesheets?: Timesheet[];
 
   @Field(() => [CommentChat], { nullable: 'items' })
-  comments?: [CommentChat];
+  comments?: CommentChat[];
 
   @Field(() => [Task], { nullable: 'items' })
-  reportedTasks?: [Task];
+  reportedTasks?: Task[];
 
   @Field(() => [Timesheet], { nullable: 'items' })
-  approvedTimesheets?: [Timesheet];
+  approvedTimesheets?: Timesheet[];
 }

@@ -184,7 +184,7 @@ export const ConversationList = ({
       try {
         await deleteConversation({ variables: { id } });
         if (selectedId === id) {
-          onSelect(null as any); // Clear selection if deleted
+          onSelect(null as unknown as Conversation); // Clear selection if deleted
         }
       } catch (err) {
         Logger.error('Failed to delete conversation:', err);
@@ -357,7 +357,7 @@ export const ConversationList = ({
           {modalMode === 'CHANNEL' && selectedUserIds.length > 0 && (
             <div className="flex flex-wrap gap-2 p-3 bg-surface-50 dark:bg-slate-800/50 rounded-xl border border-surface-200 dark:border-slate-800">
               {selectedUserIds.map((uid) => {
-                const u = userData?.users.find((u: any) => u.id === uid);
+                const u = userData?.users.find((u: User) => u.id === uid);
                 return (
                   <div
                     key={uid}

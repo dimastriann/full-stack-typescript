@@ -99,6 +99,9 @@ export class UserResolver {
       role: UserRole.USER,
     };
     const user = await this.userService.create(inputWithUserRole);
+    if (!user) {
+      throw new Error('Registration failed');
+    }
     const loginResponse = this.authService.login(user);
 
     context.res.cookie('access_token', loginResponse.access_token, {

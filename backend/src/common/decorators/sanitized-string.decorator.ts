@@ -1,8 +1,4 @@
-import {
-  registerDecorator,
-  ValidationOptions,
-  ValidationArguments,
-} from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 import { filterXSS } from 'xss';
 
 /**
@@ -33,7 +29,7 @@ export function IsSanitizedString(validationOptions?: ValidationOptions) {
         ...validationOptions,
       },
       validator: {
-        validate(value: any, _args: ValidationArguments) {
+        validate(value: unknown) {
           if (value === null || value === undefined) {
             return true; // Let @IsOptional() or @IsNotEmpty() handle null/undefined
           }

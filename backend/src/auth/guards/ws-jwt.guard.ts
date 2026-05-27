@@ -24,14 +24,19 @@ export class WsJwtGuard implements CanActivate {
         throw new UnauthorizedException();
       }
 
-      const payload = await this.jwtService.verifyAsync(authToken, {
+      const payload = await this.jwtService.verifyAsync<{
+        sub: number;
+        username: string;
+      }>(authToken, {
         secret: this.configService.get<string>('JWT_SECRET_KEY'),
       });
 
-      // Attach user information to the client
-      client['user'] = payload;
+      interface AuthenticatedSocket extends Socket {
+        user?: { sub: number; username: string };
+      }
+      (client as AuthenticatedSocket).user = payload;
       return true;
-    } catch (err) {
+    } catch {
       throw new UnauthorizedException();
     }
   }

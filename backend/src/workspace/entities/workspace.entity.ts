@@ -11,7 +11,7 @@ export class Workspace {
   name: string;
 
   @Field({ nullable: true })
-  description?: string;
+  description?: string | null;
 
   @Field(() => [WorkspaceMember], { nullable: 'items' })
   members?: WorkspaceMember[];

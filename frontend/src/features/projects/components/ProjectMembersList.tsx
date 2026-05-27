@@ -15,6 +15,18 @@ interface ProjectMembersListProps {
   currentUserId: number;
 }
 
+interface ProjectMember {
+  id: number;
+  role: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+  };
+}
+
 export default function ProjectMembersList({
   projectId,
   currentUserId,
@@ -84,7 +96,7 @@ export default function ProjectMembersList({
 
   const members = data?.projectMembers || [];
   const currentUserMembership = members.find(
-    (m: any) => parseInt(m.user.id) === currentUserId,
+    (m: ProjectMember) => parseInt(m.user.id) === currentUserId,
   );
   const canManage =
     currentUserMembership?.role === 'OWNER' ||
@@ -159,7 +171,7 @@ export default function ProjectMembersList({
       )}
 
       <ul className="divide-y divide-surface-100 dark:divide-slate-800/50">
-        {members.map((member: any) => (
+        {members.map((member: ProjectMember) => (
           <li key={member.id} className="py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center">

@@ -15,6 +15,7 @@ import { UpdateTaskInput } from './dto/update-task.input';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Task)
 export class TaskResolver {
@@ -27,7 +28,7 @@ export class TaskResolver {
   @UseGuards(GqlAuthGuard)
   createTask(
     @Args('createTaskInput') createTaskInput: CreateTaskInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.taskService.create(createTaskInput, user.id);
   }
@@ -35,7 +36,7 @@ export class TaskResolver {
   @Query(() => [Task])
   @UseGuards(GqlAuthGuard)
   tasks(
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
     @Args('projectId', { type: () => Int, nullable: true }) projectId?: number,
@@ -48,7 +49,7 @@ export class TaskResolver {
   @UseGuards(GqlAuthGuard)
   getTask(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.taskService.findOne(id, user.id);
   }
@@ -57,7 +58,7 @@ export class TaskResolver {
   @UseGuards(GqlAuthGuard)
   updateTask(
     @Args('updateTaskInput') updateTaskInput: UpdateTaskInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.taskService.update(
       updateTaskInput.id,
@@ -70,7 +71,7 @@ export class TaskResolver {
   @UseGuards(GqlAuthGuard)
   removeTask(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.taskService.remove(id, user.id);
   }

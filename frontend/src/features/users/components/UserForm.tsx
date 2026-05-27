@@ -81,7 +81,7 @@ export default function UserForm({
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      const userFormData = { ...formData } as any;
+      const userFormData = { ...formData } as Record<string, unknown>;
       if (isEditMode) {
         // Remove password if empty to avoid overwriting with empty string
         if (!userFormData.password) delete userFormData.password;

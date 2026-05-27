@@ -7,6 +7,7 @@ import { UpdateTimesheetInput } from './dto/update-timesheet.input';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { ApprovalStatus } from '../../prisma/generated/enums';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Timesheet)
 export class TimesheetResolver {
@@ -16,7 +17,7 @@ export class TimesheetResolver {
   @UseGuards(GqlAuthGuard)
   createTimesheet(
     @Args('createTimesheetInput') createTimesheetInput: CreateTimesheetInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.timesheetService.create(createTimesheetInput, user.id);
   }
@@ -24,7 +25,7 @@ export class TimesheetResolver {
   @Query(() => [Timesheet], { name: 'timesheets' })
   @UseGuards(GqlAuthGuard)
   findAll(
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
     @Args('taskId', { type: () => Int, nullable: true }) taskId?: number,
@@ -36,7 +37,7 @@ export class TimesheetResolver {
   @UseGuards(GqlAuthGuard)
   findOne(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.timesheetService.findOne(id, user.id);
   }
@@ -45,7 +46,7 @@ export class TimesheetResolver {
   @UseGuards(GqlAuthGuard)
   updateTimesheet(
     @Args('updateTimesheetInput') updateTimesheetInput: UpdateTimesheetInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.timesheetService.update(
       updateTimesheetInput.id,
@@ -58,7 +59,7 @@ export class TimesheetResolver {
   @UseGuards(GqlAuthGuard)
   removeTimesheet(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.timesheetService.remove(id, user.id);
   }
@@ -67,7 +68,7 @@ export class TimesheetResolver {
   @UseGuards(GqlAuthGuard)
   approveTimesheet(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.timesheetService.update(
       id,
@@ -85,7 +86,7 @@ export class TimesheetResolver {
   @UseGuards(GqlAuthGuard)
   rejectTimesheet(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.timesheetService.update(
       id,

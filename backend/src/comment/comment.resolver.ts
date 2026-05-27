@@ -28,14 +28,14 @@ export class CommentResolver {
   @UseGuards(GqlAuthGuard)
   createComment(
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.commentService.create(createCommentInput, user.id);
   }
 
   @Query(() => [Comment], { name: 'comments' })
   @UseGuards(GqlAuthGuard)
-  findAll(@CurrentUser() user: any) {
+  findAll(@CurrentUser() user: User) {
     return this.commentService.findAll(user.id);
   }
 
@@ -43,7 +43,7 @@ export class CommentResolver {
   @UseGuards(GqlAuthGuard)
   findOne(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.commentService.findOne(id, user.id);
   }
@@ -52,7 +52,7 @@ export class CommentResolver {
   @UseGuards(GqlAuthGuard)
   updateComment(
     @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.commentService.update(
       updateCommentInput.id,
@@ -65,7 +65,7 @@ export class CommentResolver {
   @UseGuards(GqlAuthGuard)
   removeComment(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.commentService.remove(id, user.id);
   }
@@ -79,14 +79,14 @@ export class CommentResolver {
 
   @ResolveField(() => [Comment], { nullable: 'items' })
   @UseGuards(GqlAuthGuard)
-  replies(@Parent() comment: Comment, @CurrentUser() user: any) {
+  replies(@Parent() comment: Comment, @CurrentUser() user: User) {
     const { id } = comment;
     return this.commentService.findByParentId(id, user.id);
   }
 
   @ResolveField(() => Comment, { nullable: true })
   @UseGuards(GqlAuthGuard)
-  parent(@Parent() comment: Comment, @CurrentUser() user: any) {
+  parent(@Parent() comment: Comment, @CurrentUser() user: User) {
     const { parentId } = comment;
     if (!parentId) return null;
     return this.commentService.findOne(parentId, user.id);
