@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { GqlContextType } from '@nestjs/graphql';
 
 interface SentryPlaceholder {
   init?: (options: { dsn: string }) => void;
@@ -75,7 +76,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       })();
     }
 
-    const ctxType = host.getType() as string;
+    const ctxType = host.getType<GqlContextType>();
 
     if (ctxType === 'graphql') {
       // In GraphQL, NestJS handles resolver errors, but we can return the error formatted

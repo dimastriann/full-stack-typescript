@@ -5,7 +5,7 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { randomUUID } from 'crypto';
@@ -20,7 +20,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const startTime = Date.now();
     const requestId = randomUUID();
 
-    const ctxType = context.getType() as string;
+    const ctxType = context.getType<GqlContextType>();
 
     if (ctxType === 'graphql') {
       // GraphQL Request Logging
