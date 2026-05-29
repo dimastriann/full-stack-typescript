@@ -6,7 +6,7 @@ export class UpdateTaskInput extends PartialType(CreateTaskInput) {
   @Field(() => Int)
   id: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   completedAt?: Date;
 
   @Field(() => Number, { nullable: true })
@@ -15,6 +15,6 @@ export class UpdateTaskInput extends PartialType(CreateTaskInput) {
   @Field(() => Number, { nullable: true })
   progress?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   deletedAt?: Date;
 }

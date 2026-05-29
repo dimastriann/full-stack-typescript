@@ -16,22 +16,22 @@ registerEnumType(MessageType, {
 
 @ObjectType()
 export class LinkPreview {
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   url?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   title?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   image?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   siteName?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   favicons?: string;
 }
 
@@ -67,16 +67,16 @@ export class Message {
   @Field(() => MessageType)
   type: MessageType;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   fileUrl?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   fileName?: string;
 
   @Field(() => Int, { nullable: true })
   fileSize?: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   mimeType?: string;
 
   @Field(() => String, { nullable: true })
@@ -112,7 +112,7 @@ export class Conversation {
   @Field(() => Int)
   id: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
   @Field(() => ConversationType)

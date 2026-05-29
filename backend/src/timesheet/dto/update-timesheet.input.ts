@@ -13,7 +13,7 @@ export class UpdateTimesheetInput extends PartialType(CreateTimesheetInput) {
   @Field(() => Int, { nullable: true })
   approvedById?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   approvedAt?: Date;
 
   @Field(() => Number, { nullable: true })

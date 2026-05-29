@@ -8,7 +8,7 @@ export class ProjectStage {
   @Field()
   title: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description?: string;
 
   @Field()

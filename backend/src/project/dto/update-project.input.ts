@@ -6,18 +6,18 @@ export class UpdateProjectInput extends PartialType(CreateProjectInput) {
   @Field(() => Int)
   id: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   actualStartDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   actualEndDate?: Date;
 
   @Field(() => Number, { nullable: true })
   progress?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   archivedAt?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   key?: string;
 }

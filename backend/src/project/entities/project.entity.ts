@@ -85,10 +85,10 @@ export class Project {
   @Field(() => Number, { defaultValue: 0 })
   budgetActual: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   startDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   endDate?: Date;
 
   @Field(() => Int, { defaultValue: 1 })
@@ -97,7 +97,7 @@ export class Project {
   @Field(() => ProjectMethodology, { defaultValue: ProjectMethodology.KANBAN })
   methodology: ProjectMethodology;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   key?: string;
 
   @Field(() => ProjectVisibility, { defaultValue: ProjectVisibility.TEAM })
@@ -106,10 +106,10 @@ export class Project {
   @Field(() => ProjectPriority, { defaultValue: ProjectPriority.MEDIUM })
   priority: ProjectPriority;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   actualStartDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   actualEndDate?: Date;
 
   @Field(() => Number, { defaultValue: 0 })
@@ -121,7 +121,7 @@ export class Project {
   @Field(() => [String], { nullable: 'items' })
   tags?: string[];
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   archivedAt?: Date;
 
   @Field(() => Number, { defaultValue: 0 })

@@ -46,10 +46,10 @@ export class Timesheet extends Base {
   @Field(() => Int)
   taskId: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   startTime?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   endTime?: Date;
 
   @Field({ defaultValue: true })
@@ -73,7 +73,7 @@ export class Timesheet extends Base {
   @Field(() => User, { nullable: true })
   approvedBy?: User;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   approvedAt?: Date;
 
   @Field(() => [String], { nullable: 'items' })

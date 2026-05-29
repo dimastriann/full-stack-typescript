@@ -8,7 +8,7 @@ export class CreateTaskInput {
   @IsSanitizedString()
   title: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsSanitizedString()
   description?: string;
 
@@ -27,7 +27,7 @@ export class CreateTaskInput {
   @Field(() => Number, { nullable: true, defaultValue: 0 })
   estimatedHours?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   dueDate?: Date;
 
   @Field(() => TaskPriority, {
@@ -45,7 +45,7 @@ export class CreateTaskInput {
   @Field(() => Int, { nullable: true })
   reporterId?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   startDate?: Date;
 
   @Field(() => [String], { nullable: true })
