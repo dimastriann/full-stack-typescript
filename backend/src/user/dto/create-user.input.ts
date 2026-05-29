@@ -19,32 +19,32 @@ export class CreateUserInput {
   @Field()
   password: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   phone: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   mobile: string;
 
   @Field()
   @IsSanitizedString()
   firstName: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsSanitizedString()
   lastName: string;
 
   @Field({ defaultValue: true })
   status: boolean;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsSanitizedString()
   address: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsSanitizedString()
   bio: string;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   birthDate: Date;
 
   @Field(() => UserRole, { defaultValue: UserRole.USER })

@@ -7,7 +7,7 @@ export class CreateWorkspaceInput {
   @IsSanitizedString()
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsSanitizedString()
   description?: string;
 }

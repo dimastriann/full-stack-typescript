@@ -21,13 +21,13 @@ export class CreateTimesheetInput {
   @Field(() => Int)
   taskId: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   startTime?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   endTime?: Date;
 
-  @Field({ nullable: true, defaultValue: true })
+  @Field(() => Boolean, { nullable: true, defaultValue: true })
   billable?: boolean;
 
   @Field(() => Number, { nullable: true })

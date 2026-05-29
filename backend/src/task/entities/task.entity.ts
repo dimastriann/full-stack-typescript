@@ -21,7 +21,7 @@ export class Task extends Base {
   @Field()
   title: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description?: string;
 
   @Field(() => Int)
@@ -54,7 +54,7 @@ export class Task extends Base {
   @Field(() => Number, { defaultValue: 0 })
   estimatedHours: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   dueDate?: Date;
 
   @Field(() => TaskPriority, { defaultValue: TaskPriority.MEDIUM })
@@ -81,10 +81,10 @@ export class Task extends Base {
   @Field(() => User, { nullable: true })
   reporter?: User;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   startDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   completedAt?: Date;
 
   @Field(() => Number, { defaultValue: 0 })
@@ -96,6 +96,6 @@ export class Task extends Base {
   @Field(() => [String], { nullable: 'items' })
   tags?: string[];
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   deletedAt?: Date;
 }

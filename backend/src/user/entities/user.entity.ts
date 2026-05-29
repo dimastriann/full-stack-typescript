@@ -14,28 +14,28 @@ export class User extends Base {
   @Field()
   password: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   phone?: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   mobile?: string | null;
 
   @Field()
   firstName: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   lastName?: string | null;
 
   @Field({ defaultValue: true })
   status: boolean;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   address?: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   bio?: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   birthDate?: Date | null;
 
   @Field()

@@ -12,7 +12,7 @@ export class CreateProjectInput {
   @IsSanitizedString()
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsSanitizedString()
   description?: string;
 
@@ -31,10 +31,10 @@ export class CreateProjectInput {
   @Field(() => Number, { nullable: true, defaultValue: 0 })
   budgetPlanned?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   startDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   endDate?: Date;
 
   @Field(() => Int, { nullable: true, defaultValue: 1 })
@@ -58,7 +58,7 @@ export class CreateProjectInput {
   })
   priority?: ProjectPriority;
 
-  @Field({ nullable: true, defaultValue: 'USD' })
+  @Field(() => String, { nullable: true, defaultValue: 'USD' })
   currency?: string;
 
   @Field(() => [String], { nullable: true })

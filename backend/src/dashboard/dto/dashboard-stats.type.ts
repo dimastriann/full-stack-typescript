@@ -71,7 +71,7 @@ export class RecentActivityItem {
   @Field()
   timestamp: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   projectName?: string;
 }
 
@@ -89,13 +89,13 @@ export class UpcomingDeadlineItem {
   @Field()
   priority: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   projectName?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   stageName?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   stageColor?: string;
 }
 
