@@ -27,14 +27,15 @@ async function bootstrap() {
   );
 
   app.use(cookieParser());
+  // Support comma-separated URLs in FRONTEND_URL and normalize trailing slashes
+  const rawFrontendUrls = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map((url) => url.trim())
+    : ['http://localhost:5173', 'http://localhost:8080']; // Include dev and default production docker ports
 
-  // Origin validation middleware (replaces deprecated csurf)
-  // Since we use httpOnly cookies with sameSite: 'lax', CSRF is largely mitigated.
-  // This middleware adds an extra layer by validating Origin/Referer on mutations.
   const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
+    ...rawFrontendUrls,
     'http://localhost:3000', // Backend/GraphQL playground
-  ];
+  ].map((url) => url.replace(/\/$/, ''));
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     // Skip validation for safe methods
@@ -44,17 +45,19 @@ async function bootstrap() {
       return;
     }
 
-    const origin = req.get('origin') || req.get('referer');
+    const rawOrigin = req.get('origin') || req.get('referer');
 
     // Allow requests with no origin (same-origin requests, server-to-server)
-    if (!origin) {
+    if (!rawOrigin) {
       next();
       return;
     }
 
+    const origin = rawOrigin.replace(/\/$/, '');
+
     // Validate origin against allowlist
-    const isAllowed = allowedOrigins.some((allowed) =>
-      origin.startsWith(allowed),
+    const isAllowed = allowedOrigins.some(
+      (allowed) => origin === allowed || origin.startsWith(allowed + '/'),
     );
 
     if (!isAllowed) {

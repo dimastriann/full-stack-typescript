@@ -24,6 +24,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-myuser}:${POSTGRES_PASSWORD:-mypassword}@postgres:5432/${POSTGRES_DB:-mydatabase}
       PORT: 3000
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-mysecretkey}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
     depends_on:
       postgres:
         condition: service_healthy
