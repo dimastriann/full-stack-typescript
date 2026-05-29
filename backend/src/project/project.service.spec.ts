@@ -16,6 +16,7 @@ const mockPrisma = {
     create: jest.fn().mockResolvedValue(mockProject),
     findMany: jest.fn().mockResolvedValue([mockProject]),
     findUnique: jest.fn().mockResolvedValue(mockProject),
+    findFirst: jest.fn().mockResolvedValue(mockProject),
     update: jest.fn().mockResolvedValue(mockProject),
     delete: jest.fn().mockResolvedValue(mockProject),
   },
@@ -53,7 +54,8 @@ describe('ProjectService', () => {
 
     service = module.get<ProjectService>(ProjectService);
     prisma = module.get<PrismaService>(PrismaService);
-    projectMemberService = module.get<ProjectMemberService>(ProjectMemberService);
+    projectMemberService =
+      module.get<ProjectMemberService>(ProjectMemberService);
   });
 
   it('should be defined', () => {
@@ -68,26 +70,28 @@ describe('ProjectService', () => {
       };
 
       const result = await service.create(createDto as any, 1);
-      
+
       expect(prisma.workspaceMember.findUnique).toHaveBeenCalled();
       expect(prisma.project.create).toHaveBeenCalled();
       expect(projectMemberService.addMember).toHaveBeenCalledWith(
         mockProject.id,
         1,
-        ProjectRole.OWNER
+        ProjectRole.OWNER,
       );
       expect(result).toEqual(mockProject);
     });
 
     it('should throw ForbiddenException if user is not a workspace member', async () => {
-      (mockPrisma.workspaceMember.findUnique as jest.Mock).mockResolvedValueOnce(null);
-      
+      mockPrisma.workspaceMember.findUnique.mockResolvedValueOnce(null);
+
       const createDto = {
         name: 'New Project',
         workspaceId: 2,
       };
 
-      await expect(service.create(createDto as any, 1)).rejects.toThrow(ForbiddenException);
+      await expect(service.create(createDto as any, 1)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 

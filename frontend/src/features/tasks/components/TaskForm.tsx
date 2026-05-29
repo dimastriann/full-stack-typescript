@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useTasks } from '../hooks/useTasks';
 import { useParams } from 'react-router-dom';
 import { GET_TASK, GET_TASK_STAGES } from '../gql/task.graphql';
@@ -6,13 +6,14 @@ import { useQuery } from '@apollo/client';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
 import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import Logger from '../../../lib/logger';
-import { X } from 'lucide-react';
-import type { TaskStage } from '../../../types/Tasks';
-import TaskTimesheetTable from './TaskTimesheetTable';
-import { useAuth } from '../../../context/AuthProvider';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import Select from '../../../components/Select';
+import { X, FileText, AlertCircle, Briefcase, User } from 'lucide-react';
+import { TaskPriority, TaskTypeEnum } from '../../../types/Tasks';
+import type { TaskStage, TaskType } from '../../../types/Tasks';
+import { useAuthStore } from '../../../store/authStore';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import type { UserType } from '../../../types/Users';
 
 interface TaskFormProps {
@@ -21,8 +22,8 @@ interface TaskFormProps {
 }
 
 export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
-  const { user: currentUser } = useAuth();
-  const { activeWorkspace } = useWorkspace();
+  const currentUser = useAuthStore((state) => state.user);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const { taskId } = useParams();
 
   const isEditMode = !!taskId;
@@ -48,17 +49,28 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
     loading: mutationLoading,
   } = useTasks();
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [hasResetInitial, setHasResetInitial] = useState(false);
 
   const task = data?.getTask;
-  const projects: ProjectType[] = projectsData?.projects ?? [];
-  const users: UserType[] = usersData?.users ?? [];
-  const stages: TaskStage[] = stagesData?.taskStages ?? [];
+  const projects = useMemo<ProjectType[]>(
+    () => projectsData?.projects ?? [],
+    [projectsData?.projects],
+  );
+  const users = useMemo<UserType[]>(
+    () => usersData?.users ?? [],
+    [usersData?.users],
+  );
+  const stages = useMemo<TaskStage[]>(
+    () => stagesData?.taskStages ?? [],
+    [stagesData?.taskStages],
+  );
   const userId = currentUser?.id;
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -67,6 +79,12 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
       userId: userId?.toString() || '',
       projectId: '',
       stageId: '',
+      estimatedHours: 0,
+      dueDate: '',
+      priority: TaskPriority.MEDIUM,
+      type: TaskTypeEnum.TASK,
+      parentTaskId: '',
+      startDate: '',
     },
   });
 
@@ -78,8 +96,18 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         userId: task.userId.toString(),
         projectId: task.projectId.toString(),
         stageId: task.stageId?.toString() || '',
+        estimatedHours: task.estimatedHours,
+        dueDate: task.dueDate
+          ? new Date(task.dueDate).toISOString().split('T')[0]
+          : '',
+        priority: task.priority,
+        type: task.type,
+        parentTaskId: task.parentTaskId?.toString() || '',
+        startDate: task.startDate
+          ? new Date(task.startDate).toISOString().split('T')[0]
+          : '',
       });
-    } else if (!isEditMode && userId && users.length) {
+    } else if (!isEditMode && userId && users.length && !hasResetInitial) {
       reset({
         title: '',
         description: '',
@@ -87,17 +115,33 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         projectId: '',
         stageId: '',
       });
+      setHasResetInitial(true);
     }
-  }, [task, isEditMode, reset, userId, users, projects]);
+  }, [task, isEditMode, reset, userId, users, projects, hasResetInitial]);
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      const input: any = {
+      const input: Partial<TaskType> & {
+        id?: number;
+      } = {
         title: formData.title,
         description: formData.description,
         userId: Number(formData.userId),
         projectId: Number(formData.projectId),
+        estimatedHours: Number(formData.estimatedHours),
+        priority: formData.priority,
+        type: formData.type,
+        parentTaskId: formData.parentTaskId
+          ? Number(formData.parentTaskId)
+          : undefined,
+        startDate: formData.startDate
+          ? new Date(formData.startDate).toISOString()
+          : undefined,
       };
+
+      if (formData.dueDate) {
+        input.dueDate = formData.dueDate;
+      }
 
       if (formData.stageId) {
         input.stageId = Number(formData.stageId);
@@ -121,156 +165,304 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   if (queryLoading)
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
     );
   if (!data?.getTask && taskId && !queryLoading)
-    return <p className="p-4 text-red-600">Task not found</p>;
+    return (
+      <p className="p-4 text-red-600 dark:text-red-400 font-medium text-center">
+        Task not found
+      </p>
+    );
 
   return (
-    <div>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
-          <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4">
-            Task Details
-          </h3>
+    <form onSubmit={onSubmit} className="space-y-6">
+      {/* ── Error Banner ── */}
+      {errorMsg && (
+        <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl animate-slide-in-up transition-colors">
+          <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-red-700 dark:text-red-400 font-medium">
+            {errorMsg}
+          </div>
+          <button
+            type="button"
+            onClick={() => setErrorMsg('')}
+            className="text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {/* ── Section: General ── */}
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
+          <FileText size={16} className="text-primary-500" />
+          General Information
+        </div>
+
+        <div>
+          <label htmlFor="title" className="label-modern">
+            Task Title
+          </label>
+          <input
+            id="title"
+            {...register('title', { required: 'Title is required' })}
+            placeholder="What needs to be done?"
+            className="input-modern"
+          />
+          {errors.title && (
+            <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
+              {errors.title.message}
+            </span>
+          )}
+        </div>
+
+        <div>
+          <label className="label-modern">Description</label>
+          <textarea
+            {...register('description')}
+            placeholder="Add more details about this task..."
+            rows={3}
+            className="input-modern resize-none"
+          />
+        </div>
+      </div>
+
+      {/* ── Section: Classification ── */}
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
+          <Briefcase size={16} className="text-primary-500" />
+          Classification & Hierarchy
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Title
+            <label htmlFor="projectId" className="label-modern">
+              Project
             </label>
-            <input
-              id="title"
-              {...register('title', { required: 'Title is required' })}
-              placeholder="Task Title"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+            <Controller
+              name="projectId"
+              control={control}
+              rules={{ required: 'Project is required' }}
+              render={({ field }) => (
+                <Select
+                  id="projectId"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={projects.map((p) => ({
+                    id: p.id?.toString() || '',
+                    label: p.name,
+                  }))}
+                  placeholder="Select Project"
+                  error={!!errors.projectId}
+                />
+              )}
             />
-            {errors.title && (
-              <span className="text-red-500 text-xs">
-                {errors.title.message}
+            {errors.projectId && (
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
+                {errors.projectId.message}
               </span>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Description
+            <label htmlFor="parentTaskId" className="label-modern">
+              Parent Task
             </label>
-            <textarea
-              {...register('description')}
-              placeholder="Task Description"
-              rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+            <Controller
+              name="parentTaskId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  id="parentTaskId"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={
+                    data?.tasks
+                      ?.filter((t: TaskType) => t.id !== Number(taskId))
+                      .map((t: TaskType) => ({
+                        id: t.id?.toString() || '',
+                        label: t.title,
+                      })) || []
+                  }
+                  placeholder="No Parent (Root Task)"
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="type" className="label-modern">
+              Task Type
+            </label>
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  id="type"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(TaskTypeEnum).map((t) => ({
+                    id: t,
+                    label: t,
+                  }))}
+                />
+              )}
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="userId" className="block text-sm font-medium text-gray-700">
-                Assigned User
-              </label>
-              <select
-                id="userId"
-                {...register('userId', { required: 'User is required' })}
-                disabled={currentUser?.role === 'USER'}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">Select User</option>
-                {users?.map((u: UserType) => (
-                  <option key={u.id} value={u.id}>
-                    {u.name}
-                  </option>
-                ))}
-              </select>
-
-              {errors.userId && (
-                <span className="text-red-500 text-xs">
-                  {errors.userId.message?.toString()}
-                </span>
+          <div>
+            <label htmlFor="priority" className="label-modern">
+              Priority
+            </label>
+            <Controller
+              name="priority"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  id="priority"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={Object.values(TaskPriority).map((p) => ({
+                    id: p,
+                    label: p,
+                  }))}
+                />
               )}
-            </div>
-
-            <div>
-              <label htmlFor="projectId" className="block text-sm font-medium text-gray-700">
-                Project
-              </label>
-              <select
-                id="projectId"
-                {...register('projectId', { required: 'Project is required' })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                <option value="">Select Project</option>
-                {projects?.map((p: ProjectType) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-              {errors.projectId && (
-                <span className="text-red-500 text-xs">
-                  {errors.projectId.message}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="stageId" className="block text-sm font-medium text-gray-700">
-                Stage
-              </label>
-              <select
-                id="stageId"
-                {...register('stageId')}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-              >
-                <option value="">Select Stage</option>
-                {stages.map((stage) => (
-                  <option key={stage.id} value={stage.id}>
-                    {stage.title}
-                  </option>
-                ))}
-              </select>
-            </div>
+            />
           </div>
+        </div>
+      </div>
 
-          {errorMsg && (
-            <div className="border-red-600 border-[1px] rounded-md my-2 p-2 text-red-600 bg-red-100 relative">
-              {errorMsg}
-              <X
-                className="cursor-pointer text-black absolute top-1 right-1 size-5"
-                onClick={() => setErrorMsg('')}
-              />
-            </div>
-          )}
+      {/* ── Section: Assignment & Scheduling ── */}
+      <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
+        <div className="form-section-title text-gray-900 dark:text-white">
+          <User size={16} className="text-primary-500" />
+          Assignment & Scheduling
+        </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            {onCancel && (
-              <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Cancel
-              </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="userId" className="label-modern">
+              Assigned User
+            </label>
+            <Controller
+              name="userId"
+              control={control}
+              rules={{ required: 'User is required' }}
+              render={({ field }) => (
+                <Select
+                  id="userId"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={users.map((u) => ({
+                    id: u.id?.toString() || '',
+                    label: u.name,
+                  }))}
+                  placeholder="Select User"
+                  error={!!errors.userId}
+                />
+              )}
+            />
+
+            {errors.userId && (
+              <span className="text-red-500 dark:text-red-400 text-[11px] font-bold mt-1.5 block px-1 animate-slide-in-up">
+                {errors.userId.message?.toString()}
+              </span>
             )}
-            <button
-              type="submit"
-              disabled={mutationLoading}
-              className="inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-            >
-              {mutationLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create'}
-            </button>
+          </div>
+
+          <div>
+            <label htmlFor="stageId" className="label-modern">
+              Stage
+            </label>
+            <Controller
+              name="stageId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  id="stageId"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={stages.map((s) => ({
+                    id: s.id.toString(),
+                    label: s.title,
+                  }))}
+                  placeholder="Select Stage"
+                />
+              )}
+            />
           </div>
         </div>
-      </form>
 
-      {isEditMode && task && (
-        <div className="space-y-4 mt-6">
-          <TaskTimesheetTable
-            taskId={task.id}
-            userId={task.userId}
-            projectId={task.projectId}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="startDate" className="label-modern">
+              Start Date
+            </label>
+            <input
+              id="startDate"
+              type="date"
+              {...register('startDate')}
+              className="input-modern"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="dueDate" className="label-modern">
+              Due Date
+            </label>
+            <input
+              id="dueDate"
+              type="date"
+              {...register('dueDate')}
+              className="input-modern"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="estimatedHours" className="label-modern">
+              Est. Hours
+            </label>
+            <input
+              id="estimatedHours"
+              type="number"
+              step="0.5"
+              {...register('estimatedHours')}
+              placeholder="0"
+              className="input-modern"
+            />
+          </div>
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* ── Actions ── */}
+      <div className="flex justify-end gap-3 pt-2">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-2.5 rounded-xl border border-surface-200 dark:border-slate-800 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 hover:bg-surface-50 dark:hover:bg-slate-800 transition-all"
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={mutationLoading}
+          className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {mutationLoading
+            ? 'Saving...'
+            : isEditMode
+              ? 'Update Task'
+              : 'Create Task'}
+        </button>
+      </div>
+    </form>
   );
 }

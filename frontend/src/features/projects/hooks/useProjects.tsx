@@ -5,19 +5,22 @@ import {
   UPDATE_PROJECT,
   GET_PROJECTS,
 } from '../gql/project.graphql';
-import type { ProjectType } from '../../../types/Projects';
-import { createContext, useState, useEffect, useContext } from 'react';
-import type { ProjectStoreModel } from '../../../types/BaseStore';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useEffect } from 'react';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
+import { useProjectStore } from '../../../store/projectStore';
 
-export const ProjectContext = createContext<ProjectStoreModel | undefined>(
-  undefined,
-);
-
-export function ProjectProvider({ children }: { children: React.ReactNode }) {
-  const { activeWorkspace } = useWorkspace();
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
+export const useProjects = () => {
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const {
+    projects,
+    setProjects,
+    editingProject,
+    setEditingProject,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
+  } = useProjectStore();
 
   const { data, loading, error, refetch } = useQuery(GET_PROJECTS, {
     variables: {
@@ -32,18 +35,13 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const [updateProject] = useMutation(UPDATE_PROJECT);
   const [deleteProject] = useMutation(DELETE_PROJECT);
 
-  const [editingProject, setEditingProject] = useState<ProjectType | null>(
-    null,
-  );
-  const [projects, setProjects] = useState<ProjectType[]>([]);
-
   useEffect(() => {
-    if (data) {
-      setProjects(data?.projects || []);
+    if (data?.projects) {
+      setProjects(data.projects);
     }
-  }, [data]);
+  }, [data, setProjects]);
 
-  const projectStore = {
+  return {
     records: projects,
     loading,
     error,
@@ -59,18 +57,4 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
     pageSize,
     setPageSize,
   };
-
-  return (
-    <ProjectContext.Provider value={projectStore}>
-      {children}
-    </ProjectContext.Provider>
-  );
-}
-
-export const useProjects = () => {
-  const context = useContext(ProjectContext);
-  if (!context) {
-    throw new Error('useProjects must be used within a ProjectProvider');
-  }
-  return context;
 };

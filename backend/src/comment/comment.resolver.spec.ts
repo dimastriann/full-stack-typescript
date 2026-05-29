@@ -51,8 +51,8 @@ describe('CommentResolver', () => {
       const user = { id: 1 };
       mockService.create.mockResolvedValue({ id: 1, ...input });
 
-      await resolver.createComment(input as any, user);
-      
+      await resolver.createComment(input as any, user as any);
+
       expect(mockService.create).toHaveBeenCalledWith(input, user.id);
     });
   });

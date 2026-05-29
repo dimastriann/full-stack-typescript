@@ -38,11 +38,14 @@ describe('TaskStageService', () => {
 
   describe('findAll', () => {
     it('should return all task stages', async () => {
-      const mockStages = [{ id: 1, name: 'To Do', workspaceId: 1 }, { id: 2, name: 'Done', workspaceId: 1 }];
+      const mockStages = [
+        { id: 1, name: 'To Do', workspaceId: 1 },
+        { id: 2, name: 'Done', workspaceId: 1 },
+      ];
       mockPrisma.taskStage.findMany.mockResolvedValue(mockStages);
 
       const result = await service.findAll(1);
-      
+
       expect(result).toEqual(mockStages);
       expect(mockPrisma.taskStage.findMany).toHaveBeenCalledWith({
         where: { workspaceId: 1 },

@@ -1,5 +1,6 @@
 import { Injectable, ForbiddenException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '../../prisma/generated/client';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
 import {
@@ -84,7 +85,56 @@ export class AttachmentService {
     }
 
     // 3. Proceed with upload
-    const { createReadStream, filename, mimetype } = file;
+    const filename = file.filename;
+    const mimetype = file.mimetype;
+
+    // Stage 1: Validation of filename extension & mimetype against malicious code/executable upload blocks
+    const lowerFilename = filename.toLowerCase();
+    const blockedExtensions = [
+      '.html',
+      '.htm',
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx',
+      '.exe',
+      '.bat',
+      '.cmd',
+      '.sh',
+      '.php',
+      '.pl',
+      '.py',
+      '.scr',
+      '.vbs',
+      '.msi',
+      '.jsp',
+      '.asp',
+      '.aspx',
+      '.jar',
+    ];
+    const blockedMimeTypes = [
+      'text/html',
+      'application/javascript',
+      'application/x-javascript',
+      'text/javascript',
+      'application/x-msdownload',
+      'application/x-sh',
+      'application/x-bash',
+      'application/x-php',
+      'application/x-python',
+      'application/x-httpd-php',
+    ];
+
+    const hasBlockedExt = blockedExtensions.some((ext) =>
+      lowerFilename.endsWith(ext),
+    );
+    const hasBlockedMime = blockedMimeTypes.includes(mimetype.toLowerCase());
+
+    if (hasBlockedExt || hasBlockedMime) {
+      throw new ForbiddenException(
+        `File upload blocked: File type not permitted for security reasons.`,
+      );
+    }
 
     const uploadDir = join(process.cwd(), 'uploads');
     if (!existsSync(uploadDir)) {
@@ -97,29 +147,53 @@ export class AttachmentService {
     const relativePath = `/uploads/${uniqueFilename}`;
 
     return new Promise((resolve, reject) => {
-      createReadStream()
+      file
+        .createReadStream()
         .pipe(createWriteStream(filePath))
-        .on('finish', async () => {
-          const stats = statSync(filePath);
+        .on('finish', () => {
+          void (async () => {
+            try {
+              const stats = statSync(filePath);
 
-          const data: any = {
-            filename,
-            path: relativePath,
-            mimeType: mimetype,
-            size: stats.size,
-          };
+              // Stage 2: Size validation (Max 10MB)
+              const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+              if (stats.size > MAX_SIZE) {
+                try {
+                  unlinkSync(filePath);
+                } catch {
+                  // file already deleted or not writable
+                }
+                return reject(
+                  new ForbiddenException(
+                    'File exceeds the maximum limit of 10MB.',
+                  ),
+                );
+              }
 
-          if (relationType === 'project') data.projectId = relationId;
-          else if (relationType === 'task') data.taskId = relationId;
-          else if (relationType === 'comment') data.commentId = relationId;
-          else if (relationType === 'message') data.conversationId = relationId;
+              const data: Prisma.AttachmentUncheckedCreateInput = {
+                filename,
+                path: relativePath,
+                mimeType: mimetype,
+                size: stats.size,
+              };
 
-          const attachment = await this.prisma.attachment.create({
-            data,
-          });
-          resolve(attachment);
+              if (relationType === 'project') data.projectId = relationId;
+              else if (relationType === 'task') data.taskId = relationId;
+              else if (relationType === 'message')
+                data.conversationId = relationId;
+
+              const attachment = await this.prisma.attachment.create({
+                data,
+              });
+              resolve(attachment);
+            } catch (error) {
+              reject(error instanceof Error ? error : new Error(String(error)));
+            }
+          })();
         })
-        .on('error', (error: any) => reject(error));
+        .on('error', (error: unknown) =>
+          reject(error instanceof Error ? error : new Error(String(error))),
+        );
     });
   }
 

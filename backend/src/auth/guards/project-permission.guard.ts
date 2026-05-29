@@ -47,11 +47,17 @@ export class ProjectPermissionGuard implements CanActivate {
     }
 
     const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext().req;
-    const args = ctx.getArgs();
+    const gqlCtx = ctx.getContext<{ req: { user?: { id: number } } }>();
+    const request = gqlCtx.req;
+    const args = ctx.getArgs<{
+      id?: number;
+      projectId?: number;
+      input?: { projectId?: number };
+      updateProjectInput?: { id?: number };
+    }>();
 
     // Get the authenticated user
-    const user = request.user;
+    const user = request?.user;
     if (!user) {
       throw new ForbiddenException('User not authenticated');
     }
@@ -68,16 +74,11 @@ export class ProjectPermissionGuard implements CanActivate {
     }
 
     // Check if user has one of the required roles
-    try {
-      await this.projectMemberService.checkPermission(
-        user.id,
-        projectId,
-        requiredRoles,
-      );
-      return true;
-    } catch (error) {
-      // checkPermission throws ForbiddenException if user doesn't have permission
-      throw error;
-    }
+    await this.projectMemberService.checkPermission(
+      user.id,
+      projectId,
+      requiredRoles,
+    );
+    return true;
   }
 }

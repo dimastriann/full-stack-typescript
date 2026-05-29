@@ -41,7 +41,8 @@ describe('AttachmentService', () => {
 
     service = module.get<AttachmentService>(AttachmentService);
     prisma = module.get<PrismaService>(PrismaService);
-    projectMemberService = module.get<ProjectMemberService>(ProjectMemberService);
+    projectMemberService =
+      module.get<ProjectMemberService>(ProjectMemberService);
   });
 
   afterEach(() => {

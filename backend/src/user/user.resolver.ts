@@ -5,11 +5,13 @@ import { CreateUserInput, UserRole } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import * as bcrypt from 'bcrypt';
 import { UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { LoginResponse } from '../auth/dto/login-response';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { GqlContext } from '../auth/types/context.type';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -30,7 +32,7 @@ export class UserResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  me(@Context() context: any) {
+  me(@Context() context: GqlContext) {
     return context.req.user;
   }
 
@@ -59,25 +61,21 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginResponse)
+  @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
     const user = await this.userService.findByEmail(email);
     if (!user) {
       throw new Error('User not found');
     }
-    let isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      // if bcrypt compare failed, try to compare plain password
-      // (only for migration/dev, remove in prod ideally or re-hash)
-      isMatch = password === user.password;
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
-    const loginResponse = await this.authService.login(user);
+    const loginResponse = this.authService.login(user);
 
     context.res.cookie('access_token', loginResponse.access_token, {
       httpOnly: true,
@@ -90,9 +88,10 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginResponse)
+  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 registration attempts per minute
   async register(
     @Args('createUserInput') createUserInput: CreateUserInput,
-    @Context() context: any,
+    @Context() context: GqlContext,
   ) {
     // Ensure role is always USER for public registration
     const inputWithUserRole = {
@@ -100,7 +99,10 @@ export class UserResolver {
       role: UserRole.USER,
     };
     const user = await this.userService.create(inputWithUserRole);
-    const loginResponse = await this.authService.login(user);
+    if (!user) {
+      throw new Error('Registration failed');
+    }
+    const loginResponse = this.authService.login(user);
 
     context.res.cookie('access_token', loginResponse.access_token, {
       httpOnly: true,
@@ -113,7 +115,7 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async logout(@Context() context: any) {
+  logout(@Context() context: GqlContext) {
     context.res.clearCookie('access_token');
     return true;
   }

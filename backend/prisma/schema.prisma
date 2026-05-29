@@ -31,6 +31,8 @@ model User {
   comments           Comment[]
   projectMemberships ProjectMember[]
   workspaceMembers   WorkspaceMember[]
+  reportedTasks      Task[]                    @relation("ReportedTasks")
+  approvedTimesheets Timesheet[]               @relation("ApprovedTimesheets")
   createdAt          DateTime                  @default(now())
   updatedAt          DateTime                  @updatedAt
   conversations      ConversationParticipant[]
@@ -87,6 +89,8 @@ model ProjectStage {
   projects    Project[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
 }
 
 model TaskStage {
@@ -102,6 +106,8 @@ model TaskStage {
   tasks       Task[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
 }
 
 model Project {
@@ -119,9 +125,32 @@ model Project {
   attachments   Attachment[]
   timesheets    Timesheet[]
   members       ProjectMember[]
-  sequence      Int             @default(1000)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  
+  key             String?           @unique
+  visibility      ProjectVisibility @default(TEAM)
+  priority        ProjectPriority   @default(MEDIUM)
+  budgetPlanned   Float             @default(0)
+  budgetActual    Float             @default(0)
+  startDate       DateTime?
+  endDate         DateTime?
+  actualStartDate DateTime?
+  actualEndDate   DateTime?
+  progress        Float             @default(0)
+  currency        String            @default("USD")
+  phasesCount     Int               @default(1)
+  methodology     ProjectMethodology @default(KANBAN)
+  tags            String[]
+  customFields    Json?
+  archivedAt      DateTime?
+  
+  sequence      Int               @default(1000)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  deletedAt     DateTime?
+
+  @@index([workspaceId])
+  @@index([responsibleId])
+  @@index([stageId])
 }
 
 model Task {
@@ -137,9 +166,35 @@ model Task {
   comments    Comment[]
   attachments Attachment[]
   timesheets  Timesheet[]
-  sequence    Int          @default(1000)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+
+  parentTaskId   Int?
+  parentTask     Task?         @relation("Subtasks", fields: [parentTaskId], references: [id])
+  subtasks       Task[]        @relation("Subtasks")
+  type           TaskType      @default(TASK)
+  reporterId     Int?
+  reporter       User?         @relation("ReportedTasks", fields: [reporterId], references: [id])
+  watchers       Json?
+  startDate      DateTime?
+  dueDate        DateTime?
+  completedAt    DateTime?
+  estimatedHours Float         @default(0)
+  remainingHours Float         @default(0)
+  progress       Float         @default(0)
+  priority       TaskPriority @default(MEDIUM)
+  tags           String[]
+  checklist      Json?
+  dependencies   Json?
+  customFields   Json?
+  deletedAt      DateTime?
+
+  sequence       Int          @default(1000)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([stageId])
+  @@index([parentTaskId])
 }
 
 model Timesheet {
@@ -153,8 +208,27 @@ model Timesheet {
   taskId      Int?
   user        User     @relation(fields: [userId], references: [id])
   task        Task?    @relation(fields: [taskId], references: [id])
+
+  startTime      DateTime?
+  endTime        DateTime?
+  billable       Boolean       @default(true)
+  hourlyRate     Decimal?
+  cost           Decimal?
+  source         TimesheetSource @default(MANUAL)
+  approvalStatus ApprovalStatus @default(PENDING)
+  approvedById   Int?
+  approvedBy     User?         @relation("ApprovedTimesheets", fields: [approvedById], references: [id])
+  approvedAt     DateTime?
+  tags           String[]
+  customFields   Json?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([taskId])
 }
 
 model Comment {
@@ -162,6 +236,7 @@ model Comment {
   content   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
   userId    Int
   projectId Int?
   taskId    Int?
@@ -171,6 +246,11 @@ model Comment {
   task      Task?     @relation(fields: [taskId], references: [id])
   parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies   Comment[] @relation("CommentReplies")
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([taskId])
+  @@index([parentId])
 }
 
 enum UserRole {
@@ -200,6 +280,53 @@ enum TaskStatus {
   REVISION
   DONE
   CANCELED
+}
+
+enum ProjectMethodology {
+  SCRUM
+  WATERFALL
+  KANBAN
+  AGILE
+  OTHER
+}
+
+enum ProjectVisibility {
+  PRIVATE
+  TEAM
+  PUBLIC
+}
+
+enum ProjectPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TaskType {
+  TASK
+  BUG
+  STORY
+  EPIC
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TimesheetSource {
+  MANUAL
+  TIMER
+  INTEGRATION
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Attachment {

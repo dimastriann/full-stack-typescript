@@ -2,20 +2,20 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import ProjectForm from './ProjectForm';
-import { useAuth } from '../../../context/AuthProvider';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useAuthStore } from '../../../store/authStore';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { useProjects } from '../hooks/useProjects';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 
 // Mock focus/hooks
-vi.mock('../../../context/AuthProvider', () => ({
-  useAuth: vi.fn(),
+vi.mock('../../../store/authStore', () => ({
+  useAuthStore: vi.fn(),
 }));
 
-vi.mock('../../../context/WorkspaceProvider', () => ({
-  useWorkspace: vi.fn(),
+vi.mock('../../../store/workspaceStore', () => ({
+  useWorkspaceStore: vi.fn(),
 }));
 
 vi.mock('../hooks/useProjects', () => ({
@@ -36,7 +36,9 @@ describe('ProjectForm', () => {
     },
     {
       request: { query: GET_USERS },
-      result: { data: { users: [{ id: 1, name: 'Admin', email: 'admin@test.com' }] } },
+      result: {
+        data: { users: [{ id: 1, name: 'Admin', email: 'admin@test.com' }] },
+      },
     },
     {
       request: {
@@ -49,8 +51,14 @@ describe('ProjectForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuth as any).mockReturnValue({ user: { id: 1, role: 'ADMIN' } });
-    (useWorkspace as any).mockReturnValue({ activeWorkspace: { id: 1, name: 'Test WS' } });
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (selector) => selector({ user: { id: 1, role: 'ADMIN' } }),
+    );
+    (
+      useWorkspaceStore as unknown as ReturnType<typeof vi.fn>
+    ).mockImplementation((selector) =>
+      selector({ activeWorkspace: { id: 1, name: 'Test WS' } }),
+    );
     (useProjects as any).mockReturnValue({
       createRecord: mockCreateRecord,
       updateRecord: vi.fn(),
@@ -65,19 +73,19 @@ describe('ProjectForm', () => {
         <MemoryRouter>
           <ProjectForm onSuccess={vi.fn()} />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Wait for data to load
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Project Name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Project Name/i)).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/Project Name/i), {
+    fireEvent.change(screen.getByLabelText(/Project Name/i), {
       target: { value: 'New Test Project' },
     });
-    
-    fireEvent.change(screen.getByPlaceholderText(/Project Description/i), {
+
+    fireEvent.change(screen.getByLabelText(/Description/i), {
       target: { value: 'Test description' },
     });
 
@@ -86,7 +94,9 @@ describe('ProjectForm', () => {
     await waitFor(() => {
       expect(mockCreateRecord).toHaveBeenCalled();
       const callArgs = mockCreateRecord.mock.calls[0][0];
-      expect(callArgs.variables.createProjectInput.name).toBe('New Test Project');
+      expect(callArgs.variables.createProjectInput.name).toBe(
+        'New Test Project',
+      );
     });
   });
 
@@ -96,7 +106,7 @@ describe('ProjectForm', () => {
         <MemoryRouter>
           <ProjectForm />
         </MemoryRouter>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Create/i }));

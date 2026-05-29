@@ -43,12 +43,22 @@ describe('TimesheetResolver', () => {
 
   describe('createTimesheet', () => {
     it('should call service with correct arguments', async () => {
-      const input = { projectId: 1, taskId: 1, date: new Date().toISOString(), timeSpent: 2, description: 'Work' };
+      const input = {
+        projectId: 1,
+        taskId: 1,
+        date: new Date().toISOString(),
+        timeSpent: 2,
+        description: 'Work',
+      };
       const user = { id: 1 };
-      mockTimesheetService.create.mockResolvedValue({ id: 1, ...input, userId: 1 });
+      mockTimesheetService.create.mockResolvedValue({
+        id: 1,
+        ...input,
+        userId: 1,
+      });
 
-      await resolver.createTimesheet(input as any, user);
-      
+      await resolver.createTimesheet(input as any, user as any);
+
       expect(mockTimesheetService.create).toHaveBeenCalledWith(input, user.id);
     });
   });

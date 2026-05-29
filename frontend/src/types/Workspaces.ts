@@ -14,6 +14,7 @@ export type WorkspaceMember = {
   role: WorkspaceRole;
   joinedAt: string;
   user?: UserType;
+  workspace?: Workspace;
 };
 
 export type Workspace = {

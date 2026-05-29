@@ -10,6 +10,7 @@ import { RemoveWorkspaceMemberInput } from './dto/remove-workspace-member.input'
 import { WorkspaceMember } from './entities/workspace-member.entity';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Workspace)
 export class WorkspaceResolver {
@@ -19,14 +20,14 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   createWorkspace(
     @Args('createWorkspaceInput') createWorkspaceInput: CreateWorkspaceInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.create(createWorkspaceInput, user.id);
   }
 
   @Query(() => [Workspace])
   @UseGuards(GqlAuthGuard)
-  workspaces(@CurrentUser() user: any) {
+  workspaces(@CurrentUser() user: User) {
     return this.workspaceService.findAll(user.id);
   }
 
@@ -34,7 +35,7 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   workspace(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.findOne(id, user.id);
   }
@@ -43,7 +44,7 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   updateWorkspace(
     @Args('updateWorkspaceInput') updateWorkspaceInput: UpdateWorkspaceInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.update(
       updateWorkspaceInput.id,
@@ -56,7 +57,7 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   removeWorkspace(
     @Args('id', { type: () => Int }) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.remove(id, user.id);
   }
@@ -65,7 +66,7 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   inviteToWorkspace(
     @Args('input') input: InviteToWorkspaceInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.inviteUser(
       input.workspaceId,
@@ -79,7 +80,7 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   updateWorkspaceMemberRole(
     @Args('input') input: UpdateWorkspaceMemberRoleInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.updateMemberRole(
       input.workspaceId,
@@ -93,7 +94,7 @@ export class WorkspaceResolver {
   @UseGuards(GqlAuthGuard)
   removeMemberFromWorkspace(
     @Args('input') input: RemoveWorkspaceMemberInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.workspaceService.removeMember(
       input.workspaceId,

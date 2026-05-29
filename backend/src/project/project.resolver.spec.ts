@@ -44,8 +44,8 @@ describe('ProjectResolver', () => {
       const user = { id: 1 };
       mockProjectService.create.mockResolvedValue({ id: 1, ...input });
 
-      await resolver.createProject(input as any, user);
-      
+      await resolver.createProject(input as any, user as any);
+
       expect(mockProjectService.create).toHaveBeenCalledWith(input, user.id);
     });
   });

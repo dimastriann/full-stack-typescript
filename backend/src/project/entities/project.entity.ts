@@ -7,6 +7,24 @@ import { Attachment } from 'src/attachment/entities/attachment.entity';
 import { ProjectMember } from 'src/project-member/entities/project-member.entity';
 import { Workspace } from 'src/workspace/entities/workspace.entity';
 import { ProjectStage } from 'src/project-stage/entities/project-stage.entity';
+import { registerEnumType } from '@nestjs/graphql';
+import {
+  ProjectMethodology,
+  ProjectVisibility,
+  ProjectPriority,
+} from '../../../prisma/generated/enums';
+
+registerEnumType(ProjectVisibility, {
+  name: 'ProjectVisibility',
+});
+
+registerEnumType(ProjectPriority, {
+  name: 'ProjectPriority',
+});
+
+registerEnumType(ProjectMethodology, {
+  name: 'ProjectMethodology',
+});
 
 @ObjectType()
 export class Project {
@@ -60,4 +78,52 @@ export class Project {
 
   @Field(() => Int, { nullable: true })
   sequence?: number;
+
+  @Field(() => Number, { defaultValue: 0 })
+  budgetPlanned: number;
+
+  @Field(() => Number, { defaultValue: 0 })
+  budgetActual: number;
+
+  @Field({ nullable: true })
+  startDate?: Date;
+
+  @Field({ nullable: true })
+  endDate?: Date;
+
+  @Field(() => Int, { defaultValue: 1 })
+  phasesCount: number;
+
+  @Field(() => ProjectMethodology, { defaultValue: ProjectMethodology.KANBAN })
+  methodology: ProjectMethodology;
+
+  @Field({ nullable: true })
+  key?: string;
+
+  @Field(() => ProjectVisibility, { defaultValue: ProjectVisibility.TEAM })
+  visibility: ProjectVisibility;
+
+  @Field(() => ProjectPriority, { defaultValue: ProjectPriority.MEDIUM })
+  priority: ProjectPriority;
+
+  @Field({ nullable: true })
+  actualStartDate?: Date;
+
+  @Field({ nullable: true })
+  actualEndDate?: Date;
+
+  @Field(() => Number, { defaultValue: 0 })
+  progress: number;
+
+  @Field({ defaultValue: 'USD' })
+  currency: string;
+
+  @Field(() => [String], { nullable: 'items' })
+  tags?: string[];
+
+  @Field({ nullable: true })
+  archivedAt?: Date;
+
+  @Field(() => Number, { defaultValue: 0 })
+  totalHours?: number;
 }

@@ -1,5 +1,6 @@
-import { useWorkspace } from '../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../store/workspaceStore';
 import Modal from './Dialog';
+import Select from './Select';
 import { useMutation } from '@apollo/client';
 import { GET_ME } from '../features/auth/gql/auth.graphql';
 import { CREATE_WORKSPACE } from '../features/workspaces/gql/workspace.graphql';
@@ -7,7 +8,11 @@ import { useState } from 'react';
 import Logger from '../lib/logger';
 
 export const WorkspaceSwitcher = () => {
-  const { activeWorkspace, setActiveWorkspace, workspaces } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const setActiveWorkspace = useWorkspaceStore(
+    (state) => state.setActiveWorkspace,
+  );
+  const workspaces = useWorkspaceStore((state) => state.workspaces);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [createWorkspace] = useMutation(CREATE_WORKSPACE, {
@@ -30,34 +35,27 @@ export const WorkspaceSwitcher = () => {
     }
   };
 
-  // Even if 1 workspace, show it to allow creating others
+  const selectOptions = [
+    ...workspaces.map((w) => ({ id: w.id, label: w.name })),
+    { id: 'new', label: '+ Create Workspace' },
+  ];
+
   return (
     <div className="flex items-center space-x-2">
-      <div className="flex items-center space-x-2 p-1 bg-white rounded-lg border border-gray-200 shadow-sm transition-all duration-200 hover:border-blue-400">
-        <select
-          value={activeWorkspace?.id || ''}
-          onChange={(e) => {
-            if (e.target.value === 'new') {
-              setIsModalOpen(true);
-              return;
-            }
-            const workspace = workspaces.find(
-              (w) => w.id.toString() === e.target.value,
-            );
+      <Select
+        value={activeWorkspace?.id || ''}
+        options={selectOptions}
+        onChange={(val: string | number) => {
+          if (val === 'new') {
+            setIsModalOpen(true);
+          } else {
+            const workspace = workspaces.find((w) => w.id === val);
             if (workspace) setActiveWorkspace(workspace);
-          }}
-          className="block w-full pl-2 pr-8 py-1 text-sm bg-transparent border-none focus:ring-0 cursor-pointer font-medium text-gray-700"
-        >
-          {workspaces.map((workspace) => (
-            <option key={workspace.id} value={workspace.id}>
-              {workspace.name}
-            </option>
-          ))}
-          <option value="new" className="text-blue-600 font-bold">
-            + Create Workspace
-          </option>
-        </select>
-      </div>
+          }
+        }}
+        alwaysDark
+        className="w-48"
+      />
 
       <Modal
         isOpen={isModalOpen}
@@ -66,28 +64,26 @@ export const WorkspaceSwitcher = () => {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
+            <label className="label-modern">Workspace Name</label>
             <input
               type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+              className="input-modern"
               value={newWorkspaceName}
               onChange={(e) => setNewWorkspaceName(e.target.value)}
               placeholder="My Awesome Team"
               autoFocus
             />
           </div>
-          <div className="flex justify-end space-x-3 mt-6">
+          <div className="flex justify-end space-x-3 mt-8">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center"
+              className="px-6 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 border border-surface-200 dark:border-slate-800 rounded-xl hover:bg-surface-50 dark:hover:bg-slate-800 transition-all"
             >
               Cancel
             </button>
             <button
               onClick={handleCreate}
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-8 py-2 text-sm font-bold text-white bg-primary-600 border border-transparent rounded-xl hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all"
             >
               Create
             </button>

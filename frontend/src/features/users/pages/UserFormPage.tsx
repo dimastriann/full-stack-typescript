@@ -18,15 +18,17 @@ export default function UserFormPage() {
       <div className="mb-6 flex items-center">
         <button
           onClick={handleCancel}
-          className="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+          className="mr-4 p-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-surface-100 dark:hover:bg-slate-800 transition-all shadow-sm"
           aria-label="Go back"
         >
-          <ArrowLeft className="h-6 w-6 text-gray-600" />
+          <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-2xl font-bold text-gray-900">Edit User</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Edit User
+        </h1>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl p-8 border border-surface-200 dark:border-slate-800 transition-colors">
         <UserForm onSuccess={handleSuccess} onCancel={handleCancel} />
       </div>
     </div>

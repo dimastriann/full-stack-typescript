@@ -1,8 +1,7 @@
-import { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { AuthContext } from '../context/AuthProvider';
+import { useAuthStore } from '../store/authStore';
 
 export const ProtectedRoute = () => {
-  const { session } = useContext(AuthContext);
+  const session = useAuthStore((state) => state.session);
   return session ? <Outlet /> : <Navigate to="/login" />;
 };

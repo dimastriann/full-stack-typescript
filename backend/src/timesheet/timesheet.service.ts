@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ForbiddenException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTimesheetInput } from './dto/create-timesheet.input';
 import { UpdateTimesheetInput } from './dto/update-timesheet.input';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,7 +13,7 @@ export class TimesheetService {
   ) {}
 
   get includeRelation() {
-    return { user: true, project: true, task: true };
+    return { user: true, project: true, task: true, approvedBy: true };
   }
 
   async create(createTimesheetInput: CreateTimesheetInput, userId: number) {
@@ -28,8 +24,12 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER],
     );
 
+    const cost = createTimesheetInput.hourlyRate
+      ? createTimesheetInput.hourlyRate * createTimesheetInput.timeSpent
+      : undefined;
+
     return this.prisma.timesheet.create({
-      data: createTimesheetInput,
+      data: { ...createTimesheetInput, cost },
       include: { ...this.includeRelation },
     });
   }
@@ -45,15 +45,19 @@ export class TimesheetService {
       skip,
       take,
       where: {
-        AND: [taskId ? { taskId } : {}, { projectId: { in: projectIds } }],
+        AND: [
+          taskId ? { taskId } : {},
+          { projectId: { in: projectIds } },
+          { deletedAt: null },
+        ],
       },
       include: { ...this.includeRelation },
     });
   }
 
   async findOne(id: number, userId: number) {
-    const timesheet = await this.prisma.timesheet.findUnique({
-      where: { id },
+    const timesheet = await this.prisma.timesheet.findFirst({
+      where: { id, deletedAt: null },
       include: { ...this.includeRelation },
     });
 
@@ -81,9 +85,21 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER],
     );
 
+    let cost = updateTimesheetInput.cost;
+    if (
+      !cost &&
+      (updateTimesheetInput.hourlyRate || updateTimesheetInput.timeSpent)
+    ) {
+      const rate = updateTimesheetInput.hourlyRate || timesheet.hourlyRate;
+      const hours = updateTimesheetInput.timeSpent || timesheet.timeSpent;
+      if (rate && hours) {
+        cost = Number(rate) * hours;
+      }
+    }
+
     return this.prisma.timesheet.update({
       where: { id },
-      data: updateTimesheetInput,
+      data: { ...updateTimesheetInput, cost },
       include: { ...this.includeRelation },
     });
   }
@@ -98,8 +114,9 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN],
     );
 
-    return this.prisma.timesheet.delete({
+    return this.prisma.timesheet.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }

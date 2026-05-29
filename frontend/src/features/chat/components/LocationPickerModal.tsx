@@ -16,7 +16,7 @@ import Logger from '../../../lib/logger';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-let DefaultIcon = L.icon({
+const DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
   iconSize: [25, 41],
@@ -111,13 +111,13 @@ export const LocationPickerModal = ({
           <input
             type="text"
             placeholder="Search for a place..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="input-modern pl-10"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </form>
 
-        <div className="h-[400px] w-full rounded-lg overflow-hidden border border-gray-200">
+        <div className="h-[400px] w-full rounded-2xl overflow-hidden border border-surface-200 dark:border-slate-800 shadow-sm relative">
           <MapContainer
             center={position}
             zoom={13}
@@ -132,16 +132,16 @@ export const LocationPickerModal = ({
           </MapContainer>
         </div>
 
-        <div className="flex justify-between items-center text-sm text-gray-500">
-          <div className="flex items-center gap-1">
-            <MapPin size={16} />
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400 bg-surface-50 dark:bg-slate-800/50 p-4 rounded-xl border border-surface-100 dark:border-slate-800/50">
+          <div className="flex items-center gap-2 font-mono text-[11px] bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-surface-200 dark:border-slate-700">
+            <MapPin size={14} className="text-primary-500" />
             <span>
               {position.lat.toFixed(6)}, {position.lng.toFixed(6)}
             </span>
           </div>
           <button
             onClick={handleConfirm}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
+            className="w-full sm:w-auto bg-primary-600 text-white px-6 py-2.5 rounded-xl hover:bg-primary-700 shadow-md hover:shadow-lg transition-all font-bold text-sm active:scale-95"
           >
             Confirm Location
           </button>

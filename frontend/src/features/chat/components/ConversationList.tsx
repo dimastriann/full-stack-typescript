@@ -1,5 +1,5 @@
 import type { Conversation, User } from '../types';
-import { useAuth } from '../../../context/AuthProvider';
+import { useAuthStore } from '../../../store/authStore';
 import {
   Plus,
   Search,
@@ -19,7 +19,7 @@ import {
 import { useState } from 'react';
 import Modal from '../../../components/Dialog';
 import type { UserType } from '../../../types/Users';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 import { Check, X as CloseIcon } from 'lucide-react';
 import Logger from '../../../lib/logger';
 
@@ -45,20 +45,26 @@ const ConversationItem = ({
   return (
     <button
       onClick={() => onSelect(conv)}
-      className={`w-full text-left p-3 rounded-lg transition group relative flex flex-col gap-1 ${
+      className={`w-full text-left p-3 rounded-xl transition-all group relative flex flex-col gap-1.5 ${
         selectedId === conv.id
-          ? 'bg-indigo-100 text-indigo-700 font-medium'
-          : 'hover:bg-gray-200 text-gray-600'
+          ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-bold shadow-sm'
+          : 'hover:bg-surface-100 dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400'
       }`}
     >
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-2 truncate flex-1 min-w-0 pr-2">
           {conv.type === 'CHANNEL' ? (
-            <Hash size={16} className="text-gray-400 flex-shrink-0" />
+            <Hash
+              size={16}
+              className="text-gray-400 dark:text-gray-500 flex-shrink-0"
+            />
           ) : (
-            <UserIcon size={16} className="text-gray-400 flex-shrink-0" />
+            <UserIcon
+              size={16}
+              className="text-gray-400 dark:text-gray-500 flex-shrink-0"
+            />
           )}
-          <span className="truncate">
+          <span className="truncate group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
             {conv.type === 'CHANNEL'
               ? conv.name
               : conv.participants.find((p) => p.userId !== currentUserId)?.user
@@ -73,14 +79,14 @@ const ConversationItem = ({
           ) : null}
           <div
             onClick={(e) => onDelete(e, conv.id)}
-            className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition"
+            className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
           >
             <Trash2 size={14} />
           </div>
         </div>
       </div>
       {conv.messages && conv.messages[0] && (
-        <div className="text-xs text-gray-400 truncate w-full pl-6">
+        <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate w-full pl-6 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors">
           {conv.messages[0].content}
         </div>
       )}
@@ -93,8 +99,8 @@ export const ConversationList = ({
   selectedId,
   onSelect,
 }: ConversationListProps) => {
-  const { user } = useAuth();
-  const { activeWorkspace } = useWorkspace();
+  const user = useAuthStore((state) => state.user);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'DM' | 'CHANNEL'>('DM');
   const [channelName, setChannelName] = useState('');
@@ -178,7 +184,7 @@ export const ConversationList = ({
       try {
         await deleteConversation({ variables: { id } });
         if (selectedId === id) {
-          onSelect(null as any); // Clear selection if deleted
+          onSelect(null as unknown as Conversation); // Clear selection if deleted
         }
       } catch (err) {
         Logger.error('Failed to delete conversation:', err);
@@ -197,18 +203,20 @@ export const ConversationList = ({
   const filteredUsers =
     userData?.users.filter(
       (u: User) =>
-        u.id !== user.id &&
+        u.id !== user?.id &&
         (u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           u.email.toLowerCase().includes(searchTerm.toLowerCase())),
     ) || [];
 
   return (
-    <div className="w-full flex flex-col bg-gray-50 h-full">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white sticky top-0 z-10 min-h-[64px]">
-        <h2 className="text-lg font-bold text-gray-700">Discussions</h2>
+    <div className="w-full flex flex-col bg-surface-50 dark:bg-slate-950 h-full transition-colors">
+      <div className="p-4 border-b border-surface-200 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 sticky top-0 z-10 min-h-[64px] transition-colors">
+        <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
+          Discussions
+        </h2>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="p-1 hover:bg-indigo-50 text-indigo-600 rounded-full transition"
+          className="p-2 hover:bg-primary-50 dark:hover:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all"
           title="New Chat"
         >
           <Plus size={20} />
@@ -219,13 +227,13 @@ export const ConversationList = ({
         <div>
           <button
             onClick={() => toggleSection('channels')}
-            className="w-full flex items-center justify-between px-2 py-1 text-xs font-bold text-gray-500 uppercase tracking-wider hover:bg-gray-100 rounded transition group"
+            className="w-full flex items-center justify-between px-2 py-1.5 text-[10px] font-black text-gray-500 dark:text-gray-500 uppercase tracking-widest hover:bg-surface-100 dark:hover:bg-slate-800 rounded-lg transition-all group"
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {expandedSections.channels ? (
-                <ChevronDown size={14} />
+                <ChevronDown size={14} className="text-gray-400" />
               ) : (
-                <ChevronRight size={14} />
+                <ChevronRight size={14} className="text-gray-400" />
               )}
               <span>Channels ({channels.length})</span>
             </div>
@@ -256,13 +264,13 @@ export const ConversationList = ({
         <div>
           <button
             onClick={() => toggleSection('dms')}
-            className="w-full flex items-center justify-between px-2 py-1 text-xs font-bold text-gray-500 uppercase tracking-wider hover:bg-gray-100 rounded transition group"
+            className="w-full flex items-center justify-between px-2 py-1.5 text-[10px] font-black text-gray-500 dark:text-gray-500 uppercase tracking-widest hover:bg-surface-100 dark:hover:bg-slate-800 rounded-lg transition-all group"
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {expandedSections.dms ? (
-                <ChevronDown size={14} />
+                <ChevronDown size={14} className="text-gray-400" />
               ) : (
-                <ChevronRight size={14} />
+                <ChevronRight size={14} className="text-gray-400" />
               )}
               <span>Direct Messages ({dms.length})</span>
             </div>
@@ -296,23 +304,23 @@ export const ConversationList = ({
         title={modalMode === 'DM' ? 'Start a new message' : 'Create a channel'}
       >
         <div className="space-y-4">
-          <div className="flex bg-gray-100 p-1 rounded-lg">
+          <div className="flex bg-surface-100 dark:bg-slate-800 p-1.5 rounded-xl transition-colors">
             <button
               onClick={() => setModalMode('DM')}
-              className={`flex-1 py-1.5 text-sm font-medium rounded-md transition ${
+              className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
                 modalMode === 'DM'
-                  ? 'bg-white shadow-sm text-indigo-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white dark:bg-slate-900 shadow-sm text-primary-600 dark:text-primary-400'
+                  : 'text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               Direct Message
             </button>
             <button
               onClick={() => setModalMode('CHANNEL')}
-              className={`flex-1 py-1.5 text-sm font-medium rounded-md transition ${
+              className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
                 modalMode === 'CHANNEL'
-                  ? 'bg-white shadow-sm text-indigo-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white dark:bg-slate-900 shadow-sm text-primary-600 dark:text-primary-400'
+                  : 'text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
               Channel
@@ -321,44 +329,45 @@ export const ConversationList = ({
 
           {modalMode === 'CHANNEL' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Channel Name
-              </label>
+              <label className="label-modern">Channel Name</label>
               <input
                 type="text"
                 placeholder="e.g. general-discussion"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="input-modern"
                 value={channelName}
                 onChange={(e) => setChannelName(e.target.value)}
               />
             </div>
           )}
 
-          <div className="relative">
+          <div className="relative group">
             <Search
-              className="absolute left-3 top-2.5 text-gray-400"
+              className="absolute left-3 top-2.5 text-gray-400 group-focus-within:text-primary-500 transition-colors"
               size={18}
             />
             <input
               type="text"
               placeholder="Search people..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="input-modern pl-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
           {modalMode === 'CHANNEL' && selectedUserIds.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 p-3 bg-surface-50 dark:bg-slate-800/50 rounded-xl border border-surface-200 dark:border-slate-800">
               {selectedUserIds.map((uid) => {
-                const u = userData?.users.find((u: any) => u.id === uid);
+                const u = userData?.users.find((u: User) => u.id === uid);
                 return (
                   <div
                     key={uid}
-                    className="flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full text-xs font-medium"
+                    className="flex items-center gap-1.5 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 px-2.5 py-1 rounded-full text-xs font-bold animate-fade-in"
                   >
                     {u?.name}
-                    <button onClick={() => toggleUserSelection(uid)}>
+                    <button
+                      onClick={() => toggleUserSelection(uid)}
+                      className="hover:text-primary-900 dark:hover:text-white transition-colors"
+                    >
                       <CloseIcon size={12} />
                     </button>
                   </div>
@@ -367,7 +376,7 @@ export const ConversationList = ({
             </div>
           )}
 
-          <div className="max-h-64 overflow-y-auto space-y-2">
+          <div className="max-h-64 overflow-y-auto space-y-2 no-scrollbar">
             {filteredUsers.map((u: UserType) => (
               <button
                 key={u.id}
@@ -376,29 +385,33 @@ export const ConversationList = ({
                     ? handleStartChat(u.id!)
                     : toggleUserSelection(u.id!)
                 }
-                className={`w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition text-left ${
+                className={`w-full flex items-center gap-3 p-3 hover:bg-surface-50 dark:hover:bg-slate-800 rounded-xl transition-all text-left border ${
                   modalMode === 'CHANNEL' && selectedUserIds.includes(u.id!)
-                    ? 'bg-indigo-50 border border-indigo-200'
-                    : 'border border-transparent'
+                    ? 'bg-primary-50 dark:bg-primary-900/10 border-primary-200 dark:border-primary-800'
+                    : 'border-transparent'
                 }`}
               >
-                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold relative">
+                <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-400 font-black relative transition-colors">
                   {u.firstName?.[0] || u.name[0]}
                   {modalMode === 'CHANNEL' &&
                     selectedUserIds.includes(u.id!) && (
-                      <div className="absolute -top-1 -right-1 bg-indigo-600 text-white rounded-full p-0.5">
+                      <div className="absolute -top-1 -right-1 bg-primary-600 text-white rounded-full p-0.5 shadow-md">
                         <Check size={10} />
                       </div>
                     )}
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-800">{u.name}</div>
-                  <div className="text-xs text-gray-500">{u.email}</div>
+                  <div className="font-bold text-gray-900 dark:text-white leading-tight">
+                    {u.name}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {u.email}
+                  </div>
                 </div>
               </button>
             ))}
             {filteredUsers.length === 0 && (
-              <div className="text-center py-4 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400 font-medium">
                 No users found
               </div>
             )}
@@ -408,7 +421,7 @@ export const ConversationList = ({
             <button
               onClick={handleCreateChannel}
               disabled={!channelName || selectedUserIds.length === 0}
-              className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="w-full bg-primary-600 text-white py-3 rounded-xl font-bold hover:bg-primary-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
             >
               Create Channel
             </button>

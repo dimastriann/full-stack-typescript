@@ -33,13 +33,13 @@ export default function DropDownChat({ menuItems }: DropDownChatProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none"
+        className="p-2.5 bg-surface-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 hover:bg-surface-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95"
       >
-        <Plus size={20} className="text-gray-600" />
+        <Plus size={22} />
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 z-50 mb-2 w-56 origin-bottom-right rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden py-1 transform transition-all">
+        <div className="absolute bottom-full right-0 z-50 mb-4 w-56 origin-bottom-right rounded-2xl bg-white dark:bg-slate-900 shadow-float border border-surface-200 dark:border-slate-800 focus:outline-none overflow-hidden py-1.5 animate-slide-in-up">
           {menuItems.map((item) => (
             <button
               key={item.title}
@@ -49,12 +49,12 @@ export default function DropDownChat({ menuItems }: DropDownChatProps) {
                 setIsOpen(false);
                 item.onClick(e);
               }}
-              className="group flex w-full items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-900 transition-colors focus:outline-none focus:bg-gray-100"
+              className="group flex w-full items-center gap-3.5 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-surface-50 dark:hover:bg-slate-800 transition-all focus:outline-none"
             >
-              <span className="flex-shrink-0 text-gray-400 group-hover:text-indigo-600 transition-colors">
+              <span className="flex-shrink-0 text-gray-400 dark:text-gray-500 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {item.icon}
               </span>
-              <span className="font-medium">{item.title}</span>
+              <span className="font-bold">{item.title}</span>
             </button>
           ))}
         </div>

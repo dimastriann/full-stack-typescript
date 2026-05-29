@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -20,6 +22,12 @@ import { WorkspaceModule } from './workspace/workspace.module';
 import { ProjectStageModule } from './project-stage/project-stage.module';
 import { TaskStageModule } from './task-stage/task-stage.module';
 import { ChatModule } from './chat/chat.module';
+import { HealthModule } from './health/health.module';
+import { validate } from './config/env.validation';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { depthLimitRule } from './common/validation/depth-limit.validation';
 
 @Module({
   imports: [
@@ -27,18 +35,30 @@ import { ChatModule } from './chat/chat.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req, res }: { req?: Request; res?: Response }) => ({
+        req,
+        res,
+      }),
+      subscriptions: {
+        'graphql-ws': true,
+      },
+      validationRules: [depthLimitRule(5)],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
+      validate,
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 minute
+        limit: 100, // 100 requests per minute
+      },
+    ]),
     UserModule,
     ProjectModule,
     TaskModule,
     BaseModule,
     TimesheetModule,
-    TimesheetModule,
-    CommentModule,
     CommentModule,
     AuthModule,
     AttachmentModule,
@@ -48,8 +68,19 @@ import { ChatModule } from './chat/chat.module';
     ProjectStageModule,
     TaskStageModule,
     ChatModule,
+    HealthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}

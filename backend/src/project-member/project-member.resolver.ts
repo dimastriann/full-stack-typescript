@@ -11,7 +11,7 @@ import { ProjectPermissionGuard } from 'src/auth/guards/project-permission.guard
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { RequireProjectRole } from 'src/auth/decorators/require-project-role.decorator';
 import { ProjectRole } from 'prisma/generated/enums';
-import { Project } from 'src/project/entities/project.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => ProjectMember)
 export class ProjectMemberResolver {
@@ -35,7 +35,7 @@ export class ProjectMemberResolver {
    */
   @Query(() => [ProjectMember], { name: 'myProjectMemberships' })
   @UseGuards(GqlAuthGuard)
-  async getMyProjects(@CurrentUser() user: any) {
+  async getMyProjects(@CurrentUser() user: User) {
     return this.projectMemberService.getUserProjects(user.id);
   }
 
@@ -46,7 +46,7 @@ export class ProjectMemberResolver {
   @UseGuards(GqlAuthGuard)
   async getMyRole(
     @Args('projectId', { type: () => Int }) projectId: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectMemberService.getUserRole(user.id, projectId);
   }
@@ -60,7 +60,7 @@ export class ProjectMemberResolver {
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
   async inviteToProject(
     @Args('input') input: InviteToProjectInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectMemberService.inviteUser(
       input.projectId,
@@ -77,10 +77,7 @@ export class ProjectMemberResolver {
   @Mutation(() => ProjectMember)
   @UseGuards(GqlAuthGuard, ProjectPermissionGuard)
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
-  async updateMemberRole(
-    @Args('input') input: UpdateMemberRoleInput,
-    @CurrentUser() user: any,
-  ) {
+  async updateMemberRole(@Args('input') input: UpdateMemberRoleInput) {
     return this.projectMemberService.updateMemberRole(
       input.projectId,
       input.userId,
@@ -95,10 +92,7 @@ export class ProjectMemberResolver {
   @Mutation(() => ProjectMember)
   @UseGuards(GqlAuthGuard, ProjectPermissionGuard)
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
-  async removeMemberFromProject(
-    @Args('input') input: RemoveMemberInput,
-    @CurrentUser() user: any,
-  ) {
+  async removeMemberFromProject(@Args('input') input: RemoveMemberInput) {
     return this.projectMemberService.removeMember(
       input.projectId,
       input.userId,
@@ -113,7 +107,7 @@ export class ProjectMemberResolver {
   @UseGuards(GqlAuthGuard, ProjectAccessGuard)
   async leaveProject(
     @Args('projectId', { type: () => Int }) projectId: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
   ) {
     return this.projectMemberService.removeMember(projectId, user.id);
   }

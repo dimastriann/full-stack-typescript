@@ -9,6 +9,18 @@ export const GET_PROJECTS = gql`
       workspaceId
       stageId
       sequence
+      budgetPlanned
+      budgetActual
+      startDate
+      endDate
+      phasesCount
+      methodology
+      key
+      visibility
+      priority
+      progress
+      currency
+      totalHours
       stage {
         id
         title
@@ -39,6 +51,21 @@ export const GET_PROJECT = gql`
       workspaceId
       stageId
       sequence
+      budgetPlanned
+      budgetActual
+      startDate
+      endDate
+      actualStartDate
+      actualEndDate
+      phasesCount
+      methodology
+      key
+      visibility
+      priority
+      progress
+      currency
+      totalHours
+      archivedAt
       stage {
         id
         title
@@ -100,6 +127,15 @@ export const CREATE_PROJECT = gql`
       workspaceId
       stageId
       responsibleId
+      budgetPlanned
+      startDate
+      endDate
+      phasesCount
+      methodology
+      key
+      visibility
+      priority
+      currency
     }
   }
 `;
@@ -112,6 +148,19 @@ export const UPDATE_PROJECT = gql`
       description
       stageId
       responsibleId
+      budgetPlanned
+      startDate
+      endDate
+      phasesCount
+      methodology
+      key
+      visibility
+      priority
+      progress
+      currency
+      actualStartDate
+      actualEndDate
+      archivedAt
     }
   }
 `;

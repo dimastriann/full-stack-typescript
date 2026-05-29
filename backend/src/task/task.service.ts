@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ForbiddenException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -21,6 +17,9 @@ export class TaskService {
       user: true,
       project: true,
       stage: true,
+      reporter: true,
+      parentTask: true,
+      subtasks: true,
       attachments: true,
       comments: {
         where: { parentId: null },
@@ -55,6 +54,7 @@ export class TaskService {
     skip?: number,
     take?: number,
     projectId?: number,
+    cursor?: number,
   ) {
     let projectIds: number[] = [];
 
@@ -70,8 +70,9 @@ export class TaskService {
     }
 
     return this.prisma.task.findMany({
-      skip,
+      skip: skip !== undefined ? skip : cursor !== undefined ? 1 : undefined,
       take,
+      cursor: cursor !== undefined ? { id: cursor } : undefined,
       where: {
         projectId: { in: projectIds },
       },
@@ -88,6 +89,10 @@ export class TaskService {
       include: {
         user: true,
         project: true,
+        stage: true,
+        reporter: true,
+        parentTask: true,
+        subtasks: true,
         comments: {
           where: { parentId: null },
           include: {
@@ -127,7 +132,7 @@ export class TaskService {
     return this.prisma.task.update({
       where: { id },
       data: updateTaskInput,
-      include: { user: true, project: true, attachments: true },
+      include: this.includeRelation,
     });
   }
 

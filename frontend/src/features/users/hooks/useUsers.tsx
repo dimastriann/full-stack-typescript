@@ -5,31 +5,36 @@ import {
   UPDATE_USER,
   DELETE_USER,
 } from '../gql/user.graphql';
-import type { UserType } from '../../../types/Users';
-import { createContext, useState, useEffect, useContext } from 'react';
-import type { UserStoreModel } from '../../../types/BaseStore';
+import { useEffect } from 'react';
+import { useUserStore } from '../../../store/userStore';
 
-export const UserContext = createContext<UserStoreModel | undefined>(undefined);
+export const useUserContext = () => {
+  const {
+    users,
+    setUsers,
+    editingUser,
+    setEditingUser,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
+  } = useUserStore();
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
   const { data, loading, error, refetch } = useQuery(GET_USERS, {
     variables: { skip: page * pageSize, take: pageSize },
   });
+
   const [createUser] = useMutation(CREATE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
   const [deleteUser] = useMutation(DELETE_USER);
-  const [editingUser, setEditingUser] = useState<UserType | null>(null);
-  const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
-    if (data) {
-      setUsers(data?.users || []);
+    if (data?.users) {
+      setUsers(data.users);
     }
-  }, [data]);
+  }, [data, setUsers]);
 
-  const userStore = {
+  return {
     records: users,
     loading,
     error,
@@ -44,16 +49,4 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     pageSize,
     setPageSize,
   };
-
-  return (
-    <UserContext.Provider value={userStore}>{children}</UserContext.Provider>
-  );
-}
-
-export const useUserContext = () => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error('useUserContext must be used within a UserProvider');
-  }
-  return context;
 };

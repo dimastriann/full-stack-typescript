@@ -5,4 +5,16 @@ import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 export class UpdateTaskInput extends PartialType(CreateTaskInput) {
   @Field(() => Int)
   id: number;
+
+  @Field({ nullable: true })
+  completedAt?: Date;
+
+  @Field(() => Number, { nullable: true })
+  remainingHours?: number;
+
+  @Field(() => Number, { nullable: true })
+  progress?: number;
+
+  @Field({ nullable: true })
+  deletedAt?: Date;
 }

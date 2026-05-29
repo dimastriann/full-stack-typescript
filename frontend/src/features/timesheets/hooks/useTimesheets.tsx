@@ -4,35 +4,41 @@ import {
   DELETE_TIMESHEET,
   UPDATE_TIMESHEET,
   GET_TIMESHEETS,
+  APPROVE_TIMESHEET,
+  REJECT_TIMESHEET,
 } from '../gql/timesheet.graphql';
-import type { TimesheetType } from '../../../types/Timesheets';
-import { createContext, useState, useEffect, useContext } from 'react';
-import type { TimesheetStoreModel } from '../../../types/BaseStore';
+import { useEffect } from 'react';
+import { useTimesheetStore } from '../../../store/timesheetStore';
 
-export const TimesheetContext = createContext<TimesheetStoreModel | undefined>(
-  undefined,
-);
+export const useTimesheets = () => {
+  const {
+    timesheets,
+    setTimesheets,
+    editingTimesheet,
+    setEditingTimesheet,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
+  } = useTimesheetStore();
 
-export function TimesheetProvider({ children }: { children: React.ReactNode }) {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
   const { data, loading, error, refetch } = useQuery(GET_TIMESHEETS, {
     variables: { skip: page * pageSize, take: pageSize },
   });
+
   const [createTimesheet] = useMutation(CREATE_TIMESHEET);
   const [updateTimesheet] = useMutation(UPDATE_TIMESHEET);
   const [deleteTimesheet] = useMutation(DELETE_TIMESHEET);
-  const [editingTimesheet, setEditingTimesheet] =
-    useState<TimesheetType | null>(null);
-  const [timesheets, setTimesheets] = useState<TimesheetType[]>([]);
+  const [approveTimesheet] = useMutation(APPROVE_TIMESHEET);
+  const [rejectTimesheet] = useMutation(REJECT_TIMESHEET);
 
   useEffect(() => {
-    if (data) {
-      setTimesheets(data?.timesheets || []);
+    if (data?.timesheets) {
+      setTimesheets(data.timesheets);
     }
-  }, [data]);
+  }, [data, setTimesheets]);
 
-  const timesheetStore = {
+  return {
     records: timesheets,
     loading,
     error,
@@ -46,19 +52,7 @@ export function TimesheetProvider({ children }: { children: React.ReactNode }) {
     setPage,
     pageSize,
     setPageSize,
+    approveRecord: approveTimesheet,
+    rejectRecord: rejectTimesheet,
   };
-
-  return (
-    <TimesheetContext.Provider value={timesheetStore}>
-      {children}
-    </TimesheetContext.Provider>
-  );
-}
-
-export const useTimesheets = () => {
-  const context = useContext(TimesheetContext);
-  if (!context) {
-    throw new Error('useTimesheets must be used within a TimesheetProvider');
-  }
-  return context;
 };

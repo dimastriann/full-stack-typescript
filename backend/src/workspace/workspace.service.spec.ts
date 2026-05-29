@@ -4,7 +4,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 describe('WorkspaceService', () => {
   let service: WorkspaceService;
-  let prisma: PrismaService;
 
   const mockPrisma = {
     workspace: {
@@ -32,7 +31,6 @@ describe('WorkspaceService', () => {
     }).compile();
 
     service = module.get<WorkspaceService>(WorkspaceService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(() => {
@@ -46,10 +44,14 @@ describe('WorkspaceService', () => {
   describe('create', () => {
     it('should create a workspace successfully', async () => {
       const input = { name: 'Test Workspace', description: 'Test Description' };
-      mockPrisma.workspace.create.mockResolvedValue({ id: 1, ...input, ownerId: 1 });
+      mockPrisma.workspace.create.mockResolvedValue({
+        id: 1,
+        ...input,
+        ownerId: 1,
+      });
 
       const result = await service.create(input, 1);
-      
+
       expect(result).toBeDefined();
       expect(mockPrisma.workspace.create).toHaveBeenCalled();
     });

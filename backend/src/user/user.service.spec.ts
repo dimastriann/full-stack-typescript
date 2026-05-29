@@ -85,7 +85,7 @@ describe('UserService', () => {
       };
 
       const result = await service.create(createDto as any);
-      
+
       expect(prisma.$transaction).toHaveBeenCalled();
       expect(prisma.user.create).toHaveBeenCalled();
       expect(prisma.workspace.create).toHaveBeenCalled();

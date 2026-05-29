@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
 import {
   GET_CONVERSATION_MESSAGES,
   ADD_PARTICIPANT,
@@ -8,12 +8,16 @@ import {
   MARK_AS_READ,
   UPDATE_MESSAGE,
   DELETE_MESSAGE,
+  SEND_MESSAGE,
+  MESSAGE_SENT_SUBSCRIPTION,
+  MESSAGE_UPDATED_SUBSCRIPTION,
+  MESSAGE_DELETED_SUBSCRIPTION,
 } from '../gql/chat.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { UPLOAD_FILE } from '../../attachments/gql/attachment.graphql';
 import type { Message, Conversation } from '../types';
-import { socketService } from '../../../lib/socket';
-import { useAuth } from '../../../context/AuthProvider';
+import type { UserType } from '../../../types/Users';
+import { useAuthStore } from '../../../store/authStore';
 import {
   Info,
   UserPlus,
@@ -29,12 +33,13 @@ import {
   MapPin,
   Smile,
   Download,
+  X,
 } from 'lucide-react';
 import Modal from '../../../components/Dialog';
 import Linkify from 'linkify-react';
 import LinkPreview from './LinkPreview';
 import Logger from '../../../lib/logger';
-import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react';
+import EmojiPicker, { type EmojiClickData, Theme } from 'emoji-picker-react';
 import { useAttachments } from '../../attachments/hooks/useAttachments';
 import DropDownChat, { type MenuItemData } from './DropDownChat';
 import { LocationPickerModal } from './LocationPickerModal';
@@ -43,6 +48,12 @@ import { getAttachmentUrl } from '../../../config/api';
 interface ChatWindowProps {
   conversation: Conversation;
   onBack?: () => void;
+}
+
+interface LocationData {
+  latitude: number;
+  longitude: number;
+  address?: string;
 }
 
 interface StagedAttachment {
@@ -55,7 +66,7 @@ interface StagedAttachment {
 }
 
 export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
-  const { user } = useAuth();
+  const user = useAuthStore((state) => state.user);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
@@ -65,7 +76,9 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   const [pendingAttachments, setPendingAttachments] = useState<
     StagedAttachment[]
   >([]);
-  const [pendingLocation, setPendingLocation] = useState<any | null>(null);
+  const [pendingLocation, setPendingLocation] = useState<LocationData | null>(
+    null,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -90,6 +103,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   });
   const [updateMessage] = useMutation(UPDATE_MESSAGE);
   const [deleteMessage] = useMutation(DELETE_MESSAGE);
+  const [sendMessage] = useMutation(SEND_MESSAGE);
   const [uploadFile] = useMutation(UPLOAD_FILE);
   const { handlePreviewFile, handleDownloadFile } = useAttachments();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -121,62 +135,57 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   const nonParticipants =
     usersData?.users
       .filter(
-        (u: any) => !conversation.participants.some((p) => p.userId === u.id),
+        (u: UserType) =>
+          !conversation.participants.some((p) => p.userId === u.id),
       )
       .filter(
-        (u: any) =>
+        (u: UserType) =>
           u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           u.email.toLowerCase().includes(searchTerm.toLowerCase()),
       ) || [];
 
   useEffect(() => {
     if (data?.conversationMessages) {
-      setMessages([...data.conversationMessages].reverse());
+      const sorted = [...data.conversationMessages].sort((a, b) => a.id - b.id);
+      setMessages(sorted);
       // Mark as read when messages are loaded
       markAsRead({ variables: { conversationId: conversation.id } });
     }
   }, [data, conversation.id, markAsRead]);
 
-  useEffect(() => {
-    socketService.connect();
-    socketService.emit('joinConversation', conversation.id);
-
-    const handleNewMessage = (message: Message) => {
-      if (message.conversationId === conversation.id) {
-        setMessages((prev) => [...prev, message]);
-        // Auto-mark as read if the conversation is active
+  useSubscription(MESSAGE_SENT_SUBSCRIPTION, {
+    variables: { conversationId: conversation.id },
+    onData: ({ data }) => {
+      const msg = data.data?.messageSent;
+      if (msg) {
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === msg.id)) return prev;
+          return [...prev, msg].sort((a, b) => a.id - b.id);
+        });
         markAsRead({ variables: { conversationId: conversation.id } });
       }
-    };
+    },
+  });
 
-    socketService.on('newMessage', handleNewMessage);
-
-    const handleMessageUpdated = (message: Message) => {
-      if (message.conversationId === conversation.id) {
-        setMessages((prev) =>
-          prev.map((m) => (m.id === message.id ? message : m)),
-        );
+  useSubscription(MESSAGE_UPDATED_SUBSCRIPTION, {
+    variables: { conversationId: conversation.id },
+    onData: ({ data }) => {
+      const msg = data.data?.messageUpdated;
+      if (msg) {
+        setMessages((prev) => prev.map((m) => (m.id === msg.id ? msg : m)));
       }
-    };
+    },
+  });
 
-    const handleMessageDeleted = (data: {
-      id: number;
-      conversationId: number;
-    }) => {
-      if (data.conversationId === conversation.id) {
-        setMessages((prev) => prev.filter((m) => m.id !== data.id));
+  useSubscription(MESSAGE_DELETED_SUBSCRIPTION, {
+    variables: { conversationId: conversation.id },
+    onData: ({ data }) => {
+      const deletedId = data.data?.messageDeleted;
+      if (deletedId !== undefined) {
+        setMessages((prev) => prev.filter((m) => m.id !== deletedId));
       }
-    };
-
-    socketService.on('messageUpdated', handleMessageUpdated);
-    socketService.on('messageDeleted', handleMessageDeleted);
-
-    return () => {
-      socketService.off('newMessage', handleNewMessage);
-      socketService.off('messageUpdated', handleMessageUpdated);
-      socketService.off('messageDeleted', handleMessageDeleted);
-    };
-  }, [conversation.id, markAsRead]);
+    },
+  });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -205,7 +214,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
     return () => {
       pendingAttachments.forEach((att) => URL.revokeObjectURL(att.localUrl));
     };
-  }, []);
+  }, [pendingAttachments]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -240,13 +249,14 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
       type = first.mimeType.startsWith('image/') ? 'IMAGE' : 'DOCUMENT';
     }
 
-    socketService.emit('sendMessage', {
-      conversationId: conversation.id,
-      senderId: user.id,
-      content: newMessage,
-      type,
-      attachmentIds,
-      metadata: pendingLocation ? JSON.stringify(pendingLocation) : undefined,
+    sendMessage({
+      variables: {
+        conversationId: conversation.id,
+        content: newMessage,
+        type,
+        attachmentIds,
+        metadata: pendingLocation ? JSON.stringify(pendingLocation) : undefined,
+      },
     });
 
     setNewMessage('');
@@ -308,11 +318,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
     setIsLocationModalOpen(true);
   };
 
-  const handleLocationSelect = (loc: {
-    latitude: number;
-    longitude: number;
-    address?: string;
-  }) => {
+  const handleLocationSelect = (loc: LocationData) => {
     setPendingLocation(loc);
   };
 
@@ -347,13 +353,6 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
         variables: { id: editingMessageId, content: editContent },
       });
 
-      socketService.emit('updateMessage', {
-        id: editingMessageId,
-        conversationId: conversation.id,
-        senderId: user.id,
-        content: editContent,
-      });
-
       setEditingMessageId(null);
       setEditContent('');
     } catch (err) {
@@ -369,12 +368,6 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
         setShowMenuId(null);
 
         await deleteMessage({ variables: { id: messageId } });
-
-        socketService.emit('deleteMessage', {
-          id: messageId,
-          conversationId: conversation.id,
-          senderId: user.id,
-        });
       } catch (err) {
         Logger.error('Failed to delete message:', err);
         // Revert of deleted if failed? Maybe reload messages.
@@ -400,28 +393,28 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-lg">
+    <div className="flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl shadow-card border border-surface-200 dark:border-slate-800 transition-colors overflow-hidden">
+      <div className="p-4 border-b border-surface-200 dark:border-slate-800 flex justify-between items-center bg-surface-50 dark:bg-slate-900/50 transition-colors">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
               onClick={onBack}
-              className="md:hidden p-1 text-gray-500 hover:bg-gray-200 rounded-full transition"
+              className="md:hidden p-1 text-gray-500 dark:text-gray-400 hover:bg-surface-200 dark:hover:bg-slate-800 rounded-full transition"
             >
               <ArrowLeft size={20} />
             </button>
           )}
-          <h3 className="font-semibold text-gray-800">
+          <h3 className="font-bold text-gray-900 dark:text-white tracking-tight">
             {conversation.type === 'CHANNEL'
               ? `# ${conversation.name}`
-              : conversation.participants.find((p) => p.userId !== user.id)
+              : conversation.participants.find((p) => p.userId !== user?.id)
                   ?.user.name || 'Direct Chat'}
           </h3>
         </div>
         {conversation.type === 'CHANNEL' && (
           <button
             onClick={() => setIsInfoModalOpen(true)}
-            className="p-1.5 text-gray-500 hover:bg-gray-200 rounded-full transition"
+            className="p-2 text-gray-500 dark:text-gray-400 hover:bg-surface-200 dark:hover:bg-slate-800 rounded-xl transition-all"
             title="Channel Settings"
           >
             <Info size={20} />
@@ -431,27 +424,32 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {loading && (
-          <div className="text-center text-gray-500">Loading messages...</div>
+          <div className="flex flex-col items-center justify-center py-8 gap-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-medium animate-pulse">
+              Loading messages...
+            </p>
+          </div>
         )}
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex group ${msg.senderId === user.id ? 'justify-end' : 'justify-start'}`}
+            className={`flex group ${msg.senderId === user?.id ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[70%] rounded-lg px-3 py-2 shadow-lg relative ${
-                msg.senderId === user.id
-                  ? 'bg-indigo-300 text-neutral-800'
-                  : 'bg-indigo-100 text-neutral-800'
+              className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-md relative transition-all ${
+                msg.senderId === user?.id
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-surface-100 dark:bg-slate-800 text-gray-900 dark:text-white'
               }`}
             >
               <div className="flex items-center justify-between gap-2 mb-1">
                 <div className="flex items-center gap-2">
-                  <div className="text-xs font-bold">
-                    {msg.senderId === user.id ? 'You' : msg.sender.name}
+                  <div className="text-[11px] font-black uppercase tracking-wider opacity-90">
+                    {msg.senderId === user?.id ? 'You' : msg.sender.name}
                   </div>
                   <div
-                    className="text-[10px] opacity-70"
+                    className="text-[10px] opacity-60 font-medium"
                     title={new Date(msg.createdAt).toLocaleString()}
                   >
                     {isToday(msg.createdAt)
@@ -462,7 +460,6 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                       : new Date(msg.createdAt).toLocaleDateString([], {
                           month: 'short',
                           day: 'numeric',
-                          year: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
@@ -480,32 +477,36 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                       e.stopPropagation();
                       setShowMenuId(showMenuId === msg.id ? null : msg.id);
                     }}
-                    className="p-1 text-gray-500 hover:bg-gray-200 rounded-full transition opacity-0 group-hover:opacity-100 message-menu-trigger"
+                    className={`p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100 message-menu-trigger ${
+                      msg.senderId === user?.id
+                        ? 'text-white/70 hover:bg-white/20'
+                        : 'text-gray-500 dark:text-gray-400 hover:bg-surface-200 dark:hover:bg-slate-700'
+                    }`}
                   >
                     <MoreVertical size={14} />
                   </button>
 
                   {showMenuId === msg.id && (
-                    <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-xl z-10 py-1">
+                    <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-slate-900 border border-surface-200 dark:border-slate-800 rounded-xl shadow-float z-10 py-1.5 overflow-hidden animate-fade-in">
                       <button
                         onClick={() => handleCopy(msg.content)}
-                        className="w-full px-3 py-1.5 text-xs text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                        className="w-full px-4 py-2 text-xs font-medium text-left text-gray-700 dark:text-gray-300 hover:bg-surface-50 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors"
                       >
-                        <Copy size={12} /> Copy
+                        <Copy size={14} /> Copy
                       </button>
-                      {msg.senderId === user.id && (
+                      {msg.senderId === user?.id && (
                         <>
                           <button
                             onClick={() => startEditing(msg)}
-                            className="w-full px-3 py-1.5 text-xs text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                            className="w-full px-4 py-2 text-xs font-medium text-left text-gray-700 dark:text-gray-300 hover:bg-surface-50 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors"
                           >
-                            <Edit size={12} /> Edit
+                            <Edit size={14} /> Edit
                           </button>
                           <button
                             onClick={() => handleMsgDelete(msg.id)}
-                            className="w-full px-3 py-1.5 text-xs text-left text-red-600 hover:bg-red-50 flex items-center gap-2"
+                            className="w-full px-4 py-2 text-xs font-bold text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2.5 transition-colors border-t border-surface-100 dark:border-slate-800 mt-1"
                           >
-                            <Trash size={12} /> Delete
+                            <Trash size={14} /> Delete
                           </button>
                         </>
                       )}
@@ -519,7 +520,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
-                    className="w-full p-2 text-sm border border-indigo-400 rounded bg-white outline-none focus:ring-1 focus:ring-indigo-500"
+                    className="input-modern w-full p-3 text-sm min-h-[80px]"
                     autoFocus
                   />
                   <div className="flex justify-end gap-2">
@@ -532,7 +533,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                     </button>
                     <button
                       type="submit"
-                      className="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold"
+                      className="text-xs text-white hover:text-white font-black uppercase tracking-widest bg-primary-700 dark:bg-primary-500 px-3 py-1 rounded-lg transition-all shadow-sm"
                     >
                       Save
                     </button>
@@ -543,12 +544,12 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                   {/* Multi-attachment Rendering */}
                   {msg.attachments && msg.attachments.length > 0 && (
                     <div className="grid grid-cols-1 gap-2 mt-1">
-                      {msg.attachments.map((att: any) => {
+                      {msg.attachments.map((att) => {
                         const isImage = att.mimeType.startsWith('image/');
                         return (
                           <div
                             key={att.id}
-                            className="rounded-lg overflow-hidden border border-gray-200 bg-white/50 p-1"
+                            className="rounded-xl overflow-hidden border border-surface-200/50 dark:border-slate-700/50 bg-white/10 p-1 group/att"
                           >
                             {isImage ? (
                               <img
@@ -575,12 +576,16 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                                 </div>
                                 <button
                                   onClick={() => handleDownloadFile(att)}
-                                  className="p-1 hover:bg-gray-200 rounded-full transition"
+                                  className="p-2 hover:bg-white/20 rounded-xl transition-all"
                                   title="Download"
                                 >
                                   <Download
                                     size={16}
-                                    className="text-indigo-600"
+                                    className={
+                                      msg.senderId === user?.id
+                                        ? 'text-white'
+                                        : 'text-primary-600 dark:text-primary-400'
+                                    }
                                   />
                                 </button>
                               </div>
@@ -592,16 +597,20 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                   )}
 
                   {msg.type === 'LOCATION' && msg.metadata && (
-                    <div className="p-3 bg-white/50 rounded-lg border border-gray-200 mt-1">
-                      <div className="flex items-center gap-2 text-indigo-600 font-medium mb-1">
+                    <div className="p-3 bg-white/10 rounded-xl border border-white/10 mt-1">
+                      <div
+                        className={`flex items-center gap-2 font-bold mb-1 ${msg.senderId === user?.id ? 'text-white' : 'text-primary-600 dark:text-primary-400'}`}
+                      >
                         <MapPin size={18} />
-                        <span className="text-xs">Shared Location</span>
+                        <span className="text-xs uppercase tracking-wider">
+                          Shared Location
+                        </span>
                       </div>
                       <a
                         href={`https://www.google.com/maps?q=${JSON.parse(msg.metadata).latitude},${JSON.parse(msg.metadata).longitude}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] text-blue-600 underline"
+                        className={`text-[11px] font-bold underline decoration-2 underline-offset-2 ${msg.senderId === user?.id ? 'text-white/90 hover:text-white' : 'text-blue-600 dark:text-blue-400'}`}
                       >
                         {JSON.parse(msg.metadata).address ||
                           'View on Google Maps'}
@@ -635,14 +644,14 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
 
       {/* Staging Bar */}
       {(pendingAttachments.length > 0 || pendingLocation) && (
-        <div className="px-4 py-2 border-t border-gray-200 bg-gray-50 flex flex-wrap gap-2 items-center">
+        <div className="px-4 py-3 border-t border-surface-200 dark:border-slate-800 bg-surface-50 dark:bg-slate-900/50 flex flex-wrap gap-3 items-center transition-colors">
           {pendingAttachments.map((att, index) => (
             <div
               key={index}
-              className="relative group p-2 bg-white rounded border border-gray-200 flex items-center gap-2 shadow-sm"
+              className="relative group p-2.5 bg-white dark:bg-slate-800 rounded-xl border border-surface-200 dark:border-slate-700 flex items-center gap-3 shadow-md animate-slide-in-up"
             >
               {att.mimeType.startsWith('image/') ? (
-                <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center overflow-hidden relative">
+                <div className="w-12 h-12 rounded-lg bg-surface-100 dark:bg-slate-900 flex items-center justify-center overflow-hidden relative border border-surface-100 dark:border-slate-800">
                   <img
                     src={att.localUrl}
                     alt=""
@@ -650,35 +659,42 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                   />
                   {att.status === 'uploading' && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-primary-600 dark:border-primary-400 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="relative">
+                <div className="relative p-2 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
                   <FileIcon
-                    size={20}
+                    size={24}
                     className={
                       att.status === 'uploading'
-                        ? 'text-gray-300'
-                        : 'text-gray-500'
+                        ? 'text-gray-300 dark:text-gray-600'
+                        : 'text-primary-600 dark:text-primary-400'
                     }
                   />
                   {att.status === 'uploading' && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin scale-50"></div>
+                      <div className="w-5 h-5 border-2 border-primary-600 dark:border-primary-400 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                   )}
                 </div>
               )}
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col min-w-0 pr-4">
                 <span
-                  className={`text-xs truncate max-w-[100px] ${att.status === 'failed' ? 'text-red-500' : ''}`}
+                  className={`text-xs font-bold truncate max-w-[120px] ${att.status === 'failed' ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}
                 >
                   {att.filename}
                 </span>
                 {att.status === 'failed' && (
-                  <span className="text-[8px] text-red-500">Failed</span>
+                  <span className="text-[10px] font-bold text-red-500 uppercase">
+                    Failed
+                  </span>
+                )}
+                {att.status === 'uploading' && (
+                  <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase animate-pulse">
+                    Uploading...
+                  </span>
                 )}
               </div>
               <button
@@ -688,21 +704,30 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                     prev.filter((_, i) => i !== index),
                   );
                 }}
-                className="p-0.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition absolute -top-1 -right-1"
+                className="p-1.5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all absolute -top-2 -right-2 z-10"
               >
-                <Trash2 size={10} />
+                <X size={12} />
               </button>
             </div>
           ))}
           {pendingLocation && (
-            <div className="relative group p-2 bg-indigo-50 rounded border border-indigo-200 flex items-center gap-2 shadow-sm">
-              <MapPin size={20} className="text-indigo-500" />
-              <span className="text-xs">Location selected</span>
+            <div className="relative group p-3 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-200 dark:border-primary-800 flex items-center gap-3 shadow-md animate-slide-in-up">
+              <div className="p-2 bg-primary-600 text-white rounded-lg">
+                <MapPin size={24} />
+              </div>
+              <div className="flex flex-col pr-4">
+                <span className="text-xs font-bold text-gray-900 dark:text-white">
+                  Location sharing
+                </span>
+                <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Coordinates ready
+                </span>
+              </div>
               <button
                 onClick={() => setPendingLocation(null)}
-                className="p-0.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition absolute -top-1 -right-1"
+                className="p-1.5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all absolute -top-2 -right-2 z-10"
               >
-                <Trash2 size={10} />
+                <X size={12} />
               </button>
             </div>
           )}
@@ -711,22 +736,27 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
 
       <form
         onSubmit={handleSend}
-        className="p-4 border-t border-gray-200 flex items-end gap-2"
+        className="p-4 border-t border-surface-200 dark:border-slate-800 flex items-end gap-3 bg-white dark:bg-slate-900 transition-colors"
       >
         <div className="relative emoji-picker-container">
           <button
             type="button"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition"
+            className="p-2.5 text-gray-500 dark:text-gray-400 hover:bg-surface-100 dark:hover:bg-slate-800 rounded-xl transition-all"
             title="Emoji"
           >
-            <Smile size={20} />
+            <Smile size={22} />
           </button>
           {showEmojiPicker && (
-            <div className="absolute bottom-full mb-2 right-0 z-50 shadow-2xl rounded-lg overflow-hidden border border-gray-200">
+            <div className="absolute bottom-full mb-4 right-0 z-50 shadow-float rounded-2xl overflow-hidden border border-surface-200 dark:border-slate-800 animate-slide-in-up">
               <EmojiPicker
                 onEmojiClick={onEmojiClick}
                 autoFocusSearch={false}
+                theme={
+                  document.documentElement.classList.contains('dark')
+                    ? Theme.DARK
+                    : Theme.LIGHT
+                }
               />
             </div>
           )}
@@ -744,15 +774,15 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              handleSend(e as any);
+              handleSend(e as unknown as React.FormEvent);
             }
           }}
           placeholder={
             pendingAttachments.some((a) => a.status === 'uploading')
               ? 'Uploading files...'
-              : 'Type a message... (Shift + Enter for newline)'
+              : 'Type a message...'
           }
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none overflow-y-auto min-h-[42px] max-h-[150px] disabled:bg-gray-50"
+          className="flex-1 px-4 py-2.5 border border-surface-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 resize-none overflow-y-auto min-h-[46px] max-h-[150px] disabled:opacity-50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all no-scrollbar"
           rows={1}
         />
         <button
@@ -763,7 +793,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
               !pendingLocation) ||
             pendingAttachments.some((a) => a.status === 'uploading')
           }
-          className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition h-[42px] flex-shrink-0 disabled:opacity-50"
+          className="bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-xl shadow-md hover:shadow-lg transition-all flex-shrink-0 disabled:opacity-50 disabled:scale-95 transform active:scale-90"
         >
           <Send size={20} />
         </button>
@@ -793,17 +823,19 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                   className="flex justify-between items-center group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs">
+                    <div className="h-8 w-8 rounded-full bg-surface-200 dark:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-gray-400 font-bold text-xs">
                       {p.user?.name?.[0] || '?'}
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-800">
-                        {p.user?.name || 'Unknown User'}{' '}
-                        {p.userId === user?.id && '(You)'}
+                      <div className="text-sm font-bold text-gray-900 dark:text-white">
+                        {p.user?.name} {p.userId === user?.id && '(You)'}
+                      </div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-500 uppercase tracking-wider font-medium">
+                        Member
                       </div>
                     </div>
                   </div>
-                  {p.userId !== user.id && (
+                  {p.userId !== user?.id && (
                     <button
                       onClick={() => handleRemoveMember(p.userId)}
                       className="p-1 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"
@@ -836,28 +868,33 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
             <input
               type="text"
               placeholder="Search people..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="input-modern pl-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="max-h-60 overflow-y-auto space-y-2">
-            {nonParticipants.map((u: any) => (
+            {nonParticipants.map((u: UserType) => (
               <button
                 key={u.id}
-                onClick={() => handleAddMember(u.id)}
-                className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition text-left"
+                onClick={() => handleAddMember(u.id!)}
+                className="w-full flex items-center gap-3 p-3 hover:bg-surface-50 dark:hover:bg-slate-800 rounded-xl transition-all text-left group"
               >
-                <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                <div className="h-9 w-9 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-400 font-bold text-sm transition-colors group-hover:bg-primary-600 group-hover:text-white">
                   {u.name[0]}
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-gray-800 text-sm">
+                  <div className="font-bold text-gray-900 dark:text-white text-sm leading-tight">
                     {u.name}
                   </div>
-                  <div className="text-xs text-gray-500">{u.email}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {u.email}
+                  </div>
                 </div>
-                <UserPlus size={18} className="text-indigo-600" />
+                <UserPlus
+                  size={18}
+                  className="text-primary-600 dark:text-primary-400"
+                />
               </button>
             ))}
             {nonParticipants.length === 0 && (

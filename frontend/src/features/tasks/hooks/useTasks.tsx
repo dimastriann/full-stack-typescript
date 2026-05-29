@@ -5,34 +5,39 @@ import {
   UPDATE_TASK,
   GET_TASKS,
 } from '../gql/task.graphql';
-import type { TaskType } from '../../../types/Tasks';
-import { createContext, useState, useEffect, useContext } from 'react';
-import type { TaskStoreModel } from '../../../types/BaseStore';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
+import { useEffect } from 'react';
+import { useWorkspaceStore } from '../../../store/workspaceStore';
+import { useTaskStore } from '../../../store/taskStore';
 
-export const TaskContext = createContext<TaskStoreModel | undefined>(undefined);
+export const useTasks = () => {
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const {
+    tasks,
+    setTasks,
+    editingTask,
+    setEditingTask,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
+  } = useTaskStore();
 
-export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const { activeWorkspace } = useWorkspace();
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
   const { data, loading, error, refetch } = useQuery(GET_TASKS, {
     variables: { skip: page * pageSize, take: pageSize },
     skip: !activeWorkspace,
   });
+
   const [createTask] = useMutation(CREATE_TASK);
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
-  const [editingTask, setEditingTask] = useState<TaskType | null>(null);
-  const [tasks, setTasks] = useState<TaskType[]>([]);
 
   useEffect(() => {
-    if (data) {
-      setTasks(data?.tasks || []);
+    if (data?.tasks) {
+      setTasks(data.tasks);
     }
-  }, [data]);
+  }, [data, setTasks]);
 
-  const taskStore = {
+  return {
     records: tasks,
     loading,
     error,
@@ -48,16 +53,4 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     pageSize,
     setPageSize,
   };
-
-  return (
-    <TaskContext.Provider value={taskStore}>{children}</TaskContext.Provider>
-  );
-}
-
-export const useTasks = () => {
-  const context = useContext(TaskContext);
-  if (!context) {
-    throw new Error('useTasks must be used within a TaskProvider');
-  }
-  return context;
 };

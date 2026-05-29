@@ -1,13 +1,10 @@
-import { AuthProvider } from './context/AuthProvider';
-import { WorkspaceProvider } from './context/WorkspaceProvider';
 import { AppRoutes } from './AppRoutes';
+import { AppInit } from './components/AppInit';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <WorkspaceProvider>
-        <AppRoutes />
-      </WorkspaceProvider>
-    </AuthProvider>
+    <AppInit>
+      <AppRoutes />
+    </AppInit>
   );
 }

@@ -38,7 +38,8 @@ describe('CommentService', () => {
 
     service = module.get<CommentService>(CommentService);
     prisma = module.get<PrismaService>(PrismaService);
-    projectMemberService = module.get<ProjectMemberService>(ProjectMemberService);
+    projectMemberService =
+      module.get<ProjectMemberService>(ProjectMemberService);
   });
 
   afterEach(() => {
@@ -56,7 +57,7 @@ describe('CommentService', () => {
       mockPrisma.comment.create.mockResolvedValue({ id: 1, ...input });
 
       const result = await service.create(input as any, 1);
-      
+
       expect(result).toBeDefined();
       expect(mockPrisma.comment.create).toHaveBeenCalled();
     });

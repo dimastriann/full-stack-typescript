@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import Logger from '../../../lib/logger';
 import { useQuery, useMutation } from '@apollo/client';
-import { useWorkspace } from '../../../context/WorkspaceProvider';
 import { GET_PROJECT_STAGES } from '../../projects/gql/project.graphql';
 import { GET_TASK_STAGES } from '../../tasks/gql/task.graphql';
 import { GET_ME } from '../../auth/gql/auth.graphql';
+import { GET_USERS } from '../../users/gql/user.graphql';
 import {
   UPDATE_WORKSPACE,
   INVITE_TO_WORKSPACE,
@@ -24,11 +24,19 @@ import {
   UserX,
 } from 'lucide-react';
 import { WorkspaceRole } from '../../../types/Workspaces';
+import type { WorkspaceMember } from '../../../types/Workspaces';
+import type { UserType } from '../../../types/Users';
 import ProjectStagePage from './ProjectStagePage';
 import TaskStagePage from './TaskStagePage';
+import Select from '../../../components/Select';
+
+import { useWorkspaceStore } from '../../../store/workspaceStore';
 
 export default function WorkspaceSettingsPage() {
-  const { activeWorkspace, setActiveWorkspace } = useWorkspace();
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const setActiveWorkspace = useWorkspaceStore(
+    (state) => state.setActiveWorkspace,
+  );
   const [editingId, setEditingId] = useState<
     number | 'new' | 'workspace' | 'invite' | null
   >(null);
@@ -40,6 +48,7 @@ export default function WorkspaceSettingsPage() {
 
   // Invite state
   const [inviteEmail, setInviteEmail] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [inviteRole, setInviteRole] = useState<WorkspaceRole>(
     WorkspaceRole.MEMBER,
   );
@@ -59,6 +68,18 @@ export default function WorkspaceSettingsPage() {
   );
 
   const fullWorkspace = workspaceData?.workspace || activeWorkspace;
+
+  const { data: usersData } = useQuery(GET_USERS);
+  const allUsers = usersData?.users || [];
+  const filteredUsers = inviteEmail.trim()
+    ? allUsers
+        .filter(
+          (u: UserType) =>
+            u.email.toLowerCase().includes(inviteEmail.toLowerCase()) ||
+            u.name.toLowerCase().includes(inviteEmail.toLowerCase()),
+        )
+        .slice(0, 5) // Limit suggestions to 5
+    : [];
 
   const { data: projectStagesData, refetch: refetchProjectStages } = useQuery(
     GET_PROJECT_STAGES,
@@ -130,9 +151,10 @@ export default function WorkspaceSettingsPage() {
       });
       setInviteEmail('');
       setEditingId(null);
-    } catch (err: any) {
-      Logger.error(err as string);
-      alert(err.message || 'Failed to invite user');
+    } catch (err) {
+      const error = err as Error;
+      Logger.error(error.message || 'Failed to invite user');
+      alert(error.message || 'Failed to invite user');
     }
   };
 
@@ -148,9 +170,10 @@ export default function WorkspaceSettingsPage() {
           },
         },
       });
-    } catch (err: any) {
-      Logger.error(err as string);
-      alert(err.message || 'Failed to update role');
+    } catch (err) {
+      const error = err as Error;
+      Logger.error(error.message || 'Failed to update role');
+      alert(error.message || 'Failed to update role');
     }
   };
 
@@ -169,15 +192,16 @@ export default function WorkspaceSettingsPage() {
           },
         },
       });
-    } catch (err: any) {
-      Logger.error(err as string);
-      alert(err.message || 'Failed to remove member');
+    } catch (err) {
+      const error = err as Error;
+      Logger.error(error.message || 'Failed to remove member');
+      alert(error.message || 'Failed to remove member');
     }
   };
 
   if (!activeWorkspace)
     return (
-      <div className="p-8 text-center text-gray-500">
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400 font-medium">
         Please select a workspace
       </div>
     );
@@ -185,15 +209,17 @@ export default function WorkspaceSettingsPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="flex items-center space-x-3 mb-8">
-        <Settings className="h-8 w-8 text-indigo-600" />
-        <h1 className="text-3xl font-bold text-gray-900">Workspace Settings</h1>
+        <Settings className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Workspace Settings
+        </h1>
       </div>
 
       {/* Workspace Info Section */}
-      <div className="bg-white shadow rounded-lg mb-8 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-gray-50 flex items-center space-x-2">
-          <Briefcase className="h-5 w-5 text-gray-500" />
-          <h2 className="text-lg font-semibold text-gray-800">
+      <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl mb-8 overflow-hidden border border-surface-200 dark:border-slate-800">
+        <div className="p-6 border-b border-surface-200 dark:border-slate-800 bg-surface-50 dark:bg-slate-900/50 flex items-center space-x-2">
+          <Briefcase className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Workspace Info
           </h2>
         </div>
@@ -203,14 +229,14 @@ export default function WorkspaceSettingsPage() {
               <div className="flex-1 flex items-center space-x-2">
                 <input
                   type="text"
-                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+                  className="input-modern"
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
                   autoFocus
                 />
                 <button
                   onClick={handleUpdateWorkspace}
-                  className="inline-flex items-center p-2 text-green-600 hover:bg-green-50 rounded-md"
+                  className="inline-flex items-center p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl"
                 >
                   <Check className="h-5 w-5" />
                 </button>
@@ -219,7 +245,7 @@ export default function WorkspaceSettingsPage() {
                     setEditingId(null);
                     setWorkspaceName(activeWorkspace.name);
                   }}
-                  className="inline-flex items-center p-2 text-gray-400 hover:bg-gray-50 rounded-md"
+                  className="inline-flex items-center p-2 text-gray-400 hover:bg-surface-50 dark:hover:bg-slate-800 rounded-xl"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -227,16 +253,14 @@ export default function WorkspaceSettingsPage() {
             ) : (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-                    Workspace Name
-                  </label>
-                  <p className="text-xl font-medium text-gray-900">
+                  <label className="label-modern">Workspace Name</label>
+                  <p className="text-xl font-medium text-gray-900 dark:text-white">
                     {activeWorkspace.name}
                   </p>
                 </div>
                 <button
                   onClick={() => setEditingId('workspace')}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  className="inline-flex items-center px-4 py-2 border border-surface-200 dark:border-slate-800 shadow-sm text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 hover:bg-surface-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   <Edit2 className="h-4 w-4 mr-2" /> Rename
                 </button>
@@ -247,67 +271,92 @@ export default function WorkspaceSettingsPage() {
       </div>
 
       {/* Member Management Section */}
-      <div className="bg-white shadow rounded-lg mb-8 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl mb-8 overflow-hidden border border-surface-200 dark:border-slate-800">
+        <div className="p-6 border-b border-surface-200 dark:border-slate-800 bg-surface-50 dark:bg-slate-900/50 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Users className="h-5 w-5 text-gray-500" />
-            <h2 className="text-lg font-semibold text-gray-800">Members</h2>
+            <Users className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Members
+            </h2>
           </div>
           <button
             onClick={() => setEditingId('invite')}
-            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-bold rounded-xl text-white bg-primary-600 hover:bg-primary-700 shadow-sm hover:shadow transition-all"
           >
             <Plus className="mr-1 h-4 w-4" /> Invite User
           </button>
         </div>
         <div className="p-6">
           {editingId === 'invite' && (
-            <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-100 space-y-4">
+            <div className="mb-6 p-6 bg-primary-50 dark:bg-primary-900/10 rounded-2xl border border-primary-100 dark:border-primary-800 space-y-4 animate-slide-in-up">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-bold text-indigo-900 flex items-center">
+                <h3 className="text-sm font-bold text-primary-900 dark:text-primary-300 flex items-center">
                   <Mail className="h-4 w-4 mr-2" /> Invite New Member
                 </h3>
                 <button
                   onClick={() => setEditingId(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Email Address
-                  </label>
+                <div className="relative">
+                  <label className="label-modern">Email Address</label>
                   <input
                     type="email"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+                    className="input-modern"
                     value={inviteEmail}
-                    onChange={(e) => setInviteEmail(e.target.value)}
-                    placeholder="user@example.com"
+                    onChange={(e) => {
+                      setInviteEmail(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() =>
+                      setTimeout(() => setShowSuggestions(false), 200)
+                    }
+                    placeholder="Search name or user@example.com"
                   />
+                  {/* Autocomplete Dropdown */}
+                  {showSuggestions && filteredUsers.length > 0 && (
+                    <div className="absolute z-10 mt-1 w-full bg-white dark:bg-slate-900 shadow-float rounded-xl border border-surface-200 dark:border-slate-800 max-h-60 overflow-y-auto overflow-x-hidden">
+                      {filteredUsers.map((u: UserType) => (
+                        <div
+                          key={u.id}
+                          className="px-4 py-3 hover:bg-primary-50 dark:hover:bg-slate-800 cursor-pointer flex flex-col border-b border-surface-100 dark:border-slate-800 last:border-0 transition-colors"
+                          onClick={() => {
+                            setInviteEmail(u.email);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                            {u.name}
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {u.email}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Role
-                  </label>
-                  <select
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
+                  <label className="label-modern">Role</label>
+                  <Select
                     value={inviteRole}
-                    onChange={(e) =>
-                      setInviteRole(e.target.value as WorkspaceRole)
-                    }
-                  >
-                    <option value={WorkspaceRole.MEMBER}>Member</option>
-                    <option value={WorkspaceRole.ADMIN}>Admin</option>
-                    <option value={WorkspaceRole.VIEWER}>Viewer</option>
-                  </select>
+                    onChange={(val) => setInviteRole(val as WorkspaceRole)}
+                    options={[
+                      { id: WorkspaceRole.MEMBER, label: 'Member' },
+                      { id: WorkspaceRole.ADMIN, label: 'Admin' },
+                      { id: WorkspaceRole.VIEWER, label: 'Viewer' },
+                    ]}
+                  />
                 </div>
               </div>
               <div className="flex justify-end">
                 <button
                   onClick={handleInviteUser}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                  className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-bold rounded-xl text-white bg-primary-600 hover:bg-primary-700 shadow-sm hover:shadow transition-all"
                 >
                   Send Invitation
                 </button>
@@ -316,57 +365,63 @@ export default function WorkspaceSettingsPage() {
           )}
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-surface-200 dark:divide-slate-800">
+              <thead className="bg-surface-50 dark:bg-slate-900/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {fullWorkspace.members?.map((member: any) => (
-                  <tr key={member.id}>
+              <tbody className="bg-white dark:bg-slate-900 divide-y divide-surface-200 dark:divide-slate-800">
+                {fullWorkspace.members?.map((member: WorkspaceMember) => (
+                  <tr
+                    key={member.id}
+                    className="hover:bg-surface-50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
+                        <div className="h-9 w-9 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-400 font-bold text-sm">
                           {member.user?.name?.charAt(0) || '?'}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white">
                             {member.user?.name}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
                             {member.user?.email}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <select
-                        className="text-sm border-none bg-transparent focus:ring-0 text-gray-700 cursor-pointer hover:text-indigo-600"
-                        value={member.role}
-                        onChange={(e) =>
-                          handleUpdateRole(
-                            member.userId,
-                            e.target.value as WorkspaceRole,
-                          )
-                        }
-                        disabled={member.role === WorkspaceRole.OWNER}
-                      >
-                        <option value={WorkspaceRole.OWNER} disabled>
+                      {member.role === WorkspaceRole.OWNER ? (
+                        <span className="text-sm font-bold text-purple-600 dark:text-purple-400 px-3">
                           Owner
-                        </option>
-                        <option value={WorkspaceRole.ADMIN}>Admin</option>
-                        <option value={WorkspaceRole.MEMBER}>Member</option>
-                        <option value={WorkspaceRole.VIEWER}>Viewer</option>
-                      </select>
+                        </span>
+                      ) : (
+                        <Select
+                          value={member.role}
+                          onChange={(val) =>
+                            handleUpdateRole(
+                              member.userId,
+                              val as WorkspaceRole,
+                            )
+                          }
+                          options={[
+                            { id: WorkspaceRole.ADMIN, label: 'Admin' },
+                            { id: WorkspaceRole.MEMBER, label: 'Member' },
+                            { id: WorkspaceRole.VIEWER, label: 'Viewer' },
+                          ]}
+                          className="w-32"
+                        />
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       {member.role !== WorkspaceRole.OWNER && (

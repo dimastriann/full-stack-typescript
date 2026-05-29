@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ConversationType, MessageType } from '../../prisma/generated/client';
+import {
+  ConversationType,
+  MessageType,
+  Prisma,
+} from '../../prisma/generated/client';
 import { getLinkPreview } from 'link-preview-js';
 import { Logger } from '@nestjs/common';
+import { sanitizeString } from '../common/decorators/sanitized-string.decorator';
 
 @Injectable()
 export class ChatService {
@@ -63,7 +68,7 @@ export class ChatService {
   async saveMessage(
     conversationId: number,
     senderId: number,
-    content: string,
+    rawContent: string,
     type: MessageType = MessageType.TEXT,
     fileData?: {
       url: string;
@@ -71,10 +76,12 @@ export class ChatService {
       size?: number;
       mimeType?: string;
     },
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue,
     attachmentIds?: number[],
   ) {
-    let linkPreviewData: any = null;
+    // Sanitize message content (WebSocket messages bypass DTO validation)
+    const content = sanitizeString(rawContent);
+    let linkPreviewData: Prisma.InputJsonValue | null = null;
 
     // Link preview only for TEXT messages
     if (type === MessageType.TEXT) {
@@ -83,13 +90,20 @@ export class ChatService {
 
       if (matches && matches.length > 0) {
         try {
-          const preview: any = await getLinkPreview(matches[0], {
+          const preview = (await getLinkPreview(matches[0], {
             followRedirects: 'follow',
-          });
+          })) as {
+            url?: string;
+            title?: string;
+            description?: string;
+            images?: string[];
+            favicons?: string[];
+            siteName?: string;
+          };
 
           if (preview && preview.title) {
             linkPreviewData = {
-              url: preview.url,
+              url: preview.url || '',
               title: preview.title,
               description: preview.description || '',
               image: preview.images?.[0] || preview.favicons?.[0] || '',
@@ -97,9 +111,10 @@ export class ChatService {
               favicons: preview.favicons?.[0] || '',
             };
           }
-        } catch (error) {
+        } catch (error: unknown) {
+          const errMsg = error instanceof Error ? error.message : String(error);
           this.logger.error(
-            `Failed to fetch link preview for ${matches[0]}: ${error.message}`,
+            `Failed to fetch link preview for ${matches[0]}: ${errMsg}`,
           );
         }
       }
@@ -115,8 +130,8 @@ export class ChatService {
         fileName: fileData?.name,
         fileSize: fileData?.size,
         mimeType: fileData?.mimeType,
-        metadata: metadata ? (metadata as any) : undefined,
-        linkPreview: linkPreviewData as any,
+        metadata: metadata !== undefined ? metadata : undefined,
+        linkPreview: linkPreviewData !== null ? linkPreviewData : undefined,
         attachments: attachmentIds
           ? {
               connect: attachmentIds.map((id) => ({ id })),
@@ -235,7 +250,9 @@ export class ChatService {
     });
   }
 
-  async updateMessage(id: number, senderId: number, content: string) {
+  async updateMessage(id: number, senderId: number, rawContent: string) {
+    // Sanitize message content (WebSocket messages bypass DTO validation)
+    const content = sanitizeString(rawContent);
     const message = await this.prisma.message.findUnique({
       where: { id },
     });
