@@ -20,7 +20,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const startTime = Date.now();
     const requestId = randomUUID();
 
-    const ctxType = context.getType();
+    const ctxType = context.getType() as string;
 
     if (ctxType === 'graphql') {
       // GraphQL Request Logging

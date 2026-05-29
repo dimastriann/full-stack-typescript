@@ -75,7 +75,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       })();
     }
 
-    const ctxType = host.getType();
+    const ctxType = host.getType() as string;
 
     if (ctxType === 'graphql') {
       // In GraphQL, NestJS handles resolver errors, but we can return the error formatted
