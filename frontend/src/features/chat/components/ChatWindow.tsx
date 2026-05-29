@@ -172,9 +172,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
     onData: ({ data }) => {
       const msg = data.data?.messageUpdated;
       if (msg) {
-        setMessages((prev) =>
-          prev.map((m) => (m.id === msg.id ? msg : m)),
-        );
+        setMessages((prev) => prev.map((m) => (m.id === msg.id ? msg : m)));
       }
     },
   });

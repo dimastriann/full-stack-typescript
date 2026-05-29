@@ -49,6 +49,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
     loading: mutationLoading,
   } = useTasks();
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [hasResetInitial, setHasResetInitial] = useState(false);
 
   const task = data?.getTask;
   const projects = useMemo<ProjectType[]>(
@@ -106,7 +107,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
           ? new Date(task.startDate).toISOString().split('T')[0]
           : '',
       });
-    } else if (!isEditMode && userId && users.length) {
+    } else if (!isEditMode && userId && users.length && !hasResetInitial) {
       reset({
         title: '',
         description: '',
@@ -114,8 +115,9 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         projectId: '',
         stageId: '',
       });
+      setHasResetInitial(true);
     }
-  }, [task, isEditMode, reset, userId, users, projects]);
+  }, [task, isEditMode, reset, userId, users, projects, hasResetInitial]);
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -245,6 +247,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               rules={{ required: 'Project is required' }}
               render={({ field }) => (
                 <Select
+                  id="projectId"
                   value={field.value}
                   onChange={field.onChange}
                   options={projects.map((p) => ({
@@ -272,6 +275,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="parentTaskId"
                   value={field.value}
                   onChange={field.onChange}
                   options={
@@ -299,6 +303,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="type"
                   value={field.value}
                   onChange={field.onChange}
                   options={Object.values(TaskTypeEnum).map((t) => ({
@@ -319,6 +324,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="priority"
                   value={field.value}
                   onChange={field.onChange}
                   options={Object.values(TaskPriority).map((p) => ({
@@ -350,6 +356,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               rules={{ required: 'User is required' }}
               render={({ field }) => (
                 <Select
+                  id="userId"
                   value={field.value}
                   onChange={field.onChange}
                   options={users.map((u) => ({
@@ -378,6 +385,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="stageId"
                   value={field.value}
                   onChange={field.onChange}
                   options={stages.map((s) => ({

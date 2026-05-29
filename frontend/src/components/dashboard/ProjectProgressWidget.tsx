@@ -6,14 +6,7 @@ interface Props {
   data: ProjectProgressItem[];
 }
 
-
-function BudgetBar({
-  planned,
-  actual,
-}: {
-  planned: number;
-  actual: number;
-}) {
+function BudgetBar({ planned, actual }: { planned: number; actual: number }) {
   if (planned === 0 && actual === 0) return null;
   const overBudget = actual > planned && planned > 0;
   const pct = planned > 0 ? Math.min((actual / planned) * 100, 100) : 0;

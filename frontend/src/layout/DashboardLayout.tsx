@@ -74,7 +74,9 @@ export default function DashboardLayout() {
             >
               <Search size={12} />
               <span>Search…</span>
-              <kbd className="ml-1 text-[10px] font-mono bg-surface-100 dark:bg-slate-800 px-1 rounded">⌘K</kbd>
+              <kbd className="ml-1 text-[10px] font-mono bg-surface-100 dark:bg-slate-800 px-1 rounded">
+                ⌘K
+              </kbd>
             </button>
             <ThemeToggle />
             <WorkspaceSwitcher />
@@ -225,7 +227,10 @@ export default function DashboardLayout() {
       </div>
 
       {/* ── Command Palette ── */}
-      <CommandPalette isOpen={isPaletteOpen} onClose={() => setIsPaletteOpen(false)} />
+      <CommandPalette
+        isOpen={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+      />
     </div>
   );
 }

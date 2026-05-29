@@ -63,10 +63,10 @@ describe('TimesheetForm', () => {
 
     // Wait for data to load
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Description/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Description/i)).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/Description/i), {
+    fireEvent.change(screen.getByLabelText(/Description/i), {
       target: { value: 'Working on project' },
     });
 

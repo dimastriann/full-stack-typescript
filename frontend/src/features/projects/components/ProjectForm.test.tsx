@@ -78,14 +78,14 @@ describe('ProjectForm', () => {
 
     // Wait for data to load
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Project Name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Project Name/i)).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/Project Name/i), {
+    fireEvent.change(screen.getByLabelText(/Project Name/i), {
       target: { value: 'New Test Project' },
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/Project Description/i), {
+    fireEvent.change(screen.getByLabelText(/Description/i), {
       target: { value: 'Test description' },
     });
 

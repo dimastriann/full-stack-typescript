@@ -45,8 +45,8 @@ describe('LoginPage', () => {
       </MockedProvider>,
     );
 
-    expect(screen.getByPlaceholderText(/Email address/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Password$/i)).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Sign in/i }),
     ).toBeInTheDocument();
@@ -61,10 +61,10 @@ describe('LoginPage', () => {
       </MockedProvider>,
     );
 
-    fireEvent.change(screen.getByPlaceholderText(/Email address/i), {
+    fireEvent.change(screen.getByLabelText(/Email address/i), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/^Password$/i), {
       target: { value: 'password123' },
     });
     fireEvent.click(screen.getByRole('button', { name: /Sign in/i }));
@@ -96,10 +96,10 @@ describe('LoginPage', () => {
       </MockedProvider>,
     );
 
-    fireEvent.change(screen.getByPlaceholderText(/Email address/i), {
+    fireEvent.change(screen.getByLabelText(/Email address/i), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/^Password$/i), {
       target: { value: 'wrong-password' },
     });
     fireEvent.click(screen.getByRole('button', { name: /Sign in/i }));

@@ -57,7 +57,7 @@ describe('TimesheetResolver', () => {
         userId: 1,
       });
 
-      await resolver.createTimesheet(input as any, user);
+      await resolver.createTimesheet(input as any, user as any);
 
       expect(mockTimesheetService.create).toHaveBeenCalledWith(input, user.id);
     });

@@ -39,7 +39,10 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
         {formatDate(label)}
       </p>
       {payload.map((entry) => (
-        <div key={entry.name} className="flex items-center justify-between gap-4">
+        <div
+          key={entry.name}
+          className="flex items-center justify-between gap-4"
+        >
           <div className="flex items-center gap-1.5">
             <span
               className="inline-block w-2.5 h-2.5 rounded-full"
@@ -72,7 +75,10 @@ export default function ActivityTimelineChart({ data }: Props) {
       </div>
 
       <ResponsiveContainer width="100%" height={220}>
-        <AreaChart data={data} margin={{ left: -8, right: 8, top: 8, bottom: 0 }}>
+        <AreaChart
+          data={data}
+          margin={{ left: -8, right: 8, top: 8, bottom: 0 }}
+        >
           <defs>
             <linearGradient id="gradCreated" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />

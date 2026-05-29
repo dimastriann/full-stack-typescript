@@ -20,6 +20,7 @@ interface SelectProps {
   className?: string;
   alwaysDark?: boolean;
   error?: boolean;
+  id?: string;
 }
 
 export default function Select({
@@ -30,6 +31,7 @@ export default function Select({
   className = '',
   alwaysDark = false,
   error = false,
+  id,
 }: SelectProps) {
   const selected = options.find((opt) => opt.id === value);
 
@@ -43,6 +45,32 @@ export default function Select({
 
   return (
     <div className={`relative ${className}`}>
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: '0',
+          margin: '-1px',
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
+          border: '0',
+        }}
+        aria-hidden="true"
+        tabIndex={-1}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((opt) => (
+          <option key={opt.id} value={opt.id}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+
       <Listbox value={value} onChange={onChange}>
         <div className="relative">
           <ListboxButton

@@ -19,7 +19,12 @@ function daysBetween(a: Date, b: Date): number {
   return Math.round((b.getTime() - a.getTime()) / 86400000);
 }
 
-export default function GanttTaskBar({ task, startDate, dayWidthPx, rowHeight }: Props) {
+export default function GanttTaskBar({
+  task,
+  startDate,
+  dayWidthPx,
+  rowHeight,
+}: Props) {
   const navigate = useNavigate();
 
   // Tasks without dates are shown as zero-width placeholders
@@ -104,7 +109,10 @@ export default function GanttTaskBar({ task, startDate, dayWidthPx, rowHeight }:
         <div className="absolute inset-0 flex items-center px-2 z-10">
           <span
             className="text-[10px] font-semibold truncate"
-            style={{ color: isCompleted ? barColor : '#fff', mixBlendMode: isCompleted ? 'normal' : 'normal' }}
+            style={{
+              color: isCompleted ? barColor : '#fff',
+              mixBlendMode: isCompleted ? 'normal' : 'normal',
+            }}
           >
             {task.title}
           </span>

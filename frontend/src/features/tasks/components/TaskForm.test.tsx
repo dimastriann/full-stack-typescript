@@ -79,10 +79,10 @@ describe('TaskForm', () => {
 
     // Wait for data to load
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Task Title/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Task Title/i)).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/Task Title/i), {
+    fireEvent.change(screen.getByLabelText(/Task Title/i), {
       target: { value: 'New Test Task' },
     });
 

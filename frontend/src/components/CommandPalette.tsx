@@ -35,13 +35,21 @@ interface Props {
   onClose: () => void;
 }
 
-function useCommandItems(navigate: ReturnType<typeof useNavigate>, onClose: () => void) {
+function useCommandItems(
+  navigate: ReturnType<typeof useNavigate>,
+  onClose: () => void,
+) {
   const activeWorkspace = useWorkspaceStore(
-    (state: { activeWorkspace: { id?: number } | null }) => state.activeWorkspace,
+    (state: { activeWorkspace: { id?: number } | null }) =>
+      state.activeWorkspace,
   );
 
   const { data: tasksData } = useQuery<{
-    tasks: { id: number; title: string; project: { id: number; name: string } }[];
+    tasks: {
+      id: number;
+      title: string;
+      project: { id: number; name: string };
+    }[];
   }>(GET_TASKS, {
     variables: { take: 50 },
     skip: !activeWorkspace,
@@ -63,18 +71,102 @@ function useCommandItems(navigate: ReturnType<typeof useNavigate>, onClose: () =
   );
 
   const staticItems: CommandItem[] = [
-    { id: 'nav-dashboard', label: 'Dashboard Overview', icon: LayoutDashboard, action: () => go('/dashboard'), category: 'Navigate', keywords: 'home overview stats' },
-    { id: 'nav-projects', label: 'Projects', icon: FolderGit2, action: () => go('/dashboard/projects'), category: 'Navigate', keywords: 'kanban board' },
-    { id: 'nav-tasks', label: 'Tasks', icon: ListTodo, action: () => go('/dashboard/tasks'), category: 'Navigate', keywords: 'kanban board list' },
-    { id: 'nav-calendar', label: 'Calendar', icon: CalendarDays, action: () => go('/dashboard/calendar'), category: 'Navigate', keywords: 'schedule dates' },
-    { id: 'nav-timeline', label: 'Timeline / Gantt', icon: GanttChartIcon, action: () => go('/dashboard/timeline'), category: 'Navigate', keywords: 'gantt chart' },
-    { id: 'nav-timesheets', label: 'Timesheets', icon: Timer, action: () => go('/dashboard/timesheets'), category: 'Navigate', keywords: 'time tracking hours' },
-    { id: 'nav-users', label: 'Users', icon: Users, action: () => go('/dashboard/users'), category: 'Navigate', keywords: 'team members admin' },
-    { id: 'nav-discuss', label: 'Discuss / Chat', icon: MessageSquare, action: () => go('/dashboard/discuss'), category: 'Navigate', keywords: 'messages channels' },
-    { id: 'nav-profile', label: 'My Profile', icon: User, action: () => go('/dashboard/profile'), category: 'Navigate', keywords: 'account settings' },
-    { id: 'nav-workspace', label: 'Workspace Settings', icon: Settings, action: () => go('/dashboard/workspace/settings'), category: 'Navigate', keywords: 'config stages members' },
-    { id: 'new-project', label: 'Create New Project', icon: FolderGit2, action: () => go('/dashboard/project/new'), category: 'Actions', keywords: 'add create' },
-    { id: 'new-task', label: 'Create New Task', icon: ListTodo, action: () => go('/dashboard/task/new'), category: 'Actions', keywords: 'add create' },
+    {
+      id: 'nav-dashboard',
+      label: 'Dashboard Overview',
+      icon: LayoutDashboard,
+      action: () => go('/dashboard'),
+      category: 'Navigate',
+      keywords: 'home overview stats',
+    },
+    {
+      id: 'nav-projects',
+      label: 'Projects',
+      icon: FolderGit2,
+      action: () => go('/dashboard/projects'),
+      category: 'Navigate',
+      keywords: 'kanban board',
+    },
+    {
+      id: 'nav-tasks',
+      label: 'Tasks',
+      icon: ListTodo,
+      action: () => go('/dashboard/tasks'),
+      category: 'Navigate',
+      keywords: 'kanban board list',
+    },
+    {
+      id: 'nav-calendar',
+      label: 'Calendar',
+      icon: CalendarDays,
+      action: () => go('/dashboard/calendar'),
+      category: 'Navigate',
+      keywords: 'schedule dates',
+    },
+    {
+      id: 'nav-timeline',
+      label: 'Timeline / Gantt',
+      icon: GanttChartIcon,
+      action: () => go('/dashboard/timeline'),
+      category: 'Navigate',
+      keywords: 'gantt chart',
+    },
+    {
+      id: 'nav-timesheets',
+      label: 'Timesheets',
+      icon: Timer,
+      action: () => go('/dashboard/timesheets'),
+      category: 'Navigate',
+      keywords: 'time tracking hours',
+    },
+    {
+      id: 'nav-users',
+      label: 'Users',
+      icon: Users,
+      action: () => go('/dashboard/users'),
+      category: 'Navigate',
+      keywords: 'team members admin',
+    },
+    {
+      id: 'nav-discuss',
+      label: 'Discuss / Chat',
+      icon: MessageSquare,
+      action: () => go('/dashboard/discuss'),
+      category: 'Navigate',
+      keywords: 'messages channels',
+    },
+    {
+      id: 'nav-profile',
+      label: 'My Profile',
+      icon: User,
+      action: () => go('/dashboard/profile'),
+      category: 'Navigate',
+      keywords: 'account settings',
+    },
+    {
+      id: 'nav-workspace',
+      label: 'Workspace Settings',
+      icon: Settings,
+      action: () => go('/dashboard/workspace/settings'),
+      category: 'Navigate',
+      keywords: 'config stages members',
+    },
+    {
+      id: 'new-project',
+      label: 'Create New Project',
+      icon: FolderGit2,
+      action: () => go('/dashboard/project/new'),
+      category: 'Actions',
+      keywords: 'add create',
+    },
+    {
+      id: 'new-task',
+      label: 'Create New Task',
+      icon: ListTodo,
+      action: () => go('/dashboard/task/new'),
+      category: 'Actions',
+      keywords: 'add create',
+    },
   ];
 
   const taskItems: CommandItem[] = (tasksData?.tasks ?? []).map((task) => ({
@@ -87,14 +179,16 @@ function useCommandItems(navigate: ReturnType<typeof useNavigate>, onClose: () =
     keywords: task.title.toLowerCase(),
   }));
 
-  const projectItems: CommandItem[] = (projectsData?.projects ?? []).map((p) => ({
-    id: `project-${p.id}`,
-    label: p.name,
-    icon: FolderGit2,
-    action: () => go(`/dashboard/project/${p.id}`),
-    category: 'Projects',
-    keywords: p.name.toLowerCase(),
-  }));
+  const projectItems: CommandItem[] = (projectsData?.projects ?? []).map(
+    (p) => ({
+      id: `project-${p.id}`,
+      label: p.name,
+      icon: FolderGit2,
+      action: () => go(`/dashboard/project/${p.id}`),
+      category: 'Projects',
+      keywords: p.name.toLowerCase(),
+    }),
+  );
 
   return [...staticItems, ...taskItems, ...projectItems];
 }
@@ -121,11 +215,14 @@ export default function CommandPalette({ isOpen, onClose }: Props) {
     : allItems.filter((item) => item.category === 'Navigate');
 
   // Group by category
-  const grouped = filtered.reduce<Record<string, CommandItem[]>>((acc, item) => {
-    if (!acc[item.category]) acc[item.category] = [];
-    acc[item.category].push(item);
-    return acc;
-  }, {});
+  const grouped = filtered.reduce<Record<string, CommandItem[]>>(
+    (acc, item) => {
+      if (!acc[item.category]) acc[item.category] = [];
+      acc[item.category].push(item);
+      return acc;
+    },
+    {},
+  );
 
   const flatList = Object.values(grouped).flat();
 
@@ -246,7 +343,10 @@ export default function CommandPalette({ isOpen, onClose }: Props) {
                           )}
                         </div>
                         {isActive && (
-                          <ArrowRight size={14} className="text-primary-400 flex-shrink-0" />
+                          <ArrowRight
+                            size={14}
+                            className="text-primary-400 flex-shrink-0"
+                          />
                         )}
                       </button>
                     );
@@ -258,9 +358,15 @@ export default function CommandPalette({ isOpen, onClose }: Props) {
 
           {/* Footer hint */}
           <div className="px-4 py-2.5 border-t border-surface-100 dark:border-slate-800 flex items-center gap-4 text-[10px] text-gray-400 dark:text-gray-600">
-            <span><kbd className="font-mono">↑↓</kbd> navigate</span>
-            <span><kbd className="font-mono">↵</kbd> open</span>
-            <span><kbd className="font-mono">Esc</kbd> close</span>
+            <span>
+              <kbd className="font-mono">↑↓</kbd> navigate
+            </span>
+            <span>
+              <kbd className="font-mono">↵</kbd> open
+            </span>
+            <span>
+              <kbd className="font-mono">Esc</kbd> close
+            </span>
           </div>
         </div>
       </div>

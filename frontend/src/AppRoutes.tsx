@@ -11,21 +11,25 @@ const DashboardLayout = lazy(() => import('./layout/DashboardLayout'));
 
 // Stylish modern loader component
 const RouteLoader = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '80vh',
-    background: 'transparent',
-  }}>
-    <div style={{
-      width: '40px',
-      height: '40px',
-      border: '3px solid rgba(99, 102, 241, 0.1)',
-      borderTop: '3px solid #6366f1',
-      borderRadius: '50%',
-      animation: 'spin 1s linear infinite',
-    }} />
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '80vh',
+      background: 'transparent',
+    }}
+  >
+    <div
+      style={{
+        width: '40px',
+        height: '40px',
+        border: '3px solid rgba(99, 102, 241, 0.1)',
+        borderTop: '3px solid #6366f1',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+      }}
+    />
     <style>{`
       @keyframes spin {
         0% { transform: rotate(0deg); }
@@ -51,4 +55,3 @@ export const AppRoutes = () => {
     </Suspense>
   );
 };
-

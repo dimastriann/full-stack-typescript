@@ -51,10 +51,7 @@ export default function GanttHeader({
 
   return (
     <div className="flex-shrink-0 border-b border-surface-200 dark:border-slate-700">
-      <div
-        className="flex"
-        style={{ width: `${totalDays * dayWidthPx}px` }}
-      >
+      <div className="flex" style={{ width: `${totalDays * dayWidthPx}px` }}>
         {columns.map((col, i) => {
           const label = formatDayLabel(col.date, zoom);
           const showLabel = label !== '';

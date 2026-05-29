@@ -225,9 +225,8 @@ export default function DashboardStats() {
         <div className="flex items-center gap-3 p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400">
           <AlertTriangle size={18} className="flex-shrink-0" />
           <p className="text-sm font-semibold">
-            You have{' '}
-            <span className="font-black">{stats.overdueTasks}</span> overdue{' '}
-            {stats.overdueTasks === 1 ? 'task' : 'tasks'} — consider
+            You have <span className="font-black">{stats.overdueTasks}</span>{' '}
+            overdue {stats.overdueTasks === 1 ? 'task' : 'tasks'} — consider
             prioritizing them.
           </p>
         </div>

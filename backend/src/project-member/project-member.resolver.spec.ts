@@ -46,7 +46,7 @@ describe('ProjectMemberResolver', () => {
       const user = { id: 1 };
       mockService.inviteUser.mockResolvedValue({ id: 1, ...input, userId: 2 });
 
-      await resolver.inviteToProject(input, user);
+      await resolver.inviteToProject(input, user as any);
 
       expect(mockService.inviteUser).toHaveBeenCalledWith(
         input.projectId,

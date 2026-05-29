@@ -19,15 +19,31 @@ const DAY_WIDTH: Record<GanttZoom, number> = {
 const ROW_HEIGHT = 44;
 const LABEL_COL_WIDTH = 240;
 
-
 const PRIORITY_BADGE: Record<string, { bg: string; text: string }> = {
-  LOW: { bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-400' },
-  MEDIUM: { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-400' },
-  HIGH: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-700 dark:text-orange-400' },
-  URGENT: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400' },
+  LOW: {
+    bg: 'bg-emerald-100 dark:bg-emerald-900/30',
+    text: 'text-emerald-700 dark:text-emerald-400',
+  },
+  MEDIUM: {
+    bg: 'bg-amber-100 dark:bg-amber-900/30',
+    text: 'text-amber-700 dark:text-amber-400',
+  },
+  HIGH: {
+    bg: 'bg-orange-100 dark:bg-orange-900/30',
+    text: 'text-orange-700 dark:text-orange-400',
+  },
+  URGENT: {
+    bg: 'bg-red-100 dark:bg-red-900/30',
+    text: 'text-red-700 dark:text-red-400',
+  },
 };
 
-export default function GanttChart({ tasks, zoom, startDate, totalDays }: Props) {
+export default function GanttChart({
+  tasks,
+  zoom,
+  startDate,
+  totalDays,
+}: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const dayWidthPx = DAY_WIDTH[zoom];
   const totalWidthPx = totalDays * dayWidthPx;
@@ -35,7 +51,9 @@ export default function GanttChart({ tasks, zoom, startDate, totalDays }: Props)
   // Calculate today line position
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const todayOffset = Math.round((today.getTime() - startDate.getTime()) / 86400000);
+  const todayOffset = Math.round(
+    (today.getTime() - startDate.getTime()) / 86400000,
+  );
   const todayLeft = todayOffset * dayWidthPx;
 
   // Weekend shading columns
@@ -55,7 +73,9 @@ export default function GanttChart({ tasks, zoom, startDate, totalDays }: Props)
         <div className="text-center space-y-2">
           <p className="text-4xl">📋</p>
           <p className="text-sm font-medium">No tasks with dates to display</p>
-          <p className="text-xs">Set start/due dates on tasks to see them here</p>
+          <p className="text-xs">
+            Set start/due dates on tasks to see them here
+          </p>
         </div>
       </div>
     );
@@ -78,7 +98,8 @@ export default function GanttChart({ tasks, zoom, startDate, totalDays }: Props)
         {/* Task rows */}
         <div className="overflow-y-auto flex-1">
           {tasks.map((task) => {
-            const badge = PRIORITY_BADGE[task.priority] ?? PRIORITY_BADGE.MEDIUM;
+            const badge =
+              PRIORITY_BADGE[task.priority] ?? PRIORITY_BADGE.MEDIUM;
             return (
               <div
                 key={task.id}
@@ -155,7 +176,10 @@ export default function GanttChart({ tasks, zoom, startDate, totalDays }: Props)
                     <div
                       key={i}
                       className="absolute top-0 bottom-0 border-r border-surface-100/50 dark:border-slate-800/50"
-                      style={{ left: `${i * dayWidthPx}px`, width: `${dayWidthPx}px` }}
+                      style={{
+                        left: `${i * dayWidthPx}px`,
+                        width: `${dayWidthPx}px`,
+                      }}
                     />
                   ))}
 

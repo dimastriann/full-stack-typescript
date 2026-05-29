@@ -83,7 +83,10 @@ export default function TasksByPriorityChart({ data }: Props) {
             }
             width={54}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99,102,241,0.06)' }} />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ fill: 'rgba(99,102,241,0.06)' }}
+          />
           <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={28}>
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />

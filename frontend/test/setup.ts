@@ -36,6 +36,18 @@ if (typeof window !== 'undefined') {
     value: IntersectionObserver,
   });
 
+  // Mock ResizeObserver
+  class MockResizeObserver {
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
+  }
+  Object.defineProperty(window, 'ResizeObserver', {
+    writable: true,
+    configurable: true,
+    value: MockResizeObserver,
+  });
+
   // Mock scrollIntoView
   window.HTMLElement.prototype.scrollIntoView = vi.fn();
 }

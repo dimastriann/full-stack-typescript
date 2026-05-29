@@ -28,8 +28,17 @@ export default function TimerWidget() {
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { isRunning, taskId, taskTitle, projectId, projectName, start, pause, stop, getElapsedMs } =
-    useTimerStore();
+  const {
+    isRunning,
+    taskId,
+    taskTitle,
+    projectId,
+    projectName,
+    start,
+    pause,
+    stop,
+    getElapsedMs,
+  } = useTimerStore();
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
   const user = useAuthStore((s) => s.user);
 
@@ -55,7 +64,10 @@ export default function TimerWidget() {
   // Close dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
@@ -150,7 +162,12 @@ export default function TimerWidget() {
         taskId && (
           <button
             onClick={() =>
-              start({ id: taskId, title: taskTitle!, projectId: projectId!, projectName: projectName! })
+              start({
+                id: taskId,
+                title: taskTitle!,
+                projectId: projectId!,
+                projectName: projectName!,
+              })
             }
             className="p-1.5 rounded-lg text-primary-400 hover:bg-primary-500/10 transition-colors"
             title="Resume timer"
@@ -175,7 +192,10 @@ export default function TimerWidget() {
         <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-slate-900 border border-surface-200 dark:border-slate-700 rounded-2xl shadow-float z-50 overflow-hidden">
           <div className="p-3 border-b border-surface-100 dark:border-slate-800">
             <div className="relative">
-              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search
+                size={13}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              />
               <input
                 autoFocus
                 value={search}
@@ -188,14 +208,18 @@ export default function TimerWidget() {
 
           <div className="max-h-56 overflow-y-auto py-1">
             {filteredTasks.length === 0 ? (
-              <p className="text-xs text-gray-400 text-center py-4">No tasks found</p>
+              <p className="text-xs text-gray-400 text-center py-4">
+                No tasks found
+              </p>
             ) : (
               filteredTasks.map((task) => (
                 <button
                   key={task.id}
                   onClick={() => handleSelectTask(task)}
                   className={`w-full px-4 py-2.5 text-left hover:bg-surface-50 dark:hover:bg-slate-800 transition-colors ${
-                    task.id === taskId ? 'bg-primary-50 dark:bg-primary-900/20' : ''
+                    task.id === taskId
+                      ? 'bg-primary-50 dark:bg-primary-900/20'
+                      : ''
                   }`}
                 >
                   <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">

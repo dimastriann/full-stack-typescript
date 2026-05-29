@@ -9,7 +9,12 @@ interface TimerState {
   projectName: string | null;
   startedAt: number | null; // epoch ms
   elapsedMs: number; // accumulated ms before latest start
-  start: (task: { id: number; title: string; projectId: number; projectName: string }) => void;
+  start: (task: {
+    id: number;
+    title: string;
+    projectId: number;
+    projectName: string;
+  }) => void;
   stop: () => void;
   pause: () => void;
   reset: () => void;
@@ -50,9 +55,10 @@ export const useTimerStore = create<TimerState>()(
 
       stop() {
         const { startedAt, elapsedMs, isRunning } = get();
-        const total = isRunning && startedAt
-          ? elapsedMs + (Date.now() - startedAt)
-          : elapsedMs;
+        const total =
+          isRunning && startedAt
+            ? elapsedMs + (Date.now() - startedAt)
+            : elapsedMs;
         set({
           isRunning: false,
           startedAt: null,

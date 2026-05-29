@@ -79,7 +79,8 @@ export default function CalendarPage() {
 
   // Convert tasks to FullCalendar events
   const events = (data?.tasks ?? []).map((task) => {
-    const color = task.stage?.color ?? PRIORITY_COLORS[task.priority] ?? '#6366f1';
+    const color =
+      task.stage?.color ?? PRIORITY_COLORS[task.priority] ?? '#6366f1';
     const start = task.startDate ?? task.dueDate;
     const end = task.dueDate;
 
@@ -220,7 +221,12 @@ export default function CalendarPage() {
 
         <FullCalendar
           ref={calendarRef}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+          plugins={[
+            dayGridPlugin,
+            timeGridPlugin,
+            interactionPlugin,
+            listPlugin,
+          ]}
           initialView={currentView}
           headerToolbar={false}
           events={events}

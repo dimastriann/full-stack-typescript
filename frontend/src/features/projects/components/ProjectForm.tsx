@@ -70,6 +70,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     loading: mutationLoading,
   } = useProjects();
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [hasResetInitial, setHasResetInitial] = useState(false);
 
   const userId = currentUser?.id?.toString();
   const users = useMemo(() => usersData?.users ?? [], [usersData]);
@@ -111,13 +112,14 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
           currency: project.currency,
         });
       }
-    } else if (!isEditMode && userId && users.length) {
+    } else if (!isEditMode && userId && users.length && !hasResetInitial) {
       reset({
         ...defaultValues,
         responsibleId: userId,
       });
+      setHasResetInitial(true);
     }
-  }, [projects, projectId, isEditMode, reset, userId, users]);
+  }, [projects, projectId, isEditMode, reset, userId, users, hasResetInitial]);
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -129,7 +131,9 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       } as Record<string, unknown>;
 
       if (projectFormData.responsibleId) {
-        projectFormData.responsibleId = parseInt(String(projectFormData.responsibleId));
+        projectFormData.responsibleId = parseInt(
+          String(projectFormData.responsibleId),
+        );
       }
       if (projectFormData.stageId) {
         projectFormData.stageId = parseInt(String(projectFormData.stageId));
@@ -143,7 +147,9 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
         );
       }
       if (projectFormData.phasesCount) {
-        projectFormData.phasesCount = parseInt(String(projectFormData.phasesCount));
+        projectFormData.phasesCount = parseInt(
+          String(projectFormData.phasesCount),
+        );
       }
       if (!projectFormData.startDate) delete projectFormData.startDate;
       if (!projectFormData.endDate) delete projectFormData.endDate;
@@ -247,6 +253,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="methodology"
                   value={field.value}
                   onChange={field.onChange}
                   options={Object.values(ProjectMethodology).map((m) => ({
@@ -352,6 +359,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="stageId"
                   value={field.value}
                   onChange={field.onChange}
                   options={stages.map((stage: ProjectStage) => ({
@@ -374,6 +382,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               rules={{ required: 'Responsible person is required' }}
               render={({ field }) => (
                 <Select
+                  id="responsibleId"
                   value={field.value}
                   onChange={field.onChange}
                   options={users.map((u: UserType) => ({
@@ -403,6 +412,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="visibility"
                   value={field.value}
                   onChange={field.onChange}
                   options={Object.values(ProjectVisibility).map((v) => ({
@@ -423,6 +433,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
+                  id="priority"
                   value={field.value}
                   onChange={field.onChange}
                   options={Object.values(ProjectPriority).map((p) => ({

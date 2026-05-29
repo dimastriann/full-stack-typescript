@@ -50,6 +50,7 @@ export default function TimesheetForm({
     loading: mutationLoading,
   } = useTimesheets();
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [hasResetInitial, setHasResetInitial] = useState(false);
 
   const timesheet = data?.getTimesheet;
   const projects: ProjectType[] = projectsData?.projects;
@@ -102,12 +103,13 @@ export default function TimesheetForm({
         billable: timesheet.billable,
         hourlyRate: timesheet.hourlyRate || 0,
       });
-    } else if (!isEditMode && userId && users) {
+    } else if (!isEditMode && userId && users && !hasResetInitial) {
       reset({
         userId: userId.toString(),
       });
+      setHasResetInitial(true);
     }
-  }, [timesheet, isEditMode, reset, userId, users, tasks]);
+  }, [timesheet, isEditMode, reset, userId, users, tasks, hasResetInitial]);
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -335,6 +337,7 @@ export default function TimesheetForm({
               rules={{ required: 'User is required' }}
               render={({ field }) => (
                 <Select
+                  id="userId_ts"
                   value={field.value}
                   onChange={field.onChange}
                   options={
@@ -365,6 +368,7 @@ export default function TimesheetForm({
               rules={{ required: 'Project is required' }}
               render={({ field }) => (
                 <Select
+                  id="projectId_ts"
                   value={field.value}
                   onChange={field.onChange}
                   options={
@@ -395,6 +399,7 @@ export default function TimesheetForm({
               rules={{ required: 'Task is required' }}
               render={({ field }) => (
                 <Select
+                  id="taskId_ts"
                   value={field.value}
                   onChange={field.onChange}
                   options={

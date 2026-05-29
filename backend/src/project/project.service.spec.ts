@@ -16,6 +16,7 @@ const mockPrisma = {
     create: jest.fn().mockResolvedValue(mockProject),
     findMany: jest.fn().mockResolvedValue([mockProject]),
     findUnique: jest.fn().mockResolvedValue(mockProject),
+    findFirst: jest.fn().mockResolvedValue(mockProject),
     update: jest.fn().mockResolvedValue(mockProject),
     delete: jest.fn().mockResolvedValue(mockProject),
   },

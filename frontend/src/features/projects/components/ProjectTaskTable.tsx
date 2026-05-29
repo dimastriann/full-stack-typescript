@@ -222,10 +222,12 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                       setEditForm({ ...editForm, userId: Number(val) })
                     }
                     options={
-                      (usersData?.users as UserType[] | undefined)?.map((u) => ({
-                        id: u.id?.toString() || '',
-                        label: u.name,
-                      })) || []
+                      (usersData?.users as UserType[] | undefined)?.map(
+                        (u) => ({
+                          id: u.id?.toString() || '',
+                          label: u.name,
+                        }),
+                      ) || []
                     }
                     placeholder="Select User"
                     className="w-36"
@@ -339,10 +341,12 @@ export default function ProjectTaskTable({ projectId }: ProjectTaskTableProps) {
                           setEditForm({ ...editForm, userId: Number(val) })
                         }
                         options={
-                          (usersData?.users as UserType[] | undefined)?.map((u) => ({
-                            id: u.id?.toString() || '',
-                            label: u.name,
-                          })) || []
+                          (usersData?.users as UserType[] | undefined)?.map(
+                            (u) => ({
+                              id: u.id?.toString() || '',
+                              label: u.name,
+                            }),
+                          ) || []
                         }
                         placeholder="Select User"
                         className="w-36"
