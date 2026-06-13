@@ -20,6 +20,7 @@ export type WorkspaceRole = (typeof WorkspaceRole)[keyof typeof WorkspaceRole]
 
 
 export const UserRole = {
+  SUPERADMIN: 'SUPERADMIN',
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
   USER: 'USER'
@@ -155,3 +156,33 @@ export const MessageType = {
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
+
+
+export const PlanLevel = {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  ENTERPRISE: 'ENTERPRISE',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type PlanLevel = (typeof PlanLevel)[keyof typeof PlanLevel]
+
+
+export const SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  TRIAL: 'TRIAL',
+  PAST_DUE: 'PAST_DUE',
+  CANCELED: 'CANCELED',
+  PAUSED: 'PAUSED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
+
+
+export const PaymentProvider = {
+  STRIPE: 'STRIPE',
+  XENDIT: 'XENDIT',
+  MIDTRANS: 'MIDTRANS'
+} as const
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]

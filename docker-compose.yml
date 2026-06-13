@@ -14,19 +14,42 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7.2-alpine
+    restart: always
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   backend:
     build:
       context: ./backend
     restart: always
     environment:
       NODE_ENV: production
-      # Connect to the postgres service using variables
       DATABASE_URL: postgresql://${POSTGRES_USER:-myuser}:${POSTGRES_PASSWORD:-mypassword}@postgres:5432/${POSTGRES_DB:-mydatabase}
       PORT: 3000
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-mysecretkey}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      # Redis session store
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      # Superadmin seed (only used during prisma db seed)
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL:-superadmin@app.com}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-SuperAdmin@123!}
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   frontend:
@@ -40,3 +63,4 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:

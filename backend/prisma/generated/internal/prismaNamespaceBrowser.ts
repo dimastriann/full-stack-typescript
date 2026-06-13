@@ -64,7 +64,11 @@ export const ModelName = {
   ProjectMember: 'ProjectMember',
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
-  Message: 'Message'
+  Message: 'Message',
+  Subscription: 'Subscription',
+  PlanFeatureLimit: 'PlanFeatureLimit',
+  PaymentProviderConfig: 'PaymentProviderConfig',
+  PlatformAnalyticsSnapshot: 'PlatformAnalyticsSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -339,6 +343,64 @@ export const MessageScalarFieldEnum = {
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+export const SubscriptionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  planLevel: 'planLevel',
+  status: 'status',
+  provider: 'provider',
+  providerCustomerId: 'providerCustomerId',
+  providerSubscriptionId: 'providerSubscriptionId',
+  currentPeriodStart: 'currentPeriodStart',
+  currentPeriodEnd: 'currentPeriodEnd',
+  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
+  customLimits: 'customLimits',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const PlanFeatureLimitScalarFieldEnum = {
+  id: 'id',
+  planLevel: 'planLevel',
+  maxProjects: 'maxProjects',
+  maxMembers: 'maxMembers',
+  maxStorageGb: 'maxStorageGb',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlanFeatureLimitScalarFieldEnum = (typeof PlanFeatureLimitScalarFieldEnum)[keyof typeof PlanFeatureLimitScalarFieldEnum]
+
+
+export const PaymentProviderConfigScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  isActive: 'isActive',
+  isDefault: 'isDefault',
+  config: 'config',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentProviderConfigScalarFieldEnum = (typeof PaymentProviderConfigScalarFieldEnum)[keyof typeof PaymentProviderConfigScalarFieldEnum]
+
+
+export const PlatformAnalyticsSnapshotScalarFieldEnum = {
+  id: 'id',
+  totalUsers: 'totalUsers',
+  totalWorkspaces: 'totalWorkspaces',
+  activeProPlans: 'activeProPlans',
+  activeEntPlans: 'activeEntPlans',
+  mrr: 'mrr',
+  capturedAt: 'capturedAt'
+} as const
+
+export type PlatformAnalyticsSnapshotScalarFieldEnum = (typeof PlatformAnalyticsSnapshotScalarFieldEnum)[keyof typeof PlatformAnalyticsSnapshotScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -353,6 +415,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

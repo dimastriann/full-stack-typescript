@@ -281,6 +281,8 @@ type User {
 
 type LoginResponse {
   access_token: String!
+  refresh_token: String!
+  session_id: String!
   user: User!
 }
 
@@ -504,6 +506,7 @@ input CreateUserInput {
 }
 
 enum UserRole {
+  SUPERADMIN
   ADMIN
   MANAGER
   USER

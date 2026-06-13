@@ -26,6 +26,25 @@ async function bootstrap() {
     }),
   );
 
+  // ─── Raw body for webhook signature verification ─────────────────────────────
+  // Must be registered BEFORE json body parser (helmet/cookieParser run first).
+  // Only applies to /subscription/webhook/* routes so normal routes are unaffected.
+  app.use(
+    '/subscription/webhook',
+    (
+      req: Request & { rawBody?: Buffer },
+      _res: Response,
+      next: NextFunction,
+    ) => {
+      const chunks: Buffer[] = [];
+      req.on('data', (chunk: Buffer) => chunks.push(chunk));
+      req.on('end', () => {
+        req.rawBody = Buffer.concat(chunks);
+        next();
+      });
+    },
+  );
+
   app.use(cookieParser());
   // Support comma-separated URLs in FRONTEND_URL and normalize trailing slashes
   const rawFrontendUrls = process.env.FRONTEND_URL

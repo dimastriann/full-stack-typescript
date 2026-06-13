@@ -50,6 +50,7 @@ model Workspace {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   conversations Conversation[]
+  subscription  Subscription?
 }
 
 model WorkspaceMember {
@@ -254,6 +255,7 @@ model Comment {
 }
 
 enum UserRole {
+  SUPERADMIN
   ADMIN
   MANAGER
   USER
@@ -431,4 +433,96 @@ enum MessageType {
   DOCUMENT
   LOCATION
   STICKER
+}
+
+// ─────────────────────────────────────────────
+// Subscription & Billing
+// ─────────────────────────────────────────────
+
+enum PlanLevel {
+  FREE
+  PRO
+  ENTERPRISE
+  CUSTOM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIAL
+  PAST_DUE
+  CANCELED
+  PAUSED
+}
+
+enum PaymentProvider {
+  STRIPE
+  XENDIT
+  MIDTRANS
+}
+
+/// Subscription is tied to the Workspace (B2B model — the team pays, not the individual).
+model Subscription {
+  id          Int                @id @default(autoincrement())
+  workspaceId Int                @unique
+  workspace   Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  planLevel  PlanLevel          @default(FREE)
+  status     SubscriptionStatus @default(ACTIVE)
+
+  /// Which payment provider processed this subscription
+  provider               PaymentProvider?
+  /// Provider-specific customer ID (e.g. Stripe customer_id)
+  providerCustomerId     String?
+  /// Provider-specific subscription ID (e.g. Stripe subscription_id)
+  providerSubscriptionId String?
+
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  /// If true, subscription will not auto-renew at period end
+  cancelAtPeriodEnd  Boolean @default(false)
+
+  /// JSON override for CUSTOM plan limits: { maxProjects, maxMembers, maxStorageGb }
+  customLimits Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+/// Stores the feature limits for each plan tier.
+/// Seeded on first install and can be updated by Superadmin.
+model PlanFeatureLimit {
+  id           Int       @id @default(autoincrement())
+  planLevel    PlanLevel @unique
+  maxProjects  Int       /// -1 means unlimited
+  maxMembers   Int       /// -1 means unlimited
+  maxStorageGb Float     /// -1 means unlimited
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+/// Encrypted payment provider API credentials, configurable by Superadmin.
+model PaymentProviderConfig {
+  id        Int             @id @default(autoincrement())
+  provider  PaymentProvider @unique
+  isActive  Boolean         @default(false)
+  isDefault Boolean         @default(false)
+  /// Stores provider-specific keys as encrypted JSON
+  config    Json
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+/// Pre-calculated analytics snapshot refreshed by a cron job every 6 hours.
+/// Dashboard reads from this cache, not from live aggregation queries.
+model PlatformAnalyticsSnapshot {
+  id              Int      @id @default(autoincrement())
+  totalUsers      Int      @default(0)
+  totalWorkspaces Int      @default(0)
+  activeProPlans  Int      @default(0)
+  activeEntPlans  Int      @default(0)
+  /// Monthly Recurring Revenue in USD
+  mrr             Decimal  @default(0) @db.Decimal(12, 2)
+  capturedAt      DateTime @default(now())
 }

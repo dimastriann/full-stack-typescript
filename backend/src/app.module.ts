@@ -28,6 +28,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { depthLimitRule } from './common/validation/depth-limit.validation';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { depthLimitRule } from './common/validation/depth-limit.validation';
     TaskStageModule,
     ChatModule,
     HealthModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [

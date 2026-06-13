@@ -32,6 +32,28 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   FRONTEND_URL?: string;
+
+  // Redis
+  @IsString()
+  @IsOptional()
+  REDIS_HOST?: string;
+
+  @IsNumber()
+  @IsOptional()
+  REDIS_PORT?: number;
+
+  @IsString()
+  @IsOptional()
+  REDIS_PASSWORD?: string;
+
+  // Superadmin (optional — seed uses defaults if not set)
+  @IsString()
+  @IsOptional()
+  SUPERADMIN_EMAIL?: string;
+
+  @IsString()
+  @IsOptional()
+  SUPERADMIN_PASSWORD?: string;
 }
 
 export function validate(config: Record<string, any>) {

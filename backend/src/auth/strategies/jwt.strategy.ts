@@ -2,16 +2,16 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
-
 import { ConfigService } from '@nestjs/config';
-
+import { AuthService, JwtPayload } from '../auth.service';
 import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private userService: UserService,
-    private configService: ConfigService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+    configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -28,11 +28,24 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { sub: number; username: string }) {
-    const user = await this.userService.findOne(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException();
+  async validate(payload: JwtPayload) {
+    const { sub: userId, sessionId } = payload;
+
+    // Two-factor validation: valid JWT *and* active Redis session
+    const sessionValid = await this.authService.validateSession(
+      userId,
+      sessionId,
+    );
+    if (!sessionValid) {
+      throw new UnauthorizedException('Session has been revoked or expired');
     }
-    return user;
+
+    const user = await this.userService.findOne(userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // Attach sessionId to user object so controllers/logout can use it
+    return { ...user, sessionId };
   }
 }

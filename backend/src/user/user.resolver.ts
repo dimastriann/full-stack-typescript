@@ -75,16 +75,32 @@ export class UserResolver {
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
-    const loginResponse = this.authService.login(user);
+    const { accessToken, refreshToken, sessionId } =
+      await this.authService.login(user);
 
-    context.res.cookie('access_token', loginResponse.access_token, {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    context.res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'lax',
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    return loginResponse;
+    context.res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/auth/refresh', // Only sent to the refresh endpoint
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      session_id: sessionId,
+      user,
+    };
   }
 
   @Mutation(() => LoginResponse)
@@ -102,21 +118,46 @@ export class UserResolver {
     if (!user) {
       throw new Error('Registration failed');
     }
-    const loginResponse = this.authService.login(user);
+    const { accessToken, refreshToken, sessionId } =
+      await this.authService.login(user);
 
-    context.res.cookie('access_token', loginResponse.access_token, {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    context.res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'lax',
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    return loginResponse;
+    context.res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      session_id: sessionId,
+      user,
+    };
   }
 
   @Mutation(() => Boolean)
-  logout(@Context() context: GqlContext) {
+  @UseGuards(GqlAuthGuard)
+  async logout(@Context() context: GqlContext) {
+    const user = context.req.user as unknown as {
+      id: number;
+      sessionId: string;
+    };
+    if (user?.id && user?.sessionId) {
+      await this.authService.logout(user.id, user.sessionId);
+    }
     context.res.clearCookie('access_token');
+    context.res.clearCookie('refresh_token', { path: '/auth/refresh' });
     return true;
   }
 }

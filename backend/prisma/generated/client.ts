@@ -107,3 +107,25 @@ export type ConversationParticipant = Prisma.ConversationParticipantModel
  * 
  */
 export type Message = Prisma.MessageModel
+/**
+ * Model Subscription
+ * Subscription is tied to the Workspace (B2B model — the team pays, not the individual).
+ */
+export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model PlanFeatureLimit
+ * Stores the feature limits for each plan tier.
+ * Seeded on first install and can be updated by Superadmin.
+ */
+export type PlanFeatureLimit = Prisma.PlanFeatureLimitModel
+/**
+ * Model PaymentProviderConfig
+ * Encrypted payment provider API credentials, configurable by Superadmin.
+ */
+export type PaymentProviderConfig = Prisma.PaymentProviderConfigModel
+/**
+ * Model PlatformAnalyticsSnapshot
+ * Pre-calculated analytics snapshot refreshed by a cron job every 6 hours.
+ * Dashboard reads from this cache, not from live aggregation queries.
+ */
+export type PlatformAnalyticsSnapshot = Prisma.PlatformAnalyticsSnapshotModel
