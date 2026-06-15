@@ -11,6 +11,8 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { IsEnum, IsObject, IsBoolean, IsInt, Min } from 'class-validator';
 import { SuperadminService } from './superadmin.service';
@@ -72,6 +74,7 @@ class UpdatePlanLimitsBody {
  */
 @Controller('superadmin')
 @UseGuards(JwtAuthRestGuard, RolesGuard)
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
 @Roles(UserRole.SUPERADMIN)
 export class SuperadminController {
   constructor(private readonly superadminService: SuperadminService) {}

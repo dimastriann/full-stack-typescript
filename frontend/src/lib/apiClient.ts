@@ -33,8 +33,14 @@ export async function apiClient(
 
   let response = await fetch(url, fetchOptions);
 
+  // Skip token refresh logic if we are hitting auth endpoints directly
+  const isAuthRoute =
+    url.includes('/auth/login') ||
+    url.includes('/auth/register') ||
+    url.includes('/auth/refresh');
+
   // If unauthorized, attempt token refresh and retry
-  if (response.status === 401) {
+  if (response.status === 401 && !isAuthRoute) {
     const refreshed = await refreshSession();
     if (refreshed) {
       // Retry original request

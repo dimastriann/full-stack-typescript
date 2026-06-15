@@ -92,13 +92,9 @@ async function bootstrap() {
     credentials: true,
   });
   // Enable the global validation pipe
-  // - whitelist: strip properties not decorated with class-validator decorators
-  // - forbidNonWhitelisted: throw 400 if unknown properties are sent
   // - transform: auto-coerce plain objects to DTO class instances
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
       transform: true,
     }),
   );

@@ -35,13 +35,19 @@ export async function refreshSession(): Promise<boolean> {
         }
       }
 
-      // If refresh failed, clear local auth and redirect to login page
+      // If refresh failed, clear local auth and redirect to login page if needed
       useAuthStore.getState().clearAuth();
-      window.location.href = '/login';
+      const currentPath = window.location.pathname;
+      if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+        window.location.href = '/login';
+      }
       return false;
     } catch {
       useAuthStore.getState().clearAuth();
-      window.location.href = '/login';
+      const currentPath = window.location.pathname;
+      if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+        window.location.href = '/login';
+      }
       return false;
     } finally {
       isRefreshing = false;
