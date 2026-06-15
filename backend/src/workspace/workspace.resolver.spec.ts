@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceService } from './workspace.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 describe('WorkspaceResolver', () => {
   let resolver: WorkspaceResolver;
@@ -19,6 +20,7 @@ describe('WorkspaceResolver', () => {
       providers: [
         WorkspaceResolver,
         { provide: WorkspaceService, useValue: mockService },
+        { provide: SubscriptionService, useValue: {} },
       ],
     }).compile();
 

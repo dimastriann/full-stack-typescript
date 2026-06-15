@@ -31,8 +31,10 @@ export type PlatformAnalyticsSnapshotAvgAggregateOutputType = {
   id: number | null
   totalUsers: number | null
   totalWorkspaces: number | null
-  activeProPlans: number | null
-  activeEntPlans: number | null
+  totalProjects: number | null
+  activeSubscriptions: number | null
+  newUsersToday: number | null
+  newWorkspacesToday: number | null
   mrr: runtime.Decimal | null
 }
 
@@ -40,39 +42,48 @@ export type PlatformAnalyticsSnapshotSumAggregateOutputType = {
   id: number | null
   totalUsers: number | null
   totalWorkspaces: number | null
-  activeProPlans: number | null
-  activeEntPlans: number | null
+  totalProjects: number | null
+  activeSubscriptions: number | null
+  newUsersToday: number | null
+  newWorkspacesToday: number | null
   mrr: runtime.Decimal | null
 }
 
 export type PlatformAnalyticsSnapshotMinAggregateOutputType = {
   id: number | null
+  snapshotDate: Date | null
   totalUsers: number | null
   totalWorkspaces: number | null
-  activeProPlans: number | null
-  activeEntPlans: number | null
+  totalProjects: number | null
+  activeSubscriptions: number | null
+  newUsersToday: number | null
+  newWorkspacesToday: number | null
   mrr: runtime.Decimal | null
-  capturedAt: Date | null
 }
 
 export type PlatformAnalyticsSnapshotMaxAggregateOutputType = {
   id: number | null
+  snapshotDate: Date | null
   totalUsers: number | null
   totalWorkspaces: number | null
-  activeProPlans: number | null
-  activeEntPlans: number | null
+  totalProjects: number | null
+  activeSubscriptions: number | null
+  newUsersToday: number | null
+  newWorkspacesToday: number | null
   mrr: runtime.Decimal | null
-  capturedAt: Date | null
 }
 
 export type PlatformAnalyticsSnapshotCountAggregateOutputType = {
   id: number
+  snapshotDate: number
   totalUsers: number
   totalWorkspaces: number
-  activeProPlans: number
-  activeEntPlans: number
+  totalProjects: number
+  activeSubscriptions: number
+  planBreakdown: number
+  newUsersToday: number
+  newWorkspacesToday: number
   mrr: number
-  capturedAt: number
   _all: number
 }
 
@@ -81,8 +92,10 @@ export type PlatformAnalyticsSnapshotAvgAggregateInputType = {
   id?: true
   totalUsers?: true
   totalWorkspaces?: true
-  activeProPlans?: true
-  activeEntPlans?: true
+  totalProjects?: true
+  activeSubscriptions?: true
+  newUsersToday?: true
+  newWorkspacesToday?: true
   mrr?: true
 }
 
@@ -90,39 +103,48 @@ export type PlatformAnalyticsSnapshotSumAggregateInputType = {
   id?: true
   totalUsers?: true
   totalWorkspaces?: true
-  activeProPlans?: true
-  activeEntPlans?: true
+  totalProjects?: true
+  activeSubscriptions?: true
+  newUsersToday?: true
+  newWorkspacesToday?: true
   mrr?: true
 }
 
 export type PlatformAnalyticsSnapshotMinAggregateInputType = {
   id?: true
+  snapshotDate?: true
   totalUsers?: true
   totalWorkspaces?: true
-  activeProPlans?: true
-  activeEntPlans?: true
+  totalProjects?: true
+  activeSubscriptions?: true
+  newUsersToday?: true
+  newWorkspacesToday?: true
   mrr?: true
-  capturedAt?: true
 }
 
 export type PlatformAnalyticsSnapshotMaxAggregateInputType = {
   id?: true
+  snapshotDate?: true
   totalUsers?: true
   totalWorkspaces?: true
-  activeProPlans?: true
-  activeEntPlans?: true
+  totalProjects?: true
+  activeSubscriptions?: true
+  newUsersToday?: true
+  newWorkspacesToday?: true
   mrr?: true
-  capturedAt?: true
 }
 
 export type PlatformAnalyticsSnapshotCountAggregateInputType = {
   id?: true
+  snapshotDate?: true
   totalUsers?: true
   totalWorkspaces?: true
-  activeProPlans?: true
-  activeEntPlans?: true
+  totalProjects?: true
+  activeSubscriptions?: true
+  planBreakdown?: true
+  newUsersToday?: true
+  newWorkspacesToday?: true
   mrr?: true
-  capturedAt?: true
   _all?: true
 }
 
@@ -214,12 +236,15 @@ export type PlatformAnalyticsSnapshotGroupByArgs<ExtArgs extends runtime.Types.E
 
 export type PlatformAnalyticsSnapshotGroupByOutputType = {
   id: number
+  snapshotDate: Date
   totalUsers: number
   totalWorkspaces: number
-  activeProPlans: number
-  activeEntPlans: number
+  totalProjects: number
+  activeSubscriptions: number
+  planBreakdown: runtime.JsonValue
+  newUsersToday: number
+  newWorkspacesToday: number
   mrr: runtime.Decimal
-  capturedAt: Date
   _count: PlatformAnalyticsSnapshotCountAggregateOutputType | null
   _avg: PlatformAnalyticsSnapshotAvgAggregateOutputType | null
   _sum: PlatformAnalyticsSnapshotSumAggregateOutputType | null
@@ -247,22 +272,28 @@ export type PlatformAnalyticsSnapshotWhereInput = {
   OR?: Prisma.PlatformAnalyticsSnapshotWhereInput[]
   NOT?: Prisma.PlatformAnalyticsSnapshotWhereInput | Prisma.PlatformAnalyticsSnapshotWhereInput[]
   id?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  snapshotDate?: Prisma.DateTimeFilter<"PlatformAnalyticsSnapshot"> | Date | string
   totalUsers?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
   totalWorkspaces?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
-  activeProPlans?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
-  activeEntPlans?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  totalProjects?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  activeSubscriptions?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  planBreakdown?: Prisma.JsonFilter<"PlatformAnalyticsSnapshot">
+  newUsersToday?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  newWorkspacesToday?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
   mrr?: Prisma.DecimalFilter<"PlatformAnalyticsSnapshot"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeFilter<"PlatformAnalyticsSnapshot"> | Date | string
 }
 
 export type PlatformAnalyticsSnapshotOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  snapshotDate?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  planBreakdown?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
-  capturedAt?: Prisma.SortOrder
 }
 
 export type PlatformAnalyticsSnapshotWhereUniqueInput = Prisma.AtLeast<{
@@ -270,22 +301,28 @@ export type PlatformAnalyticsSnapshotWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PlatformAnalyticsSnapshotWhereInput | Prisma.PlatformAnalyticsSnapshotWhereInput[]
   OR?: Prisma.PlatformAnalyticsSnapshotWhereInput[]
   NOT?: Prisma.PlatformAnalyticsSnapshotWhereInput | Prisma.PlatformAnalyticsSnapshotWhereInput[]
+  snapshotDate?: Prisma.DateTimeFilter<"PlatformAnalyticsSnapshot"> | Date | string
   totalUsers?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
   totalWorkspaces?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
-  activeProPlans?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
-  activeEntPlans?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  totalProjects?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  activeSubscriptions?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  planBreakdown?: Prisma.JsonFilter<"PlatformAnalyticsSnapshot">
+  newUsersToday?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
+  newWorkspacesToday?: Prisma.IntFilter<"PlatformAnalyticsSnapshot"> | number
   mrr?: Prisma.DecimalFilter<"PlatformAnalyticsSnapshot"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeFilter<"PlatformAnalyticsSnapshot"> | Date | string
 }, "id">
 
 export type PlatformAnalyticsSnapshotOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  snapshotDate?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  planBreakdown?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
-  capturedAt?: Prisma.SortOrder
   _count?: Prisma.PlatformAnalyticsSnapshotCountOrderByAggregateInput
   _avg?: Prisma.PlatformAnalyticsSnapshotAvgOrderByAggregateInput
   _max?: Prisma.PlatformAnalyticsSnapshotMaxOrderByAggregateInput
@@ -298,126 +335,161 @@ export type PlatformAnalyticsSnapshotScalarWhereWithAggregatesInput = {
   OR?: Prisma.PlatformAnalyticsSnapshotScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PlatformAnalyticsSnapshotScalarWhereWithAggregatesInput | Prisma.PlatformAnalyticsSnapshotScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
+  snapshotDate?: Prisma.DateTimeWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | Date | string
   totalUsers?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
   totalWorkspaces?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
-  activeProPlans?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
-  activeEntPlans?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
+  totalProjects?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
+  activeSubscriptions?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
+  planBreakdown?: Prisma.JsonWithAggregatesFilter<"PlatformAnalyticsSnapshot">
+  newUsersToday?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
+  newWorkspacesToday?: Prisma.IntWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | number
   mrr?: Prisma.DecimalWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformAnalyticsSnapshot"> | Date | string
 }
 
 export type PlatformAnalyticsSnapshotCreateInput = {
+  snapshotDate?: Date | string
   totalUsers?: number
   totalWorkspaces?: number
-  activeProPlans?: number
-  activeEntPlans?: number
+  totalProjects?: number
+  activeSubscriptions?: number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: number
+  newWorkspacesToday?: number
   mrr?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Date | string
 }
 
 export type PlatformAnalyticsSnapshotUncheckedCreateInput = {
   id?: number
+  snapshotDate?: Date | string
   totalUsers?: number
   totalWorkspaces?: number
-  activeProPlans?: number
-  activeEntPlans?: number
+  totalProjects?: number
+  activeSubscriptions?: number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: number
+  newWorkspacesToday?: number
   mrr?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Date | string
 }
 
 export type PlatformAnalyticsSnapshotUpdateInput = {
+  snapshotDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalUsers?: Prisma.IntFieldUpdateOperationsInput | number
   totalWorkspaces?: Prisma.IntFieldUpdateOperationsInput | number
-  activeProPlans?: Prisma.IntFieldUpdateOperationsInput | number
-  activeEntPlans?: Prisma.IntFieldUpdateOperationsInput | number
+  totalProjects?: Prisma.IntFieldUpdateOperationsInput | number
+  activeSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: Prisma.IntFieldUpdateOperationsInput | number
+  newWorkspacesToday?: Prisma.IntFieldUpdateOperationsInput | number
   mrr?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PlatformAnalyticsSnapshotUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  snapshotDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalUsers?: Prisma.IntFieldUpdateOperationsInput | number
   totalWorkspaces?: Prisma.IntFieldUpdateOperationsInput | number
-  activeProPlans?: Prisma.IntFieldUpdateOperationsInput | number
-  activeEntPlans?: Prisma.IntFieldUpdateOperationsInput | number
+  totalProjects?: Prisma.IntFieldUpdateOperationsInput | number
+  activeSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: Prisma.IntFieldUpdateOperationsInput | number
+  newWorkspacesToday?: Prisma.IntFieldUpdateOperationsInput | number
   mrr?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PlatformAnalyticsSnapshotCreateManyInput = {
   id?: number
+  snapshotDate?: Date | string
   totalUsers?: number
   totalWorkspaces?: number
-  activeProPlans?: number
-  activeEntPlans?: number
+  totalProjects?: number
+  activeSubscriptions?: number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: number
+  newWorkspacesToday?: number
   mrr?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Date | string
 }
 
 export type PlatformAnalyticsSnapshotUpdateManyMutationInput = {
+  snapshotDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalUsers?: Prisma.IntFieldUpdateOperationsInput | number
   totalWorkspaces?: Prisma.IntFieldUpdateOperationsInput | number
-  activeProPlans?: Prisma.IntFieldUpdateOperationsInput | number
-  activeEntPlans?: Prisma.IntFieldUpdateOperationsInput | number
+  totalProjects?: Prisma.IntFieldUpdateOperationsInput | number
+  activeSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: Prisma.IntFieldUpdateOperationsInput | number
+  newWorkspacesToday?: Prisma.IntFieldUpdateOperationsInput | number
   mrr?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PlatformAnalyticsSnapshotUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  snapshotDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalUsers?: Prisma.IntFieldUpdateOperationsInput | number
   totalWorkspaces?: Prisma.IntFieldUpdateOperationsInput | number
-  activeProPlans?: Prisma.IntFieldUpdateOperationsInput | number
-  activeEntPlans?: Prisma.IntFieldUpdateOperationsInput | number
+  totalProjects?: Prisma.IntFieldUpdateOperationsInput | number
+  activeSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
+  planBreakdown?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  newUsersToday?: Prisma.IntFieldUpdateOperationsInput | number
+  newWorkspacesToday?: Prisma.IntFieldUpdateOperationsInput | number
   mrr?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  capturedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PlatformAnalyticsSnapshotCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  snapshotDate?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  planBreakdown?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
-  capturedAt?: Prisma.SortOrder
 }
 
 export type PlatformAnalyticsSnapshotAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
 }
 
 export type PlatformAnalyticsSnapshotMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  snapshotDate?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
-  capturedAt?: Prisma.SortOrder
 }
 
 export type PlatformAnalyticsSnapshotMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  snapshotDate?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
-  capturedAt?: Prisma.SortOrder
 }
 
 export type PlatformAnalyticsSnapshotSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   totalUsers?: Prisma.SortOrder
   totalWorkspaces?: Prisma.SortOrder
-  activeProPlans?: Prisma.SortOrder
-  activeEntPlans?: Prisma.SortOrder
+  totalProjects?: Prisma.SortOrder
+  activeSubscriptions?: Prisma.SortOrder
+  newUsersToday?: Prisma.SortOrder
+  newWorkspacesToday?: Prisma.SortOrder
   mrr?: Prisma.SortOrder
 }
 
@@ -433,60 +505,87 @@ export type DecimalFieldUpdateOperationsInput = {
 
 export type PlatformAnalyticsSnapshotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  snapshotDate?: boolean
   totalUsers?: boolean
   totalWorkspaces?: boolean
-  activeProPlans?: boolean
-  activeEntPlans?: boolean
+  totalProjects?: boolean
+  activeSubscriptions?: boolean
+  planBreakdown?: boolean
+  newUsersToday?: boolean
+  newWorkspacesToday?: boolean
   mrr?: boolean
-  capturedAt?: boolean
 }, ExtArgs["result"]["platformAnalyticsSnapshot"]>
 
 export type PlatformAnalyticsSnapshotSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  snapshotDate?: boolean
   totalUsers?: boolean
   totalWorkspaces?: boolean
-  activeProPlans?: boolean
-  activeEntPlans?: boolean
+  totalProjects?: boolean
+  activeSubscriptions?: boolean
+  planBreakdown?: boolean
+  newUsersToday?: boolean
+  newWorkspacesToday?: boolean
   mrr?: boolean
-  capturedAt?: boolean
 }, ExtArgs["result"]["platformAnalyticsSnapshot"]>
 
 export type PlatformAnalyticsSnapshotSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  snapshotDate?: boolean
   totalUsers?: boolean
   totalWorkspaces?: boolean
-  activeProPlans?: boolean
-  activeEntPlans?: boolean
+  totalProjects?: boolean
+  activeSubscriptions?: boolean
+  planBreakdown?: boolean
+  newUsersToday?: boolean
+  newWorkspacesToday?: boolean
   mrr?: boolean
-  capturedAt?: boolean
 }, ExtArgs["result"]["platformAnalyticsSnapshot"]>
 
 export type PlatformAnalyticsSnapshotSelectScalar = {
   id?: boolean
+  snapshotDate?: boolean
   totalUsers?: boolean
   totalWorkspaces?: boolean
-  activeProPlans?: boolean
-  activeEntPlans?: boolean
+  totalProjects?: boolean
+  activeSubscriptions?: boolean
+  planBreakdown?: boolean
+  newUsersToday?: boolean
+  newWorkspacesToday?: boolean
   mrr?: boolean
-  capturedAt?: boolean
 }
 
-export type PlatformAnalyticsSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "totalUsers" | "totalWorkspaces" | "activeProPlans" | "activeEntPlans" | "mrr" | "capturedAt", ExtArgs["result"]["platformAnalyticsSnapshot"]>
+export type PlatformAnalyticsSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "snapshotDate" | "totalUsers" | "totalWorkspaces" | "totalProjects" | "activeSubscriptions" | "planBreakdown" | "newUsersToday" | "newWorkspacesToday" | "mrr", ExtArgs["result"]["platformAnalyticsSnapshot"]>
 
 export type $PlatformAnalyticsSnapshotPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PlatformAnalyticsSnapshot"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    snapshotDate: Date
     totalUsers: number
     totalWorkspaces: number
-    activeProPlans: number
-    activeEntPlans: number
+    totalProjects: number
     /**
-     * Monthly Recurring Revenue in USD
+     * Count of active non-free paid subscriptions
+     */
+    activeSubscriptions: number
+    /**
+     * JSON breakdown by plan: { FREE: 120, PRO: 45, ENTERPRISE: 3 }
+     */
+    planBreakdown: runtime.JsonValue
+    /**
+     * New users registered since midnight on snapshot day
+     */
+    newUsersToday: number
+    /**
+     * New workspaces created since midnight on snapshot day
+     */
+    newWorkspacesToday: number
+    /**
+     * Monthly Recurring Revenue in USD (calculated separately)
      */
     mrr: runtime.Decimal
-    capturedAt: Date
   }, ExtArgs["result"]["platformAnalyticsSnapshot"]>
   composites: {}
 }
@@ -911,12 +1010,15 @@ export interface Prisma__PlatformAnalyticsSnapshotClient<T, Null = never, ExtArg
  */
 export interface PlatformAnalyticsSnapshotFieldRefs {
   readonly id: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
+  readonly snapshotDate: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'DateTime'>
   readonly totalUsers: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
   readonly totalWorkspaces: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
-  readonly activeProPlans: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
-  readonly activeEntPlans: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
+  readonly totalProjects: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
+  readonly activeSubscriptions: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
+  readonly planBreakdown: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Json'>
+  readonly newUsersToday: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
+  readonly newWorkspacesToday: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Int'>
   readonly mrr: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'Decimal'>
-  readonly capturedAt: Prisma.FieldRef<"PlatformAnalyticsSnapshot", 'DateTime'>
 }
     
 

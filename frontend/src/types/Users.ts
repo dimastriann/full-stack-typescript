@@ -1,6 +1,7 @@
 import type { WorkspaceMember } from './Workspaces';
 
 export enum UserRole {
+  SUPERADMIN = 'SUPERADMIN',
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
   USER = 'USER',

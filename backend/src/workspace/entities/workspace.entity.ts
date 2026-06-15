@@ -1,13 +1,14 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { WorkspaceMember } from './workspace-member.entity';
 import { Project } from 'src/project/entities/project.entity';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
 
 @ObjectType()
 export class Workspace {
   @Field(() => Int)
   id: number;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
   @Field(() => String, { nullable: true })
@@ -18,6 +19,9 @@ export class Workspace {
 
   @Field(() => [Project], { nullable: 'items' })
   projects?: Project[];
+
+  @Field(() => Subscription, { nullable: true })
+  subscription?: Subscription | null;
 
   @Field()
   createdAt: Date;

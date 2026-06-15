@@ -23,9 +23,20 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const ctx = GqlExecutionContext.create(context);
-    const gqlCtx = ctx.getContext<{ req: { user?: { role: UserRole } } }>();
-    const user = gqlCtx.req?.user;
+    let user: { role: UserRole } | undefined;
+
+    if (context.getType<string>() === 'graphql') {
+      // GraphQL context
+      const ctx = GqlExecutionContext.create(context);
+      const gqlCtx = ctx.getContext<{ req: { user?: { role: UserRole } } }>();
+      user = gqlCtx.req?.user;
+    } else {
+      // REST / HTTP context
+      const request = context
+        .switchToHttp()
+        .getRequest<{ user?: { role: UserRole } }>();
+      user = request.user;
+    }
 
     if (!user) {
       return false;
@@ -35,7 +46,7 @@ export class RolesGuard implements CanActivate {
 
     if (!hasRole) {
       throw new ForbiddenException(
-        `Access denied. You need one of the following roles: ${requiredRoles.join(', ')}`,
+        `Access denied. Required role(s): ${requiredRoles.join(', ')}`,
       );
     }
 

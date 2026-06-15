@@ -2095,12 +2095,15 @@ export type PaymentProviderConfigScalarFieldEnum = (typeof PaymentProviderConfig
 
 export const PlatformAnalyticsSnapshotScalarFieldEnum = {
   id: 'id',
+  snapshotDate: 'snapshotDate',
   totalUsers: 'totalUsers',
   totalWorkspaces: 'totalWorkspaces',
-  activeProPlans: 'activeProPlans',
-  activeEntPlans: 'activeEntPlans',
-  mrr: 'mrr',
-  capturedAt: 'capturedAt'
+  totalProjects: 'totalProjects',
+  activeSubscriptions: 'activeSubscriptions',
+  planBreakdown: 'planBreakdown',
+  newUsersToday: 'newUsersToday',
+  newWorkspacesToday: 'newWorkspacesToday',
+  mrr: 'mrr'
 } as const
 
 export type PlatformAnalyticsSnapshotScalarFieldEnum = (typeof PlatformAnalyticsSnapshotScalarFieldEnum)[keyof typeof PlatformAnalyticsSnapshotScalarFieldEnum]

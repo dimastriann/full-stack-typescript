@@ -14,9 +14,12 @@ import {
   PanelLeftOpen,
   CalendarDays,
   GanttChartIcon,
+  Sparkles,
+  ShieldAlert,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useLogout } from '../../hooks/useLogout';
+import { useWorkspaceStore } from '../../store/workspaceStore';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -33,9 +36,12 @@ export default function Sidebar({
   onClose,
   isCollapsed,
   onToggleCollapse,
-}: SidebarProps) {
+ }: SidebarProps) {
   const logout = useLogout();
   const user = useAuthStore((state) => state.user);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+  const planLevel = activeWorkspace?.subscription?.planLevel || 'FREE';
+  const isSuperadmin = user?.role === 'SUPERADMIN';
 
   return (
     <>
@@ -68,7 +74,14 @@ export default function Sidebar({
                 <h2 className="text-sm font-bold text-white tracking-tight">
                   ProjectFlow
                 </h2>
-                <p className="text-[10px] text-sidebar-text/60">Workspace</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <p className="text-[10px] text-sidebar-text/60 max-w-[100px] truncate">
+                    {activeWorkspace?.name || 'Workspace'}
+                  </p>
+                  <span className="text-[8px] px-1 py-0.2 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded font-bold uppercase tracking-wider">
+                    {planLevel}
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -184,6 +197,29 @@ export default function Sidebar({
             <Settings size={18} className="flex-shrink-0" />
             {!isCollapsed && <span>Workspace</span>}
           </NavLink>
+          <NavLink
+            to="/dashboard/pricing"
+            onClick={onClose}
+            className={navLinkClass}
+          >
+            <Sparkles size={18} className="flex-shrink-0 text-indigo-400" />
+            {!isCollapsed && <span>Upgrade Limits</span>}
+          </NavLink>
+
+          {/* PLATFORM SUPERADMIN */}
+          {isSuperadmin && (
+            <>
+              {!isCollapsed && <div className="nav-group-label text-amber-500">Platform Admin</div>}
+              <NavLink
+                to="/dashboard/superadmin"
+                onClick={onClose}
+                className={navLinkClass}
+              >
+                <ShieldAlert size={18} className="flex-shrink-0 text-amber-500" />
+                {!isCollapsed && <span className="text-amber-500 font-bold">Platform Panel</span>}
+              </NavLink>
+            </>
+          )}
         </nav>
 
         {/* ── Bottom: User + Collapse ── */}

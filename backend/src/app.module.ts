@@ -29,6 +29,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { depthLimitRule } from './common/validation/depth-limit.validation';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { SuperadminModule } from './superadmin/superadmin.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
     ChatModule,
     HealthModule,
     SubscriptionModule,
+    SuperadminModule,
   ],
   controllers: [AppController],
   providers: [

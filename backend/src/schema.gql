@@ -157,12 +157,38 @@ enum WorkspaceRole {
   VIEWER
 }
 
+type WorkspaceSubscription {
+  id: Int!
+  workspaceId: Int!
+  planLevel: PlanLevel!
+  status: SubscriptionStatus!
+  currentPeriodStart: String
+  currentPeriodEnd: String
+  cancelAtPeriodEnd: Boolean!
+}
+
+enum PlanLevel {
+  FREE
+  PRO
+  ENTERPRISE
+  CUSTOM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIAL
+  PAST_DUE
+  CANCELED
+  PAUSED
+}
+
 type Workspace {
   id: Int!
   name: String!
   description: String
   members: [WorkspaceMember]!
   projects: [Project]!
+  subscription: WorkspaceSubscription
   createdAt: DateTime!
   updatedAt: DateTime!
 }

@@ -18,6 +18,7 @@ export class WorkspaceService {
       projects: true,
       projectStages: true,
       taskStages: true,
+      subscription: true,
     };
   }
 

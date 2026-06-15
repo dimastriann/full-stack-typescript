@@ -11,6 +11,8 @@ import { WorkspaceMember } from './entities/workspace-member.entity';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { PlanLimitGuard } from 'src/subscription/guards/plan-limit.guard';
+import { PlanLimit } from 'src/subscription/decorators/plan-limit.decorator';
 
 @Resolver(() => Workspace)
 export class WorkspaceResolver {
@@ -63,7 +65,8 @@ export class WorkspaceResolver {
   }
 
   @Mutation(() => WorkspaceMember)
-  @UseGuards(GqlAuthGuard)
+  @PlanLimit('member')
+  @UseGuards(GqlAuthGuard, PlanLimitGuard)
   inviteToWorkspace(
     @Args('input') input: InviteToWorkspaceInput,
     @CurrentUser() user: User,

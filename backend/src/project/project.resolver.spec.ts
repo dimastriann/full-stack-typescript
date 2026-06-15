@@ -3,6 +3,7 @@ import { ProjectResolver } from './project.resolver';
 import { ProjectService } from './project.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 describe('ProjectResolver', () => {
   let resolver: ProjectResolver;
@@ -23,6 +24,7 @@ describe('ProjectResolver', () => {
         { provide: ProjectService, useValue: mockProjectService },
         { provide: PrismaService, useValue: {} },
         { provide: ProjectMemberService, useValue: {} },
+        { provide: SubscriptionService, useValue: {} },
       ],
     }).compile();
 

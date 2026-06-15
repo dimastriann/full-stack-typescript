@@ -1,3 +1,4 @@
+import { apiClient } from '../../../lib/apiClient';
 import { getAttachmentUrl } from '../../../config/api';
 import Logger from '../../../lib/logger';
 
@@ -9,9 +10,7 @@ interface AttachmentFile {
 export const useAttachments = () => {
   const handlePreviewFile = async (file: AttachmentFile) => {
     try {
-      const response = await fetch(getAttachmentUrl(file.id), {
-        credentials: 'include',
-      });
+      const response = await apiClient(getAttachmentUrl(file.id));
 
       if (!response.ok) throw new Error('Failed to fetch file');
 
@@ -26,9 +25,7 @@ export const useAttachments = () => {
 
   const handleDownloadFile = async (file: AttachmentFile) => {
     try {
-      const response = await fetch(getAttachmentUrl(file.id, true), {
-        credentials: 'include',
-      });
+      const response = await apiClient(getAttachmentUrl(file.id, true));
 
       if (!response.ok) throw new Error('Failed to fetch file');
 

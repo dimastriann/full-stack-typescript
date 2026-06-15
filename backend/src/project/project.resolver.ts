@@ -20,6 +20,8 @@ import { RequireProjectRole } from 'src/auth/decorators/require-project-role.dec
 import { ProjectRole } from 'prisma/generated/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/user/entities/user.entity';
+import { PlanLimitGuard } from 'src/subscription/guards/plan-limit.guard';
+import { PlanLimit } from 'src/subscription/decorators/plan-limit.decorator';
 
 @Resolver(() => Project)
 export class ProjectResolver {
@@ -29,10 +31,12 @@ export class ProjectResolver {
   ) {}
 
   /**
-   * Create a new project - user is automatically added as OWNER
+   * Create a new project - user is automatically added as OWNER.
+   * Enforces workspace project limit based on the active subscription plan.
    */
   @Mutation(() => Project)
-  @UseGuards(GqlAuthGuard)
+  @PlanLimit('project')
+  @UseGuards(GqlAuthGuard, PlanLimitGuard)
   createProject(
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
     @CurrentUser() user: User,

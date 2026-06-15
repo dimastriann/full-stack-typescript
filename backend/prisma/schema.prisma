@@ -517,12 +517,19 @@ model PaymentProviderConfig {
 /// Pre-calculated analytics snapshot refreshed by a cron job every 6 hours.
 /// Dashboard reads from this cache, not from live aggregation queries.
 model PlatformAnalyticsSnapshot {
-  id              Int      @id @default(autoincrement())
-  totalUsers      Int      @default(0)
-  totalWorkspaces Int      @default(0)
-  activeProPlans  Int      @default(0)
-  activeEntPlans  Int      @default(0)
-  /// Monthly Recurring Revenue in USD
-  mrr             Decimal  @default(0) @db.Decimal(12, 2)
-  capturedAt      DateTime @default(now())
+  id                   Int      @id @default(autoincrement())
+  snapshotDate         DateTime @default(now())
+  totalUsers           Int      @default(0)
+  totalWorkspaces      Int      @default(0)
+  totalProjects        Int      @default(0)
+  /// Count of active non-free paid subscriptions
+  activeSubscriptions  Int      @default(0)
+  /// JSON breakdown by plan: { FREE: 120, PRO: 45, ENTERPRISE: 3 }
+  planBreakdown        Json     @default("{}")
+  /// New users registered since midnight on snapshot day
+  newUsersToday        Int      @default(0)
+  /// New workspaces created since midnight on snapshot day
+  newWorkspacesToday   Int      @default(0)
+  /// Monthly Recurring Revenue in USD (calculated separately)
+  mrr                  Decimal  @default(0) @db.Decimal(12, 2)
 }

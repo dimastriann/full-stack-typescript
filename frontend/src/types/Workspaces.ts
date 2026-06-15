@@ -17,11 +17,19 @@ export type WorkspaceMember = {
   workspace?: Workspace;
 };
 
+export type Subscription = {
+  planLevel: 'FREE' | 'PRO' | 'ENTERPRISE' | 'CUSTOM';
+  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'UNPAID';
+  currentPeriodEnd?: string;
+  cancelAtPeriodEnd?: boolean;
+};
+
 export type Workspace = {
   id: number;
   name: string;
   description?: string;
   members?: WorkspaceMember[];
+  subscription?: Subscription;
   createdAt: string;
   updatedAt: string;
 };

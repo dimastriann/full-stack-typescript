@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceResolver } from './workspace.resolver';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { SubscriptionModule } from 'src/subscription/subscription.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, SubscriptionModule],
   providers: [WorkspaceResolver, WorkspaceService],
   exports: [WorkspaceService],
 })

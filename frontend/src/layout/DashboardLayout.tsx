@@ -20,6 +20,9 @@ import CalendarPage from '../features/calendar/pages/CalendarPage';
 import GanttPage from '../features/gantt/pages/GanttPage';
 import TimerWidget from '../components/dashboard/TimerWidget';
 import CommandPalette from '../components/CommandPalette';
+import PaywallModal from '../components/dashboard/PaywallModal';
+import PricingPage from '../pages/PricingPage';
+import SuperadminPanel from '../features/superadmin/pages/SuperadminPanel';
 import { Menu, Search } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { WorkspaceSwitcher } from '../components/WorkspaceSwitcher';
@@ -205,6 +208,22 @@ export default function DashboardLayout() {
                 </div>
               }
             />
+            <Route
+              path="pricing"
+              element={
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
+                  <PricingPage />
+                </div>
+              }
+            />
+            <Route
+              path="superadmin"
+              element={
+                <div className="flex-1 overflow-y-auto p-6 page-enter">
+                  <SuperadminPanel />
+                </div>
+              }
+            />
             <Route path="discuss" element={<DiscussPage />} />
             <Route
               path="calendar"
@@ -231,6 +250,9 @@ export default function DashboardLayout() {
         isOpen={isPaletteOpen}
         onClose={() => setIsPaletteOpen(false)}
       />
+
+      {/* ── Paywall Modal ── */}
+      <PaywallModal />
     </div>
   );
 }
