@@ -41,7 +41,10 @@ describe('StripeProvider', () => {
   describe('createCheckoutSession()', () => {
     it('creates a new Stripe customer when providerCustomerId is absent', async () => {
       mockCustomers.create.mockResolvedValue({ id: 'cus_123' });
-      mockCheckoutSessions.create.mockResolvedValue({ url: 'https://checkout.stripe.com/pay/cs_test', id: 'cs_001' });
+      mockCheckoutSessions.create.mockResolvedValue({
+        url: 'https://checkout.stripe.com/pay/cs_test',
+        id: 'cs_001',
+      });
 
       const provider = buildProvider();
       const result = await provider.createCheckoutSession({
@@ -55,13 +58,18 @@ describe('StripeProvider', () => {
       expect(mockCustomers.create).toHaveBeenCalledWith(
         expect.objectContaining({ email: 'user@test.com' }),
       );
-      expect(result.checkoutUrl).toBe('https://checkout.stripe.com/pay/cs_test');
+      expect(result.checkoutUrl).toBe(
+        'https://checkout.stripe.com/pay/cs_test',
+      );
       expect(result.providerSessionId).toBe('cs_001');
     });
 
     it('reuses existing customer ID when providerCustomerId is supplied', async () => {
       mockCustomers.create.mockResolvedValue({});
-      mockCheckoutSessions.create.mockResolvedValue({ url: 'https://checkout.stripe.com/pay/cs_002', id: 'cs_002' });
+      mockCheckoutSessions.create.mockResolvedValue({
+        url: 'https://checkout.stripe.com/pay/cs_002',
+        id: 'cs_002',
+      });
 
       const provider = buildProvider();
       await provider.createCheckoutSession({

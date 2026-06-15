@@ -74,7 +74,11 @@ describe('SubscriptionService', () => {
       const service = buildService();
       const limits = await service.getPlanLimits(99);
 
-      expect(limits).toEqual({ maxProjects: 5, maxMembers: 10, maxStorageGb: 2 });
+      expect(limits).toEqual({
+        maxProjects: 5,
+        maxMembers: 10,
+        maxStorageGb: 2,
+      });
     });
 
     it('uses customLimits JSON for a CUSTOM plan subscription', async () => {
@@ -210,7 +214,9 @@ describe('SubscriptionService', () => {
 
       expect(mockPrisma.subscription.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ status: SubscriptionStatus.CANCELED }),
+          data: expect.objectContaining({
+            status: SubscriptionStatus.CANCELED,
+          }),
         }),
       );
     });

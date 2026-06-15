@@ -21,9 +21,7 @@ const mockRedis = {
     return Promise.resolve('OK');
   }),
   get: jest.fn((key: string) => Promise.resolve(redisStore[key] ?? null)),
-  exists: jest.fn((key: string) =>
-    Promise.resolve(key in redisStore ? 1 : 0),
-  ),
+  exists: jest.fn((key: string) => Promise.resolve(key in redisStore ? 1 : 0)),
   del: jest.fn((...keys: string[]) => {
     for (const k of keys) delete redisStore[k];
     return Promise.resolve(keys.length);

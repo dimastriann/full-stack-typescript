@@ -68,7 +68,9 @@ export const ModelName = {
   Subscription: 'Subscription',
   PlanFeatureLimit: 'PlanFeatureLimit',
   PaymentProviderConfig: 'PaymentProviderConfig',
-  PlatformAnalyticsSnapshot: 'PlatformAnalyticsSnapshot'
+  PlatformAnalyticsSnapshot: 'PlatformAnalyticsSnapshot',
+  PushSubscription: 'PushSubscription',
+  AppSetting: 'AppSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,6 +404,30 @@ export const PlatformAnalyticsSnapshotScalarFieldEnum = {
 } as const
 
 export type PlatformAnalyticsSnapshotScalarFieldEnum = (typeof PlatformAnalyticsSnapshotScalarFieldEnum)[keyof typeof PlatformAnalyticsSnapshotScalarFieldEnum]
+
+
+export const PushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  auth: 'auth',
+  p256dh: 'p256dh',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const AppSettingScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AppSettingScalarFieldEnum = (typeof AppSettingScalarFieldEnum)[keyof typeof AppSettingScalarFieldEnum]
 
 
 export const SortOrder = {

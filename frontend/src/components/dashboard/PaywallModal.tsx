@@ -44,7 +44,12 @@ export default function PaywallModal() {
   const details = getLimitDetails();
 
   return (
-    <Modal isOpen={isOpen} onClose={closePaywall} title={details.title} maxWidth="sm:max-w-md">
+    <Modal
+      isOpen={isOpen}
+      onClose={closePaywall}
+      title={details.title}
+      maxWidth="sm:max-w-md"
+    >
       <div className="text-center py-4">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 mb-6 animate-pulse">
           <Zap className="h-8 w-8" />
@@ -62,7 +67,7 @@ export default function PaywallModal() {
             <Sparkles className="w-4 h-4" />
             Upgrade Subscription
           </button>
-          
+
           <button
             onClick={closePaywall}
             className="w-full py-3 px-4 rounded-xl text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-surface-50 dark:hover:bg-slate-800 transition-colors"

@@ -4,6 +4,8 @@ import {
   Put,
   Patch,
   Post,
+  Delete,
+  Res,
   Body,
   Param,
   Query,
@@ -13,9 +15,14 @@ import {
   HttpStatus,
   UsePipes,
   ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { IsEnum, IsObject, IsBoolean, IsInt, Min } from 'class-validator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 import { SuperadminService } from './superadmin.service';
+import { BackupService } from './backup.service';
 import { JwtAuthRestGuard } from '../auth/guards/jwt-auth-rest.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -74,10 +81,19 @@ class UpdatePlanLimitsBody {
  */
 @Controller('superadmin')
 @UseGuards(JwtAuthRestGuard, RolesGuard)
-@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+@UsePipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }),
+)
 @Roles(UserRole.SUPERADMIN)
 export class SuperadminController {
-  constructor(private readonly superadminService: SuperadminService) {}
+  constructor(
+    private readonly superadminService: SuperadminService,
+    private readonly backupService: BackupService,
+  ) {}
 
   // ── Analytics ────────────────────────────────────────────────────────────────
 
@@ -217,5 +233,60 @@ export class SuperadminController {
       body.maxMembers,
       body.maxStorageGb,
     );
+  }
+
+  // ─── App Settings ──────────────────────────────────────────────────────────
+
+  @Get('settings')
+  getAppSettings() {
+    return this.superadminService.getAppSettings();
+  }
+
+  @Put('settings')
+  updateAppSettings(@Body() settings: Record<string, string>) {
+    return this.superadminService.updateAppSettings(settings);
+  }
+
+  @Post('settings/upload-pwa-icon')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadPwaIcon(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new Error('No file uploaded');
+    }
+    return this.superadminService.savePwaIcon(file);
+  }
+
+  // ─── Database Backups ──────────────────────────────────────────────────────
+
+  @Get('backups')
+  listBackups() {
+    return this.backupService.listBackups();
+  }
+
+  @Post('backups/trigger')
+  async triggerBackup() {
+    const result = await this.backupService.createBackup(true);
+    return {
+      success: true,
+      filename: result.filename,
+      size: result.size,
+    };
+  }
+
+  @Delete('backups/:filename')
+  deleteBackup(@Param('filename') filename: string) {
+    return this.backupService.deleteBackup(filename);
+  }
+
+  @Get('backups/download/:filename')
+  downloadBackup(@Param('filename') filename: string, @Res() res: Response) {
+    try {
+      const filePath = this.backupService.getBackupPath(filename);
+      return res.download(filePath, filename);
+    } catch {
+      res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: 'Backup file not found' });
+    }
   }
 }

@@ -36,7 +36,7 @@ export default function Sidebar({
   onClose,
   isCollapsed,
   onToggleCollapse,
- }: SidebarProps) {
+}: SidebarProps) {
   const logout = useLogout();
   const user = useAuthStore((state) => state.user);
   const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
@@ -209,14 +209,25 @@ export default function Sidebar({
           {/* PLATFORM SUPERADMIN */}
           {isSuperadmin && (
             <>
-              {!isCollapsed && <div className="nav-group-label text-amber-500">Platform Admin</div>}
+              {!isCollapsed && (
+                <div className="nav-group-label text-amber-500">
+                  Platform Admin
+                </div>
+              )}
               <NavLink
                 to="/dashboard/superadmin"
                 onClick={onClose}
                 className={navLinkClass}
               >
-                <ShieldAlert size={18} className="flex-shrink-0 text-amber-500" />
-                {!isCollapsed && <span className="text-amber-500 font-bold">Platform Panel</span>}
+                <ShieldAlert
+                  size={18}
+                  className="flex-shrink-0 text-amber-500"
+                />
+                {!isCollapsed && (
+                  <span className="text-amber-500 font-bold">
+                    Platform Panel
+                  </span>
+                )}
               </NavLink>
             </>
           )}

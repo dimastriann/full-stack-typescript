@@ -8,6 +8,9 @@ import {
   PlanLevel,
   PaymentProvider,
 } from '../../prisma/generated/client';
+import { BackupService } from './backup.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class SuperadminService {
@@ -17,6 +20,7 @@ export class SuperadminService {
     private readonly prisma: PrismaService,
     private readonly analyticsCron: AnalyticsCronService,
     private readonly authService: AuthService,
+    private readonly backupService: BackupService,
   ) {}
 
   // ─── Analytics ──────────────────────────────────────────────────────────────
@@ -252,5 +256,59 @@ export class SuperadminService {
       where: { planLevel },
       data: { maxProjects, maxMembers, maxStorageGb },
     });
+  }
+
+  // ─── Settings Management ───────────────────────────────────────────────────
+
+  async getAppSettings() {
+    const settings = await this.prisma.appSetting.findMany();
+    // Return key-value object
+    return settings.reduce(
+      (acc, curr) => {
+        acc[curr.key] = curr.value;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+  }
+
+  async updateAppSettings(settings: Record<string, string>) {
+    const updates = Object.entries(settings).map(([key, value]) => {
+      return this.prisma.appSetting.upsert({
+        where: { key },
+        update: { value: String(value) },
+        create: { key, value: String(value) },
+      });
+    });
+
+    await Promise.all(updates);
+
+    // If backup settings were updated, re-initialize scheduled backups
+    const backupKeys = [
+      'backup_enabled',
+      'backup_frequency',
+      'backup_time',
+      'backup_retention_days',
+      'backup_custom_credentials',
+    ];
+    const hasBackupUpdates = Object.keys(settings).some((key) =>
+      backupKeys.includes(key),
+    );
+    if (hasBackupUpdates) {
+      await this.backupService.initializeScheduledBackup();
+    }
+
+    return this.getAppSettings();
+  }
+
+  savePwaIcon(file: Express.Multer.File) {
+    const uploadsFolder = path.join(process.cwd(), 'uploads');
+    if (!fs.existsSync(uploadsFolder)) {
+      fs.mkdirSync(uploadsFolder, { recursive: true });
+    }
+
+    const targetPath = path.join(uploadsFolder, 'pwa-icon.png');
+    fs.writeFileSync(targetPath, file.buffer);
+    return { success: true, url: '/api/pwa/icon.png' };
   }
 }

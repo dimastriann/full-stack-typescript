@@ -37,6 +37,7 @@ model User {
   updatedAt          DateTime                  @updatedAt
   conversations      ConversationParticipant[]
   messages           Message[]
+  pushSubscriptions  PushSubscription[]
 }
 
 model Workspace {
@@ -533,3 +534,26 @@ model PlatformAnalyticsSnapshot {
   /// Monthly Recurring Revenue in USD (calculated separately)
   mrr                  Decimal  @default(0) @db.Decimal(12, 2)
 }
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  endpoint  String   @unique
+  auth      String
+  p256dh    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AppSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

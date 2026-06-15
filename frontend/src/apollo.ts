@@ -1,4 +1,11 @@
-import { ApolloClient, InMemoryCache, split, ApolloLink, fromPromise, Observable } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  split,
+  ApolloLink,
+  fromPromise,
+  Observable,
+} from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { onError } from '@apollo/client/link/error';
@@ -41,30 +48,52 @@ const splitLink = split(
   httpLink,
 );
 
-const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
-  if (graphQLErrors) {
-    // Check for plan limit exceeded errors
-    const limitError = graphQLErrors.find((err) =>
-      err.message?.includes('Plan limit exceeded'),
-    );
-    if (limitError) {
-      let limitType: 'project' | 'member' | 'storage' = 'project';
-      if (limitError.message.includes('member')) {
-        limitType = 'member';
-      } else if (limitError.message.includes('storage')) {
-        limitType = 'storage';
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      // Check for plan limit exceeded errors
+      const limitError = graphQLErrors.find((err) =>
+        err.message?.includes('Plan limit exceeded'),
+      );
+      if (limitError) {
+        let limitType: 'project' | 'member' | 'storage' = 'project';
+        if (limitError.message.includes('member')) {
+          limitType = 'member';
+        } else if (limitError.message.includes('storage')) {
+          limitType = 'storage';
+        }
+        usePaywallStore.getState().openPaywall(limitType);
       }
-      usePaywallStore.getState().openPaywall(limitType);
+
+      const hasAuthError = graphQLErrors.some(
+        (err) =>
+          err.extensions?.code === 'UNAUTHENTICATED' ||
+          err.message === 'Unauthorized' ||
+          err.message?.includes('revoked or expired'),
+      );
+
+      if (hasAuthError) {
+        return fromPromise(
+          refreshSession().then((refreshed) => {
+            if (!refreshed) return null;
+            return true;
+          }),
+        ).flatMap((refreshed) => {
+          if (!refreshed) {
+            return new Observable((observer) => {
+              observer.complete();
+            });
+          }
+          return forward(operation);
+        });
+      }
     }
 
-    const hasAuthError = graphQLErrors.some(
-      (err) =>
-        err.extensions?.code === 'UNAUTHENTICATED' ||
-        err.message === 'Unauthorized' ||
-        err.message?.includes('revoked or expired'),
-    );
-
-    if (hasAuthError) {
+    if (
+      networkError &&
+      'statusCode' in networkError &&
+      networkError.statusCode === 401
+    ) {
       return fromPromise(
         refreshSession().then((refreshed) => {
           if (!refreshed) return null;
@@ -79,28 +108,8 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
         return forward(operation);
       });
     }
-  }
-
-  if (
-    networkError &&
-    'statusCode' in networkError &&
-    networkError.statusCode === 401
-  ) {
-    return fromPromise(
-      refreshSession().then((refreshed) => {
-        if (!refreshed) return null;
-        return true;
-      }),
-    ).flatMap((refreshed) => {
-      if (!refreshed) {
-        return new Observable((observer) => {
-          observer.complete();
-        });
-      }
-      return forward(operation);
-    });
-  }
-});
+  },
+);
 
 export const client = new ApolloClient({
   link: ApolloLink.from([errorLink, splitLink]),

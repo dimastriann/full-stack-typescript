@@ -109,3 +109,13 @@ export type PaymentProviderConfig = Prisma.PaymentProviderConfigModel
  * Dashboard reads from this cache, not from live aggregation queries.
  */
 export type PlatformAnalyticsSnapshot = Prisma.PlatformAnalyticsSnapshotModel
+/**
+ * Model PushSubscription
+ * 
+ */
+export type PushSubscription = Prisma.PushSubscriptionModel
+/**
+ * Model AppSetting
+ * 
+ */
+export type AppSetting = Prisma.AppSettingModel

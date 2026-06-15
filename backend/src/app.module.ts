@@ -30,6 +30,7 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 import { depthLimitRule } from './common/validation/depth-limit.validation';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SuperadminModule } from './superadmin/superadmin.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { SuperadminModule } from './superadmin/superadmin.module';
     HealthModule,
     SubscriptionModule,
     SuperadminModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

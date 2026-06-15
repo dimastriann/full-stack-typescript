@@ -43,7 +43,9 @@ describe('XenditProvider', () => {
         cancelUrl: 'https://app.com/cancel',
       });
 
-      expect(result.checkoutUrl).toBe('https://checkout.xendit.co/web/inv_xendit_001');
+      expect(result.checkoutUrl).toBe(
+        'https://checkout.xendit.co/web/inv_xendit_001',
+      );
       expect(result.providerSessionId).toBe('inv_xendit_001');
     });
   });
@@ -80,7 +82,10 @@ describe('XenditProvider', () => {
 
     it('maps unknown status → unknown', async () => {
       const provider = buildProvider();
-      const rawBody = makeRawBody({ status: 'PENDING', external_id: 'ws-10-PRO-77' });
+      const rawBody = makeRawBody({
+        status: 'PENDING',
+        external_id: 'ws-10-PRO-77',
+      });
 
       const event = await provider.constructWebhookEvent(rawBody, VALID_TOKEN);
 

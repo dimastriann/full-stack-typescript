@@ -440,6 +440,16 @@ enum ConversationType {
   DIRECT
 }
 
+type PushSubscriptionEntity {
+  id: Int!
+  userId: Int!
+  endpoint: String!
+  auth: String!
+  p256dh: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   users(skip: Int, take: Int): [User!]!
   me: User!
@@ -514,6 +524,8 @@ type Mutation {
   sendMessage(conversationId: Int!, content: String!, type: MessageType = TEXT, attachmentIds: [Int!], metadata: String): Message!
   updateMessage(id: Int!, content: String!): Message!
   deleteMessage(id: Int!): Boolean!
+  subscribeToPushNotifications(subscription: PushSubscriptionInput!): PushSubscriptionEntity!
+  sendTestPushNotification(title: String!, body: String!): Boolean!
 }
 
 input CreateUserInput {
@@ -775,6 +787,16 @@ input UpdateTaskStageInput {
   workspaceId: Int
   sequence: Int = 5
   id: Int!
+}
+
+input PushSubscriptionInput {
+  endpoint: String!
+  keys: PushSubscriptionKeysInput!
+}
+
+input PushSubscriptionKeysInput {
+  p256dh: String!
+  auth: String!
 }
 
 type Subscription {

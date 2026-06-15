@@ -130,9 +130,12 @@ export default function PricingPage() {
     setLoadingTier(tierId);
 
     try {
-      const response = await apiClient.post(`/subscription/checkout/${activeWorkspace.id}`, {
-        planId: tierId,
-      });
+      const response = await apiClient.post(
+        `/subscription/checkout/${activeWorkspace.id}`,
+        {
+          planId: tierId,
+        },
+      );
 
       if (!response.ok) {
         const errData = await response.json();
@@ -147,7 +150,9 @@ export default function PricingPage() {
       }
     } catch (err) {
       Logger.error('Checkout error:', err as Error);
-      setErrorMsg(err instanceof Error ? err.message : 'Failed to launch checkout.');
+      setErrorMsg(
+        err instanceof Error ? err.message : 'Failed to launch checkout.',
+      );
     } finally {
       setLoadingTier(null);
     }
@@ -162,12 +167,15 @@ export default function PricingPage() {
           Flexible Plans for Modern Teams
         </h1>
         <p className="mt-5 text-xl text-gray-500 dark:text-gray-400">
-          Scale your workspace limits dynamically. Choose the subscription tier that matches your speed.
+          Scale your workspace limits dynamically. Choose the subscription tier
+          that matches your speed.
         </p>
         {activeWorkspace && (
           <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-xs font-semibold text-gray-300">
             Active Workspace:{' '}
-            <span className="text-indigo-400 font-bold">{activeWorkspace.name}</span>
+            <span className="text-indigo-400 font-bold">
+              {activeWorkspace.name}
+            </span>
             <span className="ml-2 px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
               {currentPlan} Plan
             </span>
