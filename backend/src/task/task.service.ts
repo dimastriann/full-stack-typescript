@@ -4,12 +4,17 @@ import { UpdateTaskInput } from './dto/update-task.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import {
+  ActivityLogService,
+  ActivityLogDetails,
+} from 'src/activity-log/activity-log.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
+    private readonly activityLog: ActivityLogService,
   ) {}
 
   get includeRelation() {
@@ -43,10 +48,18 @@ export class TaskService {
       [ProjectRole.OWNER, ProjectRole.ADMIN, ProjectRole.MEMBER],
     );
 
-    return this.prisma.task.create({
+    const task = await this.prisma.task.create({
       data: createTaskInput,
       include: this.includeRelation,
     });
+
+    await this.activityLog.log('CREATE', 'TASK', task.id, userId, {
+      projectId: task.projectId,
+      workspaceId: task.project.workspaceId,
+      details: { title: task.title },
+    });
+
+    return task;
   }
 
   async findAll(
@@ -129,11 +142,35 @@ export class TaskService {
       ProjectRole.MEMBER,
     ]);
 
-    return this.prisma.task.update({
+    const updatedTask = await this.prisma.task.update({
       where: { id },
       data: updateTaskInput,
       include: this.includeRelation,
     });
+
+    const changes: ActivityLogDetails = {};
+    if (updateTaskInput.title && updateTaskInput.title !== task.title) {
+      changes.title = { from: task.title, to: updateTaskInput.title };
+    }
+    if (updateTaskInput.stageId && updateTaskInput.stageId !== task.stageId) {
+      changes.stageId = { from: task.stageId, to: updateTaskInput.stageId };
+    }
+    if (updateTaskInput.priority && updateTaskInput.priority !== task.priority) {
+      changes.priority = { from: task.priority, to: updateTaskInput.priority };
+    }
+    if (updateTaskInput.userId && updateTaskInput.userId !== task.userId) {
+      changes.userId = { from: task.userId, to: updateTaskInput.userId };
+    }
+
+    if (Object.keys(changes).length > 0) {
+      await this.activityLog.log('UPDATE', 'TASK', updatedTask.id, userId, {
+        projectId: updatedTask.projectId,
+        workspaceId: updatedTask.project.workspaceId,
+        details: changes,
+      });
+    }
+
+    return updatedTask;
   }
 
   async remove(id: number, userId: number) {
@@ -145,6 +182,19 @@ export class TaskService {
       ProjectRole.ADMIN,
     ]);
 
-    return this.prisma.task.delete({ where: { id } });
+    const deletedTask = await this.prisma.task.delete({
+      where: { id },
+      include: {
+        project: true,
+      },
+    });
+
+    await this.activityLog.log('DELETE', 'TASK', id, userId, {
+      projectId: deletedTask.projectId,
+      workspaceId: deletedTask.project.workspaceId,
+      details: { title: deletedTask.title },
+    });
+
+    return deletedTask;
   }
 }

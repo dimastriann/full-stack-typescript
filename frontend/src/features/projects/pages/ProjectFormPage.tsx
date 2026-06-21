@@ -20,8 +20,10 @@ import {
   Users,
   Paperclip,
   MessageSquare,
+  Activity,
 } from 'lucide-react';
 import { useAttachments } from '../../attachments/hooks/useAttachments';
+import ActivityLogFeed from '../../../components/dashboard/ActivityLogFeed';
 
 interface ProjectAttachment {
   id: number;
@@ -39,7 +41,7 @@ export default function ProjectFormPage() {
   const id = projectId ? parseInt(projectId, 10) : 0;
 
   const [activeTab, setActiveTab] = useState<
-    'details' | 'tasks' | 'members' | 'attachments'
+    'details' | 'tasks' | 'members' | 'attachments' | 'activity'
   >('details');
 
   const { data, refetch } = useQuery(GET_PROJECT, {
@@ -158,6 +160,12 @@ export default function ProjectFormPage() {
                   </span>
                 )}
               </button>
+              <button
+                onClick={() => setActiveTab('activity')}
+                className={`tab-item flex items-center gap-2 ${activeTab === 'activity' ? 'tab-item-active' : ''}`}
+              >
+                <Activity size={16} /> Activity
+              </button>
             </div>
           )}
 
@@ -257,6 +265,12 @@ export default function ProjectFormPage() {
                     </div>
                   )}
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'activity' && id > 0 && (
+              <div className="pb-6 bg-white dark:bg-slate-900 shadow-card rounded-2xl p-6 border border-surface-200 dark:border-slate-800">
+                <ActivityLogFeed projectId={id} />
               </div>
             )}
           </div>

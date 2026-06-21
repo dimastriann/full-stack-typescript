@@ -4,12 +4,17 @@ import { UpdateProjectInput } from './dto/update-project.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import {
+  ActivityLogService,
+  ActivityLogDetails,
+} from 'src/activity-log/activity-log.service';
 
 @Injectable()
 export class ProjectService {
   constructor(
     private prisma: PrismaService,
     private projectMemberService: ProjectMemberService,
+    private activityLog: ActivityLogService,
   ) {}
 
   get includeRelation() {
@@ -78,6 +83,12 @@ export class ProjectService {
       creatorUserId,
       ProjectRole.OWNER,
     );
+
+    await this.activityLog.log('CREATE', 'PROJECT', project.id, creatorUserId, {
+      projectId: project.id,
+      workspaceId: project.workspaceId,
+      details: { name: project.name },
+    });
 
     // Return the project with updated members
     return this.prisma.project.findUnique({
@@ -149,11 +160,50 @@ export class ProjectService {
       ProjectRole.ADMIN,
     ]);
 
-    return this.prisma.project.update({
+    const oldProject = await this.prisma.project.findUnique({
+      where: { id },
+    });
+
+    const updatedProject = await this.prisma.project.update({
       where: { id },
       data: { ...updateProjectInput },
       include: { ...this.includeRelation },
     });
+
+    if (oldProject) {
+      const changes: ActivityLogDetails = {};
+      if (updateProjectInput.name && updateProjectInput.name !== oldProject.name) {
+        changes.name = { from: oldProject.name, to: updateProjectInput.name };
+      }
+      if (
+        updateProjectInput.stageId &&
+        updateProjectInput.stageId !== oldProject.stageId
+      ) {
+        changes.stageId = {
+          from: oldProject.stageId,
+          to: updateProjectInput.stageId,
+        };
+      }
+      if (
+        updateProjectInput.priority &&
+        updateProjectInput.priority !== oldProject.priority
+      ) {
+        changes.priority = {
+          from: oldProject.priority,
+          to: updateProjectInput.priority,
+        };
+      }
+
+      if (Object.keys(changes).length > 0) {
+        await this.activityLog.log('UPDATE', 'PROJECT', id, userId, {
+          projectId: id,
+          workspaceId: updatedProject.workspaceId,
+          details: changes,
+        });
+      }
+    }
+
+    return updatedProject;
   }
 
   /**
@@ -165,9 +215,23 @@ export class ProjectService {
       ProjectRole.OWNER,
     ]);
 
-    return this.prisma.project.delete({
+    const projectToDelete = await this.prisma.project.findUnique({
       where: { id },
     });
+
+    const deletedProject = await this.prisma.project.delete({
+      where: { id },
+    });
+
+    if (projectToDelete) {
+      await this.activityLog.log('DELETE', 'PROJECT', id, userId, {
+        projectId: id,
+        workspaceId: projectToDelete.workspaceId,
+        details: { name: projectToDelete.name },
+      });
+    }
+
+    return deletedProject;
   }
 
   private async generateProjectKey(name: string): Promise<string> {

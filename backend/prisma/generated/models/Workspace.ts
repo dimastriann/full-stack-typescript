@@ -222,6 +222,9 @@ export type WorkspaceWhereInput = {
   taskStages?: Prisma.TaskStageListRelationFilter
   conversations?: Prisma.ConversationListRelationFilter
   subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
+  activityLogs?: Prisma.ActivityLogListRelationFilter
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionListRelationFilter
+  webhookEndpoints?: Prisma.WebhookEndpointListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -236,6 +239,9 @@ export type WorkspaceOrderByWithRelationInput = {
   taskStages?: Prisma.TaskStageOrderByRelationAggregateInput
   conversations?: Prisma.ConversationOrderByRelationAggregateInput
   subscription?: Prisma.SubscriptionOrderByWithRelationInput
+  activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionOrderByRelationAggregateInput
+  webhookEndpoints?: Prisma.WebhookEndpointOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -253,6 +259,9 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   taskStages?: Prisma.TaskStageListRelationFilter
   conversations?: Prisma.ConversationListRelationFilter
   subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
+  activityLogs?: Prisma.ActivityLogListRelationFilter
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionListRelationFilter
+  webhookEndpoints?: Prisma.WebhookEndpointListRelationFilter
 }, "id">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -290,6 +299,9 @@ export type WorkspaceCreateInput = {
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -304,6 +316,9 @@ export type WorkspaceUncheckedCreateInput = {
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -317,6 +332,9 @@ export type WorkspaceUpdateInput = {
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -331,6 +349,9 @@ export type WorkspaceUncheckedUpdateInput = {
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -484,6 +505,50 @@ export type WorkspaceUpdateOneRequiredWithoutSubscriptionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutSubscriptionInput, Prisma.WorkspaceUpdateWithoutSubscriptionInput>, Prisma.WorkspaceUncheckedUpdateWithoutSubscriptionInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutActivityLogsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutActivityLogsInput, Prisma.WorkspaceUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutActivityLogsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneWithoutActivityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutActivityLogsInput, Prisma.WorkspaceUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutActivityLogsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutActivityLogsInput
+  disconnect?: Prisma.WorkspaceWhereInput | boolean
+  delete?: Prisma.WorkspaceWhereInput | boolean
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.WorkspaceUpdateWithoutActivityLogsInput>, Prisma.WorkspaceUncheckedUpdateWithoutActivityLogsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutCustomFieldDefinitionsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUncheckedCreateWithoutCustomFieldDefinitionsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCustomFieldDefinitionsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutCustomFieldDefinitionsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUncheckedCreateWithoutCustomFieldDefinitionsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutCustomFieldDefinitionsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutCustomFieldDefinitionsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUpdateWithoutCustomFieldDefinitionsInput>, Prisma.WorkspaceUncheckedUpdateWithoutCustomFieldDefinitionsInput>
+}
+
+export type WorkspaceCreateNestedOneWithoutWebhookEndpointsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutWebhookEndpointsInput, Prisma.WorkspaceUncheckedCreateWithoutWebhookEndpointsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutWebhookEndpointsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutWebhookEndpointsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutWebhookEndpointsInput, Prisma.WorkspaceUncheckedCreateWithoutWebhookEndpointsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutWebhookEndpointsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutWebhookEndpointsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutWebhookEndpointsInput, Prisma.WorkspaceUpdateWithoutWebhookEndpointsInput>, Prisma.WorkspaceUncheckedUpdateWithoutWebhookEndpointsInput>
+}
+
 export type WorkspaceCreateWithoutMembersInput = {
   name: string
   description?: string | null
@@ -494,6 +559,9 @@ export type WorkspaceCreateWithoutMembersInput = {
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -507,6 +575,9 @@ export type WorkspaceUncheckedCreateWithoutMembersInput = {
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -535,6 +606,9 @@ export type WorkspaceUpdateWithoutMembersInput = {
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -548,6 +622,9 @@ export type WorkspaceUncheckedUpdateWithoutMembersInput = {
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutProjectStagesInput = {
@@ -560,6 +637,9 @@ export type WorkspaceCreateWithoutProjectStagesInput = {
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutProjectStagesInput = {
@@ -573,6 +653,9 @@ export type WorkspaceUncheckedCreateWithoutProjectStagesInput = {
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutProjectStagesInput = {
@@ -601,6 +684,9 @@ export type WorkspaceUpdateWithoutProjectStagesInput = {
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutProjectStagesInput = {
@@ -614,6 +700,9 @@ export type WorkspaceUncheckedUpdateWithoutProjectStagesInput = {
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutTaskStagesInput = {
@@ -626,6 +715,9 @@ export type WorkspaceCreateWithoutTaskStagesInput = {
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutTaskStagesInput = {
@@ -639,6 +731,9 @@ export type WorkspaceUncheckedCreateWithoutTaskStagesInput = {
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutTaskStagesInput = {
@@ -667,6 +762,9 @@ export type WorkspaceUpdateWithoutTaskStagesInput = {
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutTaskStagesInput = {
@@ -680,6 +778,9 @@ export type WorkspaceUncheckedUpdateWithoutTaskStagesInput = {
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutProjectsInput = {
@@ -692,6 +793,9 @@ export type WorkspaceCreateWithoutProjectsInput = {
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutProjectsInput = {
@@ -705,6 +809,9 @@ export type WorkspaceUncheckedCreateWithoutProjectsInput = {
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutProjectsInput = {
@@ -733,6 +840,9 @@ export type WorkspaceUpdateWithoutProjectsInput = {
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
@@ -746,6 +856,9 @@ export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutConversationsInput = {
@@ -758,6 +871,9 @@ export type WorkspaceCreateWithoutConversationsInput = {
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutConversationsInput = {
@@ -771,6 +887,9 @@ export type WorkspaceUncheckedCreateWithoutConversationsInput = {
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutConversationsInput = {
@@ -799,6 +918,9 @@ export type WorkspaceUpdateWithoutConversationsInput = {
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutConversationsInput = {
@@ -812,6 +934,9 @@ export type WorkspaceUncheckedUpdateWithoutConversationsInput = {
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutSubscriptionInput = {
@@ -824,6 +949,9 @@ export type WorkspaceCreateWithoutSubscriptionInput = {
   projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutSubscriptionInput = {
@@ -837,6 +965,9 @@ export type WorkspaceUncheckedCreateWithoutSubscriptionInput = {
   projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
   taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutSubscriptionInput = {
@@ -865,6 +996,9 @@ export type WorkspaceUpdateWithoutSubscriptionInput = {
   projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutSubscriptionInput = {
@@ -878,6 +1012,243 @@ export type WorkspaceUncheckedUpdateWithoutSubscriptionInput = {
   projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutActivityLogsInput = {
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutActivityLogsInput = {
+  id?: number
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutActivityLogsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutActivityLogsInput, Prisma.WorkspaceUncheckedCreateWithoutActivityLogsInput>
+}
+
+export type WorkspaceUpsertWithoutActivityLogsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutActivityLogsInput, Prisma.WorkspaceUncheckedUpdateWithoutActivityLogsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutActivityLogsInput, Prisma.WorkspaceUncheckedCreateWithoutActivityLogsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutActivityLogsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutActivityLogsInput, Prisma.WorkspaceUncheckedUpdateWithoutActivityLogsInput>
+}
+
+export type WorkspaceUpdateWithoutActivityLogsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutActivityLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutCustomFieldDefinitionsInput = {
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutCustomFieldDefinitionsInput = {
+  id?: number
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutCustomFieldDefinitionsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUncheckedCreateWithoutCustomFieldDefinitionsInput>
+}
+
+export type WorkspaceUpsertWithoutCustomFieldDefinitionsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUncheckedUpdateWithoutCustomFieldDefinitionsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUncheckedCreateWithoutCustomFieldDefinitionsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutCustomFieldDefinitionsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutCustomFieldDefinitionsInput, Prisma.WorkspaceUncheckedUpdateWithoutCustomFieldDefinitionsInput>
+}
+
+export type WorkspaceUpdateWithoutCustomFieldDefinitionsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutCustomFieldDefinitionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  webhookEndpoints?: Prisma.WebhookEndpointUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutWebhookEndpointsInput = {
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutWorkspaceInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutWebhookEndpointsInput = {
+  id?: number
+  name: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+  projectStages?: Prisma.ProjectStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  taskStages?: Prisma.TaskStageUncheckedCreateNestedManyWithoutWorkspaceInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutWorkspaceInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutWebhookEndpointsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutWebhookEndpointsInput, Prisma.WorkspaceUncheckedCreateWithoutWebhookEndpointsInput>
+}
+
+export type WorkspaceUpsertWithoutWebhookEndpointsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutWebhookEndpointsInput, Prisma.WorkspaceUncheckedUpdateWithoutWebhookEndpointsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutWebhookEndpointsInput, Prisma.WorkspaceUncheckedCreateWithoutWebhookEndpointsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutWebhookEndpointsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutWebhookEndpointsInput, Prisma.WorkspaceUncheckedUpdateWithoutWebhookEndpointsInput>
+}
+
+export type WorkspaceUpdateWithoutWebhookEndpointsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutWorkspaceNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutWebhookEndpointsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+  projectStages?: Prisma.ProjectStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  taskStages?: Prisma.TaskStageUncheckedUpdateManyWithoutWorkspaceNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutWorkspaceNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+  customFieldDefinitions?: Prisma.CustomFieldDefinitionUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 
@@ -891,6 +1262,9 @@ export type WorkspaceCountOutputType = {
   projectStages: number
   taskStages: number
   conversations: number
+  activityLogs: number
+  customFieldDefinitions: number
+  webhookEndpoints: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -899,6 +1273,9 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   projectStages?: boolean | WorkspaceCountOutputTypeCountProjectStagesArgs
   taskStages?: boolean | WorkspaceCountOutputTypeCountTaskStagesArgs
   conversations?: boolean | WorkspaceCountOutputTypeCountConversationsArgs
+  activityLogs?: boolean | WorkspaceCountOutputTypeCountActivityLogsArgs
+  customFieldDefinitions?: boolean | WorkspaceCountOutputTypeCountCustomFieldDefinitionsArgs
+  webhookEndpoints?: boolean | WorkspaceCountOutputTypeCountWebhookEndpointsArgs
 }
 
 /**
@@ -946,6 +1323,27 @@ export type WorkspaceCountOutputTypeCountConversationsArgs<ExtArgs extends runti
   where?: Prisma.ConversationWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActivityLogWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountCustomFieldDefinitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomFieldDefinitionWhereInput
+}
+
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountWebhookEndpointsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WebhookEndpointWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -959,6 +1357,9 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   taskStages?: boolean | Prisma.Workspace$taskStagesArgs<ExtArgs>
   conversations?: boolean | Prisma.Workspace$conversationsArgs<ExtArgs>
   subscription?: boolean | Prisma.Workspace$subscriptionArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.Workspace$activityLogsArgs<ExtArgs>
+  customFieldDefinitions?: boolean | Prisma.Workspace$customFieldDefinitionsArgs<ExtArgs>
+  webhookEndpoints?: boolean | Prisma.Workspace$webhookEndpointsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -994,6 +1395,9 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   taskStages?: boolean | Prisma.Workspace$taskStagesArgs<ExtArgs>
   conversations?: boolean | Prisma.Workspace$conversationsArgs<ExtArgs>
   subscription?: boolean | Prisma.Workspace$subscriptionArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.Workspace$activityLogsArgs<ExtArgs>
+  customFieldDefinitions?: boolean | Prisma.Workspace$customFieldDefinitionsArgs<ExtArgs>
+  webhookEndpoints?: boolean | Prisma.Workspace$webhookEndpointsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1008,6 +1412,9 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     taskStages: Prisma.$TaskStagePayload<ExtArgs>[]
     conversations: Prisma.$ConversationPayload<ExtArgs>[]
     subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
+    activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
+    customFieldDefinitions: Prisma.$CustomFieldDefinitionPayload<ExtArgs>[]
+    webhookEndpoints: Prisma.$WebhookEndpointPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1415,6 +1822,9 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   taskStages<T extends Prisma.Workspace$taskStagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$taskStagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversations<T extends Prisma.Workspace$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscription<T extends Prisma.Workspace$subscriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$subscriptionArgs<ExtArgs>>): Prisma.Prisma__SubscriptionClient<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  activityLogs<T extends Prisma.Workspace$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  customFieldDefinitions<T extends Prisma.Workspace$customFieldDefinitionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$customFieldDefinitionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomFieldDefinitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  webhookEndpoints<T extends Prisma.Workspace$webhookEndpointsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$webhookEndpointsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WebhookEndpointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1973,6 +2383,78 @@ export type Workspace$subscriptionArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.SubscriptionInclude<ExtArgs> | null
   where?: Prisma.SubscriptionWhereInput
+}
+
+/**
+ * Workspace.activityLogs
+ */
+export type Workspace$activityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActivityLog
+   */
+  select?: Prisma.ActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActivityLog
+   */
+  omit?: Prisma.ActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityLogInclude<ExtArgs> | null
+  where?: Prisma.ActivityLogWhereInput
+  orderBy?: Prisma.ActivityLogOrderByWithRelationInput | Prisma.ActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.ActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActivityLogScalarFieldEnum | Prisma.ActivityLogScalarFieldEnum[]
+}
+
+/**
+ * Workspace.customFieldDefinitions
+ */
+export type Workspace$customFieldDefinitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CustomFieldDefinition
+   */
+  select?: Prisma.CustomFieldDefinitionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CustomFieldDefinition
+   */
+  omit?: Prisma.CustomFieldDefinitionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomFieldDefinitionInclude<ExtArgs> | null
+  where?: Prisma.CustomFieldDefinitionWhereInput
+  orderBy?: Prisma.CustomFieldDefinitionOrderByWithRelationInput | Prisma.CustomFieldDefinitionOrderByWithRelationInput[]
+  cursor?: Prisma.CustomFieldDefinitionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomFieldDefinitionScalarFieldEnum | Prisma.CustomFieldDefinitionScalarFieldEnum[]
+}
+
+/**
+ * Workspace.webhookEndpoints
+ */
+export type Workspace$webhookEndpointsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WebhookEndpoint
+   */
+  select?: Prisma.WebhookEndpointSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WebhookEndpoint
+   */
+  omit?: Prisma.WebhookEndpointOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WebhookEndpointInclude<ExtArgs> | null
+  where?: Prisma.WebhookEndpointWhereInput
+  orderBy?: Prisma.WebhookEndpointOrderByWithRelationInput | Prisma.WebhookEndpointOrderByWithRelationInput[]
+  cursor?: Prisma.WebhookEndpointWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WebhookEndpointScalarFieldEnum | Prisma.WebhookEndpointScalarFieldEnum[]
 }
 
 /**

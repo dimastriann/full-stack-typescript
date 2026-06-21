@@ -77,11 +77,15 @@ export class ProjectMemberResolver {
   @Mutation(() => ProjectMember)
   @UseGuards(GqlAuthGuard, ProjectPermissionGuard)
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
-  async updateMemberRole(@Args('input') input: UpdateMemberRoleInput) {
+  async updateMemberRole(
+    @Args('input') input: UpdateMemberRoleInput,
+    @CurrentUser() user: User,
+  ) {
     return this.projectMemberService.updateMemberRole(
       input.projectId,
       input.userId,
       input.role,
+      user.id,
     );
   }
 
@@ -92,10 +96,14 @@ export class ProjectMemberResolver {
   @Mutation(() => ProjectMember)
   @UseGuards(GqlAuthGuard, ProjectPermissionGuard)
   @RequireProjectRole(ProjectRole.OWNER, ProjectRole.ADMIN)
-  async removeMemberFromProject(@Args('input') input: RemoveMemberInput) {
+  async removeMemberFromProject(
+    @Args('input') input: RemoveMemberInput,
+    @CurrentUser() user: User,
+  ) {
     return this.projectMemberService.removeMember(
       input.projectId,
       input.userId,
+      user.id,
     );
   }
 
@@ -109,6 +117,6 @@ export class ProjectMemberResolver {
     @Args('projectId', { type: () => Int }) projectId: number,
     @CurrentUser() user: User,
   ) {
-    return this.projectMemberService.removeMember(projectId, user.id);
+    return this.projectMemberService.removeMember(projectId, user.id, user.id);
   }
 }

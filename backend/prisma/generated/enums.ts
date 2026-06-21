@@ -186,3 +186,13 @@ export const PaymentProvider = {
 } as const
 
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
+
+export const CustomFieldType = {
+  TEXT: 'TEXT',
+  NUMBER: 'NUMBER',
+  DATE: 'DATE',
+  SELECT: 'SELECT'
+} as const
+
+export type CustomFieldType = (typeof CustomFieldType)[keyof typeof CustomFieldType]

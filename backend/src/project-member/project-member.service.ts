@@ -6,6 +6,10 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import {
+  ActivityLogService,
+  ActivityLogDetails,
+} from 'src/activity-log/activity-log.service';
 
 /**
  * ProjectMemberService handles all business logic related to project memberships
@@ -13,7 +17,10 @@ import { ProjectRole } from 'prisma/generated/enums';
  */
 @Injectable()
 export class ProjectMemberService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private activityLog: ActivityLogService,
+  ) {}
 
   /**
    * Add a user to a project with a specific role
@@ -76,7 +83,7 @@ export class ProjectMemberService {
    * @param projectId - The project to remove the user from
    * @param userId - The user to remove
    */
-  async removeMember(projectId: number, userId: number) {
+  async removeMember(projectId: number, userId: number, actorUserId?: number) {
     const member = await this.prisma.projectMember.findUnique({
       where: {
         userId_projectId: { userId, projectId },
@@ -103,11 +110,29 @@ export class ProjectMemberService {
       }
     }
 
-    return this.prisma.projectMember.delete({
+    const deletedMember = await this.prisma.projectMember.delete({
       where: {
         userId_projectId: { userId, projectId },
       },
+      include: {
+        user: true,
+        project: true,
+      },
     });
+
+    const details: ActivityLogDetails = {
+      removedUserId: userId,
+      removedUserName: deletedMember.user.name,
+    };
+    await this.activityLog.log(
+      'REMOVE_MEMBER',
+      'MEMBER',
+      deletedMember.id,
+      actorUserId ?? userId,
+      { projectId, workspaceId: deletedMember.project.workspaceId, details },
+    );
+
+    return deletedMember;
   }
 
   /**
@@ -120,6 +145,7 @@ export class ProjectMemberService {
     projectId: number,
     userId: number,
     newRole: ProjectRole,
+    actorUserId?: number,
   ) {
     const member = await this.prisma.projectMember.findUnique({
       where: {
@@ -147,7 +173,7 @@ export class ProjectMemberService {
       }
     }
 
-    return this.prisma.projectMember.update({
+    const updatedMember = await this.prisma.projectMember.update({
       where: {
         userId_projectId: { userId, projectId },
       },
@@ -159,6 +185,26 @@ export class ProjectMemberService {
         project: true,
       },
     });
+
+    const details: ActivityLogDetails = {
+      targetUserId: userId,
+      targetUserName: updatedMember.user.name,
+      fromRole: member.role,
+      toRole: newRole,
+    };
+    await this.activityLog.log(
+      'UPDATE_MEMBER_ROLE',
+      'MEMBER',
+      updatedMember.id,
+      actorUserId ?? userId,
+      {
+        projectId,
+        workspaceId: updatedMember.project.workspaceId,
+        details,
+      },
+    );
+
+    return updatedMember;
   }
 
   /**
@@ -298,7 +344,22 @@ export class ProjectMemberService {
     }
 
     // Add the user to the project
-    return this.addMember(projectId, invitee.id, role);
+    const member = await this.addMember(projectId, invitee.id, role);
+
+    const details: ActivityLogDetails = {
+      inviteeEmail,
+      inviteeUserId: invitee.id,
+      role,
+    };
+    await this.activityLog.log(
+      'INVITE_MEMBER',
+      'MEMBER',
+      member.id,
+      inviterUserId,
+      { projectId, workspaceId: member.project.workspaceId, details },
+    );
+
+    return member;
   }
 
   /**

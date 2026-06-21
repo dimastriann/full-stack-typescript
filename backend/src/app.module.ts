@@ -31,6 +31,7 @@ import { depthLimitRule } from './common/validation/depth-limit.validation';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SuperadminModule } from './superadmin/superadmin.module';
 import { NotificationModule } from './notification/notification.module';
+import { ActivityLogModule } from './activity-log/activity-log.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { NotificationModule } from './notification/notification.module';
     SubscriptionModule,
     SuperadminModule,
     NotificationModule,
+    ActivityLogModule,
   ],
   controllers: [AppController],
   providers: [

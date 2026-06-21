@@ -51,6 +51,8 @@ export type UserMinAggregateOutputType = {
   role: $Enums.UserRole | null
   createdAt: Date | null
   updatedAt: Date | null
+  twoFactorEnabled: boolean | null
+  twoFactorSecret: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -70,6 +72,8 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.UserRole | null
   createdAt: Date | null
   updatedAt: Date | null
+  twoFactorEnabled: boolean | null
+  twoFactorSecret: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -89,6 +93,9 @@ export type UserCountAggregateOutputType = {
   role: number
   createdAt: number
   updatedAt: number
+  twoFactorEnabled: number
+  twoFactorSecret: number
+  twoFactorBackupCodes: number
   _all: number
 }
 
@@ -118,6 +125,8 @@ export type UserMinAggregateInputType = {
   role?: true
   createdAt?: true
   updatedAt?: true
+  twoFactorEnabled?: true
+  twoFactorSecret?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -137,6 +146,8 @@ export type UserMaxAggregateInputType = {
   role?: true
   createdAt?: true
   updatedAt?: true
+  twoFactorEnabled?: true
+  twoFactorSecret?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -156,6 +167,9 @@ export type UserCountAggregateInputType = {
   role?: true
   createdAt?: true
   updatedAt?: true
+  twoFactorEnabled?: true
+  twoFactorSecret?: true
+  twoFactorBackupCodes?: true
   _all?: true
 }
 
@@ -262,6 +276,9 @@ export type UserGroupByOutputType = {
   role: $Enums.UserRole
   createdAt: Date
   updatedAt: Date
+  twoFactorEnabled: boolean
+  twoFactorSecret: string | null
+  twoFactorBackupCodes: string[]
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -304,6 +321,9 @@ export type UserWhereInput = {
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  twoFactorEnabled?: Prisma.BoolFilter<"User"> | boolean
+  twoFactorSecret?: Prisma.StringNullableFilter<"User"> | string | null
+  twoFactorBackupCodes?: Prisma.StringNullableListFilter<"User">
   tasks?: Prisma.TaskListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   timesheets?: Prisma.TimesheetListRelationFilter
@@ -315,6 +335,7 @@ export type UserWhereInput = {
   conversations?: Prisma.ConversationParticipantListRelationFilter
   messages?: Prisma.MessageListRelationFilter
   pushSubscriptions?: Prisma.PushSubscriptionListRelationFilter
+  activityLogs?: Prisma.ActivityLogListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -334,6 +355,9 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
+  twoFactorSecret?: Prisma.SortOrderInput | Prisma.SortOrder
+  twoFactorBackupCodes?: Prisma.SortOrder
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   timesheets?: Prisma.TimesheetOrderByRelationAggregateInput
@@ -345,6 +369,7 @@ export type UserOrderByWithRelationInput = {
   conversations?: Prisma.ConversationParticipantOrderByRelationAggregateInput
   messages?: Prisma.MessageOrderByRelationAggregateInput
   pushSubscriptions?: Prisma.PushSubscriptionOrderByRelationAggregateInput
+  activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -367,6 +392,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  twoFactorEnabled?: Prisma.BoolFilter<"User"> | boolean
+  twoFactorSecret?: Prisma.StringNullableFilter<"User"> | string | null
+  twoFactorBackupCodes?: Prisma.StringNullableListFilter<"User">
   tasks?: Prisma.TaskListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   timesheets?: Prisma.TimesheetListRelationFilter
@@ -378,6 +406,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   conversations?: Prisma.ConversationParticipantListRelationFilter
   messages?: Prisma.MessageListRelationFilter
   pushSubscriptions?: Prisma.PushSubscriptionListRelationFilter
+  activityLogs?: Prisma.ActivityLogListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -397,6 +426,9 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
+  twoFactorSecret?: Prisma.SortOrderInput | Prisma.SortOrder
+  twoFactorBackupCodes?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -424,6 +456,9 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  twoFactorEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  twoFactorSecret?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  twoFactorBackupCodes?: Prisma.StringNullableListFilter<"User">
 }
 
 export type UserCreateInput = {
@@ -442,6 +477,9 @@ export type UserCreateInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -453,6 +491,7 @@ export type UserCreateInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -472,6 +511,9 @@ export type UserUncheckedCreateInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -483,6 +525,7 @@ export type UserUncheckedCreateInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -501,6 +544,9 @@ export type UserUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -512,6 +558,7 @@ export type UserUpdateInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -531,6 +578,9 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -542,6 +592,7 @@ export type UserUncheckedUpdateInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -561,6 +612,9 @@ export type UserCreateManyInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
 }
 
 export type UserUpdateManyMutationInput = {
@@ -579,6 +633,9 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -598,6 +655,17 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -617,6 +685,9 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
+  twoFactorSecret?: Prisma.SortOrder
+  twoFactorBackupCodes?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -640,6 +711,8 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
+  twoFactorSecret?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -659,6 +732,8 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
+  twoFactorSecret?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -673,6 +748,10 @@ export type UserScalarRelationFilter = {
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
+}
+
+export type UserCreatetwoFactorBackupCodesInput = {
+  set: string[]
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -701,6 +780,11 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserUpdatetwoFactorBackupCodesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -871,6 +955,20 @@ export type UserUpdateOneRequiredWithoutPushSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPushSubscriptionsInput, Prisma.UserUpdateWithoutPushSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutPushSubscriptionsInput>
 }
 
+export type UserCreateNestedOneWithoutActivityLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutActivityLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutActivityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutActivityLogsInput
+  upsert?: Prisma.UserUpsertWithoutActivityLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.UserUpdateWithoutActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
+}
+
 export type UserCreateWithoutWorkspaceMembersInput = {
   name: string
   email: string
@@ -887,6 +985,9 @@ export type UserCreateWithoutWorkspaceMembersInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -897,6 +998,7 @@ export type UserCreateWithoutWorkspaceMembersInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkspaceMembersInput = {
@@ -916,6 +1018,9 @@ export type UserUncheckedCreateWithoutWorkspaceMembersInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -926,6 +1031,7 @@ export type UserUncheckedCreateWithoutWorkspaceMembersInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkspaceMembersInput = {
@@ -960,6 +1066,9 @@ export type UserUpdateWithoutWorkspaceMembersInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -970,6 +1079,7 @@ export type UserUpdateWithoutWorkspaceMembersInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkspaceMembersInput = {
@@ -989,6 +1099,9 @@ export type UserUncheckedUpdateWithoutWorkspaceMembersInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -999,6 +1112,7 @@ export type UserUncheckedUpdateWithoutWorkspaceMembersInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -1017,6 +1131,9 @@ export type UserCreateWithoutProjectsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
@@ -1027,6 +1144,7 @@ export type UserCreateWithoutProjectsInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -1046,6 +1164,9 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
@@ -1056,6 +1177,7 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -1090,6 +1212,9 @@ export type UserUpdateWithoutProjectsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
@@ -1100,6 +1225,7 @@ export type UserUpdateWithoutProjectsInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -1119,6 +1245,9 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -1129,6 +1258,7 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTasksInput = {
@@ -1147,6 +1277,9 @@ export type UserCreateWithoutTasksInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
@@ -1157,6 +1290,7 @@ export type UserCreateWithoutTasksInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksInput = {
@@ -1176,6 +1310,9 @@ export type UserUncheckedCreateWithoutTasksInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
@@ -1186,6 +1323,7 @@ export type UserUncheckedCreateWithoutTasksInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksInput = {
@@ -1209,6 +1347,9 @@ export type UserCreateWithoutReportedTasksInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -1219,6 +1360,7 @@ export type UserCreateWithoutReportedTasksInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReportedTasksInput = {
@@ -1238,6 +1380,9 @@ export type UserUncheckedCreateWithoutReportedTasksInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -1248,6 +1393,7 @@ export type UserUncheckedCreateWithoutReportedTasksInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReportedTasksInput = {
@@ -1282,6 +1428,9 @@ export type UserUpdateWithoutTasksInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
@@ -1292,6 +1441,7 @@ export type UserUpdateWithoutTasksInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksInput = {
@@ -1311,6 +1461,9 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -1321,6 +1474,7 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReportedTasksInput = {
@@ -1350,6 +1504,9 @@ export type UserUpdateWithoutReportedTasksInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -1360,6 +1517,7 @@ export type UserUpdateWithoutReportedTasksInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportedTasksInput = {
@@ -1379,6 +1537,9 @@ export type UserUncheckedUpdateWithoutReportedTasksInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -1389,6 +1550,7 @@ export type UserUncheckedUpdateWithoutReportedTasksInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTimesheetsInput = {
@@ -1407,6 +1569,9 @@ export type UserCreateWithoutTimesheetsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
@@ -1417,6 +1582,7 @@ export type UserCreateWithoutTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTimesheetsInput = {
@@ -1436,6 +1602,9 @@ export type UserUncheckedCreateWithoutTimesheetsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
@@ -1446,6 +1615,7 @@ export type UserUncheckedCreateWithoutTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTimesheetsInput = {
@@ -1469,6 +1639,9 @@ export type UserCreateWithoutApprovedTimesheetsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -1479,6 +1652,7 @@ export type UserCreateWithoutApprovedTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
@@ -1498,6 +1672,9 @@ export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -1508,6 +1685,7 @@ export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
@@ -1542,6 +1720,9 @@ export type UserUpdateWithoutTimesheetsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
@@ -1552,6 +1733,7 @@ export type UserUpdateWithoutTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTimesheetsInput = {
@@ -1571,6 +1753,9 @@ export type UserUncheckedUpdateWithoutTimesheetsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -1581,6 +1766,7 @@ export type UserUncheckedUpdateWithoutTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedTimesheetsInput = {
@@ -1610,6 +1796,9 @@ export type UserUpdateWithoutApprovedTimesheetsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -1620,6 +1809,7 @@ export type UserUpdateWithoutApprovedTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
@@ -1639,6 +1829,9 @@ export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -1649,6 +1842,7 @@ export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -1667,6 +1861,9 @@ export type UserCreateWithoutCommentsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -1677,6 +1874,7 @@ export type UserCreateWithoutCommentsInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -1696,6 +1894,9 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -1706,6 +1907,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -1740,6 +1942,9 @@ export type UserUpdateWithoutCommentsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -1750,6 +1955,7 @@ export type UserUpdateWithoutCommentsInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -1769,6 +1975,9 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -1779,6 +1988,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProjectMembershipsInput = {
@@ -1797,6 +2007,9 @@ export type UserCreateWithoutProjectMembershipsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -1807,6 +2020,7 @@ export type UserCreateWithoutProjectMembershipsInput = {
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectMembershipsInput = {
@@ -1826,6 +2040,9 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -1836,6 +2053,7 @@ export type UserUncheckedCreateWithoutProjectMembershipsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectMembershipsInput = {
@@ -1870,6 +2088,9 @@ export type UserUpdateWithoutProjectMembershipsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -1880,6 +2101,7 @@ export type UserUpdateWithoutProjectMembershipsInput = {
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -1899,6 +2121,9 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -1909,6 +2134,7 @@ export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationsInput = {
@@ -1927,6 +2153,9 @@ export type UserCreateWithoutConversationsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -1937,6 +2166,7 @@ export type UserCreateWithoutConversationsInput = {
   approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsInput = {
@@ -1956,6 +2186,9 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -1966,6 +2199,7 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsInput = {
@@ -2000,6 +2234,9 @@ export type UserUpdateWithoutConversationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -2010,6 +2247,7 @@ export type UserUpdateWithoutConversationsInput = {
   approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsInput = {
@@ -2029,6 +2267,9 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -2039,6 +2280,7 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -2057,6 +2299,9 @@ export type UserCreateWithoutMessagesInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -2067,6 +2312,7 @@ export type UserCreateWithoutMessagesInput = {
   approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -2086,6 +2332,9 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -2096,6 +2345,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -2130,6 +2380,9 @@ export type UserUpdateWithoutMessagesInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -2140,6 +2393,7 @@ export type UserUpdateWithoutMessagesInput = {
   approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -2159,6 +2413,9 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -2169,6 +2426,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionsInput = {
@@ -2187,6 +2445,9 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
@@ -2197,6 +2458,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -2216,6 +2478,9 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
   timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
@@ -2226,6 +2491,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -2260,6 +2526,9 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
@@ -2270,6 +2539,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -2289,6 +2559,9 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
   timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
@@ -2299,6 +2572,153 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutActivityLogsInput = {
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  mobile?: string | null
+  firstName: string
+  lastName?: string | null
+  status?: boolean
+  address?: string | null
+  bio?: string | null
+  birthDate?: Date | string | null
+  gender?: $Enums.Gender | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutResponsibleInput
+  timesheets?: Prisma.TimesheetCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  workspaceMembers?: Prisma.WorkspaceMemberCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetCreateNestedManyWithoutApprovedByInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutActivityLogsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  mobile?: string | null
+  firstName: string
+  lastName?: string | null
+  status?: boolean
+  address?: string | null
+  bio?: string | null
+  birthDate?: Date | string | null
+  gender?: $Enums.Gender | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  twoFactorBackupCodes?: Prisma.UserCreatetwoFactorBackupCodesInput | string[]
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutResponsibleInput
+  timesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  workspaceMembers?: Prisma.WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
+  reportedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutReporterInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutActivityLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+}
+
+export type UserUpsertWithoutActivityLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutActivityLogsInput, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutActivityLogsInput, Prisma.UserUncheckedCreateWithoutActivityLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutActivityLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutActivityLogsInput, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
+}
+
+export type UserUpdateWithoutActivityLogsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutResponsibleNestedInput
+  timesheets?: Prisma.TimesheetUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  workspaceMembers?: Prisma.WorkspaceMemberUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUpdateManyWithoutApprovedByNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutActivityLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twoFactorBackupCodes?: Prisma.UserUpdatetwoFactorBackupCodesInput | string[]
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutResponsibleNestedInput
+  timesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  workspaceMembers?: Prisma.WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  reportedTasks?: Prisma.TaskUncheckedUpdateManyWithoutReporterNestedInput
+  approvedTimesheets?: Prisma.TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2318,6 +2738,7 @@ export type UserCountOutputType = {
   conversations: number
   messages: number
   pushSubscriptions: number
+  activityLogs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2332,6 +2753,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   conversations?: boolean | UserCountOutputTypeCountConversationsArgs
   messages?: boolean | UserCountOutputTypeCountMessagesArgs
   pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
+  activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
 }
 
 /**
@@ -2421,6 +2843,13 @@ export type UserCountOutputTypeCountPushSubscriptionsArgs<ExtArgs extends runtim
   where?: Prisma.PushSubscriptionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActivityLogWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2439,6 +2868,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: boolean
+  twoFactorBackupCodes?: boolean
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   timesheets?: boolean | Prisma.User$timesheetsArgs<ExtArgs>
@@ -2450,6 +2882,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   conversations?: boolean | Prisma.User$conversationsArgs<ExtArgs>
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.User$pushSubscriptionsArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2470,6 +2903,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: boolean
+  twoFactorBackupCodes?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2489,6 +2925,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: boolean
+  twoFactorBackupCodes?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2508,9 +2947,12 @@ export type UserSelectScalar = {
   role?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
+  twoFactorSecret?: boolean
+  twoFactorBackupCodes?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "phone" | "mobile" | "firstName" | "lastName" | "status" | "address" | "bio" | "birthDate" | "gender" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "phone" | "mobile" | "firstName" | "lastName" | "status" | "address" | "bio" | "birthDate" | "gender" | "role" | "createdAt" | "updatedAt" | "twoFactorEnabled" | "twoFactorSecret" | "twoFactorBackupCodes", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
@@ -2523,6 +2965,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   conversations?: boolean | Prisma.User$conversationsArgs<ExtArgs>
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.User$pushSubscriptionsArgs<ExtArgs>
+  activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2542,6 +2985,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     conversations: Prisma.$ConversationParticipantPayload<ExtArgs>[]
     messages: Prisma.$MessagePayload<ExtArgs>[]
     pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
+    activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2560,6 +3004,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.UserRole
     createdAt: Date
     updatedAt: Date
+    twoFactorEnabled: boolean
+    twoFactorSecret: string | null
+    twoFactorBackupCodes: string[]
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2965,6 +3412,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   conversations<T extends Prisma.User$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pushSubscriptions<T extends Prisma.User$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  activityLogs<T extends Prisma.User$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3010,6 +3458,9 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly twoFactorEnabled: Prisma.FieldRef<"User", 'Boolean'>
+  readonly twoFactorSecret: Prisma.FieldRef<"User", 'String'>
+  readonly twoFactorBackupCodes: Prisma.FieldRef<"User", 'String[]'>
 }
     
 
@@ -3659,6 +4110,30 @@ export type User$pushSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.PushSubscriptionScalarFieldEnum | Prisma.PushSubscriptionScalarFieldEnum[]
+}
+
+/**
+ * User.activityLogs
+ */
+export type User$activityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActivityLog
+   */
+  select?: Prisma.ActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActivityLog
+   */
+  omit?: Prisma.ActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityLogInclude<ExtArgs> | null
+  where?: Prisma.ActivityLogWhereInput
+  orderBy?: Prisma.ActivityLogOrderByWithRelationInput | Prisma.ActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.ActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActivityLogScalarFieldEnum | Prisma.ActivityLogScalarFieldEnum[]
 }
 
 /**

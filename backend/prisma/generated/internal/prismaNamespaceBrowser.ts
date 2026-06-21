@@ -70,7 +70,12 @@ export const ModelName = {
   PaymentProviderConfig: 'PaymentProviderConfig',
   PlatformAnalyticsSnapshot: 'PlatformAnalyticsSnapshot',
   PushSubscription: 'PushSubscription',
-  AppSetting: 'AppSetting'
+  AppSetting: 'AppSetting',
+  ActivityLog: 'ActivityLog',
+  CustomFieldDefinition: 'CustomFieldDefinition',
+  CustomFieldValue: 'CustomFieldValue',
+  WebhookEndpoint: 'WebhookEndpoint',
+  WebhookDeliveryLog: 'WebhookDeliveryLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -105,7 +110,10 @@ export const UserScalarFieldEnum = {
   gender: 'gender',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  twoFactorEnabled: 'twoFactorEnabled',
+  twoFactorSecret: 'twoFactorSecret',
+  twoFactorBackupCodes: 'twoFactorBackupCodes'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -428,6 +436,78 @@ export const AppSettingScalarFieldEnum = {
 } as const
 
 export type AppSettingScalarFieldEnum = (typeof AppSettingScalarFieldEnum)[keyof typeof AppSettingScalarFieldEnum]
+
+
+export const ActivityLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  workspaceId: 'workspaceId',
+  projectId: 'projectId',
+  userId: 'userId',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+
+
+export const CustomFieldDefinitionScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  entityType: 'entityType',
+  name: 'name',
+  type: 'type',
+  options: 'options',
+  isRequired: 'isRequired',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomFieldDefinitionScalarFieldEnum = (typeof CustomFieldDefinitionScalarFieldEnum)[keyof typeof CustomFieldDefinitionScalarFieldEnum]
+
+
+export const CustomFieldValueScalarFieldEnum = {
+  id: 'id',
+  fieldId: 'fieldId',
+  entityId: 'entityId',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomFieldValueScalarFieldEnum = (typeof CustomFieldValueScalarFieldEnum)[keyof typeof CustomFieldValueScalarFieldEnum]
+
+
+export const WebhookEndpointScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  url: 'url',
+  name: 'name',
+  secret: 'secret',
+  events: 'events',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WebhookEndpointScalarFieldEnum = (typeof WebhookEndpointScalarFieldEnum)[keyof typeof WebhookEndpointScalarFieldEnum]
+
+
+export const WebhookDeliveryLogScalarFieldEnum = {
+  id: 'id',
+  webhookEndpointId: 'webhookEndpointId',
+  event: 'event',
+  payload: 'payload',
+  statusCode: 'statusCode',
+  responseBody: 'responseBody',
+  durationMs: 'durationMs',
+  success: 'success',
+  createdAt: 'createdAt'
+} as const
+
+export type WebhookDeliveryLogScalarFieldEnum = (typeof WebhookDeliveryLogScalarFieldEnum)[keyof typeof WebhookDeliveryLogScalarFieldEnum]
 
 
 export const SortOrder = {

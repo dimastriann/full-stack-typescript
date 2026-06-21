@@ -450,6 +450,21 @@ type PushSubscriptionEntity {
   updatedAt: DateTime!
 }
 
+type ActivityLog {
+  id: Int!
+  action: String!
+  entityType: String!
+  entityId: Int!
+  workspaceId: Int
+  projectId: Int
+  userId: Int!
+  details: String
+  createdAt: DateTime!
+  user: User!
+  workspace: Workspace
+  project: Project
+}
+
 type Query {
   users(skip: Int, take: Int): [User!]!
   me: User!
@@ -474,6 +489,7 @@ type Query {
   taskStage(id: Int!): TaskStage!
   myConversations: [Conversation!]!
   conversationMessages(conversationId: Int!, limit: Int! = 50, cursor: Int): [Message!]!
+  activityLogs(workspaceId: Int, projectId: Int, entityType: String, entityId: Int, skip: Int, take: Int): [ActivityLog!]!
 }
 
 type Mutation {

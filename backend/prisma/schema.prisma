@@ -38,6 +38,10 @@ model User {
   conversations      ConversationParticipant[]
   messages           Message[]
   pushSubscriptions  PushSubscription[]
+  activityLogs       ActivityLog[]
+  twoFactorEnabled   Boolean                   @default(false)
+  twoFactorSecret    String?
+  twoFactorBackupCodes String[]
 }
 
 model Workspace {
@@ -48,10 +52,13 @@ model Workspace {
   projects      Project[]
   projectStages ProjectStage[]
   taskStages    TaskStage[]
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-  conversations Conversation[]
-  subscription  Subscription?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  conversations          Conversation[]
+  subscription           Subscription?
+  activityLogs           ActivityLog[]
+  customFieldDefinitions CustomFieldDefinition[]
+  webhookEndpoints       WebhookEndpoint[]
 }
 
 model WorkspaceMember {
@@ -149,6 +156,7 @@ model Project {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   deletedAt     DateTime?
+  activityLogs  ActivityLog[]
 
   @@index([workspaceId])
   @@index([responsibleId])
@@ -556,4 +564,98 @@ model AppSetting {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model ActivityLog {
+  id          Int      @id @default(autoincrement())
+  action      String   // CREATE, UPDATE, DELETE, etc.
+  entityType  String   // TASK, PROJECT, TIMESHEET, WORKSPACE, MEMBER
+  entityId    Int
+  workspaceId Int?
+  projectId   Int?
+  userId      Int
+  details     Json?    // e.g. { "previous": {...}, "next": {...} }
+  createdAt   DateTime @default(now())
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([projectId])
+  @@index([userId])
+}
+
+enum CustomFieldType {
+  TEXT
+  NUMBER
+  DATE
+  SELECT
+}
+
+model CustomFieldDefinition {
+  id          Int             @id @default(autoincrement())
+  workspaceId Int
+  entityType  String          // "TASK" or "PROJECT"
+  name        String
+  type        CustomFieldType
+  options     String[]        // for SELECT type: ["Low", "Medium", "High"]
+  isRequired  Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  values      CustomFieldValue[]
+
+  @@unique([workspaceId, entityType, name])
+  @@index([workspaceId])
+}
+
+model CustomFieldValue {
+  id           Int                   @id @default(autoincrement())
+  fieldId      Int
+  entityId     Int                   // Task ID or Project ID
+  value        String                // Stored as string, parsed based on field definition
+
+  field        CustomFieldDefinition @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  @@unique([fieldId, entityId])
+  @@index([entityId])
+}
+
+model WebhookEndpoint {
+  id           Int                   @id @default(autoincrement())
+  workspaceId  Int
+  url          String
+  name         String
+  secret       String                // Used for signing payloads
+  events       String[]              // e.g. ["task.created", "task.updated", "project.created"]
+  isActive     Boolean               @default(true)
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  workspace    Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  deliveryLogs WebhookDeliveryLog[]
+
+  @@index([workspaceId])
+}
+
+model WebhookDeliveryLog {
+  id                Int             @id @default(autoincrement())
+  webhookEndpointId Int
+  event             String
+  payload           Json
+  statusCode        Int?
+  responseBody      String?
+  durationMs        Int
+  success           Boolean
+  createdAt         DateTime        @default(now())
+
+  webhookEndpoint   WebhookEndpoint @relation(fields: [webhookEndpointId], references: [id], onDelete: Cascade)
+
+  @@index([webhookEndpointId])
+}
+
 

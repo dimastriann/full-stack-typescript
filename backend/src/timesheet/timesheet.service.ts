@@ -4,12 +4,14 @@ import { UpdateTimesheetInput } from './dto/update-timesheet.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import { ActivityLogService } from 'src/activity-log/activity-log.service';
 
 @Injectable()
 export class TimesheetService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
+    private readonly activityLog: ActivityLogService,
   ) {}
 
   get includeRelation() {
@@ -28,10 +30,18 @@ export class TimesheetService {
       ? createTimesheetInput.hourlyRate * createTimesheetInput.timeSpent
       : undefined;
 
-    return this.prisma.timesheet.create({
+    const timesheet = await this.prisma.timesheet.create({
       data: { ...createTimesheetInput, cost },
       include: { ...this.includeRelation },
     });
+
+    await this.activityLog.log('CREATE', 'TIMESHEET', timesheet.id, userId, {
+      projectId: timesheet.projectId,
+      workspaceId: timesheet.project.workspaceId,
+      details: { timeSpent: timesheet.timeSpent, description: timesheet.description },
+    });
+
+    return timesheet;
   }
 
   async findAll(userId: number, skip?: number, take?: number, taskId?: number) {
@@ -97,11 +107,29 @@ export class TimesheetService {
       }
     }
 
-    return this.prisma.timesheet.update({
+    const updatedTimesheet = await this.prisma.timesheet.update({
       where: { id },
       data: { ...updateTimesheetInput, cost },
       include: { ...this.includeRelation },
     });
+
+    const changes: any = {};
+    if (updateTimesheetInput.timeSpent && updateTimesheetInput.timeSpent !== timesheet.timeSpent) {
+      changes.timeSpent = { from: timesheet.timeSpent, to: updateTimesheetInput.timeSpent };
+    }
+    if (updateTimesheetInput.description && updateTimesheetInput.description !== timesheet.description) {
+      changes.description = { from: timesheet.description, to: updateTimesheetInput.description };
+    }
+
+    if (Object.keys(changes).length > 0) {
+      await this.activityLog.log('UPDATE', 'TIMESHEET', id, userId, {
+        projectId: updatedTimesheet.projectId,
+        workspaceId: updatedTimesheet.project.workspaceId,
+        details: changes,
+      });
+    }
+
+    return updatedTimesheet;
   }
 
   async remove(id: number, userId: number) {
@@ -114,9 +142,20 @@ export class TimesheetService {
       [ProjectRole.OWNER, ProjectRole.ADMIN],
     );
 
-    return this.prisma.timesheet.update({
+    const updated = await this.prisma.timesheet.update({
       where: { id },
       data: { deletedAt: new Date() },
+      include: {
+        project: true,
+      },
     });
+
+    await this.activityLog.log('DELETE', 'TIMESHEET', id, userId, {
+      projectId: updated.projectId,
+      workspaceId: updated.project.workspaceId,
+      details: { description: updated.description },
+    });
+
+    return updated;
   }
 }
