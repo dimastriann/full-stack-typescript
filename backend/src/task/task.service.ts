@@ -155,7 +155,10 @@ export class TaskService {
     if (updateTaskInput.stageId && updateTaskInput.stageId !== task.stageId) {
       changes.stageId = { from: task.stageId, to: updateTaskInput.stageId };
     }
-    if (updateTaskInput.priority && updateTaskInput.priority !== task.priority) {
+    if (
+      updateTaskInput.priority &&
+      updateTaskInput.priority !== task.priority
+    ) {
       changes.priority = { from: task.priority, to: updateTaskInput.priority };
     }
     if (updateTaskInput.userId && updateTaskInput.userId !== task.userId) {

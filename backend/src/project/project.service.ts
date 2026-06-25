@@ -172,7 +172,10 @@ export class ProjectService {
 
     if (oldProject) {
       const changes: ActivityLogDetails = {};
-      if (updateProjectInput.name && updateProjectInput.name !== oldProject.name) {
+      if (
+        updateProjectInput.name &&
+        updateProjectInput.name !== oldProject.name
+      ) {
         changes.name = { from: oldProject.name, to: updateProjectInput.name };
       }
       if (

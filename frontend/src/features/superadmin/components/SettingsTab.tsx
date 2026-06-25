@@ -35,7 +35,9 @@ export default function SettingsTab({
   // Storage Providers States
   const [activeProviders, setActiveProviders] = useState<string[]>(['local']);
   const [selectedProvider, setSelectedProvider] = useState<string>('local');
-  const [providerConfigs, setProviderConfigs] = useState<Record<string, ProviderConfig>>({
+  const [providerConfigs, setProviderConfigs] = useState<
+    Record<string, ProviderConfig>
+  >({
     local: { enabled: true },
     sftp: {
       enabled: false,

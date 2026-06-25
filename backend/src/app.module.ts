@@ -32,6 +32,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { SuperadminModule } from './superadmin/superadmin.module';
 import { NotificationModule } from './notification/notification.module';
 import { ActivityLogModule } from './activity-log/activity-log.module';
+import { CustomFieldModule } from './custom-field/custom-field.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { ActivityLogModule } from './activity-log/activity-log.module';
     SuperadminModule,
     NotificationModule,
     ActivityLogModule,
+    CustomFieldModule,
   ],
   controllers: [AppController],
   providers: [

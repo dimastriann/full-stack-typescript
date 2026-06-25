@@ -9,9 +9,11 @@ import {
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import Logger from '../../../lib/logger';
 import Select from '../../../components/Select';
+import CustomFieldsFormSection from '../../workspaces/components/CustomFieldsFormSection';
+import { UPSERT_CUSTOM_FIELD_VALUE } from '../../workspaces/gql/custom-field.graphql';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import {
@@ -71,6 +73,12 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   } = useProjects();
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [hasResetInitial, setHasResetInitial] = useState(false);
+  const [customFieldValues, setCustomFieldValues] = useState<
+    Record<number, string>
+  >({});
+  const [customFieldsValid, setCustomFieldsValid] = useState(true);
+
+  const [upsertCustomFieldValue] = useMutation(UPSERT_CUSTOM_FIELD_VALUE);
 
   const userId = currentUser?.id?.toString();
   const users = useMemo(() => usersData?.users ?? [], [usersData]);
@@ -122,6 +130,8 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
   }, [projects, projectId, isEditMode, reset, userId, users, hasResetInitial]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    if (!customFieldsValid) return;
+
     try {
       if (!activeWorkspace) throw new Error('No active workspace selected');
 
@@ -154,19 +164,38 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       if (!projectFormData.startDate) delete projectFormData.startDate;
       if (!projectFormData.endDate) delete projectFormData.endDate;
 
+      let savedId: number;
+
       if (isEditMode) {
         if ('__typename' in projectFormData) delete projectFormData.__typename;
-        projectFormData.id = parseInt(projectId!);
+        savedId = parseInt(projectId!);
+        projectFormData.id = savedId;
         await updateRecord({
           variables: {
             updateProjectInput: projectFormData,
           },
         });
       } else {
-        await createRecord({
+        const res = await createRecord({
           variables: { createProjectInput: projectFormData },
         });
+        savedId = res.data.createProject.id;
       }
+
+      // Upsert any filled/changed custom fields
+      await Promise.all(
+        Object.entries(customFieldValues).map(([fieldId, value]) =>
+          upsertCustomFieldValue({
+            variables: {
+              input: {
+                fieldId: parseInt(fieldId, 10),
+                entityId: savedId,
+                value,
+              },
+            },
+          }),
+        ),
+      );
 
       if (onSuccess) {
         onSuccess();
@@ -342,6 +371,19 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
         </div>
       </div>
 
+      {/* ── Section: Custom Fields ── */}
+      {activeWorkspace && (
+        <CustomFieldsFormSection
+          workspaceId={activeWorkspace.id}
+          entityType="PROJECT"
+          entityId={isEditMode ? parseInt(projectId!) : undefined}
+          onValuesChange={(values, isValid) => {
+            setCustomFieldValues(values);
+            setCustomFieldsValid(isValid);
+          }}
+        />
+      )}
+
       {/* ── Section: Settings ── */}
       <div className="bg-white dark:bg-slate-900 shadow-card border border-surface-200 dark:border-slate-800 p-6 rounded-2xl space-y-5 transition-colors">
         <div className="form-section-title text-gray-900 dark:text-white">
@@ -460,7 +502,7 @@ export default function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
         )}
         <button
           type="submit"
-          disabled={mutationLoading}
+          disabled={mutationLoading || !customFieldsValid}
           className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {mutationLoading

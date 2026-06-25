@@ -1,4 +1,11 @@
-import { Resolver, Query, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
@@ -14,9 +21,11 @@ export class ActivityLogResolver {
   @UseGuards(GqlAuthGuard)
   async getActivityLogs(
     @CurrentUser() user: User,
-    @Args('workspaceId', { type: () => Int, nullable: true }) workspaceId?: number,
+    @Args('workspaceId', { type: () => Int, nullable: true })
+    workspaceId?: number,
     @Args('projectId', { type: () => Int, nullable: true }) projectId?: number,
-    @Args('entityType', { type: () => String, nullable: true }) entityType?: string,
+    @Args('entityType', { type: () => String, nullable: true })
+    entityType?: string,
     @Args('entityId', { type: () => Int, nullable: true }) entityId?: number,
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,

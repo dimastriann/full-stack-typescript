@@ -2,8 +2,10 @@ import { useEffect, useState, useMemo } from 'react';
 import { useTasks } from '../hooks/useTasks';
 import { useParams } from 'react-router-dom';
 import { GET_TASK, GET_TASK_STAGES } from '../gql/task.graphql';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
+import CustomFieldsFormSection from '../../workspaces/components/CustomFieldsFormSection';
+import { UPSERT_CUSTOM_FIELD_VALUE } from '../../workspaces/gql/custom-field.graphql';
 import type { ProjectType } from '../../../types/Projects';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { useForm, Controller } from 'react-hook-form';
@@ -50,6 +52,12 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   } = useTasks();
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [hasResetInitial, setHasResetInitial] = useState(false);
+  const [customFieldValues, setCustomFieldValues] = useState<
+    Record<number, string>
+  >({});
+  const [customFieldsValid, setCustomFieldsValid] = useState(true);
+
+  const [upsertCustomFieldValue] = useMutation(UPSERT_CUSTOM_FIELD_VALUE);
 
   const task = data?.getTask;
   const projects = useMemo<ProjectType[]>(
@@ -120,6 +128,8 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
   }, [task, isEditMode, reset, userId, users, projects, hasResetInitial]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    if (!customFieldsValid) return;
+
     try {
       const input: Partial<TaskType> & {
         id?: number;
@@ -147,12 +157,31 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         input.stageId = Number(formData.stageId);
       }
 
+      let savedId: number;
+
       if (isEditMode) {
-        input.id = Number(taskId);
+        savedId = Number(taskId);
+        input.id = savedId;
         await updateRecord({ variables: { input } });
       } else {
-        await createRecord({ variables: { input } });
+        const res = await createRecord({ variables: { input } });
+        savedId = res.data.createTask.id;
       }
+
+      // Upsert custom field values
+      await Promise.all(
+        Object.entries(customFieldValues).map(([fieldId, value]) =>
+          upsertCustomFieldValue({
+            variables: {
+              input: {
+                fieldId: parseInt(fieldId, 10),
+                entityId: savedId,
+                value,
+              },
+            },
+          }),
+        ),
+      );
 
       if (onSuccess) onSuccess();
       await refetch();
@@ -440,6 +469,20 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         </div>
       </div>
 
+      {/* ── Section: Custom Fields ── */}
+      {activeWorkspace && (
+        <CustomFieldsFormSection
+          workspaceId={activeWorkspace.id}
+          entityType="TASK"
+          entityId={isEditMode ? Number(taskId) : undefined}
+          onValuesChange={(values, isValid) => {
+            setCustomFieldValues(values);
+            setCustomFieldsValid(isValid);
+          }}
+        />
+      )}
+
+      {/* ── Section: Actions ── */}
       {/* ── Actions ── */}
       <div className="flex justify-end gap-3 pt-2">
         {onCancel && (
@@ -453,7 +496,7 @@ export default function TaskForm({ onSuccess, onCancel }: TaskFormProps) {
         )}
         <button
           type="submit"
-          disabled={mutationLoading}
+          disabled={mutationLoading || !customFieldsValid}
           className="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold shadow-sm hover:bg-primary-700 hover:shadow-md focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {mutationLoading

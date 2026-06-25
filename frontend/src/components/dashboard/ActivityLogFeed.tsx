@@ -286,7 +286,10 @@ export default function ActivityLogFeed({
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider flex items-center gap-2">
-          <Activity size={16} className="text-primary-600 dark:text-primary-400" />
+          <Activity
+            size={16}
+            className="text-primary-600 dark:text-primary-400"
+          />
           Activity Log
         </h3>
         <button

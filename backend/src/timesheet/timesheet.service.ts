@@ -38,7 +38,10 @@ export class TimesheetService {
     await this.activityLog.log('CREATE', 'TIMESHEET', timesheet.id, userId, {
       projectId: timesheet.projectId,
       workspaceId: timesheet.project.workspaceId,
-      details: { timeSpent: timesheet.timeSpent, description: timesheet.description },
+      details: {
+        timeSpent: timesheet.timeSpent,
+        description: timesheet.description,
+      },
     });
 
     return timesheet;
@@ -114,11 +117,23 @@ export class TimesheetService {
     });
 
     const changes: any = {};
-    if (updateTimesheetInput.timeSpent && updateTimesheetInput.timeSpent !== timesheet.timeSpent) {
-      changes.timeSpent = { from: timesheet.timeSpent, to: updateTimesheetInput.timeSpent };
+    if (
+      updateTimesheetInput.timeSpent &&
+      updateTimesheetInput.timeSpent !== timesheet.timeSpent
+    ) {
+      changes.timeSpent = {
+        from: timesheet.timeSpent,
+        to: updateTimesheetInput.timeSpent,
+      };
     }
-    if (updateTimesheetInput.description && updateTimesheetInput.description !== timesheet.description) {
-      changes.description = { from: timesheet.description, to: updateTimesheetInput.description };
+    if (
+      updateTimesheetInput.description &&
+      updateTimesheetInput.description !== timesheet.description
+    ) {
+      changes.description = {
+        from: timesheet.description,
+        to: updateTimesheetInput.description,
+      };
     }
 
     if (Object.keys(changes).length > 0) {

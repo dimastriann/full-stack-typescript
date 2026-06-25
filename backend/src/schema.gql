@@ -465,6 +465,36 @@ type ActivityLog {
   project: Project
 }
 
+type CustomFieldDefinition {
+  id: Int!
+  workspaceId: Int!
+  entityType: String!
+  name: String!
+  type: CustomFieldType!
+  options: [String!]!
+  isRequired: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Supported custom field data types"""
+enum CustomFieldType {
+  TEXT
+  NUMBER
+  DATE
+  SELECT
+}
+
+type CustomFieldValue {
+  id: Int!
+  fieldId: Int!
+  entityId: Int!
+  value: String!
+  field: CustomFieldDefinition!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   users(skip: Int, take: Int): [User!]!
   me: User!
@@ -490,6 +520,8 @@ type Query {
   myConversations: [Conversation!]!
   conversationMessages(conversationId: Int!, limit: Int! = 50, cursor: Int): [Message!]!
   activityLogs(workspaceId: Int, projectId: Int, entityType: String, entityId: Int, skip: Int, take: Int): [ActivityLog!]!
+  customFieldDefinitions(workspaceId: Int!, entityType: String): [CustomFieldDefinition!]!
+  customFieldValues(entityId: Int!, workspaceId: Int!): [CustomFieldValue!]!
 }
 
 type Mutation {
@@ -542,6 +574,11 @@ type Mutation {
   deleteMessage(id: Int!): Boolean!
   subscribeToPushNotifications(subscription: PushSubscriptionInput!): PushSubscriptionEntity!
   sendTestPushNotification(title: String!, body: String!): Boolean!
+  createCustomFieldDefinition(input: CreateCustomFieldDefinitionInput!): CustomFieldDefinition!
+  updateCustomFieldDefinition(id: Int!, input: UpdateCustomFieldDefinitionInput!): CustomFieldDefinition!
+  deleteCustomFieldDefinition(id: Int!): CustomFieldDefinition!
+  upsertCustomFieldValue(input: UpsertCustomFieldValueInput!): CustomFieldValue!
+  deleteCustomFieldValue(id: Int!): CustomFieldValue!
 }
 
 input CreateUserInput {
@@ -813,6 +850,27 @@ input PushSubscriptionInput {
 input PushSubscriptionKeysInput {
   p256dh: String!
   auth: String!
+}
+
+input CreateCustomFieldDefinitionInput {
+  workspaceId: Int!
+  entityType: String!
+  name: String!
+  type: CustomFieldType!
+  options: [String!]
+  isRequired: Boolean = false
+}
+
+input UpdateCustomFieldDefinitionInput {
+  name: String
+  options: [String!]
+  isRequired: Boolean
+}
+
+input UpsertCustomFieldValueInput {
+  fieldId: Int!
+  entityId: Int!
+  value: String!
 }
 
 type Subscription {

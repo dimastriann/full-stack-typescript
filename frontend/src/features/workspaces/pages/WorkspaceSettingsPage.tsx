@@ -28,6 +28,7 @@ import type { WorkspaceMember } from '../../../types/Workspaces';
 import type { UserType } from '../../../types/Users';
 import ProjectStagePage from './ProjectStagePage';
 import TaskStagePage from './TaskStagePage';
+import CustomFieldDefinitionPage from './CustomFieldDefinitionPage';
 import Select from '../../../components/Select';
 import ActivityLogFeed from '../../../components/dashboard/ActivityLogFeed';
 
@@ -42,7 +43,9 @@ export default function WorkspaceSettingsPage() {
     number | 'new' | 'workspace' | 'invite' | null
   >(null);
 
-  const [activeTab, setActiveTab] = useState<'info' | 'members' | 'stages' | 'activity'>('info');
+  const [activeTab, setActiveTab] = useState<
+    'info' | 'members' | 'stages' | 'activity' | 'custom-fields'
+  >('info');
 
   // Workspace name editing state
   const [workspaceName, setWorkspaceName] = useState(
@@ -249,6 +252,16 @@ export default function WorkspaceSettingsPage() {
           }`}
         >
           Stages
+        </button>
+        <button
+          onClick={() => setActiveTab('custom-fields')}
+          className={`pb-3 px-4 font-bold text-sm border-b-2 transition-all whitespace-nowrap ${
+            activeTab === 'custom-fields'
+              ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+          }`}
+        >
+          Custom Fields
         </button>
         <button
           onClick={() => setActiveTab('activity')}
@@ -505,6 +518,8 @@ export default function WorkspaceSettingsPage() {
           <TaskStagePage taskStages={taskStages} refetch={refetchTaskStages} />
         </div>
       )}
+
+      {activeTab === 'custom-fields' && <CustomFieldDefinitionPage />}
 
       {activeTab === 'activity' && (
         <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl p-6 border border-surface-200 dark:border-slate-800 animate-fade-in">
