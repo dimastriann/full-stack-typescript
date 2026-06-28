@@ -33,6 +33,7 @@ import { SuperadminModule } from './superadmin/superadmin.module';
 import { NotificationModule } from './notification/notification.module';
 import { ActivityLogModule } from './activity-log/activity-log.module';
 import { CustomFieldModule } from './custom-field/custom-field.module';
+import { WebhookModule } from './webhook/webhook.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { CustomFieldModule } from './custom-field/custom-field.module';
     NotificationModule,
     ActivityLogModule,
     CustomFieldModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [

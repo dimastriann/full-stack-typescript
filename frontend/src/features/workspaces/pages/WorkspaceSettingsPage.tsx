@@ -29,6 +29,7 @@ import type { UserType } from '../../../types/Users';
 import ProjectStagePage from './ProjectStagePage';
 import TaskStagePage from './TaskStagePage';
 import CustomFieldDefinitionPage from './CustomFieldDefinitionPage';
+import WebhookDefinitionPage from './WebhookDefinitionPage';
 import Select from '../../../components/Select';
 import ActivityLogFeed from '../../../components/dashboard/ActivityLogFeed';
 
@@ -44,7 +45,12 @@ export default function WorkspaceSettingsPage() {
   >(null);
 
   const [activeTab, setActiveTab] = useState<
-    'info' | 'members' | 'stages' | 'activity' | 'custom-fields'
+    | 'info'
+    | 'members'
+    | 'stages'
+    | 'activity'
+    | 'custom-fields'
+    | 'integrations'
   >('info');
 
   // Workspace name editing state
@@ -262,6 +268,16 @@ export default function WorkspaceSettingsPage() {
           }`}
         >
           Custom Fields
+        </button>
+        <button
+          onClick={() => setActiveTab('integrations')}
+          className={`pb-3 px-4 font-bold text-sm border-b-2 transition-all whitespace-nowrap ${
+            activeTab === 'integrations'
+              ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+          }`}
+        >
+          Integrations
         </button>
         <button
           onClick={() => setActiveTab('activity')}
@@ -520,6 +536,8 @@ export default function WorkspaceSettingsPage() {
       )}
 
       {activeTab === 'custom-fields' && <CustomFieldDefinitionPage />}
+
+      {activeTab === 'integrations' && <WebhookDefinitionPage />}
 
       {activeTab === 'activity' && (
         <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl p-6 border border-surface-200 dark:border-slate-800 animate-fade-in">

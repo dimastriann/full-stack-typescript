@@ -312,6 +312,31 @@ type LoginResponse {
   user: User!
 }
 
+type WebhookDeliveryLog {
+  id: Int!
+  webhookEndpointId: Int!
+  event: String!
+  payload: String!
+  statusCode: Int
+  responseBody: String
+  durationMs: Int!
+  success: Boolean!
+  createdAt: DateTime!
+}
+
+type WebhookEndpoint {
+  id: Int!
+  workspaceId: Int!
+  url: String!
+  name: String!
+  secret: String!
+  events: [String!]!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deliveryLogs: [WebhookDeliveryLog]!
+}
+
 type TasksByStageItem {
   stage: String!
   count: Int!
@@ -504,6 +529,8 @@ type Query {
   myRoleInProject(projectId: Int!): String
   projects(skip: Int, take: Int, workspaceId: Int): [Project!]!
   project(id: Int!): Project!
+  webhookEndpoints(workspaceId: Int!): [WebhookEndpoint!]!
+  webhookDeliveryLogs(endpointId: Int!): [WebhookDeliveryLog!]!
   tasks(skip: Int, take: Int, projectId: Int, cursor: Int): [Task!]!
   getTask(id: Int!): Task!
   timesheets(skip: Int, take: Int, taskId: Int): [Timesheet!]!
@@ -538,6 +565,10 @@ type Mutation {
   createProject(createProjectInput: CreateProjectInput!): Project!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   deleteProject(id: Int!): Project!
+  createWebhookEndpoint(input: CreateWebhookInput!): WebhookEndpoint!
+  updateWebhookEndpoint(input: UpdateWebhookInput!): WebhookEndpoint!
+  deleteWebhookEndpoint(id: Int!): WebhookEndpoint!
+  testWebhookEndpoint(id: Int!): WebhookDeliveryLog!
   createTask(createTaskInput: CreateTaskInput!): Task!
   updateTask(updateTaskInput: UpdateTaskInput!): Task!
   removeTask(id: Int!): Task!
@@ -676,6 +707,21 @@ input UpdateProjectInput {
   progress: Float
   archivedAt: DateTime
   key: String
+}
+
+input CreateWebhookInput {
+  workspaceId: Int!
+  name: String!
+  url: String!
+  events: [String!]!
+}
+
+input UpdateWebhookInput {
+  id: Int!
+  name: String
+  url: String
+  events: [String!]
+  isActive: Boolean
 }
 
 input CreateTaskInput {

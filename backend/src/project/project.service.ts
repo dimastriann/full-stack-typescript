@@ -8,6 +8,7 @@ import {
   ActivityLogService,
   ActivityLogDetails,
 } from 'src/activity-log/activity-log.service';
+import { WebhookService } from '../webhook/webhook.service';
 
 @Injectable()
 export class ProjectService {
@@ -15,6 +16,7 @@ export class ProjectService {
     private prisma: PrismaService,
     private projectMemberService: ProjectMemberService,
     private activityLog: ActivityLogService,
+    private webhookService: WebhookService,
   ) {}
 
   get includeRelation() {
@@ -89,6 +91,12 @@ export class ProjectService {
       workspaceId: project.workspaceId,
       details: { name: project.name },
     });
+
+    this.webhookService.trigger(
+      project.workspaceId,
+      'project.created',
+      project,
+    );
 
     // Return the project with updated members
     return this.prisma.project.findUnique({
@@ -206,6 +214,12 @@ export class ProjectService {
       }
     }
 
+    this.webhookService.trigger(
+      updatedProject.workspaceId,
+      'project.updated',
+      updatedProject,
+    );
+
     return updatedProject;
   }
 
@@ -233,6 +247,12 @@ export class ProjectService {
         details: { name: projectToDelete.name },
       });
     }
+
+    this.webhookService.trigger(
+      deletedProject.workspaceId,
+      'project.deleted',
+      deletedProject,
+    );
 
     return deletedProject;
   }

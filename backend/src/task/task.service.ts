@@ -8,6 +8,7 @@ import {
   ActivityLogService,
   ActivityLogDetails,
 } from 'src/activity-log/activity-log.service';
+import { WebhookService } from '../webhook/webhook.service';
 
 @Injectable()
 export class TaskService {
@@ -15,6 +16,7 @@ export class TaskService {
     private readonly prisma: PrismaService,
     private readonly projectMemberService: ProjectMemberService,
     private readonly activityLog: ActivityLogService,
+    private readonly webhookService: WebhookService,
   ) {}
 
   get includeRelation() {
@@ -58,6 +60,8 @@ export class TaskService {
       workspaceId: task.project.workspaceId,
       details: { title: task.title },
     });
+
+    this.webhookService.trigger(task.project.workspaceId, 'task.created', task);
 
     return task;
   }
@@ -173,6 +177,12 @@ export class TaskService {
       });
     }
 
+    this.webhookService.trigger(
+      updatedTask.project.workspaceId,
+      'task.updated',
+      updatedTask,
+    );
+
     return updatedTask;
   }
 
@@ -197,6 +207,12 @@ export class TaskService {
       workspaceId: deletedTask.project.workspaceId,
       details: { title: deletedTask.title },
     });
+
+    this.webhookService.trigger(
+      deletedTask.project.workspaceId,
+      'task.deleted',
+      deletedTask,
+    );
 
     return deletedTask;
   }
