@@ -20,4 +20,5 @@ export type UserType = {
   phone?: string;
   status: boolean;
   workspaceMembers?: WorkspaceMember[];
+  twoFactorEnabled?: boolean;
 };

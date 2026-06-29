@@ -303,13 +303,26 @@ type User {
   comments: [Comment]!
   reportedTasks: [Task]!
   approvedTimesheets: [Timesheet]!
+  twoFactorEnabled: Boolean!
 }
 
 type LoginResponse {
-  access_token: String!
-  refresh_token: String!
-  session_id: String!
-  user: User!
+  access_token: String
+  refresh_token: String
+  session_id: String
+  user: User
+  requiresTwoFactor: Boolean
+  preAuthToken: String
+}
+
+type TwoFactorSetupResponse {
+  secret: String!
+  otpauthUrl: String!
+}
+
+type TwoFactorEnableResponse {
+  enabled: Boolean!
+  backupCodes: [String!]!
 }
 
 type WebhookDeliveryLog {
@@ -558,6 +571,10 @@ type Mutation {
   login(email: String!, password: String!): LoginResponse!
   register(createUserInput: CreateUserInput!): LoginResponse!
   logout: Boolean!
+  completeTwoFactorLogin(preAuthToken: String!, token: String!): LoginResponse!
+  setupTwoFactor: TwoFactorSetupResponse!
+  verifyAndEnableTwoFactor(token: String!): TwoFactorEnableResponse!
+  disableTwoFactor(token: String!): Boolean!
   inviteToProject(input: InviteToProjectInput!): ProjectMember!
   updateMemberRole(input: UpdateMemberRoleInput!): ProjectMember!
   removeMemberFromProject(input: RemoveMemberInput!): ProjectMember!

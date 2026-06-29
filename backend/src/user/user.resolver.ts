@@ -9,9 +9,38 @@ import { Throttle } from '@nestjs/throttler';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { LoginResponse } from '../auth/dto/login-response';
+import {
+  TwoFactorSetupResponse,
+  TwoFactorEnableResponse,
+} from '../auth/dto/two-factor.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { GqlContext } from '../auth/types/context.type';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+
+/** Helper to set HTTP-only auth cookies on the GQL response. */
+function setAuthCookies(
+  res: GqlContext['res'],
+  accessToken: string,
+  refreshToken: string,
+): void {
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  res.cookie('access_token', accessToken, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 1000, // 1 hour
+  });
+
+  res.cookie('refresh_token', refreshToken, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    path: '/auth/refresh',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+}
 
 @Resolver(() => User)
 export class UserResolver {
@@ -60,13 +89,15 @@ export class UserResolver {
     return this.userService.delete(id);
   }
 
+  // ─── Login ─────────────────────────────────────────────────────────────────
+
   @Mutation(() => LoginResponse)
-  @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
     @Context() context: GqlContext,
-  ) {
+  ): Promise<LoginResponse> {
     const user = await this.userService.findByEmail(email);
     if (!user) {
       throw new Error('User not found');
@@ -75,41 +106,35 @@ export class UserResolver {
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
+
+    // If 2FA is enabled, issue a short-lived pre-auth token instead of a session.
+    if (user.twoFactorEnabled) {
+      const preAuthToken = this.authService.issuePreAuthToken(user);
+      return { requiresTwoFactor: true, preAuthToken };
+    }
+
+    // Standard login — create a full session.
     const { accessToken, refreshToken, sessionId } =
       await this.authService.login(user);
 
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    context.res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
-
-    context.res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      path: '/auth/refresh', // Only sent to the refresh endpoint
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    setAuthCookies(context.res, accessToken, refreshToken);
 
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
       session_id: sessionId,
-      user,
+      user: user as unknown as User,
     };
   }
 
+  // ─── Register ──────────────────────────────────────────────────────────────
+
   @Mutation(() => LoginResponse)
-  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 registration attempts per minute
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   async register(
     @Args('createUserInput') createUserInput: CreateUserInput,
     @Context() context: GqlContext,
-  ) {
-    // Ensure role is always USER for public registration
+  ): Promise<LoginResponse> {
     const inputWithUserRole = {
       ...createUserInput,
       role: UserRole.USER,
@@ -121,30 +146,17 @@ export class UserResolver {
     const { accessToken, refreshToken, sessionId } =
       await this.authService.login(user);
 
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    context.res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
-
-    context.res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      path: '/auth/refresh',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    setAuthCookies(context.res, accessToken, refreshToken);
 
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
       session_id: sessionId,
-      user,
+      user: user as unknown as User,
     };
   }
+
+  // ─── Logout ────────────────────────────────────────────────────────────────
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
@@ -158,6 +170,70 @@ export class UserResolver {
     }
     context.res.clearCookie('access_token');
     context.res.clearCookie('refresh_token', { path: '/auth/refresh' });
+    return true;
+  }
+
+  // ─── 2FA — Complete login (validates TOTP after password check) ─────────────
+
+  @Mutation(() => LoginResponse)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async completeTwoFactorLogin(
+    @Args('preAuthToken') preAuthToken: string,
+    @Args('token') token: string,
+    @Context() context: GqlContext,
+  ): Promise<LoginResponse> {
+    const { accessToken, refreshToken, sessionId } =
+      await this.authService.completeTwoFactorLogin(preAuthToken, token);
+
+    setAuthCookies(context.res, accessToken, refreshToken);
+
+    // Decode to get userId, then load the user for the response
+    const decoded = this.authService.decodeToken(preAuthToken) as {
+      sub: number;
+    } | null;
+    const user = decoded
+      ? await this.userService.findOne(decoded.sub)
+      : undefined;
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      session_id: sessionId,
+      // Prisma type is compatible at runtime; cast suppresses structural type mismatch
+      user: (user ?? undefined) as unknown as User,
+    };
+  }
+
+  // ─── 2FA — Setup (generates secret + QR code URL) ──────────────────────────
+
+  @Mutation(() => TwoFactorSetupResponse)
+  @UseGuards(GqlAuthGuard)
+  async setupTwoFactor(
+    @CurrentUser() user: User,
+  ): Promise<TwoFactorSetupResponse> {
+    return this.authService.setupTwoFactor(user.id);
+  }
+
+  // ─── 2FA — Verify code and enable ──────────────────────────────────────────
+
+  @Mutation(() => TwoFactorEnableResponse)
+  @UseGuards(GqlAuthGuard)
+  async verifyAndEnableTwoFactor(
+    @CurrentUser() user: User,
+    @Args('token') token: string,
+  ): Promise<TwoFactorEnableResponse> {
+    return this.authService.verifyAndEnableTwoFactor(user.id, token);
+  }
+
+  // ─── 2FA — Disable ─────────────────────────────────────────────────────────
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async disableTwoFactor(
+    @CurrentUser() user: User,
+    @Args('token') token: string,
+  ): Promise<boolean> {
+    await this.authService.disableTwoFactor(user.id, token);
     return true;
   }
 }

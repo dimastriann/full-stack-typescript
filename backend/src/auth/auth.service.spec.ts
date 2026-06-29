@@ -59,6 +59,13 @@ const mockRedis = {
   }),
 };
 
+const mockPrismaService = {
+  user: {
+    findUnique: jest.fn(),
+    update: jest.fn(),
+  },
+};
+
 // ── Test Suite ───────────────────────────────────────────────────────────────
 
 describe('AuthService', () => {
@@ -72,6 +79,7 @@ describe('AuthService', () => {
     service = new AuthService(
       mockJwtService as unknown as JwtService,
       mockUserService as unknown as UserService,
+      mockPrismaService as any,
       mockRedis as never,
     );
   });

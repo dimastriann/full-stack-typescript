@@ -10,6 +10,7 @@ import { ProjectMemberModule } from 'src/project-member/project-member.module';
 import { ProjectAccessGuard } from './guards/project-access.guard';
 import { ProjectPermissionGuard } from './guards/project-permission.guard';
 import { RedisModule } from '../redis/redis.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RedisModule } from '../redis/redis.module';
     PassportModule,
     ProjectMemberModule,
     RedisModule,
+    PrismaModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

@@ -5,11 +5,13 @@ import { useAuthStore } from '../../../store/authStore';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION } from '../gql/auth.graphql';
 import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
+import TwoFactorChallenge from '../components/TwoFactorChallenge';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [preAuthToken, setPreAuthToken] = useState<string | null>(null);
   const login = useAuthStore((state) => state.setAuth);
   const session = useAuthStore((state) => state.session);
   const navigate = useNavigate();
@@ -29,6 +31,13 @@ export default function LoginPage() {
       const { data } = await loginMutation({
         variables: { email, password },
       });
+
+      if (data?.login?.requiresTwoFactor && data.login.preAuthToken) {
+        // User has 2FA enabled — show the TOTP challenge overlay
+        setPreAuthToken(data.login.preAuthToken);
+        return;
+      }
+
       if (data?.login) {
         login(data.login.user, 'logged_in');
         navigate('/dashboard');
@@ -147,6 +156,14 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      {/* 2FA Challenge overlay — shown after successful credential check */}
+      {preAuthToken && (
+        <TwoFactorChallenge
+          preAuthToken={preAuthToken}
+          onCancel={() => setPreAuthToken(null)}
+        />
+      )}
     </div>
   );
 }

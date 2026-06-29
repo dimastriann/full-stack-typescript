@@ -55,6 +55,7 @@
     "ioredis": "^5.11.1",
     "link-preview-js": "^4.0.0",
     "midtrans-client": "^1.4.3",
+    "otplib": "^13.4.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.16.3",

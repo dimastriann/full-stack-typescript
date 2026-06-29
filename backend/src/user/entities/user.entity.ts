@@ -61,4 +61,8 @@ export class User extends Base {
 
   @Field(() => [Timesheet], { nullable: 'items' })
   approvedTimesheets?: Timesheet[];
+
+  /** Whether Two-Factor Authentication is currently enabled for this user. */
+  @Field({ defaultValue: false })
+  twoFactorEnabled: boolean;
 }

@@ -7,7 +7,12 @@ import { SubscriptionModule } from 'src/subscription/subscription.module';
 import { WebhookModule } from '../webhook/webhook.module';
 
 @Module({
-  imports: [PrismaModule, ProjectMemberModule, SubscriptionModule, WebhookModule],
+  imports: [
+    PrismaModule,
+    ProjectMemberModule,
+    SubscriptionModule,
+    WebhookModule,
+  ],
   providers: [ProjectResolver, ProjectService],
 })
 export class ProjectModule {}

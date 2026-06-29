@@ -3,6 +3,9 @@ import { useAuthStore } from '../../../store/authStore';
 import { usePushNotifications } from '../../../hooks/usePushNotifications';
 import { Bell, CheckCircle2, ShieldAlert, Loader2, Send } from 'lucide-react';
 import { useState } from 'react';
+import { useQuery } from '@apollo/client';
+import { GET_ME } from '../../auth/gql/auth.graphql';
+import TwoFactorSetup from '../components/TwoFactorSetup';
 
 export default function ProfilePage() {
   const user = useAuthStore((state) => state.user);
@@ -19,6 +22,14 @@ export default function ProfilePage() {
   const [toastMsg, setToastMsg] = useState('');
   const [toastError, setToastError] = useState(false);
   const [testing, setTesting] = useState(false);
+
+  // Fetch fresh user data (including twoFactorEnabled) so the 2FA card
+  // reflects the latest server state, even after the auth store is stale.
+  const { data: meData, refetch: refetchMe } = useQuery(GET_ME, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const twoFactorEnabled: boolean =
+    meData?.me?.twoFactorEnabled ?? user?.twoFactorEnabled ?? false;
 
   const showToast = (msg: string, isErr = false) => {
     setToastMsg(msg);
@@ -188,6 +199,13 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
+      </div>
+      {/* Two-Factor Authentication Card */}
+      <div className="bg-white dark:bg-slate-900 shadow-card rounded-2xl p-8 border border-surface-200 dark:border-slate-800">
+        <TwoFactorSetup
+          isEnabled={twoFactorEnabled}
+          onStatusChange={() => void refetchMe()}
+        />
       </div>
     </div>
   );
