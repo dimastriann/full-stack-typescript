@@ -1,4 +1,9 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { PaymentProviderFactory } from './providers/payment-provider.factory';
@@ -25,7 +30,10 @@ export class SubscriptionService {
     workspaceId: number,
     planId: PlanLevel,
     userEmail: string,
+    userId: number,
   ) {
+    await this.assertWorkspaceBillingAccess(workspaceId, userId);
+
     if (planId === PlanLevel.FREE) {
       throw new BadRequestException(
         'Cannot create a checkout session for the FREE plan.',
@@ -188,6 +196,11 @@ export class SubscriptionService {
     };
   }
 
+  async getPlanLimitsForUser(workspaceId: number, userId: number) {
+    await this.assertWorkspaceMember(workspaceId, userId);
+    return this.getPlanLimits(workspaceId);
+  }
+
   async getWorkspaceSubscription(workspaceId: number) {
     const sub = await this.prisma.subscription.findUnique({
       where: { workspaceId },
@@ -228,6 +241,30 @@ export class SubscriptionService {
         limit: limits.maxMembers,
         current: count,
       });
+    }
+  }
+
+  private async assertWorkspaceMember(workspaceId: number, userId: number) {
+    const member = await this.prisma.workspaceMember.findUnique({
+      where: { workspaceId_userId: { workspaceId, userId } },
+    });
+
+    if (!member) {
+      throw new ForbiddenException('You do not have access to this workspace');
+    }
+
+    return member;
+  }
+
+  private async assertWorkspaceBillingAccess(
+    workspaceId: number,
+    userId: number,
+  ) {
+    const member = await this.assertWorkspaceMember(workspaceId, userId);
+    if (member.role !== 'OWNER' && member.role !== 'ADMIN') {
+      throw new ForbiddenException(
+        'Only workspace owners or admins can manage billing',
+      );
     }
   }
 }

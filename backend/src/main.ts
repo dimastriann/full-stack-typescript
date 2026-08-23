@@ -4,12 +4,19 @@ import { graphqlUploadExpress } from 'graphql-upload-ts';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { Request, Response, NextFunction } from 'express';
+import { Application, Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
+    // Preserve payment webhook payloads for signature verification while
+    // retaining Nest's bounded JSON parser and normal req.body handling.
+    rawBody: true,
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
+
+  // The production Nginx container is the single trusted reverse-proxy hop.
+  // This lets authentication throttles identify the originating client IP.
+  (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 1);
 
   // Security headers with Helmet
   app.use(
@@ -27,24 +34,6 @@ async function bootstrap() {
   );
 
   // ─── Raw body for webhook signature verification ─────────────────────────────
-  // Must be registered BEFORE json body parser (helmet/cookieParser run first).
-  // Only applies to /subscription/webhook/* routes so normal routes are unaffected.
-  app.use(
-    '/subscription/webhook',
-    (
-      req: Request & { rawBody?: Buffer },
-      _res: Response,
-      next: NextFunction,
-    ) => {
-      const chunks: Buffer[] = [];
-      req.on('data', (chunk: Buffer) => chunks.push(chunk));
-      req.on('end', () => {
-        req.rawBody = Buffer.concat(chunks);
-        next();
-      });
-    },
-  );
-
   app.use(cookieParser());
   // Support comma-separated URLs in FRONTEND_URL and normalize trailing slashes
   const rawFrontendUrls = process.env.FRONTEND_URL

@@ -10,6 +10,7 @@ import {
   UseGuards,
   BadRequestException,
   ParseIntPipe,
+  RawBodyRequest,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { SubscriptionService } from './subscription.service';
@@ -49,6 +50,7 @@ export class SubscriptionController {
       workspaceId,
       planId,
       user.email,
+      user.id,
     );
   }
 
@@ -65,7 +67,7 @@ export class SubscriptionController {
   @HttpCode(HttpStatus.OK)
   async handleWebhook(
     @Param('provider') providerParam: string,
-    @Req() req: Request,
+    @Req() req: RawBodyRequest<Request>,
     @Headers('stripe-signature') stripeSig: string,
     @Headers('x-callback-token') xenditToken: string,
   ) {
@@ -75,8 +77,7 @@ export class SubscriptionController {
       throw new BadRequestException(`Unknown provider: ${providerParam}`);
     }
 
-    // Raw body is attached to req by the rawBodyMiddleware in main.ts
-    const rawBody = (req as Request & { rawBody?: Buffer }).rawBody;
+    const rawBody = req.rawBody;
     if (!rawBody) {
       throw new BadRequestException('Raw body not available');
     }
@@ -98,7 +99,11 @@ export class SubscriptionController {
    */
   @Post(':workspaceId/limits')
   @UseGuards(JwtAuthRestGuard)
-  async getLimits(@Param('workspaceId', ParseIntPipe) workspaceId: number) {
-    return this.subscriptionService.getPlanLimits(workspaceId);
+  async getLimits(
+    @Param('workspaceId', ParseIntPipe) workspaceId: number,
+    @Req() req: Request,
+  ) {
+    const user = req.user as { id: number };
+    return this.subscriptionService.getPlanLimitsForUser(workspaceId, user.id);
   }
 }

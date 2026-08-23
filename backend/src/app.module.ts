@@ -24,7 +24,7 @@ import { TaskStageModule } from './task-stage/task-stage.module';
 import { ChatModule } from './chat/chat.module';
 import { HealthModule } from './health/health.module';
 import { validate } from './config/env.validation';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { depthLimitRule } from './common/validation/depth-limit.validation';
@@ -34,6 +34,7 @@ import { NotificationModule } from './notification/notification.module';
 import { ActivityLogModule } from './activity-log/activity-log.module';
 import { CustomFieldModule } from './custom-field/custom-field.module';
 import { WebhookModule } from './webhook/webhook.module';
+import { GqlThrottlerGuard } from './common/guards/gql-throttler.guard';
 
 @Module({
   imports: [
@@ -85,6 +86,10 @@ import { WebhookModule } from './webhook/webhook.module';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: GqlThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

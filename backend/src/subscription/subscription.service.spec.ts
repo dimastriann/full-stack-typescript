@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { PlanLevel, SubscriptionStatus } from '../../prisma/generated/client';
 
@@ -14,6 +14,7 @@ const mockPrisma = {
   },
   workspaceMember: {
     count: jest.fn(),
+    findUnique: jest.fn(),
   },
   planFeatureLimit: {
     findUnique: jest.fn(),
@@ -92,6 +93,47 @@ describe('SubscriptionService', () => {
 
       expect(limits.maxProjects).toBe(100);
       expect(mockPrisma.planFeatureLimit.findUnique).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('workspace access', () => {
+    it('returns limits to a workspace member', async () => {
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue({
+        role: 'MEMBER',
+      });
+      mockPrisma.subscription.findUnique.mockResolvedValue(null);
+      mockPrisma.planFeatureLimit.findUnique.mockResolvedValue(null);
+
+      const service = buildService();
+      await expect(service.getPlanLimitsForUser(1, 7)).resolves.toEqual({
+        maxProjects: 5,
+        maxMembers: 10,
+        maxStorageGb: 2,
+      });
+      expect(mockPrisma.workspaceMember.findUnique).toHaveBeenCalledWith({
+        where: { workspaceId_userId: { workspaceId: 1, userId: 7 } },
+      });
+    });
+
+    it('rejects limits access from a non-member', async () => {
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue(null);
+
+      const service = buildService();
+      await expect(service.getPlanLimitsForUser(1, 99)).rejects.toThrow(
+        ForbiddenException,
+      );
+    });
+
+    it('rejects checkout creation from a regular member', async () => {
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue({
+        role: 'MEMBER',
+      });
+
+      const service = buildService();
+      await expect(
+        service.createCheckoutSession(1, PlanLevel.PRO, 'user@example.com', 7),
+      ).rejects.toThrow(ForbiddenException);
+      expect(mockProviderFactory.getDefaultProvider).not.toHaveBeenCalled();
     });
   });
 
