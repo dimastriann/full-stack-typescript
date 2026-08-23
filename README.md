@@ -1,258 +1,179 @@
-# Full Stack TypeScript Project Management App
+# ProjectFlow
 
-A modern full-stack project management application built with TypeScript, featuring a NestJS GraphQL backend and React frontend with real-time collaboration capabilities.
+ProjectFlow is a full-stack TypeScript project-management application and SaaS starter. It combines a NestJS GraphQL API with a React client and includes multi-workspace collaboration, access control, real-time features, subscriptions, and self-hosted deployment.
 
-## 🚀 Technology Stack
+The project is being prepared as an open-source core that can support optional commercial extensions without making the community edition dependent on private code.
 
-### Backend
-- **Framework**: NestJS (Node.js framework)
-- **API**: GraphQL with Apollo Server
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: JWT with Passport and bcrypt
-- **Language**: TypeScript
-- **Testing**: Jest
+## Highlights
 
-### Frontend
-- **Framework**: React 19 with TypeScript
-- **Build Tool**: Vite
-- **Styling**: Vanilla CSS (Premium Aesthetics) & TailwindCSS
-- **State Management**: React Context & Zustand
-- **GraphQL Client**: Apollo Client
-- **Routing**: React Router DOM (with protected routes)
+- Workspaces with owner, admin, member, and viewer roles
+- Project-level membership and permissions
+- Projects, tasks, subtasks, configurable stages, priorities, and custom fields
+- List, Kanban, calendar, and Gantt views
+- Comments, attachments, activity history, chat, and push notifications
+- Manual and timer-based timesheets with approval fields
+- JWT authentication, Redis-backed sessions, and two-factor authentication
+- Dashboard statistics and platform administration
+- Workspace subscriptions with Stripe, Xendit, and Midtrans provider adapters
+- Signed webhooks and delivery logs
+- PostgreSQL backups and PWA configuration
+- Docker-based local or self-hosted deployment
 
-## 📋 Features
+## Technology
 
-- **Advanced ACL System**: Granular project-level roles (**Owner, Admin, Member, Viewer**) with inherited permissions.
-- **Global RBAC**: System-wide roles (**Admin, Manager, User**) protecting administrative dashboards.
-- **Dynamic Dashboard**: Real-time aggregate statistics for users, projects, and tasks.
-- **User Registration**: Seamless signup flow with automatic authentication.
-- **Task Management**: Kanban-style boards with drag-and-drop (permission-aware).
-- **Collaboration**: Nested commenting system and multi-level attachments.
-- **Time Tracking**: Log and manage time spent across entities.
+| Area       | Stack                                         |
+| ---------- | --------------------------------------------- |
+| Backend    | NestJS 11, TypeScript, GraphQL, Apollo Server |
+| Data       | PostgreSQL, Prisma 7, Redis                   |
+| Frontend   | React 19, Vite 7, Apollo Client, Zustand      |
+| UI         | CSS, Tailwind CSS, Headless UI, Lucide        |
+| Real time  | GraphQL subscriptions, Socket.IO              |
+| Testing    | Jest, Vitest, Testing Library                 |
+| Deployment | Docker Compose, Nginx, PWA                    |
 
-## 🛠️ Development Setup
+## Requirements
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-- Git
+- Node.js 24 is recommended. Prisma 7 requires a supported modern Node.js release.
+- npm
+- PostgreSQL
+- Redis
+- Docker and Docker Compose, if using the container workflow
 
-### Installation
+## Quick start with Docker
 
-1. **Clone the repository**
+1. Copy the environment template:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   On PowerShell:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+2. Replace the example secrets in `.env`.
+
+3. Build and start the stack:
+
+   ```bash
+   docker compose up --build
+   ```
+
+4. Open `http://localhost:8080`.
+
+The backend container applies committed Prisma migrations when it starts. Run the seed explicitly if you want development accounts and plan-limit records:
+
 ```bash
-git clone <repository-url>
-cd full-stack-typescript
+docker compose exec backend npx prisma db seed
 ```
 
-2. **Install root dependencies**
+The seed includes intentionally simple demo credentials. Never run it unchanged on an internet-facing production installation.
+
+## Local development
+
+Install all workspaces:
+
 ```bash
 npm install
+npm install --prefix backend
+npm install --prefix frontend
 ```
 
-3. **Backend Setup**
+Create local configuration:
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+Copy-Item frontend/.env.example frontend/.env
+```
+
+Update `backend/.env`, then prepare the database:
+
 ```bash
 cd backend
-npm install
-
-# Generate Prisma client
 npx prisma generate
-
-# Run database migrations
 npx prisma migrate dev
-
-# Start the backend server (development mode)
-npm run start:dev
-```
-
-4. **Frontend Setup**
-```bash
-cd frontend
-npm install
-
-# Start the frontend development server
-npm run dev
-```
-
-### Database Setup
-
-The application uses **PostgreSQL** with Prisma ORM. Ensure you have a running PostgreSQL instance and configure your `.env` file with the correct `DATABASE_URL`.
-
-```bash
-# Navigate to backend directory
-cd backend
-
-# Generate Prisma client
-npx prisma generate
-
-# Apply migrations
-npx prisma migrate dev
-
-# (Optional) Seed the database with sample data
 npx prisma db seed
+cd ..
 ```
 
-## 🚀 Running the Application
+Start both applications from the repository root:
 
-### Development Mode
-
-1. **Start Backend** (Terminal 1)
 ```bash
-cd backend
-npm run start:dev
-```
-Backend will be available at: `http://localhost:3000`
-GraphQL Playground: `http://localhost:3000/graphql`
-
-2. **Start Frontend** (Terminal 2)
-```bash
-cd frontend
 npm run dev
 ```
-Frontend will be available at: `http://localhost:5173`
 
-### Production Mode
+- Frontend: `http://localhost:5173`
+- GraphQL API: `http://localhost:3000/graphql`
+- Health endpoint: `http://localhost:3000/health`
 
-1. **Build and start backend**
+## Configuration
+
+The templates [.env.example](.env.example), [backend/.env.example](backend/.env.example), and [frontend/.env.example](frontend/.env.example) document supported settings.
+
+Required backend values:
+
+| Variable         | Purpose                                   |
+| ---------------- | ----------------------------------------- |
+| `DATABASE_URL`   | PostgreSQL connection URL                 |
+| `JWT_SECRET_KEY` | Secret used to sign authentication tokens |
+
+Common optional values:
+
+| Variable                                                 | Purpose                                  |
+| -------------------------------------------------------- | ---------------------------------------- |
+| `FRONTEND_URL`                                           | Comma-separated allowed frontend origins |
+| `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`             | Session-store connection                 |
+| `SENTRY_DSN`                                             | Error-reporting endpoint                 |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Web push configuration                   |
+| `STRIPE_*`, `XENDIT_*`, `MIDTRANS_*`                     | Fallback payment-provider credentials    |
+| `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD`                | Account created by the seed script       |
+
+Payment credentials can also be managed through the super-admin provider configuration. Do not commit real credentials or use the development defaults in production.
+
+## Repository structure
+
+```text
+.
+|-- backend/                 NestJS API, Prisma schema, migrations, and tests
+|   |-- prisma/
+|   `-- src/                 Feature-oriented NestJS modules
+|-- frontend/                React application and component tests
+|   `-- src/features/        Feature-oriented UI modules
+|-- docs/                    Architecture and maintenance guidance
+|-- .github/                 Contribution templates
+`-- docker-compose.yml       Self-contained application stack
+```
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the runtime and authorization model.
+
+## Quality commands
+
+Run these from the repository root:
+
 ```bash
-cd backend
+npm run format
+npm run lint
+npm test
 npm run build
-npm run start:prod
 ```
 
-2. **Build and preview frontend**
-```bash
-cd frontend
-npm run build
-npm run preview
-```
+Individual backend and frontend commands remain available through their own `package.json` files. The backend end-to-end suite requires its configured infrastructure.
 
-## 📁 Project Structure
+## Open-source and commercial direction
 
-```
-full-stack-typescript/
-├── backend/                 # NestJS GraphQL API
-│   ├── src/
-│   │   ├── user/           # User management module
-│   │   ├── project/        # Project management module
-│   │   ├── task/           # Task management module
-│   │   ├── timesheet/      # Time tracking module
-│   │   ├── comment/        # Comments system module
-│   │   ├── project-member/ # ACL & Membership module
-│   │   ├── dashboard/      # Statistics & Aggregates module
-│   │   └── prisma/         # Database service
-│   ├── prisma/
-│   │   ├── schema.prisma   # Database schema
-│   │   └── migrations/     # Database migrations
-│   └── dev.db             # SQLite database
-├── frontend/               # React application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── features/       # Feature-based modules
-│   │   │   ├── projects/   # Project management
-│   │   │   ├── tasks/      # Task management
-│   │   │   └── users/      # User management
-│   │   ├── context/        # React context providers
-│   │   ├── hooks/          # Custom React hooks
-│   │   └── types/          # TypeScript type definitions
-│   └── public/             # Static assets
-└── README.md
-```
+The current repository is the open-source core. The intended architecture keeps it independently useful and introduces stable extension contracts before any commercial modules are separated. Premium code, hosted infrastructure, and secrets will not be committed here.
 
-## 🔧 Available Scripts
+A detailed Core/Pro feature matrix will be approved before premium extraction begins.
 
-### Backend Scripts
-```bash
-npm run start:dev      # Start development server with hot reload
-npm run start:debug    # Start with debugging enabled
-npm run build          # Build for production
-npm run start:prod     # Start production server
-npm run test           # Run unit tests
-npm run test:e2e       # Run end-to-end tests
-npm run lint           # Run ESLint
-npm run format         # Format code with Prettier
-```
+## Contributing and support
 
-### Frontend Scripts
-```bash
-npm run dev            # Start development server
-npm run build          # Build for production
-npm run preview        # Preview production build
-npm run lint           # Run ESLint
-npm run format         # Format code with Prettier
-```
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+- Report vulnerabilities according to [SECURITY.md](SECURITY.md), not in public issues.
+- Use [SUPPORT.md](SUPPORT.md) to choose the right support channel.
+- Participation is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
-## 🗄️ Database Schema
+## License
 
-The application includes the following main entities:
-
-- **User**: User accounts with roles (Admin, Manager, User)
-- **Project**: Projects with status tracking
-- **Task**: Tasks assigned to users and projects
-- **Timesheet**: Time tracking entries
-- **Comment**: Collaborative commenting system
-
-## 🔐 Authentication & Authorization
-
-- Password hashing with bcrypt
-- Role-based access control (Admin, Manager, User)
-- JWT tokens for session management
-- Protected routes and API endpoints
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-cd backend
-npm run test           # Unit tests
-npm run test:e2e       # End-to-end tests
-npm run test:cov       # Coverage report
-
-# Frontend tests
-cd frontend
-npm run test           # Component tests
-```
-
-## 📝 API Documentation
-
-The GraphQL API is automatically documented and available at:
-- **Development**: `http://localhost:3000/graphql`
-- **GraphQL Playground**: Interactive API explorer
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-1. **Database connection issues**
-   - Ensure SQLite database file exists
-   - Run `npx prisma migrate dev` to apply migrations
-
-2. **GraphQL connection issues**
-   - Verify backend is running on port 3000
-   - Check CORS settings in `main.ts`
-
-3. **Frontend build issues**
-   - Clear node_modules and reinstall: `rm -rf node_modules && npm install`
-   - Check TypeScript configuration
-
-### Getting Help
-
-- Check the [Issues](https://github.com/dimastriann/full-stack-typescript/issues) page
-- Review the GraphQL Playground for API documentation
-- Ensure all dependencies are properly installed
-
----
-
-**Happy Coding! 🚀**
+ProjectFlow is licensed under the [MIT License](LICENSE).

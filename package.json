@@ -1,13 +1,22 @@
 {
   "name": "typescript-fullstack",
   "version": "1.0.0",
-  "description": "Running TypeScript Fullstack Application",
-  "main": "index.js",
+  "description": "Open-source full-stack TypeScript project-management and SaaS starter",
   "scripts": {
-    "dev": "concurrently \"npm run --prefix backend start:dev\" \"npm run --prefix frontend dev\""
+    "dev": "concurrently \"npm run --prefix backend start:dev\" \"npm run --prefix frontend dev\"",
+    "build": "npm run --prefix backend build && npm run --prefix frontend build",
+    "format": "npm run --prefix backend format && npm run --prefix frontend format",
+    "lint": "npm run --prefix backend lint && npm run --prefix frontend lint",
+    "test": "npm run --prefix backend test -- --runInBand && npm run --prefix frontend test -- --run"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "typescript",
+    "nestjs",
+    "react",
+    "graphql",
+    "project-management",
+    "saas-boilerplate"
+  ],
   "license": "MIT",
   "type": "module",
   "devDependencies": {
