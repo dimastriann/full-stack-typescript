@@ -111,7 +111,8 @@
     "rootDir": "src",
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1",
-      "^prisma/(.*)$": "<rootDir>/../prisma/$1"
+      "^prisma/(.*)$": "<rootDir>/../prisma/$1",
+      "^otplib$": "<rootDir>/test/mocks/otplib.ts"
     },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {

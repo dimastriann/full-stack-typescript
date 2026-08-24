@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectMemberService } from './project-member.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import { ActivityLogService } from 'src/activity-log/activity-log.service';
 
 describe('ProjectMemberService', () => {
   let service: ProjectMemberService;
@@ -29,6 +30,10 @@ describe('ProjectMemberService', () => {
       providers: [
         ProjectMemberService,
         { provide: PrismaService, useValue: mockPrisma },
+        {
+          provide: ActivityLogService,
+          useValue: { log: jest.fn().mockResolvedValue(undefined) },
+        },
       ],
     }).compile();
 

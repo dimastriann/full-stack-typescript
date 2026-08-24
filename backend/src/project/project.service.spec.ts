@@ -4,6 +4,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
 import { ForbiddenException } from '@nestjs/common';
+import { ActivityLogService } from 'src/activity-log/activity-log.service';
+import { WebhookService } from 'src/webhook/webhook.service';
 
 const mockProject = {
   id: 1,
@@ -32,6 +34,9 @@ const mockProjectMemberService = {
   getUserProjects: jest.fn().mockResolvedValue([{ projectId: 1 }]),
 };
 
+const mockActivityLogService = { log: jest.fn().mockResolvedValue(undefined) };
+const mockWebhookService = { trigger: jest.fn() };
+
 describe('ProjectService', () => {
   let service: ProjectService;
   let prisma: PrismaService;
@@ -49,6 +54,8 @@ describe('ProjectService', () => {
           provide: ProjectMemberService,
           useValue: mockProjectMemberService,
         },
+        { provide: ActivityLogService, useValue: mockActivityLogService },
+        { provide: WebhookService, useValue: mockWebhookService },
       ],
     }).compile();
 

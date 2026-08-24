@@ -4,7 +4,10 @@ import { UpdateTimesheetInput } from './dto/update-timesheet.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
-import { ActivityLogService } from 'src/activity-log/activity-log.service';
+import {
+  ActivityLogDetails,
+  ActivityLogService,
+} from 'src/activity-log/activity-log.service';
 
 @Injectable()
 export class TimesheetService {
@@ -116,7 +119,7 @@ export class TimesheetService {
       include: { ...this.includeRelation },
     });
 
-    const changes: any = {};
+    const changes: ActivityLogDetails = {};
     if (
       updateTimesheetInput.timeSpent &&
       updateTimesheetInput.timeSpent !== timesheet.timeSpent

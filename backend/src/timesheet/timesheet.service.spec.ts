@@ -3,12 +3,15 @@ import { TimesheetService } from './timesheet.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectMemberService } from 'src/project-member/project-member.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import { ActivityLogService } from 'src/activity-log/activity-log.service';
 
 const mockTimesheet = {
   id: 1,
   projectId: 1,
   userId: 1,
-  hours: 8,
+  timeSpent: 8,
+  description: 'Working on task',
+  project: { workspaceId: 1 },
 };
 
 const mockPrisma = {
@@ -27,6 +30,8 @@ const mockProjectMemberService = {
   getUserProjects: jest.fn().mockResolvedValue([{ projectId: 1 }]),
 };
 
+const mockActivityLogService = { log: jest.fn().mockResolvedValue(undefined) };
+
 describe('TimesheetService', () => {
   let service: TimesheetService;
   let prisma: PrismaService;
@@ -44,6 +49,7 @@ describe('TimesheetService', () => {
           provide: ProjectMemberService,
           useValue: mockProjectMemberService,
         },
+        { provide: ActivityLogService, useValue: mockActivityLogService },
       ],
     }).compile();
 
@@ -62,7 +68,7 @@ describe('TimesheetService', () => {
       const createDto = {
         projectId: 1,
         taskId: 1,
-        hours: 8,
+        timeSpent: 8,
         description: 'Working on task',
       };
 

@@ -62,7 +62,7 @@ export class AuthService {
 
   /** Decode a JWT payload without signature verification (safe for pre-auth tokens). */
   decodeToken(token: string): Record<string, unknown> | null {
-    return this.jwtService.decode(token) as Record<string, unknown> | null;
+    return this.jwtService.decode(token);
   }
 
   // ─── session creation (shared by login & completeTwoFactorLogin) ────────────

@@ -7,6 +7,9 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateWebhookInput, UpdateWebhookInput } from './dto/webhook.input';
 import * as crypto from 'crypto';
+import { Prisma, WebhookEndpoint } from '../../prisma/generated/client';
+
+type DispatchEndpoint = Pick<WebhookEndpoint, 'id' | 'url' | 'secret'>;
 
 @Injectable()
 export class WebhookService {
@@ -115,13 +118,20 @@ export class WebhookService {
   /**
    * Fires webhooks asynchronously (fire-and-forget in the background).
    */
-  trigger(workspaceId: number, event: string, payload: any) {
+  trigger(workspaceId: number, event: string, payload: unknown) {
     this.triggerAsync(workspaceId, event, payload).catch((err) => {
-      this.logger.error(`Error triggering webhooks for event ${event}`, err);
+      this.logger.error(
+        `Error triggering webhooks for event ${event}`,
+        this.errorMessage(err),
+      );
     });
   }
 
-  private async triggerAsync(workspaceId: number, event: string, payload: any) {
+  private async triggerAsync(
+    workspaceId: number,
+    event: string,
+    payload: unknown,
+  ) {
     const endpoints = await this.prisma.webhookEndpoint.findMany({
       where: { workspaceId, isActive: true, events: { has: event } },
     });
@@ -140,7 +150,7 @@ export class WebhookService {
         this.dispatch(endpoint, event, cleanPayload).catch((err) => {
           this.logger.error(
             `Failed delivering ${event} to endpoint ${endpoint.id} (${endpoint.url})`,
-            err,
+            this.errorMessage(err),
           );
         }),
       ),
@@ -167,7 +177,11 @@ export class WebhookService {
     return this.dispatch(webhook, 'test', testPayload);
   }
 
-  private async dispatch(endpoint: any, event: string, payload: any) {
+  private async dispatch(
+    endpoint: DispatchEndpoint,
+    event: string,
+    payload: Prisma.InputJsonValue,
+  ) {
     const startTime = Date.now();
 
     const body = JSON.stringify({
@@ -203,9 +217,9 @@ export class WebhookService {
       statusCode = response.status;
       success = response.ok;
       responseBody = await response.text();
-    } catch (err: any) {
-      this.logger.warn(`Webhook endpoint delivery failed: ${err.message}`);
-      responseBody = err.message || String(err);
+    } catch (err: unknown) {
+      responseBody = this.errorMessage(err);
+      this.logger.warn(`Webhook endpoint delivery failed: ${responseBody}`);
       success = false;
     } finally {
       clearTimeout(timeoutId);
@@ -222,7 +236,7 @@ export class WebhookService {
       data: {
         webhookEndpointId: endpoint.id,
         event,
-        payload: payload as any,
+        payload,
         statusCode,
         responseBody,
         durationMs,
@@ -231,18 +245,23 @@ export class WebhookService {
     });
   }
 
-  private sanitizePayload(payload: any): any {
-    if (!payload) return null;
+  private sanitizePayload(payload: unknown): Prisma.InputJsonValue {
+    if (payload === null || payload === undefined) return {};
     // Standard JS serialization/deserialization to strip complex references
     try {
-      const stringified = JSON.stringify(payload, (key, value) => {
+      const stringified = JSON.stringify(payload, (key, value: unknown) => {
         // Exclude passwords or extremely large nested properties if present
         if (key === 'password' || key === 'twoFactorSecret') return undefined;
         return value;
       });
-      return JSON.parse(stringified);
+      if (stringified === undefined) return {};
+      return JSON.parse(stringified) as Prisma.InputJsonValue;
     } catch {
-      return payload;
+      return {};
     }
+  }
+
+  private errorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
   }
 }
