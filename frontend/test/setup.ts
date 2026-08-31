@@ -2,6 +2,16 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+vi.mock('../src/lib/logger', () => ({
+  default: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+    trace: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
 // Automatically cleanup after each test
 afterEach(() => {
   cleanup();

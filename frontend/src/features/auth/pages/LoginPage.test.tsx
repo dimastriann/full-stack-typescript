@@ -28,8 +28,19 @@ describe('LoginPage', () => {
       result: {
         data: {
           login: {
+            __typename: 'AuthPayload',
             access_token: 'mock-token',
-            user: { id: 1, email: 'test@example.com', firstName: 'Test' },
+            requiresTwoFactor: false,
+            preAuthToken: null,
+            user: {
+              __typename: 'User',
+              id: 1,
+              name: 'Test User',
+              email: 'test@example.com',
+              role: 'MEMBER',
+              twoFactorEnabled: false,
+              workspaceMembers: [],
+            },
           },
         },
       },
@@ -38,7 +49,7 @@ describe('LoginPage', () => {
 
   it('renders login form correctly', () => {
     render(
-      <MockedProvider mocks={[]} addTypename={false}>
+      <MockedProvider mocks={[]}>
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
@@ -54,7 +65,7 @@ describe('LoginPage', () => {
 
   it('handles successful login', async () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={mocks}>
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
@@ -71,7 +82,15 @@ describe('LoginPage', () => {
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith(
-        { id: 1, email: 'test@example.com', firstName: 'Test' },
+        {
+          __typename: 'User',
+          id: 1,
+          name: 'Test User',
+          email: 'test@example.com',
+          role: 'MEMBER',
+          twoFactorEnabled: false,
+          workspaceMembers: [],
+        },
         'logged_in',
       );
     });
@@ -89,7 +108,7 @@ describe('LoginPage', () => {
     ];
 
     render(
-      <MockedProvider mocks={errorMocks} addTypename={false}>
+      <MockedProvider mocks={errorMocks}>
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>

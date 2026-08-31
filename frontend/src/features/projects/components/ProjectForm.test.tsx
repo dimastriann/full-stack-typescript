@@ -8,6 +8,7 @@ import { useProjects } from '../hooks/useProjects';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_PROJECTS, GET_PROJECT_STAGES } from '../gql/project.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
+import { GET_CUSTOM_FIELD_DEFINITIONS } from '../../workspaces/gql/custom-field.graphql';
 
 // Mock focus/hooks
 vi.mock('../../../store/authStore', () => ({
@@ -37,7 +38,24 @@ describe('ProjectForm', () => {
     {
       request: { query: GET_USERS },
       result: {
-        data: { users: [{ id: 1, name: 'Admin', email: 'admin@test.com' }] },
+        data: {
+          users: [
+            {
+              __typename: 'User',
+              id: 1,
+              name: 'Admin',
+              email: 'admin@test.com',
+              role: 'ADMIN',
+              status: 'ACTIVE',
+              firstName: 'Admin',
+              lastName: 'User',
+              mobile: null,
+              birthDate: null,
+              address: null,
+              bio: null,
+            },
+          ],
+        },
       },
     },
     {
@@ -45,12 +63,36 @@ describe('ProjectForm', () => {
         query: GET_PROJECT_STAGES,
         variables: { workspaceId: 1 },
       },
-      result: { data: { projectStages: [{ id: 1, title: 'In Planning' }] } },
+      result: {
+        data: {
+          projectStages: [
+            {
+              __typename: 'ProjectStage',
+              id: 1,
+              title: 'In Planning',
+              color: '#64748b',
+              sequence: 1,
+              isCompleted: false,
+              isCanceled: false,
+            },
+          ],
+        },
+      },
+    },
+    {
+      request: {
+        query: GET_CUSTOM_FIELD_DEFINITIONS,
+        variables: { workspaceId: 1, entityType: 'PROJECT' },
+      },
+      result: { data: { customFieldDefinitions: [] } },
     },
   ];
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCreateRecord.mockResolvedValue({
+      data: { createProject: { id: 1 } },
+    });
     (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
       (selector) => selector({ user: { id: 1, role: 'ADMIN' } }),
     );
@@ -69,7 +111,7 @@ describe('ProjectForm', () => {
 
   it('renders correctly and handles submission', async () => {
     render(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+      <MockedProvider mocks={apolloMocks}>
         <MemoryRouter>
           <ProjectForm onSuccess={vi.fn()} />
         </MemoryRouter>
@@ -102,7 +144,7 @@ describe('ProjectForm', () => {
 
   it('shows validation error when name is missing', async () => {
     render(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+      <MockedProvider mocks={apolloMocks}>
         <MemoryRouter>
           <ProjectForm />
         </MemoryRouter>

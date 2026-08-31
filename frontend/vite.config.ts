@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -18,7 +18,11 @@ export default defineConfig({
     }),
   ],
   server: {
-    allowedHosts: ['localhost', '127.0.0.1', 'moving-koala-briefly.ngrok-free.app'],
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'moving-koala-briefly.ngrok-free.app',
+    ],
     proxy: {
       '/pwa': {
         target: 'http://localhost:3000',
@@ -39,9 +43,6 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('lucide') || id.includes('emoji-picker') || id.includes('@headlessui')) {
-              return 'vendor-ui';
-            }
             if (id.includes('leaflet')) {
               return 'vendor-map';
             }
@@ -51,16 +52,25 @@ export default defineConfig({
             if (id.includes('@fullcalendar')) {
               return 'vendor-fullcalendar';
             }
-            if (id.includes('@apollo') || id.includes('graphql')) {
+            if (id.includes('@apollo') || id.includes('/graphql/')) {
               return 'vendor-apollo';
             }
-            if (id.includes('react-hook-form') || id.includes('zustand') || id.includes('@hello-pangea')) {
-              return 'vendor-utils';
+            if (id.includes('emoji-picker-react')) {
+              return 'vendor-emoji';
             }
-            if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/') || id.includes('/node_modules/react-router')) {
+            if (
+              id.includes('@headlessui') ||
+              id.includes('@hello-pangea/dnd')
+            ) {
+              return 'vendor-ui';
+            }
+            if (
+              id.includes('/node_modules/react/') ||
+              id.includes('/node_modules/react-dom/') ||
+              id.includes('/node_modules/react-router')
+            ) {
               return 'vendor-react';
             }
-            return 'vendor-core'; // all other node_modules
           }
         },
       },
@@ -71,4 +81,4 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './test/setup.ts',
   },
-})
+});

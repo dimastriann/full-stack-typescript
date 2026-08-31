@@ -9,6 +9,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GET_TASK_STAGES } from '../gql/task.graphql';
 import { GET_USERS } from '../../users/gql/user.graphql';
 import { GET_PROJECTS } from '../../projects/gql/project.graphql';
+import { GET_CUSTOM_FIELD_DEFINITIONS } from '../../workspaces/gql/custom-field.graphql';
 
 // Mock hooks
 vi.mock('../../../store/authStore', () => ({
@@ -32,26 +33,96 @@ describe('TaskForm', () => {
       request: {
         query: GET_USERS,
       },
-      result: { data: { users: [{ id: 1, name: 'Test User' }] } },
+      result: {
+        data: {
+          users: [
+            {
+              __typename: 'User',
+              id: 1,
+              name: 'Test User',
+              email: 'test@example.com',
+              role: 'MEMBER',
+              status: 'ACTIVE',
+              firstName: 'Test',
+              lastName: 'User',
+              mobile: null,
+              birthDate: null,
+              address: null,
+              bio: null,
+            },
+          ],
+        },
+      },
     },
     {
       request: {
         query: GET_PROJECTS,
         variables: { workspaceId: 1 },
       },
-      result: { data: { projects: [{ id: 1, name: 'Test Project' }] } },
+      result: {
+        data: {
+          projects: [
+            {
+              __typename: 'Project',
+              id: 1,
+              name: 'Test Project',
+              description: null,
+              workspaceId: 1,
+              stageId: 1,
+              sequence: 1,
+              budgetPlanned: null,
+              budgetActual: null,
+              startDate: null,
+              endDate: null,
+              phasesCount: null,
+              methodology: null,
+              key: 'TEST',
+              visibility: 'PRIVATE',
+              priority: 'MEDIUM',
+              progress: 0,
+              currency: 'USD',
+              totalHours: 0,
+              stage: null,
+              responsibleId: null,
+              responsible: null,
+              members: [],
+            },
+          ],
+        },
+      },
     },
     {
       request: {
         query: GET_TASK_STAGES,
         variables: { workspaceId: 1 },
       },
-      result: { data: { taskStages: [{ id: 1, title: 'To Do' }] } },
+      result: {
+        data: {
+          taskStages: [
+            {
+              __typename: 'TaskStage',
+              id: 1,
+              title: 'To Do',
+              color: '#64748b',
+              sequence: 1,
+              isCompleted: false,
+            },
+          ],
+        },
+      },
+    },
+    {
+      request: {
+        query: GET_CUSTOM_FIELD_DEFINITIONS,
+        variables: { workspaceId: 1, entityType: 'TASK' },
+      },
+      result: { data: { customFieldDefinitions: [] } },
     },
   ];
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCreateRecord.mockResolvedValue({ data: { createTask: { id: 1 } } });
     (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
       (selector) => selector({ user: { id: 1, role: 'ADMIN' } }),
     );
@@ -70,7 +141,7 @@ describe('TaskForm', () => {
 
   it('renders correctly and handles submission', async () => {
     render(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+      <MockedProvider mocks={apolloMocks}>
         <MemoryRouter>
           <TaskForm onSuccess={vi.fn()} />
         </MemoryRouter>
@@ -106,7 +177,7 @@ describe('TaskForm', () => {
 
   it('shows validation error when title is missing', async () => {
     render(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+      <MockedProvider mocks={apolloMocks}>
         <MemoryRouter>
           <TaskForm />
         </MemoryRouter>

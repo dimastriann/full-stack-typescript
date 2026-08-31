@@ -25,16 +25,91 @@ describe('TimesheetForm', () => {
   const apolloMocks = [
     {
       request: { query: GET_USERS },
-      result: { data: { users: [{ id: 1, name: 'Test User' }] } },
+      result: {
+        data: {
+          users: [
+            {
+              __typename: 'User',
+              id: 1,
+              name: 'Test User',
+              email: 'test@example.com',
+              role: 'MEMBER',
+              status: 'ACTIVE',
+              firstName: 'Test',
+              lastName: 'User',
+              mobile: null,
+              birthDate: null,
+              address: null,
+              bio: null,
+            },
+          ],
+        },
+      },
     },
     {
       request: { query: GET_PROJECTS },
-      result: { data: { projects: [{ id: 1, name: 'Test Project' }] } },
+      result: {
+        data: {
+          projects: [
+            {
+              __typename: 'Project',
+              id: 1,
+              name: 'Test Project',
+              description: null,
+              workspaceId: 1,
+              stageId: 1,
+              sequence: 1,
+              budgetPlanned: null,
+              budgetActual: null,
+              startDate: null,
+              endDate: null,
+              phasesCount: null,
+              methodology: null,
+              key: 'TEST',
+              visibility: 'PRIVATE',
+              priority: 'MEDIUM',
+              progress: 0,
+              currency: 'USD',
+              totalHours: 0,
+              stage: null,
+              responsibleId: null,
+              responsible: null,
+              members: [],
+            },
+          ],
+        },
+      },
     },
     {
       request: { query: GET_TASKS },
       result: {
-        data: { tasks: [{ id: 1, title: 'Test Task', project: { id: 1 } }] },
+        data: {
+          tasks: [
+            {
+              __typename: 'Task',
+              id: 1,
+              title: 'Test Task',
+              description: null,
+              stageId: 1,
+              sequence: 1,
+              type: 'TASK',
+              priority: 'MEDIUM',
+              estimatedHours: null,
+              actualHours: null,
+              remainingHours: null,
+              progress: 0,
+              dueDate: null,
+              startDate: null,
+              completedAt: null,
+              tags: [],
+              stage: null,
+              user: null,
+              reporter: null,
+              project: { __typename: 'Project', id: 1, name: 'Test Project' },
+              parentTaskId: null,
+            },
+          ],
+        },
       },
     },
   ];
@@ -54,7 +129,7 @@ describe('TimesheetForm', () => {
 
   it('renders correctly and handles submission', async () => {
     render(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+      <MockedProvider mocks={apolloMocks}>
         <MemoryRouter>
           <TimesheetForm onSuccess={vi.fn()} />
         </MemoryRouter>
@@ -98,7 +173,7 @@ describe('TimesheetForm', () => {
 
   it('shows validation error when description is missing', async () => {
     render(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+      <MockedProvider mocks={apolloMocks}>
         <MemoryRouter>
           <TimesheetForm />
         </MemoryRouter>
