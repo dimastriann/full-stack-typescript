@@ -324,7 +324,7 @@ export type TimesheetGroupByOutputType = {
   _max: TimesheetMaxAggregateOutputType | null
 }
 
-type GetTimesheetGroupByPayload<T extends TimesheetGroupByArgs> = Prisma.PrismaPromise<
+export type GetTimesheetGroupByPayload<T extends TimesheetGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TimesheetGroupByOutputType, T['by']> &
       {
@@ -2418,6 +2418,11 @@ export type TimesheetFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` Timesheets.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Timesheets.
+   */
   distinct?: Prisma.TimesheetScalarFieldEnum | Prisma.TimesheetScalarFieldEnum[]
 }
 

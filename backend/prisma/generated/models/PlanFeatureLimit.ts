@@ -219,7 +219,7 @@ export type PlanFeatureLimitGroupByOutputType = {
   _max: PlanFeatureLimitMaxAggregateOutputType | null
 }
 
-type GetPlanFeatureLimitGroupByPayload<T extends PlanFeatureLimitGroupByArgs> = Prisma.PrismaPromise<
+export type GetPlanFeatureLimitGroupByPayload<T extends PlanFeatureLimitGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PlanFeatureLimitGroupByOutputType, T['by']> &
       {
@@ -1079,6 +1079,11 @@ export type PlanFeatureLimitFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` PlanFeatureLimits.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of PlanFeatureLimits.
+   */
   distinct?: Prisma.PlanFeatureLimitScalarFieldEnum | Prisma.PlanFeatureLimitScalarFieldEnum[]
 }
 

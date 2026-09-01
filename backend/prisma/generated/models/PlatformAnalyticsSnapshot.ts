@@ -252,7 +252,7 @@ export type PlatformAnalyticsSnapshotGroupByOutputType = {
   _max: PlatformAnalyticsSnapshotMaxAggregateOutputType | null
 }
 
-type GetPlatformAnalyticsSnapshotGroupByPayload<T extends PlatformAnalyticsSnapshotGroupByArgs> = Prisma.PrismaPromise<
+export type GetPlatformAnalyticsSnapshotGroupByPayload<T extends PlatformAnalyticsSnapshotGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PlatformAnalyticsSnapshotGroupByOutputType, T['by']> &
       {
@@ -1195,6 +1195,11 @@ export type PlatformAnalyticsSnapshotFindManyArgs<ExtArgs extends runtime.Types.
    * Skip the first `n` PlatformAnalyticsSnapshots.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of PlatformAnalyticsSnapshots.
+   */
   distinct?: Prisma.PlatformAnalyticsSnapshotScalarFieldEnum | Prisma.PlatformAnalyticsSnapshotScalarFieldEnum[]
 }
 

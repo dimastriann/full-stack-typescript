@@ -202,7 +202,7 @@ export type PaymentProviderConfigGroupByOutputType = {
   _max: PaymentProviderConfigMaxAggregateOutputType | null
 }
 
-type GetPaymentProviderConfigGroupByPayload<T extends PaymentProviderConfigGroupByArgs> = Prisma.PrismaPromise<
+export type GetPaymentProviderConfigGroupByPayload<T extends PaymentProviderConfigGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PaymentProviderConfigGroupByOutputType, T['by']> &
       {
@@ -1052,6 +1052,11 @@ export type PaymentProviderConfigFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` PaymentProviderConfigs.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of PaymentProviderConfigs.
+   */
   distinct?: Prisma.PaymentProviderConfigScalarFieldEnum | Prisma.PaymentProviderConfigScalarFieldEnum[]
 }
 

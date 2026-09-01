@@ -235,7 +235,7 @@ export type TaskStageGroupByOutputType = {
   _max: TaskStageMaxAggregateOutputType | null
 }
 
-type GetTaskStageGroupByPayload<T extends TaskStageGroupByArgs> = Prisma.PrismaPromise<
+export type GetTaskStageGroupByPayload<T extends TaskStageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TaskStageGroupByOutputType, T['by']> &
       {
@@ -1481,6 +1481,11 @@ export type TaskStageFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` TaskStages.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of TaskStages.
+   */
   distinct?: Prisma.TaskStageScalarFieldEnum | Prisma.TaskStageScalarFieldEnum[]
 }
 

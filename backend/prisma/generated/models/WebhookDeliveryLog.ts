@@ -228,7 +228,7 @@ export type WebhookDeliveryLogGroupByOutputType = {
   _max: WebhookDeliveryLogMaxAggregateOutputType | null
 }
 
-type GetWebhookDeliveryLogGroupByPayload<T extends WebhookDeliveryLogGroupByArgs> = Prisma.PrismaPromise<
+export type GetWebhookDeliveryLogGroupByPayload<T extends WebhookDeliveryLogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WebhookDeliveryLogGroupByOutputType, T['by']> &
       {
@@ -1313,6 +1313,11 @@ export type WebhookDeliveryLogFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` WebhookDeliveryLogs.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WebhookDeliveryLogs.
+   */
   distinct?: Prisma.WebhookDeliveryLogScalarFieldEnum | Prisma.WebhookDeliveryLogScalarFieldEnum[]
 }
 

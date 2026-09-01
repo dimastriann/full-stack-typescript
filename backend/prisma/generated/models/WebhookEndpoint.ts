@@ -220,7 +220,7 @@ export type WebhookEndpointGroupByOutputType = {
   _max: WebhookEndpointMaxAggregateOutputType | null
 }
 
-type GetWebhookEndpointGroupByPayload<T extends WebhookEndpointGroupByArgs> = Prisma.PrismaPromise<
+export type GetWebhookEndpointGroupByPayload<T extends WebhookEndpointGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WebhookEndpointGroupByOutputType, T['by']> &
       {
@@ -1437,6 +1437,11 @@ export type WebhookEndpointFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` WebhookEndpoints.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WebhookEndpoints.
+   */
   distinct?: Prisma.WebhookEndpointScalarFieldEnum | Prisma.WebhookEndpointScalarFieldEnum[]
 }
 

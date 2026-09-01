@@ -207,7 +207,7 @@ export type CustomFieldValueGroupByOutputType = {
   _max: CustomFieldValueMaxAggregateOutputType | null
 }
 
-type GetCustomFieldValueGroupByPayload<T extends CustomFieldValueGroupByArgs> = Prisma.PrismaPromise<
+export type GetCustomFieldValueGroupByPayload<T extends CustomFieldValueGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CustomFieldValueGroupByOutputType, T['by']> &
       {
@@ -1214,6 +1214,11 @@ export type CustomFieldValueFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` CustomFieldValues.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CustomFieldValues.
+   */
   distinct?: Prisma.CustomFieldValueScalarFieldEnum | Prisma.CustomFieldValueScalarFieldEnum[]
 }
 
