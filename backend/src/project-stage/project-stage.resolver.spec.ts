@@ -37,11 +37,12 @@ describe('ProjectStageResolver', () => {
   describe('projectStages', () => {
     it('should call service with correct arguments', async () => {
       const workspaceId = 1;
+      const user = { id: 7 } as never;
       const result = [{ id: 1, name: 'Planning' }];
       mockService.findAll.mockResolvedValue(result);
 
-      expect(await resolver.findAll(workspaceId)).toBe(result);
-      expect(mockService.findAll).toHaveBeenCalledWith(workspaceId);
+      expect(await resolver.findAll(workspaceId, user)).toBe(result);
+      expect(mockService.findAll).toHaveBeenCalledWith(workspaceId, 7);
     });
   });
 });
