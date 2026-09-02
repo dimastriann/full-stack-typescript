@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ForbiddenException } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -7,6 +8,9 @@ describe('DashboardService', () => {
   let prisma: PrismaService;
 
   const mockPrisma = {
+    workspaceMember: {
+      findUnique: jest.fn(),
+    },
     task: {
       count: jest.fn(),
       findMany: jest.fn(),
@@ -37,5 +41,19 @@ describe('DashboardService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('rejects dashboard access for a non-member workspace', async () => {
+    mockPrisma.workspaceMember.findUnique.mockResolvedValue(null);
+
+    await expect(service.getStats(7, 42)).rejects.toThrow(ForbiddenException);
+
+    expect(mockPrisma.workspaceMember.findUnique).toHaveBeenCalledWith({
+      where: { workspaceId_userId: { workspaceId: 42, userId: 7 } },
+      select: { userId: true },
+    });
+    expect(mockPrisma.task.count).not.toHaveBeenCalled();
+    expect(mockPrisma.task.findMany).not.toHaveBeenCalled();
+    expect(mockPrisma.project.count).not.toHaveBeenCalled();
   });
 });

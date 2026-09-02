@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   DashboardStats,
@@ -19,6 +19,19 @@ export class DashboardService {
     userId: number,
     workspaceId?: number,
   ): Promise<DashboardStats> {
+    if (workspaceId !== undefined) {
+      const membership = await this.prisma.workspaceMember.findUnique({
+        where: { workspaceId_userId: { workspaceId, userId } },
+        select: { userId: true },
+      });
+
+      if (!membership) {
+        throw new ForbiddenException(
+          'You do not have access to this workspace',
+        );
+      }
+    }
+
     const now = new Date();
     const startOfWeek = new Date(now);
     startOfWeek.setDate(now.getDate() - now.getDay());
