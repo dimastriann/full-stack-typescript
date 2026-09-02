@@ -93,4 +93,21 @@ describe('UserService', () => {
       expect(prisma.taskStage.createMany).toHaveBeenCalled();
     });
   });
+
+  describe('update', () => {
+    it('does not persist caller-controlled role, status, or id fields', async () => {
+      await service.update(1, {
+        id: 999,
+        firstName: 'Updated',
+        role: 'SUPERADMIN',
+        status: false,
+      } as never);
+
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { firstName: 'Updated' },
+        include: expect.any(Object),
+      });
+    });
+  });
 });

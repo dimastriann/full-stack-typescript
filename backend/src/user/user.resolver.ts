@@ -4,7 +4,7 @@ import { User } from './entities/user.entity';
 import { CreateUserInput, UserRole } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import * as bcrypt from 'bcrypt';
-import { UseGuards } from '@nestjs/common';
+import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { AuthService } from '../auth/auth.service';
@@ -72,19 +72,27 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPERADMIN)
   createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.userService.create(createUserInput);
   }
 
   @Mutation(() => User)
   @UseGuards(GqlAuthGuard)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @CurrentUser() user: User,
+  ) {
+    if (updateUserInput.id !== user.id) {
+      throw new ForbiddenException('You can only update your own account');
+    }
     return this.userService.update(updateUserInput.id, updateUserInput);
   }
 
   @Mutation(() => User)
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.SUPERADMIN)
   deleteUser(@Args('id', { type: () => Int }) id: number) {
     return this.userService.delete(id);
   }

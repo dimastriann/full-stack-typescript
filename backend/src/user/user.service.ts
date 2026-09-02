@@ -90,14 +90,40 @@ export class UserService {
   }
 
   async update(id: number, updateUserInput: UpdateUserInput) {
-    if (updateUserInput.password) {
-      updateUserInput.password = await this.hashPassword(
-        updateUserInput.password,
-      );
-    }
+    const password = updateUserInput.password
+      ? await this.hashPassword(updateUserInput.password)
+      : undefined;
+
     return this.prisma.user.update({
       where: { id },
-      data: updateUserInput,
+      data: {
+        ...(updateUserInput.name !== undefined && {
+          name: updateUserInput.name,
+        }),
+        ...(updateUserInput.email !== undefined && {
+          email: updateUserInput.email,
+        }),
+        ...(password !== undefined && { password }),
+        ...(updateUserInput.phone !== undefined && {
+          phone: updateUserInput.phone,
+        }),
+        ...(updateUserInput.mobile !== undefined && {
+          mobile: updateUserInput.mobile,
+        }),
+        ...(updateUserInput.firstName !== undefined && {
+          firstName: updateUserInput.firstName,
+        }),
+        ...(updateUserInput.lastName !== undefined && {
+          lastName: updateUserInput.lastName,
+        }),
+        ...(updateUserInput.address !== undefined && {
+          address: updateUserInput.address,
+        }),
+        ...(updateUserInput.bio !== undefined && { bio: updateUserInput.bio }),
+        ...(updateUserInput.birthDate !== undefined && {
+          birthDate: updateUserInput.birthDate,
+        }),
+      },
       include: { ...this.includesRelation },
     });
   }
