@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectMemberService } from './project-member.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectRole } from 'prisma/generated/enums';
+import { ForbiddenException } from '@nestjs/common';
 import { ActivityLogService } from 'src/activity-log/activity-log.service';
 
 describe('ProjectMemberService', () => {
@@ -19,6 +20,9 @@ describe('ProjectMemberService', () => {
     },
     project: {
       findUnique: jest.fn(),
+    },
+    workspaceMember: {
+      findUnique: jest.fn().mockResolvedValue({ userId: 1 }),
     },
     user: {
       findUnique: jest.fn(),
@@ -56,6 +60,7 @@ describe('ProjectMemberService', () => {
         workspaceId: 1,
       });
       mockPrisma.user.findUnique.mockResolvedValue({ id: 1 });
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue({ userId: 1 });
       mockPrisma.projectMember.create.mockResolvedValue({
         id: 1,
         userId: 1,
@@ -66,6 +71,20 @@ describe('ProjectMemberService', () => {
 
       expect(result).toBeDefined();
       expect(mockPrisma.projectMember.create).toHaveBeenCalled();
+    });
+
+    it('rejects users who are not workspace members', async () => {
+      mockPrisma.projectMember.findUnique.mockResolvedValue(null);
+      mockPrisma.project.findUnique.mockResolvedValue({
+        id: 1,
+        workspaceId: 1,
+      });
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue(null);
+
+      await expect(service.addMember(1, 7, ProjectRole.MEMBER)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPrisma.projectMember.create).not.toHaveBeenCalled();
     });
   });
 });

@@ -54,6 +54,22 @@ export class ProjectMemberService {
       throw new NotFoundException('Project not found');
     }
 
+    const workspaceMember = await this.prisma.workspaceMember.findUnique({
+      where: {
+        workspaceId_userId: {
+          workspaceId: project.workspaceId,
+          userId,
+        },
+      },
+      select: { userId: true },
+    });
+
+    if (!workspaceMember) {
+      throw new ForbiddenException(
+        'User must be a member of the workspace before joining a project',
+      );
+    }
+
     // Verify user exists
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
