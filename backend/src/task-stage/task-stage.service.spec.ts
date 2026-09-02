@@ -1,3 +1,4 @@
+import { ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TaskStageService } from './task-stage.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -7,6 +8,9 @@ describe('TaskStageService', () => {
   let prisma: PrismaService;
 
   const mockPrisma = {
+    workspaceMember: {
+      findUnique: jest.fn(),
+    },
     taskStage: {
       findUnique: jest.fn(),
       findMany: jest.fn(),
@@ -44,13 +48,28 @@ describe('TaskStageService', () => {
       ];
       mockPrisma.taskStage.findMany.mockResolvedValue(mockStages);
 
-      const result = await service.findAll(1);
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue({
+        role: 'MEMBER',
+      });
+
+      const result = await service.findAll(1, 7);
 
       expect(result).toEqual(mockStages);
+      expect(mockPrisma.workspaceMember.findUnique).toHaveBeenCalledWith({
+        where: { workspaceId_userId: { workspaceId: 1, userId: 7 } },
+        select: { role: true },
+      });
       expect(mockPrisma.taskStage.findMany).toHaveBeenCalledWith({
         where: { workspaceId: 1 },
         orderBy: [{ sequence: 'asc' }, { id: 'asc' }],
       });
+    });
+
+    it('rejects a user outside the workspace', async () => {
+      mockPrisma.workspaceMember.findUnique.mockResolvedValue(null);
+
+      await expect(service.findAll(42, 7)).rejects.toThrow(ForbiddenException);
+      expect(mockPrisma.taskStage.findMany).not.toHaveBeenCalled();
     });
   });
 });
