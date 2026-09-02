@@ -172,9 +172,74 @@ export class ProjectService {
       where: { id },
     });
 
+    if (!oldProject) {
+      throw new ForbiddenException('Project not found');
+    }
+
+    if (
+      updateProjectInput.stageId !== undefined &&
+      updateProjectInput.stageId !== null
+    ) {
+      const stage = await this.prisma.projectStage.findUnique({
+        where: { id: updateProjectInput.stageId },
+        select: { workspaceId: true },
+      });
+      if (!stage || stage.workspaceId !== oldProject.workspaceId) {
+        throw new ForbiddenException(
+          'Project stage does not belong to this workspace',
+        );
+      }
+    }
+
     const updatedProject = await this.prisma.project.update({
       where: { id },
-      data: { ...updateProjectInput },
+      data: {
+        ...(updateProjectInput.name !== undefined && {
+          name: updateProjectInput.name,
+        }),
+        ...(updateProjectInput.description !== undefined && {
+          description: updateProjectInput.description,
+        }),
+        ...(updateProjectInput.responsibleId !== undefined && {
+          responsibleId: updateProjectInput.responsibleId,
+        }),
+        ...(updateProjectInput.stageId !== undefined && {
+          stageId: updateProjectInput.stageId,
+        }),
+        ...(updateProjectInput.visibility !== undefined && {
+          visibility: updateProjectInput.visibility,
+        }),
+        ...(updateProjectInput.priority !== undefined && {
+          priority: updateProjectInput.priority,
+        }),
+        ...(updateProjectInput.methodology !== undefined && {
+          methodology: updateProjectInput.methodology,
+        }),
+        ...(updateProjectInput.budgetPlanned !== undefined && {
+          budgetPlanned: updateProjectInput.budgetPlanned,
+        }),
+        ...(updateProjectInput.startDate !== undefined && {
+          startDate: updateProjectInput.startDate,
+        }),
+        ...(updateProjectInput.endDate !== undefined && {
+          endDate: updateProjectInput.endDate,
+        }),
+        ...(updateProjectInput.actualStartDate !== undefined && {
+          actualStartDate: updateProjectInput.actualStartDate,
+        }),
+        ...(updateProjectInput.actualEndDate !== undefined && {
+          actualEndDate: updateProjectInput.actualEndDate,
+        }),
+        ...(updateProjectInput.progress !== undefined && {
+          progress: updateProjectInput.progress,
+        }),
+        ...(updateProjectInput.archivedAt !== undefined && {
+          archivedAt: updateProjectInput.archivedAt,
+        }),
+        ...(updateProjectInput.key !== undefined && {
+          key: updateProjectInput.key,
+        }),
+      },
       include: { ...this.includeRelation },
     });
 
