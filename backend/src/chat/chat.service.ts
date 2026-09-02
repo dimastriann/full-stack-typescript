@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   ConversationType,
@@ -13,6 +13,19 @@ import { sanitizeString } from '../common/decorators/sanitized-string.decorator'
 export class ChatService {
   private readonly logger = new Logger(ChatService.name);
   constructor(private prisma: PrismaService) {}
+
+  private async assertParticipant(conversationId: number, userId: number) {
+    const participant = await this.prisma.conversationParticipant.findUnique({
+      where: { userId_conversationId: { userId, conversationId } },
+      select: { userId: true },
+    });
+
+    if (!participant) {
+      throw new ForbiddenException(
+        'You do not have access to this conversation',
+      );
+    }
+  }
 
   async createConversation(
     userIds: number[],
@@ -79,6 +92,8 @@ export class ChatService {
     metadata?: Prisma.InputJsonValue,
     attachmentIds?: number[],
   ) {
+    await this.assertParticipant(conversationId, senderId);
+
     // Sanitize message content (WebSocket messages bypass DTO validation)
     const content = sanitizeString(rawContent);
     let linkPreviewData: Prisma.InputJsonValue | null = null;
@@ -150,7 +165,13 @@ export class ChatService {
     return message;
   }
 
-  async getMessages(conversationId: number, limit = 50, cursor?: number) {
+  async getMessages(
+    conversationId: number,
+    userId: number,
+    limit = 50,
+    cursor?: number,
+  ) {
+    await this.assertParticipant(conversationId, userId);
     return this.prisma.message.findMany({
       where: { conversationId },
       take: limit,
@@ -221,13 +242,19 @@ export class ChatService {
     });
   }
 
-  async deleteConversation(id: number) {
+  async deleteConversation(id: number, userId: number) {
+    await this.assertParticipant(id, userId);
     return this.prisma.conversation.delete({
       where: { id },
     });
   }
 
-  async addParticipant(conversationId: number, userId: number) {
+  async addParticipant(
+    conversationId: number,
+    userId: number,
+    actorId: number,
+  ) {
+    await this.assertParticipant(conversationId, actorId);
     return this.prisma.conversationParticipant.create({
       data: {
         conversationId,
@@ -239,7 +266,12 @@ export class ChatService {
     });
   }
 
-  async removeParticipant(conversationId: number, userId: number) {
+  async removeParticipant(
+    conversationId: number,
+    userId: number,
+    actorId: number,
+  ) {
+    await this.assertParticipant(conversationId, actorId);
     return this.prisma.conversationParticipant.delete({
       where: {
         userId_conversationId: {

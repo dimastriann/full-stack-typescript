@@ -38,8 +38,14 @@ export class ChatResolver {
     @Args('conversationId', { type: () => Int }) conversationId: number,
     @Args('limit', { type: () => Int, defaultValue: 50 }) limit: number,
     @Args('cursor', { type: () => Int, nullable: true }) cursor?: number,
+    @Context() context?: GqlContext,
   ) {
-    return this.chatService.getMessages(conversationId, limit, cursor);
+    return this.chatService.getMessages(
+      conversationId,
+      context!.req.user!.id,
+      limit,
+      cursor,
+    );
   }
 
   @Mutation(() => Conversation)
@@ -74,8 +80,11 @@ export class ChatResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async deleteConversation(@Args('id', { type: () => Int }) id: number) {
-    await this.chatService.deleteConversation(id);
+  async deleteConversation(
+    @Args('id', { type: () => Int }) id: number,
+    @Context() context: GqlContext,
+  ) {
+    await this.chatService.deleteConversation(id, context.req.user!.id);
     return true;
   }
 
@@ -84,8 +93,13 @@ export class ChatResolver {
   async addParticipant(
     @Args('conversationId', { type: () => Int }) conversationId: number,
     @Args('userId', { type: () => Int }) userId: number,
+    @Context() context: GqlContext,
   ) {
-    return this.chatService.addParticipant(conversationId, userId);
+    return this.chatService.addParticipant(
+      conversationId,
+      userId,
+      context.req.user!.id,
+    );
   }
 
   @Mutation(() => Boolean)
@@ -93,8 +107,13 @@ export class ChatResolver {
   async removeParticipant(
     @Args('conversationId', { type: () => Int }) conversationId: number,
     @Args('userId', { type: () => Int }) userId: number,
+    @Context() context: GqlContext,
   ) {
-    await this.chatService.removeParticipant(conversationId, userId);
+    await this.chatService.removeParticipant(
+      conversationId,
+      userId,
+      context.req.user!.id,
+    );
     return true;
   }
 
