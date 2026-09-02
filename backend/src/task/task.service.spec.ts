@@ -15,6 +15,9 @@ const mockTask = {
 };
 
 const mockPrisma = {
+  taskStage: {
+    findUnique: jest.fn(),
+  },
   task: {
     create: jest.fn().mockResolvedValue(mockTask),
     findMany: jest.fn().mockResolvedValue([mockTask]),

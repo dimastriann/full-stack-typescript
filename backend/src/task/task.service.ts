@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -146,9 +150,98 @@ export class TaskService {
       ProjectRole.MEMBER,
     ]);
 
+    if (updateTaskInput.userId !== undefined) {
+      await this.projectMemberService.checkAccess(
+        updateTaskInput.userId,
+        task.projectId,
+      );
+    }
+
+    if (
+      updateTaskInput.stageId !== undefined &&
+      updateTaskInput.stageId !== null
+    ) {
+      const stage = await this.prisma.taskStage.findUnique({
+        where: { id: updateTaskInput.stageId },
+        select: { workspaceId: true },
+      });
+      if (!stage || stage.workspaceId !== task.project.workspaceId) {
+        throw new ForbiddenException(
+          'Task stage does not belong to this workspace',
+        );
+      }
+    }
+
+    if (
+      updateTaskInput.parentTaskId !== undefined &&
+      updateTaskInput.parentTaskId !== null
+    ) {
+      const parentTask = await this.prisma.task.findUnique({
+        where: { id: updateTaskInput.parentTaskId },
+        select: { projectId: true },
+      });
+      if (!parentTask || parentTask.projectId !== task.projectId) {
+        throw new ForbiddenException(
+          'Parent task does not belong to this project',
+        );
+      }
+    }
+
     const updatedTask = await this.prisma.task.update({
       where: { id },
-      data: updateTaskInput,
+      data: {
+        ...(updateTaskInput.title !== undefined && {
+          title: updateTaskInput.title,
+        }),
+        ...(updateTaskInput.description !== undefined && {
+          description: updateTaskInput.description,
+        }),
+        ...(updateTaskInput.userId !== undefined && {
+          userId: updateTaskInput.userId,
+        }),
+        ...(updateTaskInput.stageId !== undefined && {
+          stageId: updateTaskInput.stageId,
+        }),
+        ...(updateTaskInput.sequence !== undefined && {
+          sequence: updateTaskInput.sequence,
+        }),
+        ...(updateTaskInput.estimatedHours !== undefined && {
+          estimatedHours: updateTaskInput.estimatedHours,
+        }),
+        ...(updateTaskInput.dueDate !== undefined && {
+          dueDate: updateTaskInput.dueDate,
+        }),
+        ...(updateTaskInput.priority !== undefined && {
+          priority: updateTaskInput.priority,
+        }),
+        ...(updateTaskInput.parentTaskId !== undefined && {
+          parentTaskId: updateTaskInput.parentTaskId,
+        }),
+        ...(updateTaskInput.type !== undefined && {
+          type: updateTaskInput.type,
+        }),
+        ...(updateTaskInput.reporterId !== undefined && {
+          reporterId: updateTaskInput.reporterId,
+        }),
+        ...(updateTaskInput.startDate !== undefined && {
+          startDate: updateTaskInput.startDate,
+        }),
+        ...(updateTaskInput.tags !== undefined && {
+          tags: updateTaskInput.tags,
+        }),
+        ...(updateTaskInput.completedAt !== undefined && {
+          completedAt: updateTaskInput.completedAt,
+        }),
+        ...(updateTaskInput.remainingHours !== undefined && {
+          remainingHours: updateTaskInput.remainingHours,
+        }),
+        ...(updateTaskInput.progress !== undefined && {
+          progress: updateTaskInput.progress,
+        }),
+        ...(updateTaskInput.deletedAt !== undefined && {
+          deletedAt: updateTaskInput.deletedAt,
+        }),
+      },
       include: this.includeRelation,
     });
 
