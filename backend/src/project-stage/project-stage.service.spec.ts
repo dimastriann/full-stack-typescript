@@ -8,6 +8,9 @@ describe('ProjectStageService', () => {
   let prisma: PrismaService;
 
   const mockPrisma = {
+    user: {
+      findUnique: jest.fn().mockResolvedValue({ role: 'USER' }),
+    },
     workspaceMember: {
       findUnique: jest.fn(),
     },

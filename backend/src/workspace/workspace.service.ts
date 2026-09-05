@@ -102,6 +102,12 @@ export class WorkspaceService {
     userId: number,
     roles: WorkspaceRole[],
   ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user?.role === 'SUPERADMIN') return { userId, workspaceId };
+
     const member = await this.prisma.workspaceMember.findUnique({
       where: {
         workspaceId_userId: {

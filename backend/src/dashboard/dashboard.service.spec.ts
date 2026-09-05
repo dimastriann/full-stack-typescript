@@ -8,6 +8,9 @@ describe('DashboardService', () => {
   let prisma: PrismaService;
 
   const mockPrisma = {
+    user: {
+      findUnique: jest.fn(),
+    },
     workspaceMember: {
       findUnique: jest.fn(),
     },
@@ -44,6 +47,7 @@ describe('DashboardService', () => {
   });
 
   it('rejects dashboard access for a non-member workspace', async () => {
+    mockPrisma.user.findUnique.mockResolvedValue({ role: 'USER' });
     mockPrisma.workspaceMember.findUnique.mockResolvedValue(null);
 
     await expect(service.getStats(7, 42)).rejects.toThrow(ForbiddenException);

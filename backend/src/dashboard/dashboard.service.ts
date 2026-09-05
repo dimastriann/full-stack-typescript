@@ -20,6 +20,14 @@ export class DashboardService {
     workspaceId?: number,
   ): Promise<DashboardStats> {
     if (workspaceId !== undefined) {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true },
+      });
+      if (user?.role === 'SUPERADMIN') {
+        return this.getStatsForAuthorizedWorkspace(userId, workspaceId);
+      }
+
       const membership = await this.prisma.workspaceMember.findUnique({
         where: { workspaceId_userId: { workspaceId, userId } },
         select: { userId: true },
@@ -32,6 +40,13 @@ export class DashboardService {
       }
     }
 
+    return this.getStatsForAuthorizedWorkspace(userId, workspaceId);
+  }
+
+  private async getStatsForAuthorizedWorkspace(
+    userId: number,
+    workspaceId?: number,
+  ): Promise<DashboardStats> {
     const now = new Date();
     const startOfWeek = new Date(now);
     startOfWeek.setDate(now.getDate() - now.getDay());

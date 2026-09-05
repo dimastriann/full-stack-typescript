@@ -270,6 +270,12 @@ export class ProjectMemberService {
    * @returns true if user has access, false otherwise
    */
   async checkAccess(userId: number, projectId: number): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user?.role === 'SUPERADMIN') return true;
+
     const member = await this.prisma.projectMember.findUnique({
       where: {
         userId_projectId: { userId, projectId },
@@ -292,6 +298,12 @@ export class ProjectMemberService {
     projectId: number,
     requiredRoles: ProjectRole[],
   ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user?.role === 'SUPERADMIN') return { userId, projectId };
+
     const member = await this.prisma.projectMember.findUnique({
       where: {
         userId_projectId: { userId, projectId },

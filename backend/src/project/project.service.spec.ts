@@ -14,6 +14,9 @@ const mockProject = {
 };
 
 const mockPrisma = {
+  user: {
+    findUnique: jest.fn().mockResolvedValue({ role: 'USER' }),
+  },
   project: {
     create: jest.fn().mockResolvedValue(mockProject),
     findMany: jest.fn().mockResolvedValue([mockProject]),

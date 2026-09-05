@@ -52,16 +52,22 @@ export class ProjectService {
    */
   async create(createProjectInput: CreateProjectInput, creatorUserId: number) {
     // Verify user is a member of the workspace
-    const workspaceMember = await this.prisma.workspaceMember.findUnique({
-      where: {
-        workspaceId_userId: {
-          workspaceId: createProjectInput.workspaceId,
-          userId: creatorUserId,
+    const [workspaceMember, creator] = await Promise.all([
+      this.prisma.workspaceMember.findUnique({
+        where: {
+          workspaceId_userId: {
+            workspaceId: createProjectInput.workspaceId,
+            userId: creatorUserId,
+          },
         },
-      },
-    });
+      }),
+      this.prisma.user.findUnique({
+        where: { id: creatorUserId },
+        select: { role: true },
+      }),
+    ]);
 
-    if (!workspaceMember) {
+    if (!workspaceMember && creator?.role !== 'SUPERADMIN') {
       throw new ForbiddenException(
         'You must be a member of the workspace to create a project',
       );

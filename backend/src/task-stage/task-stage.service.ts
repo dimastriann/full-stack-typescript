@@ -16,6 +16,12 @@ export class TaskStageService {
     userId: number,
     requireAdmin = false,
   ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user?.role === 'SUPERADMIN') return;
+
     const member = await this.prisma.workspaceMember.findUnique({
       where: { workspaceId_userId: { workspaceId, userId } },
       select: { role: true },
