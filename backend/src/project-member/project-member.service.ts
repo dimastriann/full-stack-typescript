@@ -247,8 +247,12 @@ export class ProjectMemberService {
    * @returns Array of ProjectMember records with project details
    */
   async getUserProjects(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
     return this.prisma.projectMember.findMany({
-      where: { userId },
+      where: user?.role === 'SUPERADMIN' ? undefined : { userId },
       include: {
         project: {
           include: {
