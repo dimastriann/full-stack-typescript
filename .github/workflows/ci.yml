@@ -57,11 +57,11 @@ jobs:
 
       - name: Validate Prisma schema
         working-directory: ./backend
-        run: npx prisma validate
+        run: ./node_modules/.bin/prisma validate
 
       - name: Check generated Prisma client
         working-directory: ./backend
-        run: npx prisma generate && git diff --exit-code -- prisma/generated
+        run: ./node_modules/.bin/prisma generate && git diff --exit-code -- prisma/generated
 
       - name: Audit production dependencies
         working-directory: ./backend
@@ -73,7 +73,7 @@ jobs:
 
       - name: Generate Prisma Client
         working-directory: ./backend
-        run: npx prisma generate
+        run: ./node_modules/.bin/prisma generate
 
       - name: Run Eslint
         working-directory: ./backend
