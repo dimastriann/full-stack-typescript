@@ -85,6 +85,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
   const { data, loading } = useQuery(GET_CONVERSATION_MESSAGES, {
     variables: { conversationId: conversation.id },
     fetchPolicy: 'network-only',
+    pollInterval: 3000,
   });
 
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
