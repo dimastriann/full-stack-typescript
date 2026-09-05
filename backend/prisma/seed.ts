@@ -36,8 +36,13 @@ async function seedPlanLimits() {
 async function seedSuperadmin() {
   console.log('🌱 Seeding superadmin user...');
 
-  const email = process.env.SUPERADMIN_EMAIL ?? 'superadmin@app.com';
-  const password = process.env.SUPERADMIN_PASSWORD ?? 'SuperAdmin@123!';
+  const email = process.env.SUPERADMIN_EMAIL;
+  const password = process.env.SUPERADMIN_PASSWORD;
+  if (!email || !password) {
+    throw new Error(
+      'SUPERADMIN_EMAIL and SUPERADMIN_PASSWORD are required to seed a superadmin.',
+    );
+  }
 
   const superadmin = await prisma.user.upsert({
     where: { email },
@@ -96,7 +101,11 @@ async function main() {
   console.log('\n🚀 Starting database seed...\n');
   await seedPlanLimits();
   await seedSuperadmin();
-  await seedDemoUsers();
+  if (process.env.SEED_DEMO_DATA === 'true') {
+    await seedDemoUsers();
+  } else {
+    console.log('ℹ️ Demo users skipped (set SEED_DEMO_DATA=true to enable).');
+  }
   console.log('\n✨ Seed completed successfully!\n');
 }
 
