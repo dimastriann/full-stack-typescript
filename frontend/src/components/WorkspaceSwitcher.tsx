@@ -13,6 +13,7 @@ export const WorkspaceSwitcher = () => {
     (state) => state.setActiveWorkspace,
   );
   const workspaces = useWorkspaceStore((state) => state.workspaces);
+  const setWorkspaces = useWorkspaceStore((state) => state.setWorkspaces);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [createWorkspace] = useMutation(CREATE_WORKSPACE, {
@@ -22,11 +23,16 @@ export const WorkspaceSwitcher = () => {
   const handleCreate = async () => {
     if (!newWorkspaceName.trim()) return;
     try {
-      await createWorkspace({
+      const { data } = await createWorkspace({
         variables: {
           createWorkspaceInput: { name: newWorkspaceName, description: '' },
         },
       });
+      const createdWorkspace = data?.createWorkspace;
+      if (createdWorkspace) {
+        setWorkspaces([...workspaces, createdWorkspace]);
+        setActiveWorkspace(createdWorkspace);
+      }
       setNewWorkspaceName('');
       setIsModalOpen(false);
     } catch (err) {
