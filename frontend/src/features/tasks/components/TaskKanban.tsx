@@ -105,6 +105,20 @@ export default function TaskKanban() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const stages: TaskStage[] = stagesData?.taskStages ?? [];
+  const hasUnassignedTasks = records.some((task) => !task.stageId);
+  const boardStages: TaskStage[] = hasUnassignedTasks
+    ? [
+        ...stages,
+        {
+          id: 0,
+          title: 'No Stage',
+          color: '#6b7280',
+          sequence: Number.MAX_SAFE_INTEGER,
+          isCompleted: false,
+          isCanceled: false,
+        },
+      ]
+    : stages;
 
   const filteredRecords = useMemo(() => {
     let result = [...records];
@@ -290,10 +304,10 @@ export default function TaskKanban() {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex gap-6 overflow-x-auto h-full pb-6 scrollbar-thin scrollbar-thumb-surface-200 dark:scrollbar-thumb-slate-800 scrollbar-track-transparent">
-          {stages.map((stage) => {
+          {boardStages.map((stage) => {
             const { icon: StageIcon, color, bg } = getStageStyles(stage.title);
             const stageTasks = filteredRecords.filter(
-              (t) => t.stageId === stage.id,
+              (t) => (t.stageId ?? 0) === stage.id,
             );
 
             return (

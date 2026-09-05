@@ -93,6 +93,20 @@ export default function ProjectKanban() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const stages: ProjectStage[] = stagesData?.projectStages ?? [];
+  const hasUnassignedProjects = records.some((project) => !project.stageId);
+  const boardStages: ProjectStage[] = hasUnassignedProjects
+    ? [
+        ...stages,
+        {
+          id: 0,
+          title: 'No Stage',
+          color: '#6b7280',
+          sequence: Number.MAX_SAFE_INTEGER,
+          isCompleted: false,
+          isCanceled: false,
+        },
+      ]
+    : stages;
 
   const filteredRecords = useMemo(() => {
     let result = [...records];
@@ -282,10 +296,10 @@ export default function ProjectKanban() {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex gap-6 overflow-x-auto h-full pb-6 scrollbar-thin scrollbar-thumb-surface-200 dark:scrollbar-thumb-slate-800 scrollbar-track-transparent">
-          {stages.map((stage) => {
+          {boardStages.map((stage) => {
             const { icon: StageIcon, color, bg } = getStageStyles(stage.title);
             const stageProjects = filteredRecords.filter(
-              (p) => p.stageId === stage.id,
+              (p) => (p.stageId ?? 0) === stage.id,
             );
 
             return (
