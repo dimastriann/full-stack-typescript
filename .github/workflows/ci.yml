@@ -7,6 +7,19 @@ on:
     branches: [ main, master, dev ]
 
 jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect leaked secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   backend-lint-test-build:
     name: Backend CI
     runs-on: ubuntu-latest
