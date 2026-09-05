@@ -220,7 +220,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
       !newMessage.trim() &&
@@ -249,7 +249,7 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
       type = first.mimeType.startsWith('image/') ? 'IMAGE' : 'DOCUMENT';
     }
 
-    sendMessage({
+    const { data } = await sendMessage({
       variables: {
         conversationId: conversation.id,
         content: newMessage,
@@ -258,6 +258,14 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
         metadata: pendingLocation ? JSON.stringify(pendingLocation) : undefined,
       },
     });
+    const sentMessage = data?.sendMessage;
+    if (sentMessage) {
+      setMessages((prev) =>
+        prev.some((message) => message.id === sentMessage.id)
+          ? prev
+          : [...prev, sentMessage].sort((a, b) => a.id - b.id),
+      );
+    }
 
     setNewMessage('');
     // Clean up local URLs
