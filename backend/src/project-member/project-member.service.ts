@@ -247,12 +247,8 @@ export class ProjectMemberService {
    * @returns Array of ProjectMember records with project details
    */
   async getUserProjects(userId: number) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    });
     return this.prisma.projectMember.findMany({
-      where: user?.role === 'SUPERADMIN' ? undefined : { userId },
+      where: { userId },
       include: {
         project: {
           include: {
@@ -274,12 +270,6 @@ export class ProjectMemberService {
    * @returns true if user has access, false otherwise
    */
   async checkAccess(userId: number, projectId: number): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    });
-    if (user?.role === 'SUPERADMIN') return true;
-
     const member = await this.prisma.projectMember.findUnique({
       where: {
         userId_projectId: { userId, projectId },
@@ -302,12 +292,6 @@ export class ProjectMemberService {
     projectId: number,
     requiredRoles: ProjectRole[],
   ) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    });
-    if (user?.role === 'SUPERADMIN') return { userId, projectId };
-
     const member = await this.prisma.projectMember.findUnique({
       where: {
         userId_projectId: { userId, projectId },

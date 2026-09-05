@@ -67,7 +67,7 @@ export class ProjectService {
       }),
     ]);
 
-    if (!workspaceMember && creator?.role !== 'SUPERADMIN') {
+    if (!workspaceMember) {
       throw new ForbiddenException(
         'You must be a member of the workspace to create a project',
       );

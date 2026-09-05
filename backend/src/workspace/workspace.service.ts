@@ -43,16 +43,9 @@ export class WorkspaceService {
   }
 
   async findAll(userId: number) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    });
     // Return workspaces where user is a member
     return this.prisma.workspace.findMany({
-      where:
-        user?.role === 'SUPERADMIN'
-          ? undefined
-          : { members: { some: { userId } } },
+      where: { members: { some: { userId } } },
       include: this.includeRelation,
     });
   }
@@ -65,13 +58,7 @@ export class WorkspaceService {
 
     if (!workspace) return null;
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    });
-    const isMember =
-      user?.role === 'SUPERADMIN' ||
-      workspace.members.some((m) => m.userId === userId);
+    const isMember = workspace.members.some((m) => m.userId === userId);
     if (!isMember) {
       throw new ForbiddenException('You do not have access to this workspace');
     }
@@ -109,12 +96,6 @@ export class WorkspaceService {
     userId: number,
     roles: WorkspaceRole[],
   ) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    });
-    if (user?.role === 'SUPERADMIN') return { userId, workspaceId };
-
     const member = await this.prisma.workspaceMember.findUnique({
       where: {
         workspaceId_userId: {
