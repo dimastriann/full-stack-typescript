@@ -25,6 +25,18 @@ jobs:
       - name: Install System Dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential
 
+      - name: Validate Prisma schema
+        working-directory: ./backend
+        run: npx prisma validate
+
+      - name: Check generated Prisma client
+        working-directory: ./backend
+        run: npx prisma generate && git diff --exit-code -- prisma/generated
+
+      - name: Audit production dependencies
+        working-directory: ./backend
+        run: npm audit --omit=dev --audit-level=critical
+
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: npm ci
@@ -83,3 +95,7 @@ jobs:
       - name: Build Frontend
         working-directory: ./frontend
         run: npm run build
+
+      - name: Audit production dependencies
+        working-directory: ./frontend
+        run: npm audit --omit=dev --audit-level=critical
