@@ -80,6 +80,7 @@ export function validate(config: Record<string, any>) {
         `🔥 ENV STARTUP ERROR: Missing or invalid required environment variables!\n` +
         `========================================================================\n` +
         `${errorDetails}\n` +
+        `Copy backend/.env.example to backend/.env and replace placeholder values.\n` +
         `========================================================================\n`,
     );
   }
