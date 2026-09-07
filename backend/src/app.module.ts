@@ -35,10 +35,12 @@ import { ActivityLogModule } from './activity-log/activity-log.module';
 import { CustomFieldModule } from './custom-field/custom-field.module';
 import { WebhookModule } from './webhook/webhook.module';
 import { GqlThrottlerGuard } from './common/guards/gql-throttler.guard';
+import { ExtensionModule } from './extensions/extension.module';
 
 @Module({
   imports: [
     PrismaModule,
+    ExtensionModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
