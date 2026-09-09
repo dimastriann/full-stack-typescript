@@ -1,9 +1,8 @@
 {
   "name": "@project-flow/core-backend",
-  "author": "dimastriann",
   "version": "0.1.0",
   "description": "Open-source Project Flow Core NestJS GraphQL API",
-  "author": "",
+  "author": "dimastriann",
   "private": true,
   "license": "MIT",
   "engines": {
