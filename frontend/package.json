@@ -1,6 +1,7 @@
 {
   "name": "@project-flow/core-frontend",
   "author": "dimastriann",
+  "description": "Open-source Project Flow Core React web application",
   "private": true,
   "version": "0.1.0",
   "type": "module",
