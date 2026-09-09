@@ -1,5 +1,6 @@
 {
-  "name": "frontend",
+  "name": "@project-flow/core-frontend",
+  "author": "dimastriann",
   "private": true,
   "version": "0.1.0",
   "type": "module",

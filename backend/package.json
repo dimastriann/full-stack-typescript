@@ -1,5 +1,6 @@
 {
-  "name": "backend",
+  "name": "@project-flow/core-backend",
+  "author": "dimastriann",
   "version": "0.1.0",
   "description": "ProjectFlow NestJS GraphQL API",
   "author": "",
