@@ -1,7 +1,7 @@
 {
-  "name": "typescript-fullstack",
-  "version": "1.0.0",
-  "description": "Open-source full-stack TypeScript project-management and SaaS starter",
+  "name": "@project-flow/core",
+  "version": "0.1.0",
+  "description": "Open-source full-stack TypeScript project-management core",
   "scripts": {
     "dev": "concurrently \"npm run --prefix backend start:dev\" \"npm run --prefix frontend dev\"",
     "setup": "node scripts/bootstrap.mjs",
