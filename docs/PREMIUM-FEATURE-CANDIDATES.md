@@ -21,3 +21,15 @@ entitlements, customer-portal flows, and provider-specific operations without
 coupling Core to private code.
 
 The first implementation must be approved separately before Pro code is added.
+
+## Approval checklist
+
+Before selecting a feature, confirm:
+
+- At least three target customer use cases are documented.
+- Expected pricing or plan placement is understood.
+- Core remains useful without the feature enabled.
+- Tenant isolation, privacy, and security requirements are documented.
+- Hosting, support, and third-party service costs are acceptable.
+- The Pro implementation can consume existing Core contracts without private
+  imports in Core.
