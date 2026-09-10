@@ -7,6 +7,7 @@ The public repository is the complete, useful Core product. Pro extensions must 
 | Authentication, sessions, and 2FA | Included | Advanced SSO/SAML and SCIM provisioning |
 | Workspaces, members, roles, and project permissions | Included | Organization-wide policy automation |
 | Projects, tasks, stages, Kanban, list, calendar, and Gantt | Included | Advanced portfolio planning and capacity forecasting |
+| Subscription plans and payment checkout | Included plan limits and provider abstractions | Advanced billing operations, invoices, customer portal, and entitlement automation |
 | Timesheets and basic reporting | Included | Advanced utilization, cost, and profitability analytics |
 | Comments, chat, notifications, and file attachments | Included | Retention policies, compliance export, and advanced collaboration controls |
 | PostgreSQL persistence and self-hosted deployment | Included | Managed hosting and high-availability operations |

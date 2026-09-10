@@ -15,7 +15,7 @@ and how cleanly they can consume Core extension contracts.
 
 ## Recommendation
 
-Start with advanced billing and subscription operations. Core already contains
+**Selected first Pro feature: advanced billing and subscription operations.** Core already contains
 plan limits and payment-provider abstractions, so Pro can add invoicing,
 entitlements, customer-portal flows, and provider-specific operations without
 coupling Core to private code.
