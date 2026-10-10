@@ -9,7 +9,8 @@
     "build": "npm run --prefix backend build && npm run --prefix frontend build",
     "format": "npm run --prefix backend format && npm run --prefix frontend format",
     "lint": "npm run --prefix backend lint && npm run --prefix frontend lint",
-    "test": "npm run --prefix backend test -- --runInBand && npm run --prefix frontend test -- --run"
+    "test": "npm run --prefix backend test -- --runInBand && npm run --prefix frontend test -- --run",
+    "test:e2e": "npm run --prefix e2e test"
   },
   "keywords": [
     "typescript",

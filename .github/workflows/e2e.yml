@@ -1,0 +1,81 @@
+name: E2E
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: projectflow
+          POSTGRES_PASSWORD: projectflow
+          POSTGRES_DB: projectflow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U projectflow"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: npm
+      - name: Install root tooling
+        run: npm ci
+      - name: Install backend dependencies
+        run: npm ci --prefix backend
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend
+      - name: Prepare backend environment
+        run: |
+          cp backend/.env.example backend/.env
+          {
+            echo "DATABASE_URL=postgresql://projectflow:projectflow@localhost:5432/projectflow"
+            echo "JWT_SECRET_KEY=e2e-only-jwt-secret-demo"
+            echo "SUPERADMIN_EMAIL=admin@gmail.com"
+            echo "SUPERADMIN_PASSWORD=admin"
+          } >> backend/.env
+      - name: Apply database schema
+        working-directory: backend
+        run: npx prisma migrate deploy
+      - name: Run demo seed
+        working-directory: backend
+        env:
+          SEED_DEMO_DATA: 'true'
+        run: npx prisma db seed
+      - name: Install E2E dependencies
+        run: npm install --prefix e2e
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps --prefix e2e
+      - name: Run E2E suite
+        env:
+          E2E_AUTOSTART: '1'
+          E2E_BASE_URL: http://localhost:5173
+          E2E_API_URL: http://localhost:3000
+          E2E_USER_EMAIL: admin@gmail.com
+          E2E_USER_PASSWORD: admin
+        run: npm run test --prefix e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7
