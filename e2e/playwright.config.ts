@@ -21,13 +21,29 @@ const webServers = AUTOSTART
         url: `${process.env.E2E_API_URL ?? 'http://localhost:3000'}/health`,
         reuseExistingServer: true,
         timeout: 240_000,
+        stdout: 'pipe',
+        stderr: 'pipe',
+        // The suite performs many authenticated requests across test contexts;
+        // keeping the production default would surface fake auth failures.
+        env: {
+          ...process.env,
+          THROTTLE_LIMIT: String(Number(process.env.E2E_THROTTLE_LIMIT ?? 1000)),
+          THROTTLE_LOGIN_LIMIT: String(Number(process.env.E2E_THROTTLE_LIMIT ?? 1000)),
+          THROTTLE_REGISTER_LIMIT: String(Number(process.env.E2E_THROTTLE_LIMIT ?? 1000)),
+          THROTTLE_REFRESH_LIMIT: String(Number(process.env.E2E_THROTTLE_LIMIT ?? 1000)),
+          THROTTLE_2FA_LIMIT: String(Number(process.env.E2E_THROTTLE_LIMIT ?? 1000)),
+          THROTTLE_TTL_MS: '60000',
+        },
       },
     ]
   : [];
 
 export default defineConfig({
   testDir: '.',
-  fullyParallel: true,
+  // The backend throttles at 100 requests/minute per client IP; parallel
+  // browser sessions would exhaust that budget and surface fake auth errors.
+  workers: 1,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
