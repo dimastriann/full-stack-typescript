@@ -100,7 +100,12 @@ export class UserResolver {
   // ─── Login ─────────────────────────────────────────────────────────────────
 
   @Mutation(() => LoginResponse)
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({
+    default: {
+      limit: Number(process.env.THROTTLE_LOGIN_LIMIT ?? 5),
+      ttl: Number(process.env.THROTTLE_TTL_MS ?? 60_000),
+    },
+  })
   async login(
     @Args('email') email: string,
     @Args('password') password: string,
@@ -138,7 +143,12 @@ export class UserResolver {
   // ─── Register ──────────────────────────────────────────────────────────────
 
   @Mutation(() => LoginResponse)
-  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  @Throttle({
+    default: {
+      limit: Number(process.env.THROTTLE_REGISTER_LIMIT ?? 3),
+      ttl: Number(process.env.THROTTLE_TTL_MS ?? 60_000),
+    },
+  })
   async register(
     @Args('createUserInput') createUserInput: CreateUserInput,
     @Context() context: GqlContext,
@@ -184,7 +194,12 @@ export class UserResolver {
   // ─── 2FA — Complete login (validates TOTP after password check) ─────────────
 
   @Mutation(() => LoginResponse)
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({
+    default: {
+      limit: Number(process.env.THROTTLE_2FA_LIMIT ?? 10),
+      ttl: Number(process.env.THROTTLE_TTL_MS ?? 60_000),
+    },
+  })
   async completeTwoFactorLogin(
     @Args('preAuthToken') preAuthToken: string,
     @Args('token') token: string,

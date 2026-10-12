@@ -35,7 +35,12 @@ export class AuthController {
    */
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({
+    default: {
+      limit: Number(process.env.THROTTLE_REFRESH_LIMIT ?? 10),
+      ttl: Number(process.env.THROTTLE_TTL_MS ?? 60_000),
+    },
+  })
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,

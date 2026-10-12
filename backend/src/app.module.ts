@@ -14,7 +14,7 @@ import { BaseModule } from './base/base.module';
 import { TimesheetModule } from './timesheet/timesheet.module';
 import { CommentModule } from './comment/comment.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AttachmentModule } from './attachment/attachment.module';
 import { ProjectMemberModule } from './project-member/project-member.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -57,12 +57,23 @@ import { ExtensionModule } from './extensions/extension.module';
       isGlobal: true,
       validate,
     }),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000, // 1 minute
-        limit: 100, // 100 requests per minute
-      },
-    ]),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: Number(
+            config.get<string>('THROTTLE_TTL_MS') ??
+              process.env.THROTTLE_TTL_MS ??
+              60_000,
+          ),
+          limit: Number(
+            config.get<string>('THROTTLE_LIMIT') ??
+              process.env.THROTTLE_LIMIT ??
+              100,
+          ),
+        },
+      ],
+    }),
     UserModule,
     ProjectModule,
     TaskModule,

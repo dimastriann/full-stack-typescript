@@ -33,7 +33,12 @@ export class SubscriptionController {
    */
   @Post('checkout/:workspaceId')
   @UseGuards(JwtAuthRestGuard)
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({
+    default: {
+      limit: Number(process.env.THROTTLE_SUBSCRIPTION_LIMIT ?? 5),
+      ttl: Number(process.env.THROTTLE_TTL_MS ?? 60_000),
+    },
+  })
   async createCheckout(
     @Param('workspaceId', ParseIntPipe) workspaceId: number,
     @Body() body: CheckoutBody,
