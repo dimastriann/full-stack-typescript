@@ -8,12 +8,12 @@ describe('ProjectMemberResolver', () => {
   let service: ProjectMemberService;
 
   const mockService = {
-    addMember: jest.fn(),
-    removeMember: jest.fn(),
-    updateMemberRole: jest.fn(),
-    getProjectMembers: jest.fn(),
-    getUserProjects: jest.fn(),
-    inviteUser: jest.fn(),
+    addMember: vi.fn(),
+    removeMember: vi.fn(),
+    updateMemberRole: vi.fn(),
+    getProjectMembers: vi.fn(),
+    getUserProjects: vi.fn(),
+    inviteUser: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -29,7 +29,7 @@ describe('ProjectMemberResolver', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

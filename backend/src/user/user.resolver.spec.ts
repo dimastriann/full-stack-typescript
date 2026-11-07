@@ -8,16 +8,16 @@ describe('UserResolver', () => {
   let resolver: UserResolver;
 
   const mockUserService = {
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-    findByEmail: jest.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    findByEmail: vi.fn(),
   };
 
   const mockAuthService = {
-    login: jest.fn(),
+    login: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -33,7 +33,7 @@ describe('UserResolver', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

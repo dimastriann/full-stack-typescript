@@ -10,24 +10,24 @@ describe('AttachmentService', () => {
 
   const mockPrisma = {
     attachment: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      delete: jest.fn(),
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      delete: vi.fn(),
     },
     task: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
     comment: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
     conversationParticipant: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
   };
 
   const mockProjectMemberService = {
-    checkPermission: jest.fn(),
+    checkPermission: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -46,7 +46,7 @@ describe('AttachmentService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

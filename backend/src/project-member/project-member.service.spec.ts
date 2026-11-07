@@ -11,21 +11,21 @@ describe('ProjectMemberService', () => {
 
   const mockPrisma = {
     projectMember: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      count: jest.fn(),
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      count: vi.fn(),
     },
     project: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
     workspaceMember: {
-      findUnique: jest.fn().mockResolvedValue({ userId: 1 }),
+      findUnique: vi.fn().mockResolvedValue({ userId: 1 }),
     },
     user: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
   };
 
@@ -36,7 +36,7 @@ describe('ProjectMemberService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         {
           provide: ActivityLogService,
-          useValue: { log: jest.fn().mockResolvedValue(undefined) },
+          useValue: { log: vi.fn().mockResolvedValue(undefined) },
         },
       ],
     }).compile();
@@ -45,7 +45,7 @@ describe('ProjectMemberService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

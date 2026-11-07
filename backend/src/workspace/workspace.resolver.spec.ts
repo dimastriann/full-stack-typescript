@@ -7,12 +7,12 @@ describe('WorkspaceResolver', () => {
   let resolver: WorkspaceResolver;
 
   const mockService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
-    getWorkspaceMembers: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
+    getWorkspaceMembers: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('WorkspaceResolver', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

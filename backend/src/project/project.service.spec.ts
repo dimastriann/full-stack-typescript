@@ -15,30 +15,30 @@ const mockProject = {
 
 const mockPrisma = {
   user: {
-    findUnique: jest.fn().mockResolvedValue({ role: 'USER' }),
+    findUnique: vi.fn().mockResolvedValue({ role: 'USER' }),
   },
   project: {
-    create: jest.fn().mockResolvedValue(mockProject),
-    findMany: jest.fn().mockResolvedValue([mockProject]),
-    findUnique: jest.fn().mockResolvedValue(mockProject),
-    findFirst: jest.fn().mockResolvedValue(mockProject),
-    update: jest.fn().mockResolvedValue(mockProject),
-    delete: jest.fn().mockResolvedValue(mockProject),
+    create: vi.fn().mockResolvedValue(mockProject),
+    findMany: vi.fn().mockResolvedValue([mockProject]),
+    findUnique: vi.fn().mockResolvedValue(mockProject),
+    findFirst: vi.fn().mockResolvedValue(mockProject),
+    update: vi.fn().mockResolvedValue(mockProject),
+    delete: vi.fn().mockResolvedValue(mockProject),
   },
   workspaceMember: {
-    findUnique: jest.fn().mockResolvedValue({ workspaceId: 1, userId: 1 }),
+    findUnique: vi.fn().mockResolvedValue({ workspaceId: 1, userId: 1 }),
   },
 };
 
 const mockProjectMemberService = {
-  addMember: jest.fn().mockResolvedValue(true),
-  checkAccess: jest.fn().mockResolvedValue(true),
-  checkPermission: jest.fn().mockResolvedValue(true),
-  getUserProjects: jest.fn().mockResolvedValue([{ projectId: 1 }]),
+  addMember: vi.fn().mockResolvedValue(true),
+  checkAccess: vi.fn().mockResolvedValue(true),
+  checkPermission: vi.fn().mockResolvedValue(true),
+  getUserProjects: vi.fn().mockResolvedValue([{ projectId: 1 }]),
 };
 
-const mockActivityLogService = { log: jest.fn().mockResolvedValue(undefined) };
-const mockWebhookService = { trigger: jest.fn() };
+const mockActivityLogService = { log: vi.fn().mockResolvedValue(undefined) };
+const mockWebhookService = { trigger: vi.fn() };
 
 describe('ProjectService', () => {
   let service: ProjectService;

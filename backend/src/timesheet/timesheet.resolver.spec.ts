@@ -9,11 +9,11 @@ describe('TimesheetResolver', () => {
   let service: TimesheetService;
 
   const mockTimesheetService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   const mockPrismaService = {};
@@ -34,7 +34,7 @@ describe('TimesheetResolver', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

@@ -16,21 +16,21 @@ const mockTimesheet = {
 
 const mockPrisma = {
   timesheet: {
-    create: jest.fn().mockResolvedValue(mockTimesheet),
-    findMany: jest.fn().mockResolvedValue([mockTimesheet]),
-    findUnique: jest.fn().mockResolvedValue(mockTimesheet),
-    update: jest.fn().mockResolvedValue(mockTimesheet),
-    delete: jest.fn().mockResolvedValue(mockTimesheet),
+    create: vi.fn().mockResolvedValue(mockTimesheet),
+    findMany: vi.fn().mockResolvedValue([mockTimesheet]),
+    findUnique: vi.fn().mockResolvedValue(mockTimesheet),
+    update: vi.fn().mockResolvedValue(mockTimesheet),
+    delete: vi.fn().mockResolvedValue(mockTimesheet),
   },
 };
 
 const mockProjectMemberService = {
-  checkPermission: jest.fn().mockResolvedValue(true),
-  checkAccess: jest.fn().mockResolvedValue(true),
-  getUserProjects: jest.fn().mockResolvedValue([{ projectId: 1 }]),
+  checkPermission: vi.fn().mockResolvedValue(true),
+  checkAccess: vi.fn().mockResolvedValue(true),
+  getUserProjects: vi.fn().mockResolvedValue([{ projectId: 1 }]),
 };
 
-const mockActivityLogService = { log: jest.fn().mockResolvedValue(undefined) };
+const mockActivityLogService = { log: vi.fn().mockResolvedValue(undefined) };
 
 describe('TimesheetService', () => {
   let service: TimesheetService;

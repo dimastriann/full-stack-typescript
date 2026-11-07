@@ -1,15 +1,15 @@
 import { MidtransProvider } from './midtrans.provider';
 
 // ── Mock midtrans-client ──────────────────────────────────────────────────────
-const mockNotification = jest.fn();
+const mockNotification = vi.fn();
 
-jest.mock('midtrans-client', () => ({
-  Snap: jest.fn().mockImplementation(() => ({
-    createTransaction: jest.fn().mockResolvedValue({
+vi.mock('midtrans-client', () => ({
+  Snap: vi.fn().mockImplementation(() => ({
+    createTransaction: vi.fn().mockResolvedValue({
       redirect_url: 'https://app.sandbox.midtrans.com/snap/v2/vtweb/token123',
     }),
   })),
-  CoreApi: jest.fn().mockImplementation(() => ({
+  CoreApi: vi.fn().mockImplementation(() => ({
     transaction: {
       notification: mockNotification,
     },
@@ -30,7 +30,7 @@ function makeRawBody(payload: Record<string, unknown>): Buffer {
 
 describe('MidtransProvider', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   // ── createCheckoutSession ─────────────────────────────────────────────────

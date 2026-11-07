@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Prisma } from '../../prisma/generated/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { PlanLevel, SubscriptionStatus } from '../../prisma/generated/client';
 
@@ -97,7 +96,7 @@ export class AnalyticsCronService {
           totalWorkspaces,
           totalProjects,
           activeSubscriptions,
-          planBreakdown: planCounts as Prisma.InputJsonValue,
+          planBreakdown: planCounts,
           newUsersToday,
           newWorkspacesToday,
           mrr,

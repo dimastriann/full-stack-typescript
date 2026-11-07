@@ -9,20 +9,20 @@ describe('DashboardService', () => {
 
   const mockPrisma = {
     user: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
     workspaceMember: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
     task: {
-      count: jest.fn(),
-      findMany: jest.fn(),
+      count: vi.fn(),
+      findMany: vi.fn(),
     },
     project: {
-      count: jest.fn(),
+      count: vi.fn(),
     },
     timesheet: {
-      aggregate: jest.fn(),
+      aggregate: vi.fn(),
     },
   };
 
@@ -39,7 +39,7 @@ describe('DashboardService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

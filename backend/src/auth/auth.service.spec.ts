@@ -1,56 +1,57 @@
+import type { Mocked } from 'vitest';
 import { AuthService, JwtPayload } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
-const mockJwtService: jest.Mocked<Partial<JwtService>> = {
-  sign: jest.fn().mockReturnValue('mock.access.token'),
-  verify: jest.fn(),
+const mockJwtService: Mocked<Partial<JwtService>> = {
+  sign: vi.fn().mockReturnValue('mock.access.token'),
+  verify: vi.fn(),
 };
 
 const mockUserService = {
-  findOne: jest.fn(),
+  findOne: vi.fn(),
 };
 
 // In-memory Redis mock
 const redisStore: Record<string, string> = {};
 const mockRedis = {
-  setex: jest.fn((key: string, _ttl: number, val: string) => {
+  setex: vi.fn((key: string, _ttl: number, val: string) => {
     redisStore[key] = val;
     return Promise.resolve('OK');
   }),
-  get: jest.fn((key: string) => Promise.resolve(redisStore[key] ?? null)),
-  exists: jest.fn((key: string) => Promise.resolve(key in redisStore ? 1 : 0)),
-  del: jest.fn((...keys: string[]) => {
+  get: vi.fn((key: string) => Promise.resolve(redisStore[key] ?? null)),
+  exists: vi.fn((key: string) => Promise.resolve(key in redisStore ? 1 : 0)),
+  del: vi.fn((...keys: string[]) => {
     for (const k of keys) delete redisStore[k];
     return Promise.resolve(keys.length);
   }),
-  mget: jest.fn((...keys: string[]) =>
+  mget: vi.fn((...keys: string[]) =>
     Promise.resolve(keys.map((k) => redisStore[k] ?? null)),
   ),
-  keys: jest.fn((pattern: string) => {
+  keys: vi.fn((pattern: string) => {
     const prefix = pattern.replace('*', '');
     return Promise.resolve(
       Object.keys(redisStore).filter((k) => k.startsWith(prefix)),
     );
   }),
-  pipeline: jest.fn(() => {
+  pipeline: vi.fn(() => {
     const ops: Array<() => void> = [];
     const pipe = {
-      del: jest.fn((...keys: string[]) => {
+      del: vi.fn((...keys: string[]) => {
         ops.push(() => {
           for (const k of keys) delete redisStore[k];
         });
         return pipe;
       }),
-      setex: jest.fn((key: string, _ttl: number, val: string) => {
+      setex: vi.fn((key: string, _ttl: number, val: string) => {
         ops.push(() => {
           redisStore[key] = val;
         });
         return pipe;
       }),
-      exec: jest.fn(() => {
+      exec: vi.fn(() => {
         for (const op of ops) op();
         return Promise.resolve([]);
       }),
@@ -61,8 +62,8 @@ const mockRedis = {
 
 const mockPrismaService = {
   user: {
-    findUnique: jest.fn(),
-    update: jest.fn(),
+    findUnique: vi.fn(),
+    update: vi.fn(),
   },
 };
 
@@ -74,7 +75,7 @@ describe('AuthService', () => {
   beforeEach(() => {
     // Clear the in-memory store between tests
     for (const key of Object.keys(redisStore)) delete redisStore[key];
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     service = new AuthService(
       mockJwtService as unknown as JwtService,
@@ -130,8 +131,8 @@ describe('AuthService', () => {
         sessionId: 'old-session',
       };
 
-      mockJwtService.verify = jest.fn().mockReturnValue(oldPayload);
-      mockUserService.findOne = jest
+      mockJwtService.verify = vi.fn().mockReturnValue(oldPayload);
+      mockUserService.findOne = vi
         .fn()
         .mockResolvedValue({ id: 42, email: 'user@test.com' });
 
@@ -146,7 +147,7 @@ describe('AuthService', () => {
     });
 
     it('throws UnauthorizedException when refresh token is invalid JWT', async () => {
-      mockJwtService.verify = jest.fn().mockImplementation(() => {
+      mockJwtService.verify = vi.fn().mockImplementation(() => {
         throw new Error('jwt expired');
       });
 
@@ -159,7 +160,7 @@ describe('AuthService', () => {
       redisStore['session:1:sid'] = '{}';
       redisStore['refresh:1:sid'] = 'real.token';
 
-      mockJwtService.verify = jest.fn().mockReturnValue({
+      mockJwtService.verify = vi.fn().mockReturnValue({
         sub: 1,
         username: 'u@test.com',
         sessionId: 'sid',

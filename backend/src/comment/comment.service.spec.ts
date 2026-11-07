@@ -10,21 +10,21 @@ describe('CommentService', () => {
 
   const mockPrisma = {
     comment: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
     },
     task: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
   };
 
   const mockProjectMemberService = {
-    checkPermission: jest.fn(),
-    checkAccess: jest.fn(),
-    getUserProjects: jest.fn(),
+    checkPermission: vi.fn(),
+    checkAccess: vi.fn(),
+    getUserProjects: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -43,7 +43,7 @@ describe('CommentService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

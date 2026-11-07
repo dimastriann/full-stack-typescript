@@ -16,25 +16,25 @@ const mockTask = {
 
 const mockPrisma = {
   taskStage: {
-    findUnique: jest.fn(),
+    findUnique: vi.fn(),
   },
   task: {
-    create: jest.fn().mockResolvedValue(mockTask),
-    findMany: jest.fn().mockResolvedValue([mockTask]),
-    findUnique: jest.fn().mockResolvedValue(mockTask),
-    update: jest.fn().mockResolvedValue(mockTask),
-    delete: jest.fn().mockResolvedValue(mockTask),
+    create: vi.fn().mockResolvedValue(mockTask),
+    findMany: vi.fn().mockResolvedValue([mockTask]),
+    findUnique: vi.fn().mockResolvedValue(mockTask),
+    update: vi.fn().mockResolvedValue(mockTask),
+    delete: vi.fn().mockResolvedValue(mockTask),
   },
 };
 
 const mockProjectMemberService = {
-  checkPermission: jest.fn().mockResolvedValue(true),
-  checkAccess: jest.fn().mockResolvedValue(true),
-  getUserProjects: jest.fn().mockResolvedValue([{ projectId: 1 }]),
+  checkPermission: vi.fn().mockResolvedValue(true),
+  checkAccess: vi.fn().mockResolvedValue(true),
+  getUserProjects: vi.fn().mockResolvedValue([{ projectId: 1 }]),
 };
 
-const mockActivityLogService = { log: jest.fn().mockResolvedValue(undefined) };
-const mockWebhookService = { trigger: jest.fn() };
+const mockActivityLogService = { log: vi.fn().mockResolvedValue(undefined) };
+const mockWebhookService = { trigger: vi.fn() };
 
 describe('TaskService', () => {
   let service: TaskService;

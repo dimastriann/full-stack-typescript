@@ -12,22 +12,22 @@ const mockUser = {
 
 const mockPrisma = {
   user: {
-    findUnique: jest.fn().mockResolvedValue(mockUser),
-    findMany: jest.fn().mockResolvedValue([mockUser]),
-    create: jest.fn().mockResolvedValue(mockUser),
-    update: jest.fn().mockResolvedValue(mockUser),
-    delete: jest.fn().mockResolvedValue(mockUser),
+    findUnique: vi.fn().mockResolvedValue(mockUser),
+    findMany: vi.fn().mockResolvedValue([mockUser]),
+    create: vi.fn().mockResolvedValue(mockUser),
+    update: vi.fn().mockResolvedValue(mockUser),
+    delete: vi.fn().mockResolvedValue(mockUser),
   },
   workspace: {
-    create: jest.fn().mockResolvedValue({ id: 1, name: 'Test Workspace' }),
+    create: vi.fn().mockResolvedValue({ id: 1, name: 'Test Workspace' }),
   },
   projectStage: {
-    createMany: jest.fn().mockResolvedValue({ count: 2 }),
+    createMany: vi.fn().mockResolvedValue({ count: 2 }),
   },
   taskStage: {
-    createMany: jest.fn().mockResolvedValue({ count: 3 }),
+    createMany: vi.fn().mockResolvedValue({ count: 3 }),
   },
-  $transaction: jest.fn((callback) => callback(mockPrisma)),
+  $transaction: vi.fn((callback) => callback(mockPrisma)),
 };
 
 describe('UserService', () => {

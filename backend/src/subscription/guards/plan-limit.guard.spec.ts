@@ -1,3 +1,4 @@
+import type { Mocked } from 'vitest';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -7,21 +8,19 @@ import { PLAN_LIMIT_KEY } from '../decorators/plan-limit.decorator';
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const mockSubscriptionService = {
-  checkProjectLimit: jest.fn().mockResolvedValue(undefined),
-  checkMemberLimit: jest.fn().mockResolvedValue(undefined),
+  checkProjectLimit: vi.fn().mockResolvedValue(undefined),
+  checkMemberLimit: vi.fn().mockResolvedValue(undefined),
 };
 
 function buildContext(gqlArgs: Record<string, unknown>): ExecutionContext {
   const mockGqlCtx = {
-    getArgs: jest.fn().mockReturnValue(gqlArgs),
+    getArgs: vi.fn().mockReturnValue(gqlArgs),
   };
-  jest
-    .spyOn(GqlExecutionContext, 'create')
-    .mockReturnValue(mockGqlCtx as never);
+  vi.spyOn(GqlExecutionContext, 'create').mockReturnValue(mockGqlCtx as never);
 
   return {
-    getHandler: jest.fn(),
-    getClass: jest.fn(),
+    getHandler: vi.fn(),
+    getClass: vi.fn(),
   } as unknown as ExecutionContext;
 }
 
@@ -29,13 +28,13 @@ function buildContext(gqlArgs: Record<string, unknown>): ExecutionContext {
 
 describe('PlanLimitGuard', () => {
   let guard: PlanLimitGuard;
-  let reflector: jest.Mocked<Reflector>;
+  let reflector: Mocked<Reflector>;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     reflector = {
-      getAllAndOverride: jest.fn(),
-    } as unknown as jest.Mocked<Reflector>;
+      getAllAndOverride: vi.fn(),
+    } as unknown as Mocked<Reflector>;
 
     guard = new PlanLimitGuard(reflector, mockSubscriptionService as never);
   });

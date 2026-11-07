@@ -6,28 +6,28 @@ import { PlanLevel, SubscriptionStatus } from '../../prisma/generated/client';
 
 const mockPrisma = {
   subscription: {
-    findUnique: jest.fn(),
-    updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+    findUnique: vi.fn(),
+    updateMany: vi.fn().mockResolvedValue({ count: 1 }),
   },
   project: {
-    count: jest.fn(),
+    count: vi.fn(),
   },
   workspaceMember: {
-    count: jest.fn(),
-    findUnique: jest.fn(),
+    count: vi.fn(),
+    findUnique: vi.fn(),
   },
   planFeatureLimit: {
-    findUnique: jest.fn(),
+    findUnique: vi.fn(),
   },
 };
 
 const mockConfigService = {
-  get: jest.fn().mockReturnValue('http://localhost:5173'),
+  get: vi.fn().mockReturnValue('http://localhost:5173'),
 };
 
 const mockProviderFactory = {
-  getDefaultProvider: jest.fn(),
-  getProvider: jest.fn(),
+  getDefaultProvider: vi.fn(),
+  getProvider: vi.fn(),
 };
 
 function buildService() {
@@ -41,7 +41,7 @@ function buildService() {
 // ── Test Suite ────────────────────────────────────────────────────────────────
 
 describe('SubscriptionService', () => {
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => vi.clearAllMocks());
 
   // ── getPlanLimits ──────────────────────────────────────────────────────────
 
@@ -218,7 +218,7 @@ describe('SubscriptionService', () => {
   describe('handleWebhook()', () => {
     it('calls _activateSubscription on payment.succeeded event', async () => {
       const mockProvider = {
-        constructWebhookEvent: jest.fn().mockResolvedValue({
+        constructWebhookEvent: vi.fn().mockResolvedValue({
           type: 'payment.succeeded',
           providerSubscriptionId: 'sub_001',
           providerCustomerId: 'cus_001',
@@ -244,7 +244,7 @@ describe('SubscriptionService', () => {
 
     it('calls cancel on subscription.canceled event', async () => {
       const mockProvider = {
-        constructWebhookEvent: jest.fn().mockResolvedValue({
+        constructWebhookEvent: vi.fn().mockResolvedValue({
           type: 'subscription.canceled',
           providerSubscriptionId: 'sub_002',
         }),

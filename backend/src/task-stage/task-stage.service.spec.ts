@@ -9,17 +9,17 @@ describe('TaskStageService', () => {
 
   const mockPrisma = {
     user: {
-      findUnique: jest.fn().mockResolvedValue({ role: 'USER' }),
+      findUnique: vi.fn().mockResolvedValue({ role: 'USER' }),
     },
     workspaceMember: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
     taskStage: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
     },
   };
 
@@ -36,7 +36,7 @@ describe('TaskStageService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

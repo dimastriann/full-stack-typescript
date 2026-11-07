@@ -94,7 +94,7 @@ export class StripeProvider extends PaymentProviderStrategy {
         rawBody,
         signature,
         this.webhookSecret,
-      ) as unknown as StripeEvent;
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
       this.logger.error(`Stripe webhook signature verification failed: ${msg}`);

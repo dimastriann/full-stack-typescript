@@ -1,12 +1,12 @@
 import { XenditProvider } from './xendit.provider';
 
 // ── Mock xendit-node ──────────────────────────────────────────────────────────
-jest.mock('xendit-node', () => {
+vi.mock('xendit-node', () => {
   return {
     __esModule: true,
-    default: jest.fn().mockImplementation(() => ({
+    default: vi.fn().mockImplementation(() => ({
       Invoice: {
-        createInvoice: jest.fn().mockResolvedValue({
+        createInvoice: vi.fn().mockResolvedValue({
           id: 'inv_xendit_001',
           invoiceUrl: 'https://checkout.xendit.co/web/inv_xendit_001',
         }),

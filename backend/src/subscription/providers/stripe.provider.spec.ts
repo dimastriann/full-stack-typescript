@@ -3,14 +3,14 @@ import { StripeProvider } from './stripe.provider';
 // ── Stripe SDK mock ───────────────────────────────────────────────────────────
 // The Stripe SDK uses a default export class — mock it manually so Jest doesn't
 // try to use ESM interop (which breaks MockedClass casting).
-const mockWebhooks = { constructEvent: jest.fn() };
-const mockCustomers = { create: jest.fn() };
-const mockCheckoutSessions = { create: jest.fn() };
+const mockWebhooks = { constructEvent: vi.fn() };
+const mockCustomers = { create: vi.fn() };
+const mockCheckoutSessions = { create: vi.fn() };
 
-jest.mock('stripe', () => {
+vi.mock('stripe', () => {
   return {
     __esModule: true,
-    default: jest.fn().mockImplementation(() => ({
+    default: vi.fn().mockImplementation(() => ({
       webhooks: mockWebhooks,
       customers: mockCustomers,
       checkout: { sessions: mockCheckoutSessions },
@@ -33,7 +33,7 @@ function makeStripeEvent(type: string, dataObject: unknown) {
 
 describe('StripeProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   // ── createCheckoutSession ─────────────────────────────────────────────────
