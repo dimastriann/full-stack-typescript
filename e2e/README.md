@@ -27,3 +27,15 @@ npm run show-report               # after failures (html report)
 Scope of the current spec (`auth.spec.ts`): bad-credential rejection, seeded login landing on `/dashboard`, session persistence across reload, and logout return to `/login`.
 
 Roadmap section: `ROADMAP.local.md` → "End-to-end tests".
+
+## Backend throttle overrides
+
+The backend rate-limits per route (login 5/min by default). When Playwright
+autostarts the backend it injects `THROTTLE_LOGIN_LIMIT`,
+`THROTTLE_REGISTER_LIMIT`, `THROTTLE_REFRESH_LIMIT`, `THROTTLE_2FA_LIMIT`,
+and `THROTTLE_LIMIT` (default `1000` in e2e). Tweak with `E2E_THROTTLE_LIMIT`.
+If you run services manually, set the same vars yourself or wait out the
+one-minute windows.
+
+Production defaults are unchanged; see `backend/src/app.module.ts` and the
+`@Throttle` decorators.
