@@ -28,7 +28,7 @@ The project is being prepared as an open-source core that can support optional c
 | Frontend   | React 19, Vite 7, Apollo Client, Zustand      |
 | UI         | CSS, Tailwind CSS, Headless UI, Lucide        |
 | Real time  | GraphQL subscriptions, Socket.IO              |
-| Testing    | Jest, Vitest, Testing Library                 |
+| Testing    | Vitest, Testing Library                       |
 | Deployment | Docker Compose, Nginx, PWA                    |
 
 ## Requirements

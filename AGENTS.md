@@ -37,7 +37,7 @@ Guidance for coding agents working anywhere in this repository.
 ```bash
 npm run format      # prettier (backend + frontend)
 npm run lint        # eslint (backend + frontend)
-npm run test        # backend jest + frontend vitest
+npm run test        # backend + frontend vitest
 npm run build       # backend + frontend builds
 npm run smoke       # deployment smoke test
 ```
@@ -55,6 +55,6 @@ npm run smoke       # deployment smoke test
 
 ## Testing notes
 
-- Backend: Jest unit tests per resolver/service; e2e config in `backend/test/`.
+- Backend: Vitest unit tests per resolver/service (NestJS 12 is ESM-only; `unplugin-swc` provides decorator metadata); e2e suites in `backend/test/`.
 - Frontend: Vitest + Testing Library; cover critical forms and chat flows at minimum.
 - CI runs install, format/lint checks, unit tests, builds, Prisma validation, dependency audit, and secret/dependency scanning; do not weaken gates without discussion.
