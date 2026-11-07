@@ -50,8 +50,8 @@ jobs:
           {
             echo "DATABASE_URL=postgresql://projectflow:projectflow@localhost:5432/projectflow"
             echo "JWT_SECRET_KEY=e2e-only-jwt-secret-demo"
-            echo "SUPERADMIN_EMAIL=admin@gmail.com"
-            echo "SUPERADMIN_PASSWORD=admin"
+            echo "SUPERADMIN_EMAIL=superadmin@e2e.test"
+            echo "SUPERADMIN_PASSWORD=e2e-super-secret-123"
           } >> backend/.env
       - name: Apply database schema
         working-directory: backend
@@ -72,6 +72,8 @@ jobs:
           E2E_API_URL: http://localhost:3000
           E2E_USER_EMAIL: admin@gmail.com
           E2E_USER_PASSWORD: admin
+          E2E_SUPERADMIN_EMAIL: superadmin@e2e.test
+          E2E_SUPERADMIN_PASSWORD: e2e-super-secret-123
         run: npm run test --prefix e2e
       - uses: actions/upload-artifact@v4
         if: failure()
