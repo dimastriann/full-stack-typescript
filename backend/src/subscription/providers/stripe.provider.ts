@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import Stripe from 'stripe';
 import {
   PaymentProviderStrategy,
@@ -98,7 +98,7 @@ export class StripeProvider extends PaymentProviderStrategy {
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
       this.logger.error(`Stripe webhook signature verification failed: ${msg}`);
-      throw new Error(`Invalid Stripe webhook signature: ${msg}`);
+      throw new BadRequestException(`Invalid Stripe webhook signature: ${msg}`);
     }
 
     const raw = event as unknown as Record<string, unknown>;

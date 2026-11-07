@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Snap, CoreApi } from 'midtrans-client';
 import {
   PaymentProviderStrategy,
@@ -69,7 +69,9 @@ export class MidtransProvider extends PaymentProviderStrategy {
         unknown
       >;
     } catch {
-      throw new Error('Invalid Midtrans notification payload JSON');
+      throw new BadRequestException(
+        'Invalid Midtrans notification payload JSON',
+      );
     }
 
     // Midtrans validates the notification via the CoreApi — signature key is embedded

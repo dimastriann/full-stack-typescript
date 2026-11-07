@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import Xendit from 'xendit-node';
 import {
   PaymentProviderStrategy,
@@ -73,14 +73,14 @@ export class XenditProvider extends PaymentProviderStrategy {
 
     if (!isValid) {
       this.logger.error('Xendit webhook callback token verification failed');
-      throw new Error('Invalid Xendit callback token');
+      throw new BadRequestException('Invalid Xendit callback token');
     }
 
     let payload: Record<string, unknown>;
     try {
       payload = JSON.parse(rawBody.toString('utf8')) as Record<string, unknown>;
     } catch {
-      throw new Error('Invalid Xendit webhook payload JSON');
+      throw new BadRequestException('Invalid Xendit webhook payload JSON');
     }
 
     const status = payload['status'] as string | undefined;
