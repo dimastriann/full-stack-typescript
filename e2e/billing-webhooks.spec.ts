@@ -109,7 +109,7 @@ test.describe('billing and payment webhooks', () => {
     const existingStripe = existing.find((row) => row.provider === 'STRIPE');
     if (!existingStripe || isSuiteOwned(existingStripe)) {
       await configureProvider(superApi, 'STRIPE', {
-        stripeSecretKey: 'sk_test_e2e_placeholder',
+        stripeSecretKey: process.env.E2E_STRIPE_SECRET_KEY ?? 'placeholder',
         stripeWebhookSecret: STRIPE_WEBHOOK_SECRET,
       });
       stripeManaged = true;
@@ -122,7 +122,7 @@ test.describe('billing and payment webhooks', () => {
     const existingXendit = existing.find((row) => row.provider === 'XENDIT');
     if (!existingXendit || isSuiteOwned(existingXendit)) {
       await configureProvider(superApi, 'XENDIT', {
-        xenditSecretKey: 'xnd_test_e2e_placeholder',
+        xenditSecretKey: process.env.E2E_XENDIT_SECRET_KEY ?? 'placeholder',
         xenditCallbackToken: XENDIT_CALLBACK_TOKEN,
       });
       xenditManaged = true;
