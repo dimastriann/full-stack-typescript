@@ -1,0 +1,93 @@
+name: Performance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 1' # weekly, Monday 03:00 UTC
+
+jobs:
+  api-latency:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: projectflow
+          POSTGRES_PASSWORD: projectflow
+          POSTGRES_DB: projectflow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U projectflow"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Generate Prisma client
+        working-directory: backend
+        run: npx prisma generate
+      - name: Apply database schema
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://projectflow:projectflow@localhost:5432/projectflow
+        run: npx prisma migrate deploy
+      - name: Seed demo data
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://projectflow:projectflow@localhost:5432/projectflow
+          SEED_DEMO_DATA: 'true'
+          SUPERADMIN_EMAIL: superadmin@perf.test
+          SUPERADMIN_PASSWORD: perf-super-secret-123
+        run: npx prisma db seed
+      - name: Build backend
+        working-directory: backend
+        run: npm run build
+      - name: Start backend
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://projectflow:projectflow@localhost:5432/projectflow
+          REDIS_HOST: localhost
+          REDIS_PORT: '6379'
+          JWT_SECRET_KEY: perf-only-jwt-secret
+          FRONTEND_URL: http://localhost:5173
+          PORT: '3000'
+        run: |
+          nohup node dist/src/main > /tmp/backend.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:3000/health/readiness > /dev/null; then
+              echo "backend ready after ${i}0s"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "backend failed to start"; tail -n 80 /tmp/backend.log; exit 1
+      - name: Run API latency smoke
+        env:
+          PERF_BASE_URL: http://localhost:3000
+          PERF_EMAIL: admin@gmail.com
+          PERF_PASSWORD: admin
+          PERF_ITERATIONS: '50'
+        run: node scripts/perf-smoke.mjs
+      - name: Backend log on failure
+        if: failure()
+        run: tail -n 100 /tmp/backend.log || true
