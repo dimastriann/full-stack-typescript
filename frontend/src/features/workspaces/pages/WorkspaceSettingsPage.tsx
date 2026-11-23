@@ -402,10 +402,20 @@ export default function WorkspaceSettingsPage() {
                         {filteredUsers.map((u: UserType) => (
                           <div
                             key={u.id}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Invite ${u.name} (${u.email})`}
                             className="px-4 py-3 hover:bg-primary-50 dark:hover:bg-slate-800 cursor-pointer flex flex-col border-b border-surface-100 dark:border-slate-800 last:border-0 transition-colors"
                             onClick={() => {
                               setInviteEmail(u.email);
                               setShowSuggestions(false);
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                setInviteEmail(u.email);
+                                setShowSuggestions(false);
+                              }
                             }}
                           >
                             <span className="text-sm font-semibold text-gray-900 dark:text-white">

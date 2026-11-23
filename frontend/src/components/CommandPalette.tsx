@@ -266,6 +266,7 @@ export default function CommandPalette({ isOpen, onClose }: Props) {
       {/* Backdrop */}
       <div
         className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm"
+        aria-hidden="true"
         onClick={onClose}
       />
 

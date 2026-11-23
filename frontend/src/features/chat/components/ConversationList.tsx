@@ -77,12 +77,27 @@ const ConversationItem = ({
               {conv.unreadCount}
             </span>
           ) : null}
-          <div
-            onClick={(e) => onDelete(e, conv.id)}
-            className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label={`Delete conversation ${
+              conv.name ?? 'with participant'
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(e, conv.id);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete(e as unknown as React.MouseEvent, conv.id);
+              }
+            }}
+            className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1.5 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
           >
             <Trash2 size={14} />
-          </div>
+          </span>
         </div>
       </div>
       {conv.messages && conv.messages[0] && (

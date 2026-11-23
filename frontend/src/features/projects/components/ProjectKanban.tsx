@@ -347,9 +347,23 @@ export default function ProjectKanban() {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`Open project ${project.name}`}
                                 onClick={() =>
                                   navigate(`/dashboard/project/${project.id}`)
                                 }
+                                onKeyDown={(event) => {
+                                  if (
+                                    event.key === 'Enter' ||
+                                    event.key === ' '
+                                  ) {
+                                    event.preventDefault();
+                                    navigate(
+                                      `/dashboard/project/${project.id}`,
+                                    );
+                                  }
+                                }}
                                 className={`bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-surface-200 dark:border-slate-800 transition-all group hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md ${
                                   snapshot.isDragging
                                     ? 'shadow-2xl border-primary-400 dark:border-primary-500 rotate-1 scale-105 z-50'

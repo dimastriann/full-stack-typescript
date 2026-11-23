@@ -69,26 +69,30 @@ export default function GanttTaskBar({
 
   if (isMilestone) {
     return (
-      <div
+      <button
+        type="button"
         className="absolute top-1/2 -translate-y-1/2 cursor-pointer group"
         style={{ left: `${left + dayWidthPx / 2 - 8}px` }}
         onClick={handleClick}
         title={task.title}
+        aria-label={task.title}
       >
         <div
           className="h-4 w-4 rotate-45 shadow-sm group-hover:scale-125 transition-transform"
           style={{ background: barColor }}
         />
-      </div>
+      </button>
     );
   }
 
   return (
-    <div
+    <button
+      type="button"
       className="absolute top-1/2 -translate-y-1/2 cursor-pointer group"
       style={{ left: `${left + 2}px`, width: `${width - 4}px`, height: '22px' }}
       onClick={handleClick}
       title={`${task.title} — ${progress.toFixed(0)}%`}
+      aria-label={`${task.title} (${progress.toFixed(0)}% complete)`}
     >
       {/* Bar background */}
       <div
@@ -118,6 +122,6 @@ export default function GanttTaskBar({
           </span>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

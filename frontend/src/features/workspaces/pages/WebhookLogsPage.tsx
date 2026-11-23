@@ -103,7 +103,17 @@ export default function WebhookLogsPage({
                 >
                   {/* Summary Bar */}
                   <div
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isExpanded}
+                    aria-label={`Toggle webhook delivery ${log.id}`}
                     onClick={() => toggleExpand(log.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        toggleExpand(log.id);
+                      }
+                    }}
                     className="flex flex-col md:flex-row md:items-center justify-between p-4 cursor-pointer gap-4"
                   >
                     <div className="flex items-center gap-3">

@@ -561,17 +561,23 @@ export const ChatWindow = ({ conversation, onBack }: ChatWindowProps) => {
                             className="rounded-xl overflow-hidden border border-surface-200/50 dark:border-slate-700/50 bg-white/10 p-1 group/att"
                           >
                             {isImage ? (
-                              <img
-                                src={getAttachmentUrl(att.id)}
-                                alt={att.filename}
-                                className="max-h-[300px] w-auto object-contain cursor-pointer"
+                              <button
+                                type="button"
+                                className="block cursor-pointer"
+                                aria-label={`Preview ${att.filename}`}
                                 onClick={() => handlePreviewFile(att)}
-                                onError={() => {
-                                  Logger.warn(
-                                    'Legacy image path failed, using hook for preview',
-                                  );
-                                }}
-                              />
+                              >
+                                <img
+                                  src={getAttachmentUrl(att.id)}
+                                  alt={att.filename}
+                                  className="max-h-[300px] w-auto object-contain"
+                                  onError={() => {
+                                    Logger.warn(
+                                      'Legacy image path failed, using hook for preview',
+                                    );
+                                  }}
+                                />
+                              </button>
                             ) : (
                               <div className="flex items-center gap-3 p-2">
                                 <FileIcon

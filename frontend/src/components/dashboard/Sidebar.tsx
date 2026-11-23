@@ -49,6 +49,7 @@ export default function Sidebar({
       {isOpen && (
         <div
           className="fixed inset-0 z-20 bg-black/50 backdrop-blur-sm lg:hidden"
+          aria-hidden="true"
           onClick={onClose}
         />
       )}
