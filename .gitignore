@@ -37,3 +37,6 @@ e2e/.auth
 # test coverage output
 frontend/coverage
 backend/coverage
+
+# playwright output at repo root (mis-rooted runs)
+test-results
