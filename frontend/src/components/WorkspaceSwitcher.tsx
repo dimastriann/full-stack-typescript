@@ -55,7 +55,11 @@ export const WorkspaceSwitcher = () => {
           if (val === 'new') {
             setIsModalOpen(true);
           } else {
-            const workspace = workspaces.find((w) => w.id === val);
+            // The hidden native select emits string values while workspace ids
+            // are numeric, so compare both as strings.
+            const workspace = workspaces.find(
+              (w) => String(w.id) === String(val),
+            );
             if (workspace) setActiveWorkspace(workspace);
           }
         }}
